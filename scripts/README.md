@@ -1,0 +1,1248 @@
+# AURORA-IA Automation Scripts
+
+This directory contains automation scripts that support the AURORA-IA / AI-DLC methodology.
+
+## Directory Structure
+
+```
+scripts/
+├── bash/                        # Bash scripts (Linux/macOS/WSL)
+│   ├── init.sh                  # 🆕 Project initialization (Brownfield/Greenfield)
+│   ├── project-status.sh        # 🆕 Project status analyzer (continuity)
+│   ├── alignment-analysis.sh    # 🆕 Alignment & gap analysis
+│   ├── create-new-feature.sh
+│   ├── quality-gates.sh
+│   ├── validate-specs.sh
+│   ├── generate-usecases.sh
+│   ├── generate-gherkin.sh
+│   ├── create-adr.sh
+│   └── update-agent-context.sh
+└── powershell/                  # PowerShell scripts (Windows)
+    ├── Init.ps1                 # 🆕 Project initialization (Brownfield/Greenfield)
+    ├── Get-ProjectStatus.ps1    # 🆕 Project status analyzer (continuity)
+    ├── Get-AlignmentAnalysis.ps1 # 🆕 Alignment & gap analysis
+    ├── Create-NewFeature.ps1
+    ├── Quality-Gates.ps1
+    ├── Validate-Specs.ps1
+    ├── Generate-UseCases.ps1
+    ├── Generate-Gherkin.ps1
+    ├── Create-ADR.ps1
+    └── Update-AgentContext.ps1
+```
+
+## Available Scripts
+
+### 🆕 Project Status Analyzer
+
+Analyzes project state and generates a comprehensive status report for continuity. Essential for resuming work after a pause, onboarding team members, or preparing status updates.
+
+#### Usage
+
+**Bash (Linux/macOS/WSL):**
+```bash
+# Executive summary (default)
+./scripts/bash/project-status.sh
+
+# Full analysis with all details
+./scripts/bash/project-status.sh --full
+
+# Specific views
+./scripts/bash/project-status.sh --features    # Features only
+./scripts/bash/project-status.sh --tasks       # Tasks/Bolts only
+./scripts/bash/project-status.sh --quality     # Quality metrics
+./scripts/bash/project-status.sh --blockers    # Blockers and decisions
+./scripts/bash/project-status.sh --infra       # Infrastructure status
+
+# JSON output for CI/CD
+./scripts/bash/project-status.sh --json
+
+# Save report to memory/context/
+./scripts/bash/project-status.sh --full --save
+
+# Analyze specific feature
+./scripts/bash/project-status.sh --feature 001-user-auth
+```
+
+**PowerShell (Windows):**
+```powershell
+# Executive summary (default)
+.\scripts\powershell\Get-ProjectStatus.ps1
+
+# Full analysis with all details
+.\scripts\powershell\Get-ProjectStatus.ps1 -ReportType Full
+
+# Specific views
+.\scripts\powershell\Get-ProjectStatus.ps1 -ReportType Features
+.\scripts\powershell\Get-ProjectStatus.ps1 -ReportType Tasks
+.\scripts\powershell\Get-ProjectStatus.ps1 -ReportType Quality
+.\scripts\powershell\Get-ProjectStatus.ps1 -ReportType Blockers
+.\scripts\powershell\Get-ProjectStatus.ps1 -ReportType Infra
+
+# JSON output for CI/CD
+.\scripts\powershell\Get-ProjectStatus.ps1 -Format Json
+
+# Save report to memory/context/
+.\scripts\powershell\Get-ProjectStatus.ps1 -ReportType Full -Save
+
+# Analyze specific feature
+.\scripts\powershell\Get-ProjectStatus.ps1 -Feature "001-user-auth"
+```
+
+#### What It Analyzes
+
+| Category | Information |
+|----------|-------------|
+| **Constitution** | Project scope, type, tech stack |
+| **Features** | Status of each feature (specs/), completion % |
+| **Tasks** | Bolt progress, pending tasks, current work |
+| **Quality** | Coverage %, mutation score, code health |
+| **Infrastructure** | IaC status, modules, tools |
+| **Git** | Last commit, branch, uncommitted changes |
+| **Blockers** | Blocked items, pending decisions |
+
+#### Sample Output
+
+```
+═══════════════════════════════════════════════════════════════
+  🚀 AURORA-IA Project Status
+═══════════════════════════════════════════════════════════════
+
+Project:       MyProject
+Type:          Greenfield | Scope: Full Stack
+Branch:        feature/user-auth
+Last Activity: abc1234 - feat: Add user registration (2 hours ago)
+
+─── Quick Stats ───
+
+| Metric        | Value |
+|---------------|-------|
+| Constitution  | ✅ Present |
+| Features      | 2/5 complete |
+| Tasks         | [████████░░░░░░░░░░░░] 40% |
+| Quality       | ⚠️ Below Target |
+| Uncommitted   | 3 files |
+
+─── 🎯 Resume Work ───
+
+Current Bolt: Bolt 2 - User Authentication
+
+Next tasks to complete:
+  - [ ] T015 Create UserRepository in src/infrastructure/
+  - [ ] T016 Add database migration
+  - [ ] T017 Implement login endpoint
+
+─── Recommended Actions ───
+
+🔴 HIGH: Resolve blocker B001 with /aurora.clarify
+🟡 MEDIUM: Continue with T015 using /aurora.implement
+🟡 MEDIUM: Improve test coverage with /aurora.test
+```
+
+#### Integration with AI Agents
+
+When starting a new Copilot session, always run `/aurora.status` first:
+
+```
+@aurora /aurora.status
+```
+
+The agent will analyze the project and provide:
+1. Current work in progress
+2. Recommended next steps
+3. Blockers to address
+4. Quality status
+
+---
+
+### 🆕 Alignment & Gap Analysis
+
+Analyzes the alignment between RFP requirements, legacy code, implementation, and AURORA methodology compliance. Detects gaps and generates actionable reports with coverage percentages.
+
+#### Usage
+
+**Bash (Linux/macOS/WSL):**
+```bash
+# Executive summary (default)
+./scripts/bash/alignment-analysis.sh
+
+# Full analysis with all dimensions
+./scripts/bash/alignment-analysis.sh --full
+
+# Specific analyses
+./scripts/bash/alignment-analysis.sh --rfp          # RFP coverage only
+./scripts/bash/alignment-analysis.sh --legacy       # Legacy migration only
+./scripts/bash/alignment-analysis.sh --methodology  # AURORA compliance
+./scripts/bash/alignment-analysis.sh --gaps         # Gap summary
+
+# Baseline and comparison
+./scripts/bash/alignment-analysis.sh --baseline     # Create baseline
+./scripts/bash/alignment-analysis.sh --compare memory/baselines/alignment_2024-01-01.json
+
+# JSON output for CI/CD
+./scripts/bash/alignment-analysis.sh --json
+
+# Save report to memory/analysis/
+./scripts/bash/alignment-analysis.sh --full --save
+```
+
+**PowerShell (Windows):**
+```powershell
+# Executive summary (default)
+.\scripts\powershell\Get-AlignmentAnalysis.ps1
+
+# Full analysis with all dimensions
+.\scripts\powershell\Get-AlignmentAnalysis.ps1 -Full
+
+# Specific analyses
+.\scripts\powershell\Get-AlignmentAnalysis.ps1 -RfpOnly
+.\scripts\powershell\Get-AlignmentAnalysis.ps1 -LegacyOnly
+.\scripts\powershell\Get-AlignmentAnalysis.ps1 -MethodologyOnly
+.\scripts\powershell\Get-AlignmentAnalysis.ps1 -GapsOnly
+
+# Baseline and comparison
+.\scripts\powershell\Get-AlignmentAnalysis.ps1 -CreateBaseline
+.\scripts\powershell\Get-AlignmentAnalysis.ps1 -CompareTo "memory\baselines\alignment_2024-01-01.json"
+
+# JSON output for CI/CD
+.\scripts\powershell\Get-AlignmentAnalysis.ps1 -AsJson
+
+# Save report to memory/analysis/
+.\scripts\powershell\Get-AlignmentAnalysis.ps1 -Full -SaveReport
+```
+
+#### Analysis Dimensions
+
+| Dimension | Description | Relevance |
+|-----------|-------------|-----------|
+| **RFP Coverage** | Traceability from RFP items to specs/features | When `demo/from_rfp/` exists |
+| **Legacy Migration** | Functions/modules migrated vs pending | When `demo/from_old_src/` exists |
+| **AURORA Methodology** | Compliance with AI-DLC phases | Always |
+| **Testing** | Test coverage and mutation score | Always |
+| **Documentation** | README, ADRs, constitution completeness | Always |
+| **Infrastructure** | IaC, CI/CD, containers | Always |
+
+#### Gap Severity Levels
+
+| Level | Color | Description |
+|-------|-------|-------------|
+| 🔴 Critical | Red | Major gaps blocking progress (>50% missing) |
+| 🟠 High | Orange | Significant gaps requiring attention (30-50% missing) |
+| 🟡 Medium | Yellow | Minor gaps for improvement |
+| 🟢 Low | Green | Nice-to-have items |
+
+#### Sample Output
+
+```
+═══════════════════════════════════════════════════════════════
+  🎯 AURORA-IA Alignment Analysis
+═══════════════════════════════════════════════════════════════
+
+Project Type: Migration | Scope: Full Stack
+Migration Strategy: Strangler Fig
+Has RFP: true | Has Legacy: true
+
+─── Overall Alignment: 67% ───
+
+[█████████████░░░░░░░] 67%
+
+| Dimension            | Score                        | Status |
+|---------------------|------------------------------|--------|
+| RFP Coverage        | [███████████░░░░░░░░░] 55%  | ⚠️     |
+| Legacy Migration    | [████████░░░░░░░░░░░░] 40%  | ⚠️     |
+| AURORA Methodology  | [█████████████████░░░] 85%  | ✅     |
+| Testing             | [████████████████░░░░] 80%  | ✅     |
+| Documentation       | [████████████░░░░░░░░] 60%  | ⚠️     |
+| Infrastructure      | [█████████████████░░░] 80%  | ✅     |
+
+─── Gap Summary ───
+
+| Priority     | Count |
+|-------------|-------|
+| 🔴 Critical | 1     |
+| 🟠 High     | 2     |
+| 🟡 Medium   | 3     |
+| 🟢 Low      | 1     |
+| **Total**   | **7** |
+
+─── 🔴 Critical Gaps ───
+
+  - Legacy migration only 40%
+
+─── 🟠 High Priority Gaps ───
+
+  - RFP coverage at 55%
+  - Test coverage at 75% (target: 80%)
+
+─── 🎯 Recommended Actions ───
+
+| # | Priority | Action                                    | Command           |
+|---|----------|-------------------------------------------|-------------------|
+| 1 | High     | Analyze and migrate legacy functions      | `/aurora.analyze` |
+| 2 | High     | Create feature specs for uncovered RFP    | `/aurora.feature` |
+| 3 | High     | Improve test coverage                     | `/aurora.test`    |
+```
+
+#### Baseline Comparison
+
+Track alignment progress over time:
+
+```
+═══════════════════════════════════════════════════════════════
+  📊 Alignment Comparison
+═══════════════════════════════════════════════════════════════
+
+Comparing with baseline: 2024-01-01
+
+| Dimension        | Previous | Current | Delta   |
+|------------------|----------|---------|---------|
+| Overall          | 45%      | 67%     | +22%    |
+| RFP Coverage     | 30%      | 55%     | +25%    |
+| Legacy Migration | 20%      | 40%     | +20%    |
+| Methodology      | 70%      | 85%     | +15%    |
+| Testing          | 60%      | 80%     | +20%    |
+```
+
+#### Integration with AI Agents
+
+Invoke alignment analysis from Copilot:
+
+```
+@aurora /aurora.alignment
+```
+
+The agent analyzes:
+1. **RFP Traceability**: Which requirements have specs vs uncovered
+2. **Legacy Progress**: Migration status by language/module
+3. **Methodology Gaps**: Which AI-DLC artifacts are missing
+4. **Action Plan**: Prioritized list of next steps
+
+---
+
+### 🆕 Project Initialization (Init)
+
+Initializes a new AURORA-IA project workspace with an **interactive configuration wizard**. Supports both **Greenfield** (new projects) and **Brownfield** (migration from existing code) scenarios.
+
+#### Quick Start with Auto-Profiles
+
+For rapid project setup, use auto-profiles that pre-configure all technology choices:
+
+**Bash (Linux/macOS/WSL):**
+```bash
+# .NET 8 Modular Monolith with CQRS, Azure SQL, Container Apps
+./scripts/bash/init.sh /path/to/project green --auto app-dotnet
+
+# Node.js 20 NestJS with PostgreSQL, Container Apps
+./scripts/bash/init.sh /path/to/project green --auto app-node
+
+# Landing Zone Infrastructure with Bicep
+./scripts/bash/init.sh /path/to/project green --auto infra-landing
+
+# Workload Infrastructure with Bicep
+./scripts/bash/init.sh /path/to/project green --auto infra-workload
+
+# Full Stack: .NET + Vue.js + Bicep Infrastructure
+./scripts/bash/init.sh /path/to/project green --auto fullstack-dotnet
+```
+
+**PowerShell (Windows):**
+```powershell
+# .NET 8 Modular Monolith with CQRS, Azure SQL, Container Apps
+.\scripts\powershell\Init.ps1 -OutputDirectory "C:\projects\my-api" -Auto "app-dotnet"
+
+# Node.js 20 NestJS with PostgreSQL, Container Apps
+.\scripts\powershell\Init.ps1 -OutputDirectory "C:\projects\my-node-api" -Auto "app-node"
+
+# Landing Zone Infrastructure with Bicep
+.\scripts\powershell\Init.ps1 -OutputDirectory "C:\projects\my-landing-zone" -Auto "infra-landing"
+
+# Workload Infrastructure with Bicep
+.\scripts\powershell\Init.ps1 -OutputDirectory "C:\projects\my-workload" -Auto "infra-workload"
+
+# Full Stack: .NET + Vue.js + Bicep Infrastructure
+.\scripts\powershell\Init.ps1 -OutputDirectory "C:\projects\my-fullstack" -Auto "fullstack-dotnet"
+```
+
+#### Auto-Profile Configurations
+
+| Profile | Scope | Backend | Architecture | Database | Container | IaC |
+|---------|-------|---------|--------------|----------|-----------|-----|
+| `app-dotnet` | App Only | C# .NET 8 Minimal API | Modular Monolith + CQRS | Azure SQL + EF Core | Container Apps | - |
+| `app-node` | App Only | Node.js 20 NestJS | Modular Monolith + CQRS | PostgreSQL + Prisma | Container Apps | - |
+| `infra-landing` | Infra Only | - | - | - | - | Bicep |
+| `infra-workload` | Infra Only | - | - | - | - | Bicep |
+| `fullstack-dotnet` | Full Stack | C# .NET 8 Minimal API | Modular Monolith + CQRS | Azure SQL + EF Core | Container Apps | Bicep |
+
+#### Interactive Wizard Mode
+
+Without `--auto`, the scripts launch a 10-question interactive wizard:
+
+**Bash:**
+```bash
+# Interactive Greenfield
+./scripts/bash/init.sh ~/projects/my-new-app green
+
+# Interactive Brownfield (migration)
+./scripts/bash/init.sh ~/projects/legacy-migration brown ~/legacy-code
+```
+
+**PowerShell:**
+```powershell
+# Interactive Greenfield
+.\scripts\powershell\Init.ps1 -OutputDirectory "C:\projects\my-new-app"
+
+# Interactive Brownfield (migration)
+.\scripts\powershell\Init.ps1 -OutputDirectory "C:\projects\migration" -ProjectType brown -SourceDirectory "C:\legacy"
+```
+
+**Wizard Questions (10 steps):**
+1. **Project Scope**: Infrastructure Only, Application Only, or Full Stack
+2. **Backend Technology**: C# .NET or Node.js TypeScript
+3. **Architecture Style**: Modular Monolith, Microservices, Monolith, Serverless, Event-Driven
+4. **CQRS Pattern**: Enable/Disable Command Query Responsibility Segregation
+5. **Frontend Framework**: None, Vue.js, React, Angular, Blazor
+6. **Database**: Azure SQL, PostgreSQL, Cosmos DB, MongoDB
+7. **Containers & Orchestration**: Docker + Container Apps/AKS/App Service
+8. **Infrastructure as Code**: Bicep, Terraform, Pulumi
+9. **CI/CD Platform**: GitHub Actions or Azure DevOps
+10. **Environments**: dev, staging, prod (customizable)
+
+#### Parameters Reference
+
+| Parameter | Bash | PowerShell | Required | Description |
+|-----------|------|------------|----------|-------------|
+| Output Directory | `$1` (positional) | `-OutputDirectory` | Yes | Where to create the project |
+| Project Type | `$2` (positional) | `-ProjectType` | Yes* | `green` (new) or `brown` (migration) |
+| Source Directory | `$3` (positional) | `-SourceDirectory` | Brown only | Source code/docs to migrate |
+| Auto Profile | `--auto <profile>` | `-Auto <profile>` | No | Skip wizard with pre-configured profile |
+
+*PowerShell defaults to `green` if not specified.
+
+#### Generated Project Structure
+
+**Greenfield (Application - app-dotnet):**
+```
+my-project/
+├── .github/
+│   ├── copilot/agents/       # AI Agents
+│   ├── commands/             # Slash Commands
+│   ├── prompts/              # Context Prompts
+│   └── workflows/            # CI/CD Pipelines
+├── memory/
+│   └── constitution.md       # Pre-filled with your choices!
+├── specs/
+│   └── .template/            # Feature specification templates
+├── docs/
+│   ├── adr/                  # Architecture Decision Records
+│   └── architecture/         # Architecture documentation
+├── src/
+│   ├── Shared/SharedKernel/  # CQRS interfaces, Domain primitives
+│   ├── Modules/SampleModule/ # Sample module with DDD layers
+│   └── Api.Host/             # Composition root
+├── tests/
+│   ├── SampleModule.UnitTests/
+│   ├── SampleModule.IntegrationTests/
+│   └── Architecture.Tests/
+├── scripts/                  # AURORA-IA automation scripts
+├── infra/scripts/            # Infrastructure scripts
+├── Directory.Build.props     # .NET build configuration
+├── global.json               # .NET SDK version
+├── .editorconfig             # Code style rules
+├── .gitignore                # Git ignore patterns
+└── README.md                 # Project documentation
+```
+
+**Greenfield (Infrastructure - infra-landing):**
+```
+my-landing-zone/
+├── .github/workflows/        # Platform deploy pipelines
+├── memory/constitution.md    # Pre-filled configuration
+├── infra/
+│   └── landing-zone/
+│       ├── modules/
+│       │   ├── management-groups/
+│       │   ├── policy-definitions/
+│       │   ├── policy-assignments/
+│       │   ├── rbac/
+│       │   ├── networking/hub/
+│       │   ├── networking/dns/
+│       │   ├── security/defender/
+│       │   ├── security/sentinel/
+│       │   ├── monitoring/log-analytics/
+│       │   └── identity/
+│       ├── environments/
+│       └── main.bicep
+├── tests/
+│   ├── bicep-lint/
+│   ├── security/
+│   ├── policy-compliance/
+│   └── post-deploy/
+├── docs/
+│   ├── adr/
+│   ├── architecture/
+│   └── runbooks/
+└── pipelines/
+```
+
+**Brownfield (Migration):**
+```
+my-migration/
+├── legacy/
+│   ├── source/               # Copy of original code
+│   ├── analysis/             # Discovery documentation
+│   └── documentation/        # Existing docs
+├── migration/
+│   ├── plan/                 # Migration roadmap
+│   └── mappings/             # Legacy → New mappings
+├── memory/constitution.md    # Technology choices
+├── specs/                    # Feature specifications
+├── docs/adr/                 # Architecture decisions
+└── ... (same structure as greenfield)
+```
+
+#### Constitution Pre-fill
+
+The `constitution.md` file is automatically pre-filled with your wizard/auto-profile selections:
+
+```markdown
+## 🎯 Project Scope
+- [x] **Application Development Only**  ← Auto-selected!
+
+## 💻 Backend Technology
+- [x] **C# / .NET**  ← Auto-selected!
+  - Version: [x] .NET 8
+  - API Style: [x] Minimal APIs
+
+## 🏛️ Architecture Pattern
+- [x] **Modular Monolith**  ← Auto-selected!
+  - CQRS Enabled: [x] Yes
+```
+
+#### Next Steps After Init
+
+1. `cd <your-project-directory>`
+2. Review `memory/constitution.md` (already pre-filled!)
+3. Complete any remaining configuration sections
+4. Start your first feature: `/aurora.feature [your-first-feature]`
+
+---
+
+### Feature Creation
+
+Creates a new feature branch with specification structure.
+
+**Bash:**
+```bash
+./scripts/bash/create-new-feature.sh user-authentication main
+```
+
+**PowerShell:**
+```powershell
+.\scripts\powershell\Create-NewFeature.ps1 -FeatureName "user-authentication" -BaseBranch "main"
+```
+
+**Creates:**
+- Feature branch: `feature/user-authentication`
+- Specification directory: `specs/user-authentication/`
+  - `spec.md` - Feature specification template
+  - `data-model.md` - Data model template
+  - `plan.md` - Plan placeholder
+  - `contracts/` - API contracts directory
+
+### Quality Gates
+
+Runs comprehensive quality checks on the codebase.
+
+**Bash:**
+```bash
+# Check mode (default)
+./scripts/bash/quality-gates.sh --check
+
+# Auto-fix mode
+./scripts/bash/quality-gates.sh --fix
+
+# Full suite (includes security scan)
+./scripts/bash/quality-gates.sh --check --full
+```
+
+**PowerShell:**
+```powershell
+# Check mode (default)
+.\scripts\powershell\Quality-Gates.ps1 -Check
+
+# Auto-fix mode
+.\scripts\powershell\Quality-Gates.ps1 -Fix
+
+# Full suite
+.\scripts\powershell\Quality-Gates.ps1 -Check -Full
+```
+
+**Checks Include:**
+1. Type checking (TypeScript/MyPy)
+2. Linting (ESLint/Ruff/Go Vet)
+3. Formatting (Prettier/Black/gofmt)
+4. Unit tests
+5. Coverage (with `--full`)
+6. Security scan (with `--full`)
+
+### Specification Validation
+
+Validates specification files for completeness.
+
+**Bash:**
+```bash
+# Validate all features
+./scripts/bash/validate-specs.sh --check
+
+# Validate specific feature
+./scripts/bash/validate-specs.sh --check user-authentication
+```
+
+**PowerShell:**
+```powershell
+# Validate all features
+.\scripts\powershell\Validate-Specs.ps1 -Check
+
+# Validate specific feature
+.\scripts\powershell\Validate-Specs.ps1 -Check -BranchName "user-authentication"
+```
+
+**Validates:**
+- Constitution existence and required sections
+- `spec.md` - User stories and acceptance criteria
+- `plan.md` - Bolts definition
+- `tasks.md` - Task completion status
+- `data-model.md` - Entity definitions
+- `contracts/` - API specifications
+- Cross-references between artifacts
+
+### Use Case Generation
+
+Generates use case documents from feature specifications.
+
+**Bash:**
+```bash
+# Generate for feature
+./scripts/bash/generate-usecases.sh user-authentication
+
+# Generate for multiple features
+./scripts/bash/generate-usecases.sh user-authentication payment-processing
+```
+
+**PowerShell:**
+```powershell
+# Generate for feature
+.\scripts\powershell\Generate-UseCases.ps1 -FeatureName "user-authentication"
+
+# Custom output directory
+.\scripts\powershell\Generate-UseCases.ps1 -FeatureName "user-authentication" -OutputDir "docs/features"
+```
+
+**Creates:**
+- `docs/use-cases/{feature}/` - Use case directory
+  - `README.md` - Use case index
+  - `UC-{NNN}-{name}.md` - Individual use case files
+
+### Gherkin Scenario Generation
+
+Generates BDD/Gherkin test scenarios from use cases.
+
+**Bash:**
+```bash
+# Generate for feature
+./scripts/bash/generate-gherkin.sh user-authentication
+
+# Generate for specific use case
+./scripts/bash/generate-gherkin.sh user-authentication login
+```
+
+**PowerShell:**
+```powershell
+# Generate for feature
+.\scripts\powershell\Generate-Gherkin.ps1 -FeatureName "user-authentication"
+
+# Custom output directory
+.\scripts\powershell\Generate-Gherkin.ps1 -FeatureName "user-authentication" -OutputDir "tests/acceptance"
+```
+
+**Creates:**
+- `tests/acceptance/{feature}/` - Gherkin directory
+  - `{feature}.feature` - Main feature file
+  - Individual `.feature` files per use case
+
+### ADR Creation
+
+Creates Architectural Decision Records from template.
+
+**Bash:**
+```bash
+# Create new ADR
+./scripts/bash/create-adr.sh database-selection
+
+# With spaces
+./scripts/bash/create-adr.sh "authentication strategy"
+```
+
+**PowerShell:**
+```powershell
+# Create new ADR
+.\scripts\powershell\Create-ADR.ps1 -Title "database-selection"
+
+# With spaces
+.\scripts\powershell\Create-ADR.ps1 -Title "authentication strategy"
+```
+
+**Creates:**
+- `docs/adr/ADR-{NNN}-{slug}.md` - New ADR from template
+- `docs/adr/README.md` - Updated index (creates if not exists)
+
+### Agent Context Validation
+
+Validates the relationships between Prompts, Agents, and Constitution ensuring consistency across AURORA-IA artifacts.
+
+**Bash:**
+```bash
+# Check mode - validate all relationships (default)
+./scripts/bash/update-agent-context.sh --check
+
+# Report mode - generate detailed mapping report
+./scripts/bash/update-agent-context.sh --report
+
+# Fix mode - show what would be corrected
+./scripts/bash/update-agent-context.sh --fix
+```
+
+**PowerShell:**
+```powershell
+# Check mode - validate all relationships
+.\scripts\powershell\Update-AgentContext.ps1 -Mode Check
+
+# Report mode - generate detailed mapping report
+.\scripts\powershell\Update-AgentContext.ps1 -Mode Report
+
+# Fix mode - show what would be corrected
+.\scripts\powershell\Update-AgentContext.ps1 -Mode Fix
+```
+
+**Validates:**
+- Constitution exists at `memory/constitution.md`
+- All Agents (`.github/copilot/agents/`) reference the Constitution
+- All Prompts (`.github/prompts/`) reference their corresponding Agent(s)
+- Prompt → Agent → Constitution chain is complete
+
+**Report Output:**
+```
+AURORA-IA Context Validation Report
+====================================
+
+Constitution: ✓ Found
+Agents: 18 total, 18 with Constitution Reference
+Prompts: 15 total, 15 with Agent Reference
+
+Prompt → Agent Mappings:
+  business-analysis.prompt.md → business-explorer.md
+  code-generation.prompt.md → coding-agent.md, micro-iterator.md
+  ...
+```
+
+## Integration with Commands
+
+Scripts are referenced in command files for automation:
+
+```yaml
+# In .github/commands/constitution.md
+scripts:
+  sh: scripts/bash/create-new-feature.sh
+  ps: scripts/powershell/Create-NewFeature.ps1
+```
+
+## Supported Project Types
+
+The scripts auto-detect project type and adapt accordingly:
+
+| Project Type | Detection | Tools Used |
+|--------------|-----------|------------|
+| Node.js | `package.json` | TypeScript, ESLint, Prettier, Jest/Vitest, npm audit |
+| Python | `requirements.txt` / `pyproject.toml` | MyPy, Ruff/Flake8, Black, Pytest, Safety |
+| Go | `go.mod` | go vet, golint, gofmt, go test, govulncheck |
+| Rust | `Cargo.toml` | rustfmt, cargo test, cargo audit |
+
+## Making Scripts Executable
+
+**Linux/macOS:**
+```bash
+chmod +x scripts/bash/*.sh
+```
+
+**Windows:**
+PowerShell scripts may require execution policy adjustment:
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+## Exit Codes
+
+All scripts follow standard exit codes:
+
+| Code | Meaning |
+|------|---------|
+| 0 | Success (all checks passed) |
+| 1 | Failure (one or more checks failed) |
+
+This allows integration with CI/CD pipelines:
+
+```yaml
+# GitHub Actions example
+- name: Quality Gates
+  run: ./scripts/bash/quality-gates.sh --check --full
+```
+
+---
+
+## 🎯 Practical Examples: Step-by-Step Tutorials
+
+This section provides complete walkthroughs using the demo files included in this repository.
+
+### Demo Files Available
+
+```
+demo/
+├── from_rfp/
+│   └── RFP-Calculator.md      # 📄 RFP document for a new Calculator app
+├── from_old_src/
+│   ├── CALCENGN.cbl           # 📜 Legacy COBOL calculator engine
+│   └── CALCMAIN.cbl           # 📜 Legacy COBOL main program
+├── to_rfp/
+│   └── README.md              # Output folder for Greenfield projects
+└── to_old_src/
+    └── README.md              # Output folder for Brownfield projects
+```
+
+---
+
+### 🌱 Example 1: Greenfield Project (New Calculator from RFP)
+
+**Scenario**: You have an RFP (Request for Proposal) document describing a new Business Calculator application. You want to create a brand new project using modern technologies.
+
+#### Step 1: Initialize the Greenfield Project
+
+**Using WSL/Bash:**
+```bash
+# Navigate to AURORA-IA template
+cd /path/to/aurora-ia-dlc-v1.0.0
+
+# Create new project from RFP
+./scripts/bash/init.sh ./demo/to_rfp/calculator-app green
+```
+
+**Using PowerShell (Windows):**
+```powershell
+# Navigate to AURORA-IA template
+cd C:\path\to\aurora-ia-dlc-v1.0.0
+
+# Create new project from RFP
+.\scripts\powershell\Init.ps1 -OutputDirectory ".\demo\to_rfp\calculator-app" -ProjectType green
+```
+
+#### Step 2: Configure the Constitution
+
+```bash
+# Open VS Code in the new project
+code ./demo/to_rfp/calculator-app
+```
+
+Edit `memory/constitution.md` and fill in your technology choices:
+
+```markdown
+# Example Constitution for Calculator App
+
+## Article I: Technology Stack
+
+### Section 1.1: Frontend
+| Layer | Technology | Version | Rationale |
+|-------|------------|---------|-----------|
+| Framework | React | 18.x | Modern component-based UI |
+| Language | TypeScript | 5.x | Type safety |
+| Styling | Tailwind CSS | 3.x | Utility-first CSS |
+| State Management | Zustand | 4.x | Lightweight state |
+| Build Tool | Vite | 5.x | Fast builds |
+| Testing | Vitest + Testing Library | latest | Modern testing |
+
+### Section 1.2: Backend
+| Layer | Technology | Version | Rationale |
+|-------|------------|---------|-----------|
+| Runtime | Node.js | 20.x | LTS version |
+| Framework | Express | 4.x | Mature, well-documented |
+| Language | TypeScript | 5.x | Type safety |
+| API Style | REST | - | Simple, well-understood |
+| Authentication | JWT | - | Stateless auth |
+| Testing | Jest | 29.x | Comprehensive testing |
+```
+
+**Or use Copilot Chat:**
+```
+/aurora.constitution
+```
+
+#### Step 3: Attach the RFP and Create Feature
+
+In GitHub Copilot Chat:
+```
+#file:demo/from_rfp/RFP-Calculator.md
+
+/aurora.feature calculator-core
+```
+
+#### Step 4: Generate Use Cases
+
+```
+/aurora.usecase
+```
+
+#### Step 5: Plan Implementation
+
+```
+/aurora.plan
+```
+
+#### Step 6: Generate Tasks (Bolts)
+
+```
+/aurora.tasks
+```
+
+#### Step 7: Start Implementation
+
+```
+#file:.github/prompts/aurora-code-generation.prompt.md
+
+Implement task T001: Create the Calculator domain entity
+```
+
+#### Greenfield Project Structure Created
+
+```
+demo/to_rfp/calculator-app/
+├── .github/
+│   ├── copilot/agents/       # 18 AI agents ready
+│   ├── commands/             # 13 slash commands
+│   ├── prompts/              # 15 context prompts
+│   └── workflows/            # CI/CD pipelines
+├── memory/
+│   ├── constitution.md       # 👈 FILL THIS FIRST
+│   └── SETUP-CONSTITUTION.md # Setup guide
+├── specs/                    # Feature specifications
+├── docs/
+│   ├── adr/                  # Architecture decisions
+│   └── architecture/         # Design docs
+├── src/
+│   ├── domain/               # Business logic (DDD)
+│   │   ├── entities/
+│   │   ├── value-objects/
+│   │   ├── events/
+│   │   └── services/
+│   ├── application/          # Use cases
+│   │   ├── use-cases/
+│   │   ├── ports/
+│   │   └── dtos/
+│   ├── infrastructure/       # External adapters
+│   │   ├── persistence/
+│   │   ├── messaging/
+│   │   └── external/
+│   └── presentation/         # API/UI
+│       ├── api/
+│       └── web/
+├── tests/
+│   ├── unit/
+│   ├── integration/
+│   └── e2e/
+└── scripts/                  # Automation scripts
+```
+
+---
+
+### 🏗️ Example 2: Brownfield Project (COBOL Migration)
+
+**Scenario**: You have legacy COBOL calculator programs that need to be migrated to a modern technology stack while preserving business logic.
+
+#### Step 1: Initialize the Brownfield Project
+
+**Using WSL/Bash:**
+```bash
+# Navigate to AURORA-IA template
+cd /path/to/aurora-ia-dlc-v1.0.0
+
+# Create migration project pointing to legacy source
+./scripts/bash/init.sh ./demo/to_old_src/calculator-migration brown ./demo/from_old_src
+```
+
+**Using PowerShell (Windows):**
+```powershell
+# Navigate to AURORA-IA template
+cd C:\path\to\aurora-ia-dlc-v1.0.0
+
+# Create migration project pointing to legacy source
+.\scripts\powershell\Init.ps1 `
+    -OutputDirectory ".\demo\to_old_src\calculator-migration" `
+    -ProjectType brown `
+    -SourceDirectory ".\demo\from_old_src"
+```
+
+#### Step 2: Analyze Legacy Code
+
+Your COBOL source has been copied to `legacy/source/`:
+```bash
+# View the legacy code
+cat ./demo/to_old_src/calculator-migration/legacy/source/CALCENGN.cbl
+cat ./demo/to_old_src/calculator-migration/legacy/source/CALCMAIN.cbl
+```
+
+Use Copilot to analyze:
+```
+#file:legacy/source/CALCENGN.cbl
+#file:legacy/source/CALCMAIN.cbl
+#file:.github/prompts/aurora-legacy-analysis.prompt.md
+
+Analyze these COBOL programs and document:
+1. Business logic and calculations
+2. Data structures
+3. Input/output operations
+4. Dependencies
+```
+
+Document findings in `legacy/analysis/`:
+```markdown
+# legacy/analysis/cobol-analysis.md
+
+## CALCENGN.cbl Analysis
+- Purpose: Core calculation engine
+- Operations: ADD, SUBTRACT, MULTIPLY, DIVIDE
+- Precision: 18 digits with 4 decimal places
+- Error handling: Division by zero, overflow
+
+## CALCMAIN.cbl Analysis  
+- Purpose: User interface and orchestration
+- Input: Screen-based data entry
+- Output: Formatted results display
+- Flow: Menu-driven operation selection
+```
+
+#### Step 3: Define TARGET Constitution
+
+Edit `memory/constitution.md` with your **target** modern stack:
+
+```markdown
+# Migration Constitution: COBOL Calculator → Modern Stack
+
+## Article I: Technology Stack
+
+<!-- LEGACY (for reference):
+- Language: COBOL-85
+- Runtime: Mainframe z/OS
+- Data: VSAM files
+- UI: 3270 terminal screens
+-->
+
+### Section 1.2: Backend (TARGET)
+| Layer | Technology | Version | Rationale |
+|-------|------------|---------|-----------|
+| Runtime | Python | 3.12 | Easy COBOL logic translation |
+| Framework | FastAPI | 0.100+ | Modern async API |
+| Language | Python | 3.12 | Readable, maintainable |
+| API Style | REST | - | Universal access |
+| Authentication | OAuth2 | - | Modern standard |
+| Testing | Pytest | 7.x | Comprehensive |
+
+### Section 1.3: Data Layer (TARGET)
+| Layer | Technology | Version | Rationale |
+|-------|------------|---------|-----------|
+| Primary Database | PostgreSQL | 15+ | ACID compliance like mainframe |
+| ORM | SQLAlchemy | 2.x | Robust data mapping |
+```
+
+#### Step 4: Create Migration Mappings
+
+Create `migration/mappings/technology-mapping.md`:
+```markdown
+# Technology Migration Mapping
+
+| Legacy (COBOL) | Target (Python) | Notes |
+|----------------|-----------------|-------|
+| PIC 9(18)V9(4) | Decimal(22,4) | Exact precision |
+| WORKING-STORAGE | Python classes | State management |
+| PERFORM | Functions | Procedure calls |
+| EVALUATE/WHEN | match/case | Control flow |
+| VSAM files | PostgreSQL | Data persistence |
+| DISPLAY | API response | Output |
+| ACCEPT | API request | Input |
+```
+
+Create `migration/mappings/code-mapping.md`:
+```markdown
+# Code Pattern Migration
+
+## Calculation Mapping
+
+### COBOL Pattern
+```cobol
+COMPUTE WS-RESULT = WS-NUM1 + WS-NUM2
+IF WS-RESULT > 999999999999999999.9999
+   MOVE 'OVERFLOW' TO WS-ERROR
+END-IF
+```
+
+### Python Equivalent
+```python
+from decimal import Decimal, InvalidOperation
+
+def add(num1: Decimal, num2: Decimal) -> Decimal:
+    result = num1 + num2
+    if result > Decimal('999999999999999999.9999'):
+        raise OverflowError("Result exceeds maximum precision")
+    return result
+```
+```
+
+#### Step 5: Define Migration Features
+
+```
+/aurora.feature migrate-calculation-engine
+```
+
+This creates `specs/migrate-calculation-engine/spec.md`:
+```markdown
+# Feature: Migrate Calculation Engine
+
+## Migration Scope
+- Source: CALCENGN.cbl
+- Target: src/domain/services/calculation_engine.py
+
+## Acceptance Criteria
+- [ ] All 4 operations (ADD, SUB, MUL, DIV) produce identical results
+- [ ] Precision maintained: 18 digits, 4 decimals
+- [ ] Error handling: Division by zero, overflow
+- [ ] 100% test coverage with legacy equivalence tests
+```
+
+#### Step 6: Plan Migration
+
+```
+/aurora.plan
+```
+
+#### Step 7: Execute Migration with Legacy Equivalence
+
+```
+#file:.github/prompts/aurora-code-generation.prompt.md
+#file:legacy/source/CALCENGN.cbl
+#file:migration/mappings/code-mapping.md
+
+Migrate the COBOL calculation engine to Python, ensuring:
+1. Exact same precision (18,4)
+2. Same overflow handling
+3. Same division by zero behavior
+```
+
+#### Step 8: Create Equivalence Tests
+
+```
+#file:.github/prompts/aurora-test-generation.prompt.md
+
+Create equivalence tests that verify the Python implementation
+produces identical results to the COBOL original for:
+- Edge cases (max values, zero, negative)
+- All operations
+- Error conditions
+```
+
+#### Brownfield Project Structure Created
+
+```
+demo/to_old_src/calculator-migration/
+├── .github/
+│   ├── copilot/agents/       # 18 AI agents
+│   ├── commands/             # 13 slash commands
+│   ├── prompts/              # 15 context prompts
+│   └── workflows/            # CI/CD pipelines
+├── memory/
+│   ├── constitution.md       # 👈 TARGET stack here
+│   └── SETUP-CONSTITUTION.md # Migration guide
+├── legacy/                   # 📂 LEGACY REFERENCE
+│   ├── source/               # 👈 Your COBOL copied here
+│   │   ├── CALCENGN.cbl
+│   │   └── CALCMAIN.cbl
+│   ├── analysis/             # Document discoveries
+│   └── documentation/        # Existing docs
+├── migration/                # 📋 MIGRATION PLANNING
+│   ├── plan/                 # Phase planning
+│   └── mappings/             # Legacy → New mappings
+├── specs/                    # Migration features
+├── docs/
+│   ├── adr/                  # Decisions (e.g., "why Python")
+│   └── architecture/         # New architecture
+└── scripts/                  # Automation
+```
+
+---
+
+### 📊 Comparison: Greenfield vs Brownfield
+
+| Aspect | Greenfield 🌱 | Brownfield 🏗️ |
+|--------|--------------|---------------|
+| **Starting Point** | RFP/Requirements doc | Existing source code |
+| **Constitution Focus** | Define new stack | Define TARGET stack |
+| **First Step** | `/aurora.constitution` | Analyze legacy code |
+| **Key Folders** | `src/` (new code) | `legacy/` + `migration/` |
+| **Testing Strategy** | TDD from scratch | Equivalence tests |
+| **Risk** | Requirements gaps | Logic translation errors |
+| **AI Prompts** | `aurora-code-generation` | `aurora-legacy-analysis` |
+
+---
+
+### 🔄 Quick Reference: Init Parameters
+
+```bash
+# Greenfield Syntax
+./scripts/bash/init.sh <output-dir> green
+
+# Brownfield Syntax  
+./scripts/bash/init.sh <output-dir> brown <source-dir>
+```
+
+```powershell
+# Greenfield Syntax
+.\scripts\powershell\Init.ps1 -OutputDirectory <path> -ProjectType green
+
+# Brownfield Syntax
+.\scripts\powershell\Init.ps1 -OutputDirectory <path> -ProjectType brown -SourceDirectory <legacy-path>
+```
+
+| Parameter | Greenfield | Brownfield | Description |
+|-----------|------------|------------|-------------|
+| `OutputDirectory` | ✅ Required | ✅ Required | Where to create project |
+| `ProjectType` | `green` | `brown` | Type of project |
+| `SourceDirectory` | ❌ Not used | ✅ Required | Path to legacy code |
+
+---
+
+### 💡 Tips for Real Projects
+
+1. **Always start with Constitution** - It's the DNA of your project
+2. **For Brownfield**: Spend time analyzing legacy BEFORE defining target stack
+3. **Use ADRs** - Document why you chose specific technologies
+4. **Iterate in Bolts** - Small 2-3 day iterations, not big-bang migrations
+5. **Test equivalence** - For migrations, ensure new code behaves identically
+6. **Leverage AI agents** - Each agent is specialized for specific tasks
+
+---
+
+### 🚀 Try It Yourself
+
+```bash
+# Quick test - Greenfield
+./scripts/bash/init.sh /tmp/test-green green
+ls -la /tmp/test-green
+
+# Quick test - Brownfield  
+./scripts/bash/init.sh /tmp/test-brown brown ./demo/from_old_src
+ls -la /tmp/test-brown/legacy/source
+```

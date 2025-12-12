@@ -1,0 +1,25 @@
+name: Docs Lint
+
+on:
+  pull_request:
+    branches: [ "**" ]
+  push:
+    branches: [ main ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Prettier check (Markdown and code)
+        run: npx --yes prettier . --check
+
+      - name: Markdownlint
+        run: npx --yes markdownlint-cli2 "**/*.md" "#node_modules" "#.git" "#.vscode"

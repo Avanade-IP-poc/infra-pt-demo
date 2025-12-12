@@ -1,0 +1,29 @@
+{
+    "$schema": "https://raw.githubusercontent.com/DavidAnson/markdownlint/main/schema/markdownlint-schema.json",
+    "default": true,
+    "MD013": {
+        "line_length": 130,
+        "heading_line_length": 100,
+        "code_block_line_length": 150
+    },
+    "MD029": {
+        "style": "ordered"
+    },
+    "MD024": {
+        "siblings_only": true
+    },
+    "MD033": false,
+    "MD041": {
+        "level": 2
+    },
+    "MD046": {
+        "style": "fenced"
+    },
+    "MD007": {
+        "indent": 2
+    },
+    "MD012": {
+        "maximum": 1
+    },
+    "MD025": true
+}
