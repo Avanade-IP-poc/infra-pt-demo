@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "Running pre-commit: format staged files and lint markdown"
+
+# Get staged files (added/modified) for this commit
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
+
+if [ -z "${STAGED_FILES}" ]; then
+  echo "No staged files to check."
+  exit 0
+fi
+
+# Split staged files into groups
+MD_FILES=$(echo "${STAGED_FILES}" | grep -E '\.md$' || true)
+FORMAT_FILES=$(echo "${STAGED_FILES}" | grep -E '\.(md|markdown|js|jsx|ts|tsx|json|yml|yaml|css|scss|html)$' || true)
+
+# Run Prettier to format staged files (write changes), then re-add updated files
+if [ -n "${FORMAT_FILES}" ]; then
+  echo "Formatting with Prettier…"
+  npx --yes prettier ${FORMAT_FILES} --write
+  # Re-stage files after formatting
+  echo "Re-staging formatted files…"
+  echo "${FORMAT_FILES}" | xargs git add
+fi
+
+# Run markdownlint on staged markdown files
+if [ -n "${MD_FILES}" ]; then
+  echo "Linting Markdown…"
+  npx --yes markdownlint-cli2 "{${MD_FILES//\n/,}}"
+fi
+
+echo "pre-commit checks passed."
