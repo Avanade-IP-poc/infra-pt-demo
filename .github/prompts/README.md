@@ -9,123 +9,143 @@ Copilot prompts help ensure consistent, high-quality AI assistance aligned with:
 - **AI-DLC**: AWS AI-Driven Development Lifecycle with Bolts
 - **Constitution**: Central governance through `memory/constitution.md`
 
-## Available Prompts (15 Total)
+## How Prompts Relate to Agents
+
+Prompts are **reusable instruction templates** that agents can reference for additional context:
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    AGENTS → PROMPTS RELATIONSHIP                         │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│   🤖 AGENT                         📝 PROMPT                             │
+│   (Conversational)                 (Instructions)                        │
+│                                                                          │
+│   @Aurora Testing       ──uses──>  aurora-test-generation.prompt.md     │
+│   @Aurora Implement     ──uses──>  aurora-code-generation.prompt.md     │
+│   @Aurora Architect     ──uses──>  aurora-architecture.prompt.md        │
+│   @Aurora DDD           ──uses──>  aurora-domain-modeling.prompt.md     │
+│   @Aurora Release       ──uses──>  aurora-release.prompt.md             │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+## Available Prompts (18 Total)
 
 ### Block 1: Inception - Discovery & Analysis
 
-| Prompt | Agent Reference | Purpose |
-|--------|-----------------|---------|
-| `aurora-business-analysis.prompt.md` | `aurora-business-explorer.md` | Business requirements extraction, stakeholder analysis |
-| `aurora-technical-discovery.prompt.md` | `aurora-technical-detective.md` | Technical assessment, stack analysis, constraints |
-| `aurora-legacy-analysis.prompt.md` | `aurora-legacy-archaeologist.md` | Legacy system documentation, migration planning |
+| Prompt | Related Agent | Purpose |
+|--------|---------------|---------|
+| `aurora-business-analysis.prompt.md` | Aurora Feature | Business requirements extraction |
+| `aurora-technical-discovery.prompt.md` | Aurora Analyze | Technical assessment |
+| `aurora-legacy-analysis.prompt.md` | Aurora Analyze | Legacy system documentation |
 
 ### Block 2: Inception - Planning & Architecture
 
-| Prompt | Agent Reference | Purpose |
-|--------|-----------------|---------|
-| `aurora-planning.prompt.md` | `aurora-cosmic-planner.md` | Sprint planning, Bolts definition, task breakdown |
-| `aurora-architecture.prompt.md` | `aurora-omega-architect.md` | Solution architecture, design decisions |
-| `aurora-domain-modeling.prompt.md` | `aurora-ddd-master.md`, `aurora-domain-sage.md` | Domain-Driven Design, bounded contexts |
+| Prompt | Related Agent | Purpose |
+|--------|---------------|---------|
+| `aurora-planning.prompt.md` | Aurora Plan | Sprint planning, Bolts definition |
+| `aurora-architecture.prompt.md` | Aurora Architect | Solution architecture |
+| `aurora-domain-modeling.prompt.md` | Aurora DDD | Domain-Driven Design |
 
 ### Block 3: Construction - Implementation
 
-| Prompt | Agent Reference | Purpose |
-|--------|-----------------|---------|
-| `aurora-code-generation.prompt.md` | `aurora-coding-agent.md`, `aurora-micro-iterator.md` | Clean code generation following Constitution |
-| `aurora-test-generation.prompt.md` | `aurora-test-inspector.md` | Test case creation (BDD/TDD/Unit) |
-| `aurora-infrastructure.prompt.md` | `aurora-infra-builder.md` | Terraform/IaC generation |
+| Prompt | Related Agent | Purpose |
+|--------|---------------|---------|
+| `aurora-code-generation.prompt.md` | Aurora Implement | Clean code generation |
+| `aurora-test-generation.prompt.md` | Aurora Testing | Test case creation (BDD/TDD) |
+| `aurora-infrastructure.prompt.md` | Aurora CI/CD | Terraform/IaC generation |
 
 ### Block 4: Construction - Security & Quality
 
-| Prompt | Agent Reference | Purpose |
-|--------|-----------------|---------|
-| `aurora-security-review.prompt.md` | `aurora-policy-guardian.md` | Security analysis, OWASP, policy compliance |
+| Prompt | Related Agent | Purpose |
+|--------|---------------|---------|
+| `aurora-security-review.prompt.md` | Aurora Review | Security analysis, OWASP |
+| `aurora-guardrails.prompt.md` | Aurora Review | Policy compliance |
 
 ### Block 5: Delivery - Release & Operations
 
-| Prompt | Agent Reference | Purpose |
-|--------|-----------------|---------|
-| `aurora-release.prompt.md` | `aurora-release-orchestrator.md` | CI/CD, versioning, deployment strategies |
-| `aurora-operations.prompt.md` | `aurora-proactive-operator.md`, `aurora-ops-bugfix-autonomous.md` | Monitoring, alerting, incident response |
+| Prompt | Related Agent | Purpose |
+|--------|---------------|---------|
+| `aurora-release.prompt.md` | Aurora Release | CI/CD, versioning |
+| `aurora-operations.prompt.md` | Aurora Ops | Monitoring, alerting |
 
 ### Block 6: Evolution - Continuous Improvement
 
-| Prompt | Agent Reference | Purpose |
-|--------|-----------------|---------|
-| `aurora-evolution.prompt.md` | `aurora-continuous-evolver.md` | System evolution, tech debt management |
-| `aurora-refactoring.prompt.md` | `aurora-surgical-refactorer.md` | Safe refactoring patterns, code improvement |
+| Prompt | Related Agent | Purpose |
+|--------|---------------|---------|
+| `aurora-evolution.prompt.md` | Aurora Improve | System evolution, tech debt |
+| `aurora-refactoring.prompt.md` | Aurora Implement | Safe refactoring patterns |
 
 ### Block 7: Sunset - End of Life
 
-| Prompt | Agent Reference | Purpose |
-|--------|-----------------|---------|
-| `aurora-decommission.prompt.md` | `aurora-final-archiver.md` | System decommissioning, archival, data migration |
+| Prompt | Related Agent | Purpose |
+|--------|---------------|---------|
+| `aurora-decommission.prompt.md` | Aurora Retire | System decommissioning |
+
+### Cross-Phase
+
+| Prompt | Related Agent | Purpose |
+|--------|---------------|---------|
+| `aurora.prompt.md` | AURORA | Main orchestrator instructions |
+| `aurora-structure-generator.prompt.md` | Aurora Templates | Project scaffolding |
 
 ## Usage
 
-### In VS Code with Copilot Chat
+### Method 1: Reference in Chat
 
-Reference prompts using `#file` directive:
+Use the `#file` directive to add prompt context to any chat:
 
 ```
-#file:.github/prompts/aurora-domain-modeling.prompt.md
-
-Analyze the domain for our e-commerce system
+#file:.github/prompts/aurora-test-generation.prompt.md
+Generate comprehensive tests for the UserService class
 ```
 
-### With GitHub Copilot Agent Mode
+### Method 2: Use with Agent
 
-Agents automatically pick up relevant prompts. The prompt references which agent to use:
+Combine agent invocation with prompt context:
 
-```markdown
-## Agent Reference
-
-> **Primary Agent**: [DDD Master](../copilot/agents/aurora-ddd-master.md)  
-> **Phase**: Block 2 - Inception (Planning & Architecture)  
-> **Constitution**: Read `memory/constitution.md` for tech stack and standards
+```
+@Aurora Testing #file:.github/prompts/aurora-test-generation.prompt.md
+Generate BDD tests for the payment module
 ```
 
-### Prompt + Agent Workflow
+### Method 3: Agent Auto-Discovery
 
-1. **Select the prompt** for your task type
-2. **Copilot loads the agent** referenced in the prompt
-3. **Agent reads Constitution** for project-specific standards
-4. **AI generates** context-aware output
+Agents automatically pick up relevant prompts based on the task. The agent will reference the appropriate prompt internally.
 
-## Prompt Structure
+## Prompt + Agent + Script Workflow
 
-All prompts follow this consistent structure:
-
-```markdown
-# [Prompt Title]
-
-## Context
-[When this prompt applies and its purpose]
-
-## Agent Reference
-> **Primary Agent**: [Agent Name](../copilot/agents/agent-file.md)  
-> **Phase**: Block X - Phase Name  
-> **Constitution**: Read `memory/constitution.md` for tech stack and standards
-
-## Instructions
-[Detailed guidance for Copilot]
-
-## Input Requirements
-[What information is needed]
-
-## Output Format
-[Expected deliverables and format]
-
-## Examples
-[Input/Output examples when applicable]
-
-## Quality Criteria
-[Success criteria and validation points]
 ```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    COMPLETE WORKFLOW EXAMPLE                             │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│   1. USER: @Aurora Testing generate tests for auth module                │
+│                                                                          │
+│   2. AGENT: Aurora Testing                                               │
+│      ├── Reads: aurora-test-generation.prompt.md (instructions)         │
+│      ├── Reads: memory/constitution.md (standards)                      │
+│      └── Generates: Test code following BDD/TDD patterns                │
+│                                                                          │
+│   3. AGENT: Executes script (if needed)                                  │
+│      └── scripts/bash/generate-tests.sh                                  │
+│                                                                          │
+│   4. OUTPUT: Comprehensive test suite                                    │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+## Related Resources
+
+- **Agents**: `.github/agents/` - AI agent definitions (29 agents)
+- **Scripts**: `scripts/bash/` and `scripts/powershell/` - Automation
+- **Constitution**: `memory/constitution.md` - Project governance
+- **Workflows**: `.github/workflows/` - GitHub Actions
 
 ## Validation
 
-Use the validation scripts to ensure prompt-agent-constitution consistency:
+Use validation scripts to ensure prompt-agent consistency:
 
 ```bash
 # Bash
@@ -133,52 +153,4 @@ Use the validation scripts to ensure prompt-agent-constitution consistency:
 
 # PowerShell
 .\scripts\powershell\Update-AgentContext.ps1 -Mode Check
-```
-
-## Related Resources
-
-- **Agents**: `.github/copilot/agents/` - AI agent definitions
-- **Workflows**: `.github/workflows/` - GitHub Actions
-- **Commands**: `.github/commands/` - PO/Developer commands
-- **Constitution**: `memory/constitution.md` - Project governance
-
-## Methodology Integration
-
-Prompts map to AURORA-IA blocks and lifecycle phases:
-
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                     PROMPT → BLOCK MAPPING                              │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  BLOCK 1: INCEPTION (Discovery)                                         │
-│    ├── aurora-business-analysis.prompt.md   → Aurora Business Explorer  │
-│    ├── aurora-technical-discovery.prompt.md → Aurora Technical Detective│
-│    └── aurora-legacy-analysis.prompt.md     → Aurora Legacy Archaeologist│
-│                                                                         │
-│  BLOCK 2: INCEPTION (Planning)                                          │
-│    ├── aurora-planning.prompt.md            → Aurora Cosmic Planner     │
-│    ├── aurora-architecture.prompt.md        → Aurora Omega Architect    │
-│    └── aurora-domain-modeling.prompt.md     → Aurora DDD Master + Sage  │
-│                                                                         │
-│  BLOCK 3: CONSTRUCTION (Implementation)                                 │
-│    ├── aurora-code-generation.prompt.md     → Aurora Coding Agent       │
-│    ├── aurora-test-generation.prompt.md     → Aurora Test Inspector     │
-│    └── aurora-infrastructure.prompt.md      → Aurora Infra Builder      │
-│                                                                         │
-│  BLOCK 4: CONSTRUCTION (Security)                                       │
-│    └── aurora-security-review.prompt.md     → Aurora Policy Guardian    │
-│                                                                         │
-│  BLOCK 5: DELIVERY                                                      │
-│    ├── aurora-release.prompt.md             → Aurora Release Orchestrator│
-│    └── aurora-operations.prompt.md          → Aurora Proactive Operator │
-│                                                                         │
-│  BLOCK 6: EVOLUTION                                                     │
-│    ├── aurora-evolution.prompt.md           → Aurora Continuous Evolver │
-│    └── aurora-refactoring.prompt.md         → Aurora Surgical Refactorer│
-│                                                                         │
-│  BLOCK 7: SUNSET                                                        │
-│    └── aurora-decommission.prompt.md        → Aurora Final Archiver     │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
 ```

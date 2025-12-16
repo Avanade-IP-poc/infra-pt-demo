@@ -261,31 +261,57 @@ case $PROJECT_TYPE in
 esac
 
 # =============================================================================
-# Quality Gate 5: Coverage (if --full)
+# Quality Gate 5: Coverage (MANDATORY - not optional)
 # =============================================================================
-if [ "$FULL_SUITE" = true ]; then
-    log_section "Test Coverage"
-    
-    case $PROJECT_TYPE in
-        node)
-            run_check "Coverage" "npm test -- --coverage --passWithNoTests" || true
-            ;;
-        python)
-            if command -v pytest &> /dev/null; then
-                run_check "Coverage" "pytest --cov=. --cov-report=term-missing" || true
-            fi
-            ;;
-        go)
-            run_check "Coverage" "go test -cover ./..." || true
-            ;;
-        *)
-            log_info "Coverage not configured for ${PROJECT_TYPE}"
-            ;;
-    esac
-fi
+log_section "Test Coverage"
+
+case $PROJECT_TYPE in
+    node)
+        run_check "Coverage" "npm test -- --coverage --passWithNoTests" || true
+        ;;
+    python)
+        if command -v pytest &> /dev/null; then
+            run_check "Coverage" "pytest --cov=. --cov-report=term-missing --cov-fail-under=80" || true
+        fi
+        ;;
+    go)
+        run_check "Coverage" "go test -cover ./..." || true
+        ;;
+    *)
+        log_info "Coverage not configured for ${PROJECT_TYPE}"
+        ;;
+esac
 
 # =============================================================================
-# Quality Gate 6: Security Scan (if --full)
+# Quality Gate 6: Mutation Testing (MANDATORY)
+# =============================================================================
+log_section "Mutation Testing"
+
+case $PROJECT_TYPE in
+    node)
+        if [ -f "stryker.conf.js" ] || [ -f "stryker.conf.json" ] || [ -f "stryker.config.mjs" ]; then
+            run_check "Stryker Mutation" "npx stryker run --concurrency 2" || true
+        else
+            log_warning "Stryker not configured. Run: npx stryker init"
+            log_info "To install: npm install --save-dev @stryker-mutator/core @stryker-mutator/jest-runner"
+            ((WARNINGS++))
+        fi
+        ;;
+    python)
+        if command -v mutmut &> /dev/null; then
+            run_check "Mutmut" "mutmut run --paths-to-mutate=src/" || true
+        else
+            log_warning "mutmut not installed. Run: pip install mutmut"
+            ((WARNINGS++))
+        fi
+        ;;
+    *)
+        log_info "Mutation testing not configured for ${PROJECT_TYPE}"
+        ;;
+esac
+
+# =============================================================================
+# Quality Gate 7: Security Scan (if --full)
 # =============================================================================
 if [ "$FULL_SUITE" = true ]; then
     log_section "Security Scan"

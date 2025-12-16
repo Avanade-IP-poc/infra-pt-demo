@@ -237,31 +237,55 @@ switch ($ProjectType) {
 }
 
 # =============================================================================
-# Quality Gate 5: Coverage (if -Full)
+# Quality Gate 5: Coverage (MANDATORY - not optional)
 # =============================================================================
-if ($Full) {
-    Write-Section "Test Coverage"
-    
-    switch ($ProjectType) {
-        "node" {
-            Invoke-Check "Coverage" { npm test -- --coverage --passWithNoTests }
+Write-Section "Test Coverage"
+
+switch ($ProjectType) {
+    "node" {
+        Invoke-Check "Coverage" { npm test -- --coverage --passWithNoTests }
+    }
+    "python" {
+        if (Get-Command pytest -ErrorAction SilentlyContinue) {
+            Invoke-Check "Coverage" { pytest --cov=. --cov-report=term-missing --cov-fail-under=80 }
         }
-        "python" {
-            if (Get-Command pytest -ErrorAction SilentlyContinue) {
-                Invoke-Check "Coverage" { pytest --cov=. --cov-report=term-missing }
-            }
-        }
-        "go" {
-            Invoke-Check "Coverage" { go test -cover ./... }
-        }
-        default {
-            Write-Info "Coverage not configured for $ProjectType"
-        }
+    }
+    "go" {
+        Invoke-Check "Coverage" { go test -cover ./... }
+    }
+    default {
+        Write-Info "Coverage not configured for $ProjectType"
     }
 }
 
 # =============================================================================
-# Quality Gate 6: Security Scan (if -Full)
+# Quality Gate 6: Mutation Testing (MANDATORY)
+# =============================================================================
+Write-Section "Mutation Testing"
+
+switch ($ProjectType) {
+    "node" {
+        if (Test-Path "stryker.conf.js" -or Test-Path "stryker.conf.json" -or Test-Path "stryker.config.mjs") {
+            Invoke-Check "Stryker Mutation" { npx stryker run --concurrency 2 }
+        } else {
+            Write-Warning "Stryker not configured. Run: npx stryker init"
+            Write-Info "To install: npm install --save-dev @stryker-mutator/core @stryker-mutator/jest-runner"
+        }
+    }
+    "python" {
+        if (Get-Command mutmut -ErrorAction SilentlyContinue) {
+            Invoke-Check "Mutmut" { mutmut run --paths-to-mutate=src/ }
+        } else {
+            Write-Warning "mutmut not installed. Run: pip install mutmut"
+        }
+    }
+    default {
+        Write-Info "Mutation testing not configured for $ProjectType"
+    }
+}
+
+# =============================================================================
+# Quality Gate 7: Security Scan (if -Full)
 # =============================================================================
 if ($Full) {
     Write-Section "Security Scan"

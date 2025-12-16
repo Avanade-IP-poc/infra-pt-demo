@@ -2,6 +2,59 @@
 
 This directory contains automation scripts that support the AURORA-IA / AI-DLC methodology.
 
+## How Scripts Relate to Agents
+
+Scripts provide **automation capabilities** that agents can execute using the `execute` tool:
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    AGENTS → SCRIPTS RELATIONSHIP                         │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│   🤖 AGENT                         ⚙️ SCRIPT                             │
+│   (Conversational)                 (Automation)                          │
+│                                                                          │
+│   @AURORA             ──executes──> init.sh, project-status.sh          │
+│   @Aurora Feature     ──executes──> create-new-feature.sh               │
+│   @Aurora Testing     ──executes──> generate-tests.sh                   │
+│   @Aurora Release     ──executes──> create-release.sh                   │
+│   @Aurora Gherkin     ──executes──> generate-gherkin.sh                 │
+│   @Aurora ADR         ──executes──> create-adr.sh                       │
+│   @Aurora Status      ──executes──> project-status.sh                   │
+│   @Aurora Ops         ──executes──> ops-status.sh, deploy.sh            │
+│   @Aurora Postmortem  ──executes──> generate-postmortem.sh              │
+│   @Aurora Improve     ──executes──> analyze-improvements.sh             │
+│   @Aurora Retire      ──executes──> plan-retirement.sh                  │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+## Usage Options
+
+### Option 1: Via Agent (Recommended)
+
+Let the agent execute scripts automatically:
+
+```
+@Aurora Status show project status
+# Agent internally runs: ./scripts/bash/project-status.sh
+
+@Aurora Feature create user-authentication feature
+# Agent internally runs: ./scripts/bash/create-new-feature.sh
+```
+
+### Option 2: Direct Execution
+
+Run scripts directly from terminal:
+
+```bash
+# Bash (Linux/macOS/WSL)
+./scripts/bash/project-status.sh
+
+# PowerShell (Windows)
+.\scripts\powershell\Get-ProjectStatus.ps1
+```
+
 ## Directory Structure
 
 ```
@@ -10,6 +63,11 @@ scripts/
 │   ├── init.sh                  # 🆕 Project initialization (Brownfield/Greenfield)
 │   ├── project-status.sh        # 🆕 Project status analyzer (continuity)
 │   ├── alignment-analysis.sh    # 🆕 Alignment & gap analysis
+│   ├── create-release.sh        # 🆕 Release/deployment automation
+│   ├── ops-status.sh            # 🆕 Operations status & runbooks
+│   ├── generate-postmortem.sh   # 🆕 Incident postmortem generator
+│   ├── analyze-improvements.sh  # 🆕 Improvement backlog generator
+│   ├── plan-retirement.sh       # 🆕 System retirement planner
 │   ├── create-new-feature.sh
 │   ├── quality-gates.sh
 │   ├── validate-specs.sh
@@ -21,6 +79,11 @@ scripts/
     ├── Init.ps1                 # 🆕 Project initialization (Brownfield/Greenfield)
     ├── Get-ProjectStatus.ps1    # 🆕 Project status analyzer (continuity)
     ├── Get-AlignmentAnalysis.ps1 # 🆕 Alignment & gap analysis
+    ├── Create-Release.ps1       # 🆕 Release/deployment automation
+    ├── Get-OpsStatus.ps1        # 🆕 Operations status & runbooks
+    ├── Generate-Postmortem.ps1  # 🆕 Incident postmortem generator
+    ├── Get-Improvements.ps1     # 🆕 Improvement backlog generator
+    ├── Plan-Retirement.ps1      # 🆕 System retirement planner
     ├── Create-NewFeature.ps1
     ├── Quality-Gates.ps1
     ├── Validate-Specs.ps1
@@ -29,6 +92,30 @@ scripts/
     ├── Create-ADR.ps1
     └── Update-AgentContext.ps1
 ```
+
+## Script Reference by Agent
+
+| Agent | Bash Script | PowerShell Script |
+|-------|-------------|-------------------|
+| AURORA | `init.sh`, `project-status.sh`, `quality-gates.sh` | `Init.ps1`, `Get-ProjectStatus.ps1`, `Quality-Gates.ps1` |
+| Aurora Feature | `create-new-feature.sh` | `Create-NewFeature.ps1` |
+| Aurora Specify | `create-new-feature.sh` | `Create-NewFeature.ps1` |
+| Aurora Use Case | `generate-usecases.sh` | `Generate-UseCases.ps1` |
+| Aurora Gherkin | `generate-gherkin.sh` | `Generate-Gherkin.ps1` |
+| Aurora Plan | `setup-plan.sh` | `Setup-Plan.ps1` |
+| Aurora Tasks | `check-prerequisites.sh` | `Check-Prerequisites.ps1` |
+| Aurora Implement | `quality-gates.sh` | `Quality-Gates.ps1` |
+| Aurora Testing | `generate-tests.sh` | `Generate-Tests.ps1` |
+| Aurora Review | `quality-gates.sh` | `Quality-Gates.ps1` |
+| Aurora Analyze | `alignment-analysis.sh` | `Get-AlignmentAnalysis.ps1` |
+| Aurora Alignment | `alignment-analysis.sh` | `Get-AlignmentAnalysis.ps1` |
+| Aurora ADR | `create-adr.sh` | `Create-ADR.ps1` |
+| Aurora Release | `create-release.sh` | `Create-Release.ps1` |
+| Aurora Ops | `ops-status.sh`, `deploy.sh` | `Get-OpsStatus.ps1` |
+| Aurora Status | `project-status.sh` | `Get-ProjectStatus.ps1` |
+| Aurora Postmortem | `generate-postmortem.sh` | `Generate-Postmortem.ps1` |
+| Aurora Improve | `analyze-improvements.sh` | `Get-Improvements.ps1` |
+| Aurora Retire | `plan-retirement.sh` | `Plan-Retirement.ps1` |
 
 ## Available Scripts
 
@@ -1224,7 +1311,109 @@ demo/to_old_src/calculator-migration/
 
 ---
 
-### 💡 Tips for Real Projects
+### � Release Manager (NEW)
+
+Creates release artifacts, updates CHANGELOG, and generates deployment units for Block 5 - Release.
+
+**Bash:**
+```bash
+./scripts/bash/create-release.sh --version 1.2.0
+./scripts/bash/create-release.sh --type patch --notes
+./scripts/bash/create-release.sh --version 2.0.0 --deploy staging
+```
+
+**PowerShell:**
+```powershell
+.\scripts\powershell\Create-Release.ps1 -Version "1.2.0"
+.\scripts\powershell\Create-Release.ps1 -VersionType patch -IncludeNotes
+.\scripts\powershell\Create-Release.ps1 -Version "2.0.0" -DeployTo staging
+```
+
+---
+
+### 🔧 Operations Status (NEW)
+
+Checks system health, Docker status, and generates runbooks for Block 6 - Operations.
+
+**Bash:**
+```bash
+./scripts/bash/ops-status.sh --all
+./scripts/bash/ops-status.sh --status
+./scripts/bash/ops-status.sh --runbook "my-service"
+./scripts/bash/ops-status.sh --docker
+```
+
+**PowerShell:**
+```powershell
+.\scripts\powershell\Get-OpsStatus.ps1 -All
+.\scripts\powershell\Get-OpsStatus.ps1 -CheckHealth
+.\scripts\powershell\Get-OpsStatus.ps1 -GenerateRunbook "my-service"
+.\scripts\powershell\Get-OpsStatus.ps1 -DockerStatus
+```
+
+---
+
+### 📋 Postmortem Generator (NEW)
+
+Creates blameless incident postmortem documents for Block 6 - Operations.
+
+**Bash:**
+```bash
+./scripts/bash/generate-postmortem.sh --interactive
+./scripts/bash/generate-postmortem.sh --title "API Outage" --severity P1 --date 2024-01-15
+```
+
+**PowerShell:**
+```powershell
+.\scripts\powershell\Generate-Postmortem.ps1 -Interactive
+.\scripts\powershell\Generate-Postmortem.ps1 -Title "API Outage" -Severity P1 -IncidentDate "2024-01-15"
+```
+
+---
+
+### 📊 Improvement Analyzer (NEW)
+
+Analyzes codebase and generates improvement backlogs for Block 7 - Evolution.
+
+**Bash:**
+```bash
+./scripts/bash/analyze-improvements.sh --all
+./scripts/bash/analyze-improvements.sh --code
+./scripts/bash/analyze-improvements.sh --deps
+./scripts/bash/analyze-improvements.sh --generate
+```
+
+**PowerShell:**
+```powershell
+.\scripts\powershell\Get-Improvements.ps1 -All
+.\scripts\powershell\Get-Improvements.ps1 -AnalyzeCode
+.\scripts\powershell\Get-Improvements.ps1 -AnalyzeDependencies
+.\scripts\powershell\Get-Improvements.ps1 -GenerateBacklogs
+```
+
+---
+
+### 🏚️ Retirement Planner (NEW)
+
+Plans system decommissioning and tracks consumer migrations for Block 8 - Retirement.
+
+**Bash:**
+```bash
+./scripts/bash/plan-retirement.sh --interactive
+./scripts/bash/plan-retirement.sh --name "Legacy API" --date 2024-12-31 --generate
+./scripts/bash/plan-retirement.sh --name "Old Module" --list-consumers
+```
+
+**PowerShell:**
+```powershell
+.\scripts\powershell\Plan-Retirement.ps1 -Interactive
+.\scripts\powershell\Plan-Retirement.ps1 -SystemName "Legacy API" -TargetDate "2024-12-31" -GeneratePlan
+.\scripts\powershell\Plan-Retirement.ps1 -SystemName "Old Module" -ListConsumers
+```
+
+---
+
+### �💡 Tips for Real Projects
 
 1. **Always start with Constitution** - It's the DNA of your project
 2. **For Brownfield**: Spend time analyzing legacy BEFORE defining target stack
