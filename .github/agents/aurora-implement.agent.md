@@ -72,7 +72,7 @@ git checkout -b "${CURRENT_BRANCH}/bolt-[N]-[description]"
 
 If NOT on a feature branch:
 1. **STOP** - Do not implement on main/develop
-2. **Create feature branch**: `./scripts/bash/create-new-feature.sh "[feature-name]"`
+2. **Create feature branch**: `./.aurora/scripts/bash/create-new-feature.sh "[feature-name]"`
 3. **Then create BOLT branch** following pattern above
 
 ## Prerequisites
@@ -83,7 +83,7 @@ Required files in `specs/[XXX-feature-name]/`:
 - `requirements/requirements.md` - Feature specification
 
 Required in project root:
-- `memory/constitution.md` - Technology and standards governance
+- `.aurora/memory/constitution.md` - Technology and standards governance
 
 ## Implementation Discipline
 
@@ -137,7 +137,7 @@ CURRENT_BRANCH=$(git branch --show-current)
 if [[ ! "$CURRENT_BRANCH" =~ ^feature/ ]]; then
     echo "ERROR: Not on a feature branch!"
     echo "Current: $CURRENT_BRANCH"
-    echo "Run: ./scripts/bash/create-new-feature.sh [feature-name]"
+    echo "Run: ./.aurora/scripts/bash/create-new-feature.sh [feature-name]"
     exit 1
 fi
 ```
@@ -146,7 +146,7 @@ fi
 
 ```bash
 # Read governing constitution
-cat memory/constitution.md
+cat .aurora/memory/constitution.md
 
 # Read current Bolt tasks
 cat specs/[XXX-feature-name]/planning/tasks.md
@@ -314,6 +314,68 @@ npm audit
 | Mutation Score | >= 70% | >= 80% | Stryker |
 
 **BOLT CANNOT be marked complete until ALL quality gates pass.**
+
+### 3b. Architecture Quality Gates (Per Bolt - MANDATORY)
+
+Ensure Clean Architecture compliance with every BOLT:
+
+```bash
+# Use multi-language quality gates script
+./.aurora/scripts/bash/quality-gates.sh
+# or PowerShell: .\scripts\powershell\Quality-Gates.ps1
+```
+
+**Node.js/TypeScript:**
+```bash
+# Validate layer dependencies (domain must not depend on infrastructure)
+npm run arch:check
+
+# Detect circular dependencies
+npm run circular:check
+
+# Generate architecture diagram (Mermaid - renders in GitHub/VS Code)
+npm run arch:graph
+# Output: reports/architecture/dependency-graph.md
+
+# Validate API contracts
+npm run validate:openapi
+```
+
+**Python:**
+```bash
+pylint --disable=all --enable=import-error src/
+pydeps src/ --cluster --max-bacon=2
+```
+
+**.NET:**
+```bash
+dotnet tool run depend --verify
+```
+
+**Architecture Gate Thresholds:**
+
+| Gate | Requirement | Tool by Stack |
+|------|-------------|---------------|
+| Layer violations | 0 | dependency-cruiser (Node), depend (.NET), pydeps (Python) |
+| Circular dependencies | 0 | madge (Node), depend (.NET), pydeps (Python) |
+| Contract errors | 0 | Spectral (OpenAPI), asyncapi-cli (AsyncAPI) |
+
+**Architecture Graph (Mermaid):**
+The graph is generated in Mermaid format - text-based, versionable, renders everywhere:
+
+```mermaid
+flowchart LR
+    subgraph domain["Domain Layer"]
+        entities["Entities"]
+        valueObjects["Value Objects"]
+    end
+    subgraph application["Application Layer"]
+        services["Services"] --> domain
+    end
+    subgraph infrastructure["Infrastructure"]
+        repos["Repositories"] --> application
+    end
+```
 
 ### First BOLT: Setup Mutation Testing
 

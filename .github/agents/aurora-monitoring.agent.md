@@ -37,25 +37,25 @@ You are the monitoring specialist for AURORA projects. You implement comprehensi
 ### Install Monitoring Stack:
 ```bash
 # Install complete monitoring stack
-./scripts/bash/setup-monitoring.sh --stack prometheus-grafana --env production
+./.aurora/scripts/bash/setup-monitoring.sh --stack prometheus-grafana --env production
 
 # Setup with SLO-based alerting
-./scripts/bash/setup-monitoring.sh --slo-file specs/slos.yml
+./.aurora/scripts/bash/setup-monitoring.sh --slo-file specs/slos.yml
 
 # Configure cloud monitoring
-./scripts/bash/setup-cloud-monitoring.sh --provider azure --resource-group aurora-rg
+./.aurora/scripts/bash/setup-cloud-monitoring.sh --provider azure --resource-group aurora-rg
 ```
 
 ### Dashboard Generation:
 ```bash
 # Generate dashboards based on tech stack
-./scripts/bash/generate-dashboards.sh --from-constitution
+./.aurora/scripts/bash/generate-dashboards.sh --from-constitution
 
 # Create custom dashboard for feature
-./scripts/bash/create-dashboard.sh --feature F001-authentication --metrics auth_requests,auth_failures
+./.aurora/scripts/bash/create-dashboard.sh --feature F001-authentication --metrics auth_requests,auth_failures
 
 # Import community dashboards
-./scripts/bash/import-dashboards.sh --source grafana-community
+./.aurora/scripts/bash/import-dashboards.sh --source grafana-community
 ```
 
 ## Auto-Instrumentation by Tech Stack
@@ -401,10 +401,10 @@ features:
 ### SLI Metrics Generation:
 ```bash
 # Generate SLI tracking code
-./scripts/bash/generate-sli-metrics.sh --slo-file specs/slos.yml
+./.aurora/scripts/bash/generate-sli-metrics.sh --slo-file specs/slos.yml
 
 # Create SLO compliance dashboard
-./scripts/bash/create-slo-dashboard.sh --slos specs/slos.yml
+./.aurora/scripts/bash/create-slo-dashboard.sh --slos specs/slos.yml
 ```
 
 ## Log Analysis and Correlation
@@ -445,8 +445,8 @@ logger.error('Payment failed', {
 ### Application Performance Monitoring:
 ```bash
 # Setup APM for different tech stacks
-./scripts/bash/setup-apm.sh --stack dotnet --provider elastic-apm
-./scripts/bash/setup-apm.sh --stack react --provider sentry
+./.aurora/scripts/bash/setup-apm.sh --stack dotnet --provider elastic-apm
+./.aurora/scripts/bash/setup-apm.sh --stack react --provider sentry
 ```
 
 ### Real User Monitoring (RUM):
@@ -474,10 +474,10 @@ getTTFB(sendToAnalytics);
 ### Health Check Monitoring:
 ```bash
 # Generate synthetic tests
-./scripts/bash/generate-synthetic-tests.sh --endpoints api/health,api/status
+./.aurora/scripts/bash/generate-synthetic-tests.sh --endpoints api/health,api/status
 
 # Setup uptime monitoring
-./scripts/bash/setup-uptime-monitoring.sh --urls https://app.aurora.com,https://api.aurora.com
+./.aurora/scripts/bash/setup-uptime-monitoring.sh --urls https://app.aurora.com,https://api.aurora.com
 ```
 
 ## Integration with AURORA Ecosystem

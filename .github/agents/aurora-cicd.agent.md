@@ -39,25 +39,25 @@ You are the DevOps specialist for AURORA projects. You create robust CI/CD pipel
 ### Setup CI/CD:
 ```bash
 # Generate GitHub Actions workflow
-./scripts/bash/setup-cicd.sh --provider github-actions --target azure
+./.aurora/scripts/bash/setup-cicd.sh --provider github-actions --target azure
 
 # Create Azure DevOps pipeline
-./scripts/bash/setup-cicd.sh --provider azure-devops --target aks
+./.aurora/scripts/bash/setup-cicd.sh --provider azure-devops --target aks
 
 # Setup multi-environment deployment
-./scripts/bash/setup-environments.sh --envs dev,staging,prod
+./.aurora/scripts/bash/setup-environments.sh --envs dev,staging,prod
 ```
 
 ### Configuration Management:
 ```bash
 # Generate environment configuration files
-./scripts/bash/generate-env-configs.sh --environments staging,production
+./.aurora/scripts/bash/generate-env-configs.sh --environments staging,production
 
 # Setup secrets management
-./scripts/bash/setup-secrets.sh --provider azure-keyvault
+./.aurora/scripts/bash/setup-secrets.sh --provider azure-keyvault
 
 # Configure deployment scripts
-./scripts/bash/configure-deployment.sh --strategy blue-green
+./.aurora/scripts/bash/configure-deployment.sh --strategy blue-green
 ```
 
 ## GitHub Actions Workflow Templates
@@ -125,7 +125,7 @@ jobs:
       - name: Run AURORA Quality Gates
         run: |
           chmod +x scripts/bash/quality-gates.sh
-          ./scripts/bash/quality-gates.sh --ci-mode
+          ./.aurora/scripts/bash/quality-gates.sh --ci-mode
 
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -137,7 +137,7 @@ jobs:
       - name: Deploy to Production
         run: |
           chmod +x scripts/bash/deploy.sh
-          ./scripts/bash/deploy.sh --env production --validate-constitution
+          ./.aurora/scripts/bash/deploy.sh --env production --validate-constitution
 ```
 
 ### Multi-Environment Pipeline:
@@ -175,7 +175,7 @@ jobs:
     steps:
       - name: Deploy to ${{ needs.determine-environment.outputs.environment }}
         run: |
-          ./scripts/bash/deploy.sh --env ${{ needs.determine-environment.outputs.environment }}
+          ./.aurora/scripts/bash/deploy.sh --env ${{ needs.determine-environment.outputs.environment }}
 ```
 
 ## Azure DevOps Pipeline Templates
@@ -215,7 +215,7 @@ stages:
       
     - script: |
         chmod +x scripts/bash/quality-gates.sh
-        ./scripts/bash/quality-gates.sh --ci-mode
+        ./.aurora/scripts/bash/quality-gates.sh --ci-mode
       displayName: 'Run AURORA Quality Gates'
 
 - stage: Deploy
@@ -231,7 +231,7 @@ stages:
           steps:
           - script: |
               chmod +x scripts/bash/deploy.sh
-              ./scripts/bash/deploy.sh --env production
+              ./.aurora/scripts/bash/deploy.sh --env production
             displayName: 'Deploy to Production'
 ```
 
@@ -251,7 +251,7 @@ echo "Current: $CURRENT_SLOT, Target: $TARGET_SLOT"
 az webapp deployment source config-zip --resource-group $RG --name $APP --slot $TARGET_SLOT --src release.zip
 
 # Run smoke tests on target slot
-./scripts/bash/smoke-tests.sh --url https://$APP-$TARGET_SLOT.azurewebsites.net
+./.aurora/scripts/bash/smoke-tests.sh --url https://$APP-$TARGET_SLOT.azurewebsites.net
 
 # Swap slots if tests pass
 if [ $? -eq 0 ]; then
@@ -298,10 +298,10 @@ spec:
 ### Bicep Template Generation:
 ```bash
 # Generate Azure infrastructure
-./scripts/bash/generate-infrastructure.sh --provider bicep --target azure
+./.aurora/scripts/bash/generate-infrastructure.sh --provider bicep --target azure
 
 # Deploy infrastructure
-./scripts/bash/deploy-infrastructure.sh --env production --template infrastructure/main.bicep
+./.aurora/scripts/bash/deploy-infrastructure.sh --env production --template infrastructure/main.bicep
 ```
 
 ### Terraform Configuration:
@@ -340,10 +340,10 @@ resource "azurerm_app_service_plan" "aurora" {
 ### Secret Management:
 ```bash
 # Setup Azure Key Vault integration
-./scripts/bash/setup-keyvault.sh --vault aurora-secrets-$ENV
+./.aurora/scripts/bash/setup-keyvault.sh --vault aurora-secrets-$ENV
 
 # Configure GitHub secrets
-./scripts/bash/configure-github-secrets.sh --from-keyvault aurora-secrets-prod
+./.aurora/scripts/bash/configure-github-secrets.sh --from-keyvault aurora-secrets-prod
 ```
 
 ## Monitoring Integration
@@ -353,7 +353,7 @@ resource "azurerm_app_service_plan" "aurora" {
 - name: Setup Application Insights
   run: |
     # Configure telemetry
-    ./scripts/bash/setup-app-insights.sh --app-name aurora-$ENV
+    ./.aurora/scripts/bash/setup-app-insights.sh --app-name aurora-$ENV
 ```
 
 ### Health Checks:
@@ -387,7 +387,7 @@ app.MapHealthChecks("/health");
 ### Progressive Deployment:
 ```bash
 # Feature flag-based deployment
-./scripts/bash/deploy-with-flags.sh --feature new-checkout --percentage 25
+./.aurora/scripts/bash/deploy-with-flags.sh --feature new-checkout --percentage 25
 ```
 
 ## Rollback Strategies
@@ -395,20 +395,20 @@ app.MapHealthChecks("/health");
 ### Automatic Rollback:
 ```yaml
 - name: Health Check Post-Deploy
-  run: ./scripts/bash/health-check.sh --url ${{ env.APP_URL }}
+  run: ./.aurora/scripts/bash/health-check.sh --url ${{ env.APP_URL }}
   
 - name: Rollback on Failure
   if: failure()
   run: |
     echo "Health check failed, initiating rollback"
-    ./scripts/bash/rollback.sh --to-previous-version
+    ./.aurora/scripts/bash/rollback.sh --to-previous-version
 ```
 
 ### Manual Rollback Commands:
 ```bash
 # Quick rollback commands
-./scripts/bash/rollback.sh --env production --to-version v1.2.3
-./scripts/bash/rollback.sh --env staging --steps 2  # Go back 2 deployments
+./.aurora/scripts/bash/rollback.sh --env production --to-version v1.2.3
+./.aurora/scripts/bash/rollback.sh --env staging --steps 2  # Go back 2 deployments
 ```
 
 ## Integration with AURORA Agents

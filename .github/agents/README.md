@@ -51,7 +51,7 @@ Agents are conversational AI assistants specialized for specific tasks. Each age
 | Aurora Implement | `aurora-implement.agent.md` | Execute implementation with quality gates |
 | Aurora Micro Iterator | `aurora-micro-iterator.agent.md` | Micro-iteration discipline |
 | Aurora Testing | `aurora-testing.agent.md` | Generate test suites (TDD/BDD) |
-| Aurora Review | `aurora-review.agent.md` | Code review and SOLID validation |
+| Aurora Review | `aurora-review.agent.md` | Code review, SOLID, and architecture validation |
 
 ### 🔍 Analysis & Quality
 
@@ -60,6 +60,12 @@ Agents are conversational AI assistants specialized for specific tasks. Each age
 | Aurora Analyze | `aurora-analyze.agent.md` | Consistency analysis between artifacts |
 | Aurora Alignment | `aurora-alignment.agent.md` | Business-technical alignment |
 | Aurora ADR | `aurora-adr.agent.md` | Architecture Decision Records |
+
+### 🔒 Security & Compliance
+
+| Agent | File | Purpose |
+|-------|------|---------|
+| Aurora Security | `aurora-security.agent.md` | Comprehensive security analysis and OWASP compliance |
 
 ### 📦 Release & Operations
 
@@ -193,7 +199,7 @@ When you need automation, execute these scripts:
 
 - **Prompts**: `.github/prompts/` - Reusable instruction templates
 - **Scripts**: `scripts/bash/` and `scripts/powershell/` - Automation scripts
-- **Constitution**: `memory/constitution.md` - Project governance
+- **Constitution**: `.aurora/memory/constitution.md` - Project governance
 - **Workflows**: `.github/workflows/` - GitHub Actions CI/CD
 
 ## Migration from Commands
@@ -213,7 +219,9 @@ The previous `/aurora.*` slash commands have been replaced by agents:
 ## Best Practices
 
 1. **Start with AURORA**: Use `@AURORA` to get guidance on which agent to use
-2. **Read Constitution First**: Agents automatically reference `memory/constitution.md`
+2. **Read Constitution First**: Agents automatically reference `.aurora/memory/constitution.md`
 3. **Use Handoffs**: Let agents delegate to specialists when appropriate
 4. **Chain Workflows**: Feature → Plan → Tasks → Implement → Test → Review
 5. **Execute Scripts**: Use the `execute` tool for automation tasks
+6. **Run Quality Gates**: Execute `scripts/bash/quality-gates.sh` (multi-language support)
+7. **Architecture Validation**: Use `npm run arch:check` and `arch:graph` for Mermaid diagrams

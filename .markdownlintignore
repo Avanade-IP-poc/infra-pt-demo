@@ -1,7 +1,0 @@
-node_modules/
-**/dist/
-**/build/
-**/.next/
-**/.vite/
-**/coverage/
-demo/**/to_rfp/**/calculator-app/node_modules/

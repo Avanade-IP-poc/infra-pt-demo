@@ -36,7 +36,7 @@ Suggest running the init script:
 
 **Bash:**
 ```bash
-./scripts/bash/init.sh project-name greenfield
+./init.sh project-name green --scope app-only
 ```
 
 ## Lifecycle Phases

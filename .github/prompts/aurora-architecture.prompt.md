@@ -31,8 +31,45 @@ When designing architecture:
 - C4 diagrams (Context, Container, Component)
 - Sequence diagrams for key flows
 - Data architecture documentation
+- **Dependency graphs** (Mermaid format)
 
-### 4. Output Format
+### 4. Architecture Quality Gates (Automated)
+
+Every architecture must include automated validation:
+
+**Configuration files to generate:**
+| File | Purpose | Stack |
+|------|---------|-------|
+| `.dependency-cruiser.cjs` | Layer boundary rules | Node/TS |
+| `.spectral.yaml` | OpenAPI/AsyncAPI validation | All |
+| `depend.json` | Dependency rules | .NET |
+| `pyproject.toml` | Import rules | Python |
+
+**Scripts to add to project:**
+```json
+{
+  "scripts": {
+    "arch:check": "depcruise src --config .dependency-cruiser.cjs --output-type err-long",
+    "arch:graph": "depcruise src --config .dependency-cruiser.cjs --output-type mermaid > reports/architecture/dependency-graph.md",
+    "circular:check": "madge --circular src",
+    "validate:openapi": "npx @stoplight/spectral-cli lint specs/**/openapi.yaml"
+  }
+}
+```
+
+**Clean Architecture Rules (example .dependency-cruiser.cjs):**
+```javascript
+module.exports = {
+  forbidden: [
+    { name: 'domain-no-infrastructure', from: { path: 'domain/' }, to: { path: 'infrastructure/' } },
+    { name: 'domain-no-presentation', from: { path: 'domain/' }, to: { path: 'presentation|controllers|api/' } },
+    { name: 'domain-no-application', from: { path: 'domain/' }, to: { path: 'application/' } },
+    { name: 'application-no-infrastructure', from: { path: 'application/' }, to: { path: 'infrastructure/' } }
+  ]
+};
+```
+
+### 5. Output Format
 
 ```markdown
 # Architecture Design: [System Name]

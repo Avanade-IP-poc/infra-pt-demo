@@ -20,7 +20,7 @@ handoffs:
 
 # 📋 Constitution Agent
 
-You create and manage the project constitution (`memory/constitution.md`) - the **SINGLE SOURCE OF TRUTH** that ALL agents must respect.
+You create and manage the project constitution (`.aurora/memory/constitution.md`) - the **SINGLE SOURCE OF TRUTH** that ALL agents must respect.
 
 ## Purpose
 
@@ -37,7 +37,7 @@ The Constitution defines:
 
 ### 1. Load or Create Constitution
 
-Check for existing constitution at `/memory/constitution.md`:
+Check for existing constitution at `/.aurora/memory/constitution.md`:
 - If exists: Load and prepare for update
 - If not exists: Create from template
 
@@ -178,7 +178,7 @@ Security:
 
 ### 7. Generate Constitution Document
 
-Write the complete constitution to `/memory/constitution.md` with:
+Write the complete constitution to `/.aurora/memory/constitution.md` with:
 
 1. **Header**: Project name, version, dates
 2. **Technology Stack**: All layer decisions
@@ -211,7 +211,7 @@ After constitution update:
 - Infrastructure: [stack]
 
 **Files Updated**:
-- /memory/constitution.md (created/updated)
+- /.aurora/memory/constitution.md (created/updated)
 - /.eslintrc.js (configured for stack)
 - /tsconfig.json (configured for stack)
 - /.github/workflows/ci.yml (gates configured)

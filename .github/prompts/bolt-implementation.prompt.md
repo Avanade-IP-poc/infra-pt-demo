@@ -83,9 +83,57 @@ npm run build
 | Branch Coverage | >= 75% | `npm run test:cov` |
 | Mutation Score | >= 70% | `npx stryker run` |
 
+### 5. Architecture Quality Gates (MANDATORY per BOLT)
+
+Ensure Clean Architecture compliance:
+
+```bash
+# Use multi-language quality gates script
+./scripts/bash/quality-gates.sh
+# or PowerShell: .\scripts\powershell\Quality-Gates.ps1
+```
+
+**Node.js/TypeScript specific:**
+```bash
+# Validate layer dependencies (domain cannot depend on infrastructure)
+npm run arch:check
+
+# Detect circular dependencies
+npm run circular:check
+
+# Generate architecture diagram (Mermaid format - renders in GitHub/VS Code)
+npm run arch:graph
+# Output: reports/architecture/dependency-graph.md
+
+# Validate API contracts
+npm run validate:openapi
+```
+
+**Architecture Gate Thresholds:**
+| Gate | Requirement | Tool |
+|------|-------------|------|
+| Layer violations | 0 | dependency-cruiser |
+| Circular dependencies | 0 | madge |
+| Contract validation | 0 errors | Spectral |
+
+**Mermaid Architecture Graph:**
+The `arch:graph` generates a dependency diagram that renders everywhere:
+```mermaid
+flowchart LR
+    subgraph domain["Domain Layer"]
+        entities & valueObjects
+    end
+    subgraph application["Application"]
+        services --> domain
+    end
+    subgraph infrastructure["Infrastructure"]
+        repos --> application
+    end
+```
+
 **⚠️ BOLT cannot be completed until ALL quality gates pass.**
 
-### 5. BOLT Completion
+### 6. BOLT Completion
 
 When BOLT is complete:
 ```bash

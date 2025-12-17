@@ -97,4 +97,4 @@ AURORA includes 29 specialized AI agents. Invoke them with `@AgentName`:
 
 ---
 
-*AURORA-IA-DLC v2.2.0*
+*AURORA-IA-DLC v1.0.0*

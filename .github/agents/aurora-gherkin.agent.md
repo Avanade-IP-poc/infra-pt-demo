@@ -59,7 +59,7 @@ git branch --show-current
 # Expected: feature/user-authentication
 
 # 2. Read constitution for BDD settings
-cat memory/constitution.md
+cat .aurora/memory/constitution.md
 
 # 3. Read requirements
 cat specs/user-authentication/requirements/requirements.md
@@ -82,7 +82,7 @@ cat specs/user-authentication/requirements/requirements.md
 
 ## Constitution Check
 
-**FIRST**: Read `memory/constitution.md` to understand:
+**FIRST**: Read `.aurora/memory/constitution.md` to understand:
 - **Testing Framework** - Cucumber, SpecFlow, Behave, pytest-bdd, etc.
 - **Language** - Step definition language
 - **Naming Conventions** - Feature file naming
@@ -91,7 +91,7 @@ cat specs/user-authentication/requirements/requirements.md
 ## Prerequisites
 
 - Feature spec at `specs/[feature-name]/requirements/requirements.md`
-- Constitution at `memory/constitution.md`
+- Constitution at `.aurora/memory/constitution.md`
 - **Must be on feature branch** - verify with `git branch --show-current`
 
 ## Gherkin Structure

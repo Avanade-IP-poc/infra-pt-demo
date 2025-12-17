@@ -41,28 +41,28 @@ You are the documentation specialist for AURORA projects. You create, maintain, 
 ### Code-Driven Documentation:
 ```bash
 # Generate all documentation from codebase
-./scripts/bash/generate-docs.sh --full --scan-code
+./.aurora/scripts/bash/generate-docs.sh --full --scan-code
 
 # Update API documentation from controllers
-./scripts/bash/update-api-docs.sh --from-code --format openapi
+./.aurora/scripts/bash/update-api-docs.sh --from-code --format openapi
 
 # Generate architecture diagrams from code structure
-./scripts/bash/generate-architecture.sh --format mermaid --output docs/architecture/
+./.aurora/scripts/bash/generate-architecture.sh --format mermaid --output docs/architecture/
 
 # Extract inline documentation
-./scripts/bash/extract-code-docs.sh --languages typescript,csharp --output docs/code/
+./.aurora/scripts/bash/extract-code-docs.sh --languages typescript,csharp --output docs/code/
 ```
 
 ### Specification-Driven Documentation:
 ```bash
 # Generate user documentation from feature specs
-./scripts/bash/generate-user-docs.sh --from-specs specs/
+./.aurora/scripts/bash/generate-user-docs.sh --from-specs specs/
 
 # Create deployment guides from infrastructure code
-./scripts/bash/generate-deployment-docs.sh --from-bicep infrastructure/
+./.aurora/scripts/bash/generate-deployment-docs.sh --from-bicep infrastructure/
 
 # Build troubleshooting guides from monitoring alerts
-./scripts/bash/generate-troubleshooting.sh --from-alerts monitoring/alerts.yml
+./.aurora/scripts/bash/generate-troubleshooting.sh --from-alerts monitoring/alerts.yml
 ```
 
 ## API Documentation Auto-Generation
@@ -219,7 +219,7 @@ graph TB
 ### Feature Documentation from Specs:
 ```bash
 # Generate user guide from feature spec
-./scripts/bash/generate-user-guide.sh --feature F001-authentication --output docs/user-guide/
+./.aurora/scripts/bash/generate-user-guide.sh --feature F001-authentication --output docs/user-guide/
 ```
 
 Generated Output:
@@ -402,16 +402,16 @@ export async function processPayment(
 ### Documentation Quality Checks:
 ```bash
 # Validate documentation completeness
-./scripts/bash/validate-docs.sh --check-coverage --min-coverage 80
+./.aurora/scripts/bash/validate-docs.sh --check-coverage --min-coverage 80
 
 # Check for broken links
-./scripts/bash/check-doc-links.sh --fix-relative-paths
+./.aurora/scripts/bash/check-doc-links.sh --fix-relative-paths
 
 # Spell check and grammar
-./scripts/bash/check-doc-quality.sh --spell-check --grammar-check
+./.aurora/scripts/bash/check-doc-quality.sh --spell-check --grammar-check
 
 # Ensure constitution compliance
-./scripts/bash/validate-doc-compliance.sh --constitution memory/constitution.md
+./.aurora/scripts/bash/validate-doc-compliance.sh --constitution .aurora/memory/constitution.md
 ```
 
 ### Documentation Metrics:
@@ -439,7 +439,7 @@ quality_scores:
 # Auto-update documentation on code changes
 - name: Update Documentation
   run: |
-    ./scripts/bash/generate-docs.sh --incremental
+    ./.aurora/scripts/bash/generate-docs.sh --incremental
     git add docs/
     git commit -m "docs: auto-update documentation [skip ci]"
     git push
@@ -448,10 +448,10 @@ quality_scores:
 ### Documentation Site Generation:
 ```bash
 # Generate static documentation site
-./scripts/bash/build-docs-site.sh --generator docusaurus --theme aurora
+./.aurora/scripts/bash/build-docs-site.sh --generator docusaurus --theme aurora
 
 # Deploy documentation site
-./scripts/bash/deploy-docs.sh --target netlify --domain docs.aurora.com
+./.aurora/scripts/bash/deploy-docs.sh --target netlify --domain docs.aurora.com
 ```
 
 ## Knowledge Management
@@ -459,19 +459,19 @@ quality_scores:
 ### Search and Discovery:
 ```bash
 # Index documentation for search
-./scripts/bash/index-docs.sh --search-engine elasticsearch
+./.aurora/scripts/bash/index-docs.sh --search-engine elasticsearch
 
 # Generate documentation sitemap
-./scripts/bash/generate-doc-sitemap.sh --output docs/sitemap.xml
+./.aurora/scripts/bash/generate-doc-sitemap.sh --output docs/sitemap.xml
 ```
 
 ### Version Management:
 ```bash
 # Create documentation version for release
-./scripts/bash/version-docs.sh --version v1.2.0
+./.aurora/scripts/bash/version-docs.sh --version v1.2.0
 
 # Archive old documentation versions
-./scripts/bash/archive-docs.sh --older-than 6months
+./.aurora/scripts/bash/archive-docs.sh --older-than 6months
 ```
 
 ## Integration with AURORA Ecosystem

@@ -58,7 +58,7 @@ The Omega Architect serves as the final authority on architecture decisions. It:
 
 ## Constitution Reference
 
-**CRITICAL**: Before any architecture decision, read `memory/constitution.md` to understand:
+**CRITICAL**: Before any architecture decision, read `.aurora/memory/constitution.md` to understand:
 
 - **Tech Stack** - Approved technologies (languages, frameworks, databases)
 - **Architecture Principles** - SOLID, DDD, Clean Architecture as defined
@@ -69,7 +69,7 @@ Architecture must align with Constitution. Do NOT use examples from this agent i
 
 ## Expected Inputs
 
-- **`memory/constitution.md`** - Project governing document (REQUIRED)
+- **`.aurora/memory/constitution.md`** - Project governing document (REQUIRED)
 - Domain model from DDD Master
 - Technical constraints from Technical Detective
 - Business requirements from Business Explorer
@@ -83,6 +83,30 @@ Architecture must align with Constitution. Do NOT use examples from this agent i
 - **System Diagrams** (C4, component, sequence)
 - **Technology Stack** recommendations
 - **Integration Patterns** documentation
+- **Architecture Quality Gates Configuration**:
+  - `.dependency-cruiser.cjs` (Node/TS) or equivalent
+  - `.spectral.yaml` for API contracts
+  - Mermaid dependency graphs in `reports/architecture/`
+
+## Architecture Quality Gates Setup
+
+When designing architecture, include automated validation:
+
+```bash
+# Generate dependency graph (Mermaid format)
+npm run arch:graph
+# Output: reports/architecture/dependency-graph.md
+
+# Validate layer boundaries
+npm run arch:check
+
+# Check circular dependencies
+npm run circular:check
+```
+
+**Multi-stack quality gates script:**
+- Bash: `scripts/bash/quality-gates.sh`
+- PowerShell: `scripts/powershell/Quality-Gates.ps1`
 
 ## C4 Model Diagrams
 

@@ -27,8 +27,8 @@ handoffs:
 ## Available Scripts
 
 When you need to run tests, execute these scripts:
-- **Bash**: `scripts/bash/generate-tests.sh`
-- **PowerShell**: `scripts/powershell/Generate-Tests.ps1`
+- **Bash**: `.aurora/scripts/bash/generate-tests.sh`
+- **PowerShell**: `.aurora/scripts/powershell/Generate-Tests.ps1`
 
 Generate test suites that achieve coverage targets and validate test quality through mutation testing.
 
@@ -58,7 +58,7 @@ You do (IN ORDER):
 git branch --show-current
 
 # 2. Read constitution for testing rules
-cat memory/constitution.md
+cat .aurora/.aurora/memory/constitution.md
 
 # 3. Read the source to test
 cat src/application/UserService.ts  # or whatever file
@@ -95,12 +95,12 @@ npm test  # or equivalent from constitution
 
 Required files:
 - `specs/[XXX-feature-name]/requirements/requirements.md` - User stories with acceptance criteria
-- `memory/constitution.md` - Project governing document
+- `.aurora/.aurora/memory/constitution.md` - Project governing document
 - **Must be on feature branch** - verify with `git branch --show-current`
 
 ## Constitution References (CRITICAL)
 
-Before generating tests, read these sections from `memory/constitution.md`:
+Before generating tests, read these sections from `.aurora/.aurora/memory/constitution.md`:
 
 | Section | Purpose | Key Information |
 |---------|---------|----------------|

@@ -71,7 +71,7 @@ Generate comprehensive project status reports across all AURORA lifecycle phases
 ```yaml
 artifacts:
   inception:
-    constitution: memory/constitution.md
+    constitution: .aurora/memory/constitution.md
     status: [exists|missing|outdated]
     
   discovery:

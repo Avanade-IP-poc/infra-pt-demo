@@ -69,18 +69,18 @@ You are the template generation specialist for AURORA projects. You create intel
 ### Generate from Constitution:
 ```bash
 # Generate complete project structure
-./scripts/bash/generate-project-structure.sh --from-constitution
+./.aurora/scripts/bash/generate-project-structure.sh --from-constitution
 
 # Generate specific component type
-./scripts/bash/create-component.sh --type react-page --name UserProfile
-./scripts/bash/create-component.sh --type api-controller --name UserController
-./scripts/bash/create-component.sh --type vue-component --name DataTable
+./.aurora/scripts/bash/create-component.sh --type react-page --name UserProfile
+./.aurora/scripts/bash/create-component.sh --type api-controller --name UserController
+./.aurora/scripts/bash/create-component.sh --type vue-component --name DataTable
 ```
 
 ### Template Validation:
 ```bash
 # Validate generated structure against constitution
-./scripts/bash/validate-template.sh --constitution memory/constitution.md
+./.aurora/scripts/bash/validate-template.sh --constitution .aurora/.aurora/memory/constitution.md
 ```
 
 ## Auto-Generation Logic

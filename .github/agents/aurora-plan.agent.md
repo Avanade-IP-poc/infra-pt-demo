@@ -53,7 +53,7 @@ git branch --show-current
 # Expected: feature/user-authentication
 
 # 2. Read constitution
-cat memory/constitution.md
+cat .aurora/memory/constitution.md
 
 # 3. Read feature spec
 cat specs/user-authentication/requirements/requirements.md
@@ -65,7 +65,7 @@ cat specs/user-authentication/requirements/requirements.md
 ## Prerequisites
 
 1. Feature specification exists at `specs/[XXX-feature-name]/requirements/requirements.md`
-2. Constitution exists at `/memory/constitution.md`
+2. Constitution exists at `/.aurora/memory/constitution.md`
 3. **Must be on feature branch** - verify with `git branch --show-current`
 
 ## Execution Flow
@@ -83,7 +83,7 @@ fi
 ### 1. Load Context
 
 Read and analyze:
-- `/memory/constitution.md` - Tech stack, principles, gates
+- `/.aurora/memory/constitution.md` - Tech stack, principles, gates
 - `specs/[XXX-feature-name]/requirements/requirements.md` - Feature requirements
 
 Extract:

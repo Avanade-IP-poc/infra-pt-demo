@@ -6,7 +6,7 @@ model: Claude Sonnet 4
 handoffs:
   - label: 📋 Define Constitution
     agent: Aurora Constitution
-    prompt: Create or update the project constitution (memory/constitution.md) with tech stack, standards, and architecture decisions.
+    prompt: Create or update the project constitution (.aurora/memory/constitution.md) with tech stack, standards, and architecture decisions.
     send: false
   - label: ❓ Clarify Requirements
     agent: Aurora Clarify
@@ -47,6 +47,14 @@ handoffs:
   - label: 🔍 Analyze Consistency
     agent: Aurora Analyze
     prompt: Perform consistency analysis across all specification artifacts.
+    send: false
+  - label: 🚀 Init Workspace  
+    agent: AURORA
+    prompt: I want to create a new project workspace. First, read the ./init.sh file to discover what command-line parameters it accepts by searching for patterns like 'case $1 in', '--parameter)', and validation messages that show valid values. Then ask me interactively for: 1) Destination directory (use relative paths like ../my-project for bash compatibility), 2) Project type, 3) Source directory (if brownfield), and 4) Each discovered parameter with its valid options found in the script. When executing, if user is on Windows, use 'bash ./init.sh' and convert Windows paths to relative paths (C:\projects\name becomes ../name). This way the questions adapt automatically if the script changes and paths work correctly.
+    send: true
+  - label: 🔒 Security Analysis
+    agent: Aurora Security
+    prompt: Perform comprehensive security analysis with OWASP compliance checks.
     send: false
   - label: 👀 Review Code
     agent: Aurora Review
@@ -94,7 +102,7 @@ When you need to automate AURORA operations, execute these scripts:
 
 | Script | Bash | PowerShell |
 |--------|------|------------|
-| **Initialize Project** | `scripts/bash/init.sh` | `scripts/powershell/Init.ps1` |
+| **Initialize Project** | `init.sh` | `Init.ps1` |
 | **Project Status** | `scripts/bash/project-status.sh` | `scripts/powershell/Get-ProjectStatus.ps1` |
 | **Quality Gates** | `scripts/bash/quality-gates.sh` | `scripts/powershell/Quality-Gates.ps1` |
 
@@ -109,7 +117,7 @@ AURORA is an AI-powered development methodology that guides projects through spe
 ## Your Responsibilities
 
 1. **Understand** what the user wants to achieve
-2. **Check project state** - Does `memory/constitution.md` exist?
+2. **Check project state** - Does `.aurora/memory/constitution.md` exist?
 3. **Route** to the appropriate workflow or handoff
 4. **Ensure** quality gates and constitutional compliance
 5. **Execute** tasks using available tools
@@ -195,7 +203,7 @@ Check these folders/files exist:
 - [ ] `specs/` folder  
 - [ ] `src/` folder
 - [ ] `scripts/` folder
-- [ ] `memory/constitution.md` file
+- [ ] `.aurora/memory/constitution.md` file
 
 ### If ANY of the above is missing → STOP and Execute Init
 
@@ -208,7 +216,7 @@ Check these folders/files exist:
 
 **Bash (Linux/Mac/WSL):**
 ```bash
-./scripts/bash/init.sh my-project greenfield react-dotnet
+./init.sh my-project green --scope full-stack --backend csharp --frontend react
 ```
 
 **💡 What init creates:**
@@ -219,7 +227,7 @@ Check these folders/files exist:
 
 ### Only AFTER init completes successfully:
 
-1. **Read `memory/constitution.md`** to understand tech stack
+1. **Read `.aurora/memory/constitution.md`** to understand tech stack
 2. **Check `specs/`** for existing features
 3. **Proceed** with development workflow
 
@@ -228,7 +236,7 @@ Check these folders/files exist:
 ### Auto-detect Current Phase:
 ```javascript
 function detectProjectPhase() {
-    if (!exists("memory/constitution.md")) return "PRE_INCEPTION";
+    if (!exists(".aurora/memory/constitution.md")) return "PRE_INCEPTION";
     if (!exists("specs/") || specsEmpty()) return "INCEPTION"; 
     if (specsExist() && !srcExists()) return "DISCOVERY";
     if (srcExists() && !testsPass()) return "CONSTRUCTION";
@@ -240,7 +248,7 @@ function detectProjectPhase() {
 ## How I Work
 
 1. **I read your request** and determine the appropriate phase
-2. **I check constitution** (`memory/constitution.md`) for project rules
+2. **I check constitution** (`.aurora/memory/constitution.md`) for project rules
 3. **I delegate** to the specialized agent
 4. **I ensure quality gates** pass before proceeding
 5. **I handoff** to the next phase when ready

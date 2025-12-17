@@ -56,7 +56,7 @@ When the user requests a feature, you will:
 
 ```bash
 # Execute immediately - DO NOT ASK FOR PERMISSION
-./scripts/bash/create-new-feature.sh "[feature-name]" "main"
+./.aurora/scripts/bash/create-new-feature.sh "[feature-name]" "main"
 ```
 
 **Step 3: Inform the user** what was created:
@@ -71,7 +71,7 @@ When the user requests a feature, you will:
 User says: "Create a user registration feature"
 
 You do (IN THIS ORDER):
-1. ✅ Execute: `./scripts/bash/create-new-feature.sh "user-registration" "main"`
+1. ✅ Execute: `./.aurora/scripts/bash/create-new-feature.sh "user-registration" "main"`
 2. ✅ Inform: "Created branch `feature/user-registration` and specs directory"
 3. ✅ Read constitution
 4. ✅ Generate specification
@@ -80,7 +80,7 @@ You do (IN THIS ORDER):
 
 ## Constitution Check
 
-**AFTER creating branch**: Read `memory/constitution.md` to understand:
+**AFTER creating branch**: Read `.aurora/memory/constitution.md` to understand:
 - Project domain and context
 - Tech stack constraints
 - Documentation standards
@@ -94,7 +94,7 @@ You do (IN THIS ORDER):
 
 ```bash
 # You execute this AUTOMATICALLY when user requests a feature
-./scripts/bash/create-new-feature.sh "[extracted-feature-name]" "main"
+./.aurora/scripts/bash/create-new-feature.sh "[extracted-feature-name]" "main"
 ```
 
 Output to user:
@@ -107,7 +107,7 @@ Output to user:
 ### Step 2: Read Constitution
 
 ```bash
-cat memory/constitution.md
+cat .aurora/memory/constitution.md
 ```
 
 ### Step 3: Gather Feature Context
