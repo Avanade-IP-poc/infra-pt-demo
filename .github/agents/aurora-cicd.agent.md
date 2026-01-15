@@ -2,7 +2,7 @@
 name: Aurora CI/CD
 description: 🚀 DevOps integration, deployment automation and pipeline management
 tools: ['read', 'edit', 'execute', 'search']
-model: Claude Sonnet 4
+model: Claude Sonnet 4.5
 handoffs:
   - label: 🧪 Setup Testing Pipeline
     agent: Aurora Testing

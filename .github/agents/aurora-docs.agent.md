@@ -2,7 +2,7 @@
 name: Aurora Documentation
 description: 📚 Living documentation generator, maintainer and knowledge management system
 tools: ['read', 'edit', 'execute', 'search']
-model: Claude Sonnet 4
+model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Analyze Code
     agent: Aurora Implement

@@ -1,8 +1,8 @@
 ---
 name: AURORA
 description: 🌌 AI-Driven Development Lifecycle Orchestrator - Guides you through the complete software development process from inception to retirement
-tools: ['read', 'edit', 'execute', 'search', 'web', 'agent']
-model: Claude Sonnet 4
+tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'microsoftdocs/mcp/*', 'agent', 'todo']
+model: Claude Sonnet 4.5
 handoffs:
   - label: 📋 Define Constitution
     agent: Aurora Constitution

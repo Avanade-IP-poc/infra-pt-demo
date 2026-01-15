@@ -2,7 +2,7 @@
 name: Aurora DDD
 description: 🎯 Domain-Driven Design Specialist - defines aggregates, bounded contexts, and ubiquitous language
 tools: ['read', 'edit', 'search']
-model: Claude Sonnet 4
+model: Claude Sonnet 4.5
 handoffs:
   - label: 🏛️ Architecture Design
     agent: Aurora Architect

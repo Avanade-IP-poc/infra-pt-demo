@@ -2,7 +2,7 @@
 name: Aurora Plan
 description: 🗺️ Create technical implementation plan from feature specification, aligned with AURORA-IA AI-DLC methodology
 tools: ['read', 'edit', 'search', 'execute']
-model: Claude Sonnet 4
+model: Claude Sonnet 4.5
 handoffs:
   - label: ✅ Generate Bolt Tasks
     agent: Aurora Tasks

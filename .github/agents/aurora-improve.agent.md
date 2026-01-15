@@ -2,7 +2,7 @@
 name: Aurora Improve
 description: 📈 Analyze project for continuous improvement opportunities using operational data and feedback
 tools: ['read', 'search', 'execute']
-model: Claude Sonnet 4
+model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Analyze Consistency
     agent: Aurora Analyze

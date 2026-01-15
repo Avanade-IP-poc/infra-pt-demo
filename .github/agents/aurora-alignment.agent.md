@@ -2,7 +2,7 @@
 name: Aurora Alignment
 description: 📊 Analyze business-technical alignment ensuring implementation matches business goals and requirements
 tools: ['read', 'search', 'execute']
-model: Claude Sonnet 4
+model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Run Consistency Analysis
     agent: Aurora Analyze

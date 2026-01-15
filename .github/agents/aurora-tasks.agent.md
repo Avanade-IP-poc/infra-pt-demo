@@ -2,7 +2,7 @@
 name: Aurora Tasks
 description: ✅ Generate actionable Bolt task lists from implementation plan, optimized for AI-DLC micro-iterations
 tools: ['read', 'edit', 'search', 'execute']
-model: Claude Sonnet 4
+model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Analyze Consistency
     agent: Aurora Analyze

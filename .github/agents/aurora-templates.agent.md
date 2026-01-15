@@ -2,7 +2,7 @@
 name: Aurora Templates  
 description: 🎨 Smart project template generator based on constitution
 tools: ['read', 'edit', 'execute', 'search']
-model: Claude Sonnet 4
+model: Claude Sonnet 4.5
 handoffs:
   - label: 🏗️ Generate Structure
     agent: Aurora Implement

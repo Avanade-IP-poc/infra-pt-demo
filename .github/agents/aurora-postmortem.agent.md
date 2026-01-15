@@ -2,7 +2,7 @@
 name: Aurora Postmortem
 description: 🔥 Generate blameless postmortems for incidents, outages, and project failures following AURORA methodology
 tools: ['read', 'edit', 'search', 'execute']
-model: Claude Sonnet 4
+model: Claude Sonnet 4.5
 handoffs:
   - label: 📈 Improvement Actions
     agent: Aurora Improve

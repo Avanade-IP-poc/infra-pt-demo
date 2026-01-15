@@ -2,7 +2,7 @@
 name: Aurora Dependencies
 description: 📦 Smart dependency management and auto-installation based on features
 tools: ['execute', 'read', 'search', 'edit']
-model: Claude Sonnet 4
+model: Claude Sonnet 4.5
 handoffs:
   - label: 🧪 Generate Tests
     agent: Aurora Testing

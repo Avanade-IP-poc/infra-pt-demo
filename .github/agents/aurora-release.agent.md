@@ -2,7 +2,7 @@
 name: Aurora Release
 description: 📦 Orchestrate release process following semantic versioning and AURORA methodology
 tools: ['read', 'edit', 'execute', 'search']
-model: Claude Sonnet 4
+model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Pre-release Check
     agent: Aurora Analyze

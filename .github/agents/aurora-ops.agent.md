@@ -2,7 +2,7 @@
 name: Aurora Ops
 description: 🚀 Manage operations, deployments, monitoring and incident response following AURORA methodology
 tools: ['read', 'execute', 'search']
-model: Claude Sonnet 4
+model: Claude Sonnet 4.5
 handoffs:
   - label: 📈 Check Improvements
     agent: Aurora Improve

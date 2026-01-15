@@ -2,7 +2,7 @@
 name: Aurora Status
 description: 📊 Generate comprehensive project status reports across all AURORA lifecycle phases
 tools: ['read', 'search', 'execute']
-model: Claude Sonnet 4
+model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Run Analysis
     agent: Aurora Analyze

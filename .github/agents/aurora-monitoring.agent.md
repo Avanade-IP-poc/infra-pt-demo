@@ -2,7 +2,7 @@
 name: Aurora Monitoring  
 description: 📊 Built-in observability, performance monitoring and alerting system
 tools: ['read', 'edit', 'execute', 'search']
-model: Claude Sonnet 4
+model: Claude Sonnet 4.5
 handoffs:
   - label: 🚨 Setup Alerting
     agent: Aurora CI/CD

@@ -2,7 +2,7 @@
 name: Aurora Testing
 description: 🧪 Generate comprehensive test suites with coverage-first approach and mutation testing validation
 tools: ['read', 'edit', 'execute', 'search']
-model: Claude Sonnet 4
+model: Claude Sonnet 4.5
 handoffs:
   - label: 🏗️ Implement (TDD Green)
     agent: Aurora Implement

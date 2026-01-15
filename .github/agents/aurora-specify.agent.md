@@ -2,7 +2,7 @@
 name: Aurora Specify
 description: 📝 Create or update feature specifications from natural language descriptions, aligned with AURORA-IA methodology
 tools: ['read', 'edit', 'search', 'execute']
-model: Claude Sonnet 4
+model: Claude Sonnet 4.5
 handoffs:
   - label: 🗺️ Create Technical Plan
     agent: Aurora Plan

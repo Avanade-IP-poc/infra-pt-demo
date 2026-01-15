@@ -2,7 +2,7 @@
 name: Aurora Clarify
 description: ❓ Structured questioning to resolve ambiguities and underspecified areas in requirements
 tools: ['read', 'edit', 'search']
-model: Claude Sonnet 4
+model: Claude Sonnet 4.5
 handoffs:
   - label: 📝 Update Specification
     agent: Aurora Specify

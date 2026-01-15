@@ -8,7 +8,7 @@ Agents are conversational AI assistants specialized for specific tasks. Each age
 - **Name**: Display name for invocation (e.g., `@Aurora Testing`)
 - **Description**: Brief explanation of capabilities
 - **Tools**: Available actions (`read`, `edit`, `execute`, `search`, `web`)
-- **Model**: AI model used (Claude Sonnet 4)
+- **Model**: AI model used (Claude Sonnet 4.5)
 - **Handoffs**: Ability to delegate to other agents
 
 ## Available Agents (29 Total)
@@ -165,7 +165,7 @@ Each agent follows this YAML frontmatter structure:
 name: Aurora Agent Name
 description: 📝 Brief description of capabilities
 tools: ['read', 'edit', 'execute', 'search']
-model: Claude Sonnet 4
+model: Claude Sonnet 4.5
 handoffs:
   - label: 🔗 Handoff Label
     agent: Aurora Other Agent

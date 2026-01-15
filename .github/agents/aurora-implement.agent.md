@@ -2,7 +2,7 @@
 name: Aurora Implement
 description: 🏗️ Execute implementation following Bolt task list with AI-DLC quality gates and micro-iteration discipline
 tools: ['read', 'edit', 'execute', 'search']
-model: Claude Sonnet 4
+model: Claude Sonnet 4.5
 handoffs:
   - label: 🧪 Generate Tests
     agent: Aurora Testing
