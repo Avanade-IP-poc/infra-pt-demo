@@ -1,7 +1,7 @@
 ---
 name: Aurora Documentation
 description: 📚 Living documentation generator, maintainer and knowledge management system
-tools: ['read', 'edit', 'execute', 'search']
+tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'markitdown/*', 'microsoftdocs/mcp/*', 'agent', 'todo']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Analyze Code

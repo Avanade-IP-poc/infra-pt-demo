@@ -1,7 +1,7 @@
 ---
 name: Aurora Testing
 description: 🧪 Generate comprehensive test suites with coverage-first approach and mutation testing validation
-tools: ['read', 'edit', 'execute', 'search']
+tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'microsoftdocs/mcp/*', 'agent', 'todo']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🏗️ Implement (TDD Green)

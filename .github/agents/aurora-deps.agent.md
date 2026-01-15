@@ -1,7 +1,7 @@
 ---
 name: Aurora Dependencies
 description: 📦 Smart dependency management and auto-installation based on features
-tools: ['execute', 'read', 'search', 'edit']
+tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'github/web_search', 'microsoftdocs/mcp/*', 'agent', 'todo']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🧪 Generate Tests

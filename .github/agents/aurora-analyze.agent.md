@@ -1,7 +1,7 @@
 ---
 name: Aurora Analyze
 description: 🔍 Run consistency analysis between all AURORA artifacts ensuring specification-implementation alignment
-tools: ['read', 'search', 'execute']
+tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'agent', 'todo']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🏗️ Fix Implementation

@@ -1,7 +1,7 @@
 ---
 name: Aurora Review
 description: 👀 Perform comprehensive code review validating constitution compliance, patterns, and SOLID principles
-tools: ['read', 'search', 'execute']
+tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'microsoftdocs/mcp/*', 'agent', 'todo']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🏗️ Fix Issues

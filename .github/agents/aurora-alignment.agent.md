@@ -1,7 +1,7 @@
 ---
 name: Aurora Alignment
 description: 📊 Analyze business-technical alignment ensuring implementation matches business goals and requirements
-tools: ['read', 'search', 'execute']
+tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'agent', 'todo']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Run Consistency Analysis

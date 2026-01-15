@@ -1,7 +1,7 @@
 ---
 name: Aurora Specify
 description: 📝 Create or update feature specifications from natural language descriptions, aligned with AURORA-IA methodology
-tools: ['read', 'edit', 'search', 'execute']
+tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'microsoftdocs/mcp/*', 'agent', 'todo']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🗺️ Create Technical Plan

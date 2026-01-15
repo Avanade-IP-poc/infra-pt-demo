@@ -1,7 +1,7 @@
 ---
 name: Aurora Constitution
 description: 📋 Create or update the AURORA-IA project constitution - the foundational document that governs all AI agents and development decisions
-tools: ['read', 'edit', 'search', 'execute']
+tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'angular-cli/search_documentation', 'github/web_search', 'microsoftdocs/mcp/*', 'agent', 'todo']
 model: Claude Sonnet 4.5
 handoffs:
   - label: ✨ Build Specification

@@ -1,7 +1,7 @@
 ---
 name: Aurora Security
 description: 🔒 Security Guardian & Policy Enforcer - comprehensive stack-agnostic security analysis with OWASP compliance and constitution-driven policies
-tools: ['read', 'edit', 'search', 'execute']
+tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'microsoftdocs/mcp/*', 'agent', 'todo']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Run Security Analysis

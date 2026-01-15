@@ -1,7 +1,7 @@
 ---
 name: Aurora Improve
 description: 📈 Analyze project for continuous improvement opportunities using operational data and feedback
-tools: ['read', 'search', 'execute']
+tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'microsoftdocs/mcp/*', 'agent', 'todo']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Analyze Consistency

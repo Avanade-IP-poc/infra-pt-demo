@@ -1,7 +1,7 @@
 ---
 name: Aurora Retire
 description: 🌅 Plan and execute controlled retirement of systems, features, or entire projects following AURORA methodology
-tools: ['read', 'edit', 'search', 'execute']
+tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'microsoftdocs/mcp/*', 'agent', 'todo']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 📦 Final Release

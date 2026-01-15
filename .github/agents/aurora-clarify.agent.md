@@ -1,7 +1,7 @@
 ---
 name: Aurora Clarify
 description: ❓ Structured questioning to resolve ambiguities and underspecified areas in requirements
-tools: ['read', 'edit', 'search']
+tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'microsoftdocs/mcp/*', 'agent', 'todo']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 📝 Update Specification

@@ -1,7 +1,7 @@
 ---
 name: Aurora Architect
 description: 🏛️ Solution Architecture Authority - translates domain models into technical architecture with ADRs and C4 diagrams
-tools: ['read', 'edit', 'search']
+tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'agent', 'todo']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 📝 Create ADR

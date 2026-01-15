@@ -1,7 +1,7 @@
 ---
 name: Aurora Feature
 description: ✨ Create comprehensive feature specifications with user stories, use cases, and acceptance criteria
-tools: ['read', 'edit', 'search', 'execute']
+tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'microsoftdocs/mcp/*', 'agent', 'todo']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 📖 Generate Use Cases

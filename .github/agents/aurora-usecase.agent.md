@@ -1,7 +1,7 @@
 ---
 name: Aurora Use Case
 description: 📖 Generate detailed use case specifications from user stories following UML/Cockburn style
-tools: ['read', 'edit', 'search', 'execute']
+tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'microsoftdocs/mcp/*', 'agent', 'todo']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🥒 Generate Gherkin
