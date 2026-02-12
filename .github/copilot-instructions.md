@@ -87,6 +87,27 @@ AURORA includes 29 specialized AI agents. Invoke them with `@AgentName`:
 
 📚 **Full list**: [.github/agents/README.md](.github/agents/README.md)
 
+## Skills - Specialized Capabilities
+
+AURORA includes specialized **skills** that provide domain-specific knowledge and workflows. When working on specific tasks, Copilot will automatically load relevant skills to improve response quality.
+
+📚 **Skills documentation**: [.github/skills/README.md](.github/skills/README.md)
+
+### Available Skills
+
+| Skill | Domain | Use When |
+|-------|--------|----------|
+| [skill-development](.github/skills/skill-development/) | Skill Creation | Creating or improving Copilot skills |
+
+### Creating Custom Skills
+
+Want to add a new skill? Ask Copilot:
+```
+"Help me create a skill for [domain]"
+```
+
+Copilot will guide you through the process using the skill-development guidelines.
+
 ## Remember
 
 - 🔒 **Constitution is law** - Never violate its constraints
@@ -94,6 +115,7 @@ AURORA includes 29 specialized AI agents. Invoke them with `@AgentName`:
 - 🧪 **Test everything** - TDD/BDD approach
 - 📝 **Document decisions** - ADRs for architecture
 - 🔄 **Iterate small** - Micro-iterations, frequent validation
+- 🎯 **Use skills** - Load relevant skills for specialized tasks
 
 ---
 
