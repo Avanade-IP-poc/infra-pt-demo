@@ -15,11 +15,11 @@ AURORA-IA provides multiple initialization scripts to bootstrap your development
 ## 🎯 Quick Start
 
 ### 🤖 **Interactive Agent (Recommended)**
-Use the AURORA agent with the **Init Workspace** handoff for guided project creation:
+Use the Bolt Framework agent with the handoffs for guided project creation:
 
 1. **Open GitHub Copilot Chat** in VS Code
-2. **Select the AURORA agent** from available agents
-3. **Click "🚀 Init Workspace"** handoff
+2. **Select the Bolt Framework agent** from available agents
+3. **Use handoffs** for guided workflows
 4. **Answer interactive questions** - the agent will:
    - Dynamically read `init.sh` parameters
    - Ask for destination directory (use relative paths like `../my-project`)
@@ -165,7 +165,7 @@ Use the AURORA agent with the **Init Workspace** handoff for guided project crea
 ```
 my-project/
 ├── .github/                    # GitHub Actions, Issue Templates, PR Templates
-│   ├── agents/                 # 31 specialized AI agents
+│   ├── agents/                 # 30 specialized AI agents
 │   ├── workflows/              # CI/CD pipelines
 │   └── prompts/                # Reusable AI prompts
 ├── .aurora/                    # AURORA framework
@@ -207,7 +207,7 @@ After initialization, use specialized AI agents:
 
 | Agent | Purpose | Usage |
 |-------|---------|--------|
-| `@AURORA` | Main orchestrator | Project coordination |
+| `@Bolt Framework` | Main orchestrator | Project coordination |
 | `@Aurora Feature` | Feature creation | New feature development |
 | `@Aurora Legacy` | Legacy analysis | Brownfield migration |
 | `@Aurora Architect` | Architecture design | System architecture |
@@ -261,7 +261,7 @@ chmod +x init2.sh
 ## 📞 Support
 
 - 📖 **Documentation**: `.aurora/docs/`
-- 🤖 **AI Help**: `@AURORA` agent in your project
+- 🤖 **AI Help**: `@Bolt Framework` agent in your project
 - 🔧 **Scripts**: `.aurora/scripts/` for development automation
 - 📝 **Issues**: Create GitHub issues for bugs or feature requests
 

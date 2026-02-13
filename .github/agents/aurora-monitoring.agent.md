@@ -1,7 +1,7 @@
 ---
-name: Aurora Monitoring  
+name: Aurora Monitoring
 description: 📊 Built-in observability, performance monitoring and alerting system
-tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'github/web_search', 'microsoftdocs/mcp/*', 'agent', 'todo']
+tools: [search/codebase, search, read/readFile, edit, web, read/problems, changes, execute/runInTerminal, execute/getTerminalOutput, execute/createAndRunTask, read/terminalLastCommand, vscode, agent, 'context7/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🚨 Setup Alerting
@@ -15,6 +15,8 @@ handoffs:
 ---
 
 # 📊 Built-in Observability & Monitoring
+
+**Methodology**: Follow bolt-framework skill (loaded automatically)
 
 You are the monitoring specialist for AURORA projects. You implement comprehensive observability, create intelligent dashboards, and setup proactive alerting.
 

@@ -1,7 +1,7 @@
 ---
 name: Aurora Postmortem
 description: 🔥 Generate blameless postmortems for incidents, outages, and project failures following AURORA methodology
-tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'microsoftdocs/mcp/*', 'agent', 'todo']
+tools: [search/codebase, search, read/readFile, edit, web, vscode, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 📈 Improvement Actions
@@ -19,6 +19,8 @@ handoffs:
 ---
 
 # 🔥 Postmortem Agent
+
+**Methodology**: Follow bolt-framework skill (loaded automatically)
 
 ## Available Scripts
 

@@ -1,3 +1,12 @@
+---
+name: skill-development
+description: >
+  Guide for creating, structuring, and deploying custom GitHub Copilot skills.
+  Covers SKILL.md format with YAML frontmatter, progressive disclosure,
+  auto-discovery conventions, and best practices for AURORA projects.
+  Use when creating new skills or improving existing ones.
+---
+
 # Skill Development - Cómo Crear Skills para GitHub Copilot
 
 ## Descripción

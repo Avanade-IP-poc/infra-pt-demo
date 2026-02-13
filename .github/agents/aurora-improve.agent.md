@@ -1,7 +1,7 @@
 ---
 name: Aurora Improve
 description: 📈 Analyze project for continuous improvement opportunities using operational data and feedback
-tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'microsoftdocs/mcp/*', 'agent', 'todo']
+tools: [search/codebase, search, read/readFile, usages, web, read/problems, changes, vscode, read/terminalLastCommand, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Analyze Consistency
@@ -23,6 +23,8 @@ handoffs:
 ---
 
 # 📈 Improvement Agent
+
+**Methodology**: Follow bolt-framework skill (loaded automatically)
 
 ## Available Scripts
 

@@ -1,7 +1,7 @@
 ---
 name: Aurora Release
 description: 📦 Orchestrate release process following semantic versioning and AURORA methodology
-tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'microsoftdocs/mcp/*', 'agent', 'todo']
+tools: [search/codebase, search, read/readFile, edit, web, read/problems, changes, execute/runInTerminal, execute/getTerminalOutput, execute/createAndRunTask, read/terminalLastCommand, vscode, agent, 'context7/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Pre-release Check
@@ -23,6 +23,8 @@ handoffs:
 ---
 
 # 📦 Release Agent
+
+**Methodology**: Follow bolt-framework skill (loaded automatically)
 
 ## Available Scripts
 

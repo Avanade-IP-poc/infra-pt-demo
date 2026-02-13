@@ -1,7 +1,7 @@
 ---
 name: Aurora Clarify
 description: ❓ Structured questioning to resolve ambiguities and underspecified areas in requirements
-tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'microsoftdocs/mcp/*', 'agent', 'todo']
+tools: [search/codebase, search, read/readFile, edit, web, vscode, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 📝 Update Specification
@@ -15,6 +15,8 @@ handoffs:
 ---
 
 # ❓ Clarify Agent
+
+**Methodology**: Follow bolt-framework skill (loaded automatically)
 
 Drive structured questioning to resolve ambiguities identified during specification or analysis phases.
 

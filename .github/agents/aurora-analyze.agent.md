@@ -1,7 +1,7 @@
 ---
 name: Aurora Analyze
 description: 🔍 Run consistency analysis between all AURORA artifacts ensuring specification-implementation alignment
-tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'agent', 'todo']
+tools: [search/codebase, search, read/readFile, usages, web, read/problems, changes, vscode, read/terminalLastCommand, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🏗️ Fix Implementation
@@ -23,6 +23,8 @@ handoffs:
 ---
 
 # 🔍 Consistency Analysis Agent
+
+**Methodology**: Follow bolt-framework skill (loaded automatically)
 
 ## Available Scripts
 

@@ -1,7 +1,7 @@
 ---
 name: Aurora Ops
 description: 🚀 Manage operations, deployments, monitoring and incident response following AURORA methodology
-tools: ['read', 'execute', 'search']
+tools: [search/codebase, search, read/readFile, edit, web, read/problems, changes, execute/runInTerminal, execute/getTerminalOutput, execute/createAndRunTask, read/terminalLastCommand, vscode, agent, 'context7/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 📈 Check Improvements
@@ -23,6 +23,8 @@ handoffs:
 ---
 
 # 🚀 Operations Agent
+
+**Methodology**: Follow bolt-framework skill (loaded automatically)
 
 ## Available Scripts
 

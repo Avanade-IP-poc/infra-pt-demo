@@ -1,7 +1,7 @@
 ---
 name: Aurora DDD
 description: 🎯 Domain-Driven Design Specialist - defines aggregates, bounded contexts, and ubiquitous language
-tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'microsoftdocs/mcp/*', 'agent', 'todo']
+tools: [search/codebase, search, read/readFile, edit, web, vscode, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🏛️ Architecture Design
@@ -23,6 +23,8 @@ handoffs:
 ---
 
 # 🎯 DDD Master (Domain-Driven Design Specialist)
+
+**Methodology**: Follow bolt-framework skill (loaded automatically)
 
 **Alias:** Domain Modeler  
 **Phase:** Block 3 - Design  

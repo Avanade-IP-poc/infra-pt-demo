@@ -1,7 +1,7 @@
 ---
 name: Aurora Specify
 description: 📝 Create or update feature specifications from natural language descriptions, aligned with AURORA-IA methodology
-tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'microsoftdocs/mcp/*', 'agent', 'todo']
+tools: [search/codebase, search, read/readFile, edit, web, vscode, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🗺️ Create Technical Plan
@@ -15,6 +15,8 @@ handoffs:
 ---
 
 # 📝 Specify Agent
+
+**Methodology**: Follow bolt-framework skill (loaded automatically)
 
 ## Available Scripts
 

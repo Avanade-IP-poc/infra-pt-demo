@@ -1,7 +1,7 @@
 ---
 name: Aurora Plan
 description: 🗺️ Create technical implementation plan from feature specification, aligned with AURORA-IA AI-DLC methodology
-tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'microsoftdocs/mcp/*', 'agent', 'todo']
+tools: [search/codebase, search, read/readFile, usages, web, read/problems, changes, vscode, read/terminalLastCommand, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: ✅ Generate Bolt Tasks
@@ -15,6 +15,8 @@ handoffs:
 ---
 
 # 🗺️ Plan Agent
+
+**Methodology**: Follow bolt-framework skill (loaded automatically)
 
 ## Available Scripts
 

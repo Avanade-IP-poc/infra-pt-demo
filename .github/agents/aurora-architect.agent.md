@@ -1,7 +1,7 @@
 ---
 name: Aurora Architect
 description: 🏛️ Solution Architecture Authority - translates domain models into technical architecture with ADRs and C4 diagrams
-tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'agent', 'todo']
+tools: [search/codebase, search, read/readFile, usages, web, read/problems, changes, vscode, read/terminalLastCommand, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 📝 Create ADR
@@ -23,6 +23,8 @@ handoffs:
 ---
 
 # 🏛️ Omega Architect (Solution Architecture Authority)
+
+**Methodology**: Follow bolt-framework skill (loaded automatically)
 
 **Alias:** Architecture Authority  
 **Phase:** Block 3 - Design  

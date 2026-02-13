@@ -7,17 +7,17 @@ This directory contains GitHub Copilot Custom Agents that implement the AURORA-I
 Agents are conversational AI assistants specialized for specific tasks. Each agent has:
 - **Name**: Display name for invocation (e.g., `@Aurora Testing`)
 - **Description**: Brief explanation of capabilities
-- **Tools**: Available actions (`read`, `edit`, `execute`, `search`, `web`)
+- **Tools**: Available VS Code built-in tools (see TOOLSETS.md)
 - **Model**: AI model used (Claude Sonnet 4.5)
 - **Handoffs**: Ability to delegate to other agents
 
-## Available Agents (29 Total)
+## Available Agents (30 Total)
 
 ### 🌌 Orchestrator
 
 | Agent | File | Purpose |
 |-------|------|---------|
-| **AURORA** | `aurora.agent.md` | Main orchestrator - routes to specialized agents |
+| **Bolt Framework** | `bolt-framework.agent.md` | Main orchestrator - routes to specialized agents |
 
 ### 📋 Discovery & Requirements
 
@@ -104,7 +104,7 @@ In VS Code Copilot Chat, use the `@` prefix:
 
 @Aurora Implement implement the authentication feature
 
-@AURORA help me start a new feature for user registration
+@Bolt Framework help me start a new feature for user registration
 ```
 
 ### Agent Handoffs
@@ -132,14 +132,14 @@ Agents can execute automation scripts when needed. Each agent documents its avai
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                         USER INTERACTION                                 │
-│                    @Aurora, @Aurora Testing, etc.                        │
+│                    @Bolt Framework, @Aurora Testing, etc.                 │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
-│   ┌────────────────────────────────────────────────────────────────┐    │
-│   │                    🤖 AGENTS (29)                               │    │
+│   ┌────────────────────────────────────────────────────────────┐    │
+│   │                    🤖 AGENTS (30)                               │    │
 │   │         Conversational interface with users                     │    │
 │   │                                                                 │    │
-│   │   Tools: read, edit, execute, search, web                      │    │
+│   │   Tools: codebase, search, edit, runInTerminal, etc.            │    │
 │   │   Handoffs: Delegate to other agents                           │    │
 │   └────────────────────────┬───────────────────────────────────────┘    │
 │                            │                                             │
@@ -164,7 +164,19 @@ Each agent follows this YAML frontmatter structure:
 ---
 name: Aurora Agent Name
 description: 📝 Brief description of capabilities
-tools: ['read', 'edit', 'execute', 'search']
+tools:
+  - codebase
+  - search
+  - readFile
+  - listDirectory
+  - edit
+  - editFiles
+  - createFile
+  - runSubagent
+  - VSCodeAPI
+  - context7/*
+  - awesome-copilot/*
+  - microsoftdocs/*
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🔗 Handoff Label
@@ -186,14 +198,14 @@ When you need automation, execute these scripts:
 
 ## Supported Tools
 
-| Tool | Alias | Purpose |
-|------|-------|---------|
-| `read` | filesystem | Read files and directories |
-| `edit` | editFiles | Create and modify files |
-| `execute` | runInTerminal | Run shell commands |
-| `search` | codebase | Search code semantically |
-| `web` | fetch | Fetch web content |
-| `agent` | - | Delegate to other agents |
+Agents use VS Code built-in tools organized in 9 toolset categories.
+See `.github/skills/bolt-framework/TOOLSETS.md` for the complete reference.
+
+Key tools: `codebase`, `search`, `readFile`, `listDirectory`, `edit`, `editFiles`,
+`createFile`, `createDirectory`, `runCommands`, `runInTerminal`, `getTerminalOutput`,
+`runTests`, `runSubagent`, `todos`, `VSCodeAPI`, `fetch`, `githubRepo`, `problems`,
+`changes`, `usages`, `terminalLastCommand`, `testFailure`, `searchResults`,
+`runTasks`, `getTaskOutput`, `context7/*`, `awesome-copilot/*`, `microsoftdocs/*`
 
 ## Related Resources
 
@@ -214,11 +226,11 @@ The previous `/aurora.*` slash commands have been replaced by agents:
 | `/aurora.plan` | `@Aurora Plan` |
 | `/aurora.constitution` | `@Aurora Constitution` |
 | `/aurora.status` | `@Aurora Status` |
-| `/aurora` | `@AURORA` |
+| `/aurora` | `@Bolt Framework` |
 
 ## Best Practices
 
-1. **Start with AURORA**: Use `@AURORA` to get guidance on which agent to use
+1. **Start with Bolt Framework**: Use `@Bolt Framework` to get guidance on which agent to use
 2. **Read Constitution First**: Agents automatically reference `.aurora/memory/constitution.md`
 3. **Use Handoffs**: Let agents delegate to specialists when appropriate
 4. **Chain Workflows**: Feature → Plan → Tasks → Implement → Test → Review

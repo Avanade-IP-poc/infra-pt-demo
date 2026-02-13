@@ -1,7 +1,7 @@
 ---
 name: Aurora Review
 description: 👀 Perform comprehensive code review validating constitution compliance, patterns, and SOLID principles
-tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'microsoftdocs/mcp/*', 'agent', 'todo']
+tools: [search/codebase, search, read/readFile, usages, web, read/problems, changes, edit, execute/runInTerminal, execute/getTerminalOutput, execute/createAndRunTask, runTests, testFailure, read/terminalLastCommand, vscode, agent, todo, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🏗️ Fix Issues
@@ -19,6 +19,8 @@ handoffs:
 ---
 
 # 👀 Code Review Agent
+
+**Methodology**: Follow bolt-framework skill (loaded automatically)
 
 ## Available Scripts
 
@@ -70,38 +72,6 @@ Perform comprehensive code review validating constitution compliance, architectu
 | **CQRS** | Commands and Queries separated |
 | **Event Sourcing** | Events are immutable |
 | **Hexagonal** | Ports and Adapters defined |
-
-### 2b. Architecture Quality Gates (Automated)
-
-Run architecture validation tools per stack:
-
-**Node.js/TypeScript:**
-```bash
-# Layer dependency violations (must be 0)
-npm run arch:check
-
-# Circular dependencies (must be 0)
-npm run circular:check
-
-# Generate architecture graph (Mermaid)
-npm run arch:graph
-# Output: reports/architecture/dependency-graph.md
-
-# Contract validation
-npm run validate:openapi
-```
-
-**Multi-stack script:**
-```bash
-./.aurora/scripts/bash/quality-gates.sh
-# or: .\scripts\powershell\Quality-Gates.ps1
-```
-
-| Gate | Pass Criteria | Tool |
-|------|---------------|------|
-| Layer Violations | 0 | dependency-cruiser / depend / pydeps |
-| Circular Dependencies | 0 | madge / depend / pydeps |
-| Contract Errors | 0 | Spectral / asyncapi-cli |
 
 ### 3. SOLID Principles
 

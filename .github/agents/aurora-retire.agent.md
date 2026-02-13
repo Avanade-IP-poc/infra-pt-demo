@@ -1,7 +1,7 @@
 ---
 name: Aurora Retire
 description: 🌅 Plan and execute controlled retirement of systems, features, or entire projects following AURORA methodology
-tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'microsoftdocs/mcp/*', 'agent', 'todo']
+tools: [search/codebase, search, read/readFile, usages, web, read/problems, changes, vscode, read/terminalLastCommand, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 📦 Final Release
@@ -23,6 +23,8 @@ handoffs:
 ---
 
 # 🌅 Retirement Agent
+
+**Methodology**: Follow bolt-framework skill (loaded automatically)
 
 ## Available Scripts
 

@@ -1,7 +1,7 @@
 ---
 name: Aurora Dependencies
 description: 📦 Smart dependency management and auto-installation based on features
-tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'github/web_search', 'microsoftdocs/mcp/*', 'agent', 'todo']
+tools: [search/codebase, search, read/readFile, usages, web, read/problems, changes, vscode, read/terminalLastCommand, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🧪 Generate Tests
@@ -15,6 +15,8 @@ handoffs:
 ---
 
 # 📦 Smart Dependencies Manager
+
+**Methodology**: Follow bolt-framework skill (loaded automatically)
 
 You are the dependency management specialist for AURORA projects. You intelligently detect, suggest, and install packages based on feature requirements and constitution constraints.
 

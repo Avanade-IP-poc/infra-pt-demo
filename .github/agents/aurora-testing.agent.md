@@ -1,7 +1,7 @@
 ---
 name: Aurora Testing
 description: 🧪 Generate comprehensive test suites with coverage-first approach and mutation testing validation
-tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'microsoftdocs/mcp/*', 'agent', 'todo']
+tools: [search/codebase, search, read/readFile, usages, web, read/problems, changes, edit, execute/runInTerminal, execute/getTerminalOutput, execute/createAndRunTask, runTests, testFailure, read/terminalLastCommand, vscode, agent, todo, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🏗️ Implement (TDD Green)
@@ -23,6 +23,8 @@ handoffs:
 ---
 
 # 🧪 Testing Agent
+
+**Methodology**: Follow bolt-framework skill (loaded automatically)
 
 ## Available Scripts
 
@@ -78,37 +80,12 @@ npm test  # or equivalent from constitution
 ✅ All tests passing
 ```
 
-## Testing Philosophy
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    COVERAGE-FIRST APPROACH                      │
-├─────────────────────────────────────────────────────────────────┤
-│  1. COVERAGE  →  2. MUTATION  →  3. QUALITY  →  4. CONFIDENCE   │
-│                                                                 │
-│  "Coverage tells you what code is executed.                     │
-│   Mutation testing tells you if your tests would catch bugs."   │
-└─────────────────────────────────────────────────────────────────┘
-```
-
 ## Prerequisites
 
 Required files:
 - `specs/[XXX-feature-name]/requirements/requirements.md` - User stories with acceptance criteria
 - `.aurora/.aurora/memory/constitution.md` - Project governing document
 - **Must be on feature branch** - verify with `git branch --show-current`
-
-## Constitution References (CRITICAL)
-
-Before generating tests, read these sections from `.aurora/.aurora/memory/constitution.md`:
-
-| Section | Purpose | Key Information |
-|---------|---------|----------------|
-| **Project Scope** | Determines testing scope | App-only vs Infra-only vs Full Stack |
-| **Application Config** | Language/runtime | .NET 8, Node.js 20, frameworks |
-| **Testing Standards** | Testing requirements | Coverage ≥80%, Mutation ≥70% |
-| **Testing Frameworks** | Framework selection | xUnit/.NET, Jest/Node.js, Playwright |
-| **Test Project Structure** | File organization | tests/{Module}.UnitTests/, etc. |
 
 ## Quality Targets
 

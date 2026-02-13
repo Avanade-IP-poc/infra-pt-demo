@@ -27,7 +27,7 @@ Each feature has its own directory with:
 
 ### Agents (`@Aurora*`)
 Invoke AURORA workflows via agents:
-- `@AURORA` - Main orchestrator
+- `@Bolt Framework` - Main orchestrator
 - `@Aurora Feature` - Create feature
 - `@Aurora Implement` - Implement code
 - `@Aurora Testing` - Generate tests
@@ -66,22 +66,24 @@ project/
 ├── src/                     # Source code
 ├── legacy/                  # Legacy code analysis (brownfield)
 └── .github/
-    ├── agents/              # AURORA agents (29)
-    ├── prompts/             # Reusable prompts (18)
+    ├── agents/              # AURORA agents (30)
+    ├── prompts/             # Reusable prompts
+    ├── skills/              # Auto-discovered skills
     └── workflows/           # GitHub Actions
 ```
 
 ## Specialized Agents
 
-AURORA includes 29 specialized AI agents. Invoke them with `@AgentName`:
+AURORA includes 30 specialized AI agents. Invoke them with `@AgentName`:
 
 | Topic | Agent |
 |-------|-------|
-| Orchestration | `@AURORA` |
+| Orchestration | `@Bolt Framework` |
 | Architecture | `@Aurora Architect` |
 | Domain modeling | `@Aurora DDD` |
 | Testing | `@Aurora Testing` |
 | Implementation | `@Aurora Implement` |
+| Documentation | `@Aurora Documentation` |
 | Operations | `@Aurora Ops` |
 | Releases | `@Aurora Release` |
 
@@ -89,14 +91,13 @@ AURORA includes 29 specialized AI agents. Invoke them with `@AgentName`:
 
 ## Skills - Specialized Capabilities
 
-AURORA includes specialized **skills** that provide domain-specific knowledge and workflows. When working on specific tasks, Copilot will automatically load relevant skills to improve response quality.
-
-📚 **Skills documentation**: [.github/skills/README.md](.github/skills/README.md)
+AURORA includes specialized **skills** that are auto-discovered from `.github/skills/<name>/SKILL.md`. When working on specific tasks, Copilot automatically loads relevant skills.
 
 ### Available Skills
 
 | Skill | Domain | Use When |
 |-------|--------|----------|
+| [bolt-framework](.github/skills/bolt-framework/) | AURORA Methodology | Working on AURORA projects, managing lifecycle |
 | [skill-development](.github/skills/skill-development/) | Skill Creation | Creating or improving Copilot skills |
 
 ### Creating Custom Skills

@@ -1,7 +1,7 @@
 ---
 name: Aurora Tasks
 description: ✅ Generate actionable Bolt task lists from implementation plan, optimized for AI-DLC micro-iterations
-tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'microsoftdocs/mcp/*', 'agent', 'todo']
+tools: [search/codebase, search, read/readFile, usages, web, read/problems, changes, vscode, read/terminalLastCommand, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Analyze Consistency
@@ -15,6 +15,8 @@ handoffs:
 ---
 
 # ✅ Tasks Agent
+
+**Methodology**: Follow bolt-framework skill (loaded automatically)
 
 ## Available Scripts
 

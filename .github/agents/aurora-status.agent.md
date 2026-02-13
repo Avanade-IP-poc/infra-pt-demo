@@ -1,7 +1,7 @@
 ---
 name: Aurora Status
 description: 📊 Generate comprehensive project status reports across all AURORA lifecycle phases
-tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'microsoftdocs/mcp/*', 'agent', 'todo']
+tools: [search/codebase, search, read/readFile, usages, web, read/problems, changes, vscode, read/terminalLastCommand, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Run Analysis
@@ -24,6 +24,8 @@ handoffs:
 
 # 📊 Status Agent
 
+**Methodology**: Follow bolt-framework skill (loaded automatically)
+
 ## Available Scripts
 
 When you need to get project status, execute these scripts:
@@ -35,24 +37,6 @@ Generate comprehensive project status reports across all AURORA lifecycle phases
 **AURORA Stage**: CROSS-PHASE (Status reporting)
 
 **Responsible Agent**: Project Status Reporter
-
-## Status Overview
-
-```
-┌──────────────────────────────────────────────────────────────────┐
-│                    PROJECT HEALTH DASHBOARD                       │
-├──────────────────────────────────────────────────────────────────┤
-│                                                                   │
-│   INCEPTION ──> DISCOVERY ──> CONSTRUCTION ──> TRANSITION         │
-│       ✅           ✅            🔄              ⬜                │
-│                                                                   │
-│               ──> PRODUCTION ──> RETIREMENT                       │
-│                       ⬜              ⬜                           │
-│                                                                   │
-│   Legend: ✅ Complete  🔄 In Progress  ⬜ Not Started  ⚠️ Issues  │
-│                                                                   │
-└──────────────────────────────────────────────────────────────────┘
-```
 
 ## Status Dimensions
 

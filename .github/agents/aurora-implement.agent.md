@@ -1,7 +1,7 @@
 ---
 name: Aurora Implement
 description: 🏗️ Execute implementation following Bolt task list with AI-DLC quality gates and micro-iteration discipline
-tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'microsoftdocs/mcp/*', 'agent', 'todo']
+tools: [search/codebase, search, read/readFile, usages, web, read/problems, changes, edit, execute/runInTerminal, execute/getTerminalOutput, execute/createAndRunTask, runTests, testFailure, read/terminalLastCommand, vscode, agent, todo, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🧪 Generate Tests
@@ -19,6 +19,8 @@ handoffs:
 ---
 
 # 🏗️ Implementation Agent
+
+**Methodology**: Follow bolt-framework skill (loaded automatically)
 
 ## Available Scripts
 
@@ -85,48 +87,6 @@ Required files in `specs/[XXX-feature-name]/`:
 Required in project root:
 - `.aurora/memory/constitution.md` - Technology and standards governance
 
-## Implementation Discipline
-
-### 📋 BOLT Workflow (Follow bolt-implementation.prompt.md)
-
-When user requests BOLT implementation:
-
-1. **AUTO-CREATE BOLT BRANCH** (no confirmation needed)
-   ```bash
-   # Pattern: feature/[feature-name]/bolt-[N]-[description]
-   FEATURE_BRANCH=$(git branch --show-current)
-   BOLT_BRANCH="${FEATURE_BRANCH}/bolt-${N}-${DESCRIPTION}"
-   git checkout -b "$BOLT_BRANCH"
-   ```
-
-2. **READ SPECIFICATIONS**
-   - Constitution: `specs/[feature]/constitution.md`
-   - Tasks: `specs/[feature]/planning/tasks.md`
-   - Requirements: `specs/[feature]/requirements/requirements.md`
-
-3. **EXECUTE BOLT TASKS** 
-   - Follow task list in order
-   - Update checkboxes as you complete them
-   - Implement + test each component
-
-### The Bolt Rhythm
-
-```
-┌─────────────────────────────────────────────────┐
-│  BOLT Start                                      │
-│  ├── AUTO-CREATE branch bolt-[N]-[desc]         │
-│  ├── READ constitution & tasks                   │
-│  ├── EXECUTE tasks sequentially                 │
-│  │   ├── Implement code                         │
-│  │   ├── Write/update tests                     │
-│  │   ├── ✅ Check off task                      │
-│  │   └── Mark checkbox [x]                      │
-│  ├── Run quality gates                          │
-│  ├── Commit changes                             │
-│  └── Bolt complete → next Bolt                  │
-└─────────────────────────────────────────────────┘
-```
-
 ## Execution Flow
 
 ### 0. Verify Branch (MANDATORY)
@@ -155,243 +115,7 @@ cat specs/[XXX-feature-name]/planning/tasks.md
 ls specs/[XXX-feature-name]/contracts/
 ```
 
-### 2. Begin Bolt Implementation
-
-For each Bolt in `tasks.md`:
-
-#### A. Domain Layer (src/domain/)
-
-```typescript
-// Entities - Core business objects
-// File: src/domain/entities/[entity].ts
-
-import { EntityId } from '../value-objects/entity-id';
-
-export class [Entity] {
-  private constructor(
-    private readonly id: EntityId,
-    // ... properties
-  ) {}
-
-  // Factory method
-  static create(props: [Entity]Props): [Entity] {
-    // Validation
-    // Business rules
-    return new [Entity](...);
-  }
-
-  // Domain behavior methods
-}
-```
-
-```typescript
-// Value Objects - Immutable domain concepts
-// File: src/domain/value-objects/[value-object].ts
-
-export class [ValueObject] {
-  private constructor(private readonly value: string) {
-    this.validate(value);
-  }
-
-  static create(value: string): [ValueObject] {
-    return new [ValueObject](value);
-  }
-
-  private validate(value: string): void {
-    // Validation rules
-  }
-}
-```
-
-#### B. Application Layer (src/application/)
-
-```typescript
-// Use Cases - Application orchestration
-// File: src/application/use-cases/[use-case].ts
-
-import { Result } from '../common/result';
-import { [Entity]Repository } from '../ports/[entity]-repository';
-
-export class [UseCase] {
-  constructor(
-    private readonly repository: [Entity]Repository,
-    // ... dependencies
-  ) {}
-
-  async execute(request: [Request]): Promise<Result<[Response]>> {
-    // 1. Validate request
-    // 2. Load/create domain objects
-    // 3. Execute domain logic
-    // 4. Persist changes
-    // 5. Return result
-  }
-}
-```
-
-```typescript
-// Ports - Dependency interfaces
-// File: src/application/ports/[entity]-repository.ts
-
-export interface [Entity]Repository {
-  findById(id: EntityId): Promise<[Entity] | null>;
-  save(entity: [Entity]): Promise<void>;
-  // ... operations
-}
-```
-
-#### C. Infrastructure Layer (src/infrastructure/)
-
-```typescript
-// Repository Implementation
-// File: src/infrastructure/persistence/[entity]-repository-impl.ts
-
-import { [Entity]Repository } from '../../application/ports/[entity]-repository';
-
-export class [Entity]RepositoryImpl implements [Entity]Repository {
-  constructor(private readonly db: Database) {}
-
-  async findById(id: EntityId): Promise<[Entity] | null> {
-    // Database query implementation
-  }
-
-  async save(entity: [Entity]): Promise<void> {
-    // Database persistence implementation
-  }
-}
-```
-
-#### D. Presentation Layer (src/presentation/)
-
-```typescript
-// API Controller
-// File: src/presentation/api/[controller].ts
-
-import { [UseCase] } from '../../application/use-cases/[use-case]';
-
-export class [Controller] {
-  constructor(private readonly useCase: [UseCase]) {}
-
-  async handle(request: HttpRequest): Promise<HttpResponse> {
-    // 1. Parse request
-    // 2. Execute use case
-    // 3. Format response
-  }
-}
-```
-
-### 3. Quality Gates (Per Bolt - MANDATORY)
-
-After completing each Bolt:
-
-```bash
-# Run linting
-npm run lint
-# or: dotnet format
-
-# Run tests
-npm test
-# or: dotnet test
-
-# Check coverage (MUST be >= 80%)
-npm run test:cov
-# or: dotnet test /p:CollectCoverage=true
-
-# Run mutation testing (MUST be >= 70%)
-npx stryker run
-# or: dotnet stryker
-
-# Run security scan
-npm audit
-# or: dotnet list package --vulnerable
-```
-
-**⚠️ MANDATORY Quality Gate Thresholds (from Constitution):**
-
-| Metric | Minimum | Recommended | Tool |
-|--------|---------|-------------|------|
-| Line Coverage | >= 80% | >= 90% | istanbul / coverlet |
-| Branch Coverage | >= 75% | >= 85% | istanbul / coverlet |
-| Mutation Score | >= 70% | >= 80% | Stryker |
-
-**BOLT CANNOT be marked complete until ALL quality gates pass.**
-
-### 3b. Architecture Quality Gates (Per Bolt - MANDATORY)
-
-Ensure Clean Architecture compliance with every BOLT:
-
-```bash
-# Use multi-language quality gates script
-./.aurora/scripts/bash/quality-gates.sh
-# or PowerShell: .\scripts\powershell\Quality-Gates.ps1
-```
-
-**Node.js/TypeScript:**
-```bash
-# Validate layer dependencies (domain must not depend on infrastructure)
-npm run arch:check
-
-# Detect circular dependencies
-npm run circular:check
-
-# Generate architecture diagram (Mermaid - renders in GitHub/VS Code)
-npm run arch:graph
-# Output: reports/architecture/dependency-graph.md
-
-# Validate API contracts
-npm run validate:openapi
-```
-
-**Python:**
-```bash
-pylint --disable=all --enable=import-error src/
-pydeps src/ --cluster --max-bacon=2
-```
-
-**.NET:**
-```bash
-dotnet tool run depend --verify
-```
-
-**Architecture Gate Thresholds:**
-
-| Gate | Requirement | Tool by Stack |
-|------|-------------|---------------|
-| Layer violations | 0 | dependency-cruiser (Node), depend (.NET), pydeps (Python) |
-| Circular dependencies | 0 | madge (Node), depend (.NET), pydeps (Python) |
-| Contract errors | 0 | Spectral (OpenAPI), asyncapi-cli (AsyncAPI) |
-
-**Architecture Graph (Mermaid):**
-The graph is generated in Mermaid format - text-based, versionable, renders everywhere:
-
-```mermaid
-flowchart LR
-    subgraph domain["Domain Layer"]
-        entities["Entities"]
-        valueObjects["Value Objects"]
-    end
-    subgraph application["Application Layer"]
-        services["Services"] --> domain
-    end
-    subgraph infrastructure["Infrastructure"]
-        repos["Repositories"] --> application
-    end
-```
-
-### First BOLT: Setup Mutation Testing
-
-If Stryker is not configured, add to first BOLT:
-
-```bash
-# Node.js/TypeScript
-npm install --save-dev @stryker-mutator/core @stryker-mutator/jest-runner @stryker-mutator/typescript-checker
-npx stryker init
-
-# .NET
-dotnet tool install -g dotnet-stryker
-dotnet stryker init
-```
-
-### 4. Update Progress
+### 2. Update Progress
 
 After completing tasks, update `tasks.md`:
 
@@ -400,16 +124,6 @@ After completing tasks, update `tasks.md`:
 - [x] T002 Configure linting
 - [ ] T003 Set up CI/CD pipeline  <- Current
 ```
-
-## Code Generation Rules
-
-Based on constitution, generate code that:
-
-1. **Follows the stack** - Use ONLY what constitution allows
-2. **Follows patterns** - Architecture patterns from constitution
-3. **Is testable** - Dependency injection, small functions
-4. **Is documented** - Comments for complex logic
-5. **Handles errors** - Proper error handling
 
 ## Terminal Commands
 

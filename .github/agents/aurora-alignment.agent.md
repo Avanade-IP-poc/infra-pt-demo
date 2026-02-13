@@ -1,7 +1,7 @@
 ---
 name: Aurora Alignment
 description: 📊 Analyze business-technical alignment ensuring implementation matches business goals and requirements
-tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'agent', 'todo']
+tools: [search/codebase, search, read/readFile, usages, web, read/problems, changes, vscode, read/terminalLastCommand, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Run Consistency Analysis
@@ -23,6 +23,8 @@ handoffs:
 ---
 
 # 📊 Alignment Agent
+
+**Methodology**: Follow bolt-framework skill (loaded automatically)
 
 ## Available Scripts
 

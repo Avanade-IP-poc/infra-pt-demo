@@ -1,7 +1,7 @@
 ---
 name: Aurora Gherkin
 description: 🥒 Generate Gherkin BDD scenarios from user stories and acceptance criteria with step definitions
-tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'microsoftdocs/mcp/*', 'agent', 'todo']
+tools: [search/codebase, search, read/readFile, edit, web, vscode, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🧪 Generate Unit Tests (BDD)
@@ -23,6 +23,8 @@ handoffs:
 ---
 
 # 🥒 Gherkin Agent
+
+**Methodology**: Follow bolt-framework skill (loaded automatically)
 
 ## Available Scripts
 
