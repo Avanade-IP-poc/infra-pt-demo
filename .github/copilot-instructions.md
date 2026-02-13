@@ -99,6 +99,7 @@ AURORA includes specialized **skills** that are auto-discovered from `.github/sk
 |-------|--------|----------|
 | [bolt-framework](.github/skills/bolt-framework/) | AURORA Methodology | Working on AURORA projects, managing lifecycle |
 | [skill-development](.github/skills/skill-development/) | Skill Creation | Creating or improving Copilot skills |
+| [markdown-formatting](.github/skills/markdown-formatting/) | Markdown Best Practices | Writing or editing any Markdown document (.md, .agent.md, .prompt.md) |
 
 ### Creating Custom Skills
 

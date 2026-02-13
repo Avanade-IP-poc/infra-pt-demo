@@ -330,7 +330,7 @@ Microsoft SQL Server operations.
 
 | Tool | Description | Category |
 |------|-------------|----------|
-| `codebase` | Semantic code search | Read-only |
+| `search/codebase` | Semantic code search | Read-only |
 | `changes` | Git changes | Read-only |
 | `extensions` | VS Code extensions | Read-only |
 | `installExtension` | Install extension | Execute |
@@ -357,7 +357,7 @@ Microsoft SQL Server operations.
 ### 1. FULL_PLANNING (Read-Only Analysis)
 
 ```yaml
-tools: [codebase, search, usages, fetch, githubRepo, problems, changes, readFile, listDirectory, runSubagent, VSCodeAPI, terminalLastCommand, searchResults, 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
+tools: [search/codebase, search, usages, fetch, githubRepo, problems, changes, readFile, listDirectory, runSubagent, VSCodeAPI, terminalLastCommand, searchResults, 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
 ```
 
 **Used by**: Plan, Analyze, Status, Alignment, Architect, Tasks, Improve, Retire, Deps
@@ -365,7 +365,7 @@ tools: [codebase, search, usages, fetch, githubRepo, problems, changes, readFile
 ### 2. FULL_IMPLEMENTATION (Read + Write + Execute)
 
 ```yaml
-tools: [codebase, search, usages, fetch, githubRepo, problems, changes, readFile, listDirectory, edit, editFiles, createFile, createDirectory, runCommands, runInTerminal, getTerminalOutput, runTests, runTasks, testFailure, terminalLastCommand, getTaskOutput, runSubagent, todos, VSCodeAPI, 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
+tools: [search/codebase, search, usages, fetch, githubRepo, problems, changes, readFile, listDirectory, edit, editFiles, createFile, createDirectory, runCommands, runInTerminal, getTerminalOutput, runTests, runTasks, testFailure, terminalLastCommand, getTaskOutput, runSubagent, todos, VSCodeAPI, 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
 ```
 
 **Used by**: Implement, Testing, Review, Micro Iterator
@@ -373,7 +373,7 @@ tools: [codebase, search, usages, fetch, githubRepo, problems, changes, readFile
 ### 3. SPEC_FOCUSED (Specifications)
 
 ```yaml
-tools: [codebase, search, readFile, listDirectory, edit, editFiles, createFile, fetch, githubRepo, runSubagent, VSCodeAPI, 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
+tools: [search/codebase, search, read/readFile, listDirectory, edit, editFiles, createFile, fetch, githubRepo, runSubagent, VSCodeAPI, 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
 ```
 
 **Used by**: Feature, Specify, Clarify, Use Case, Gherkin, DDD
@@ -381,7 +381,7 @@ tools: [codebase, search, readFile, listDirectory, edit, editFiles, createFile, 
 ### 4. DOCS_FOCUSED (Documentation)
 
 ```yaml
-tools: [codebase, search, readFile, listDirectory, edit, editFiles, createFile, fetch, githubRepo, runSubagent, VSCodeAPI, 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
+tools: [search/codebase, search, read/readFile, listDirectory, edit, editFiles, createFile, fetch, githubRepo, runSubagent, VSCodeAPI, 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
 ```
 
 **Used by**: Documentation, ADR, Postmortem
@@ -389,7 +389,7 @@ tools: [codebase, search, readFile, listDirectory, edit, editFiles, createFile, 
 ### 5. OPS_FOCUSED (Operations)
 
 ```yaml
-tools: [codebase, search, readFile, listDirectory, edit, editFiles, fetch, problems, changes, runCommands, runInTerminal, getTerminalOutput, runTasks, getTaskOutput, terminalLastCommand, runSubagent, VSCodeAPI, 'context7/*', 'microsoftdocs/mcp/*']
+tools: [search/codebase, search, read/readFile, listDirectory, edit, editFiles, fetch, problems, changes, runCommands, runInTerminal, getTerminalOutput, runTasks, getTaskOutput, terminalLastCommand, runSubagent, VSCodeAPI, 'context7/*', 'microsoftdocs/mcp/*']
 ```
 
 **Used by**: Ops, Release, Monitoring
@@ -397,7 +397,7 @@ tools: [codebase, search, readFile, listDirectory, edit, editFiles, fetch, probl
 ### 6. CONSTITUTION_BUILDER (Project Configuration)
 
 ```yaml
-tools: [codebase, search, readFile, listDirectory, edit, editFiles, createFile, createDirectory, fetch, githubRepo, runSubagent, VSCodeAPI, 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
+tools: [search/codebase, search, read/readFile, listDirectory, edit, editFiles, createFile, createDirectory, fetch, githubRepo, runSubagent, VSCodeAPI, 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
 ```
 
 **Used by**: Constitution
@@ -405,7 +405,7 @@ tools: [codebase, search, readFile, listDirectory, edit, editFiles, createFile, 
 ### 7. CICD_FOCUSED (CI/CD & Pipelines)
 
 ```yaml
-tools: [codebase, search, readFile, listDirectory, edit, editFiles, createFile, fetch, githubRepo, runCommands, runInTerminal, getTerminalOutput, runTasks, runTests, testFailure, terminalLastCommand, getTaskOutput, runSubagent, VSCodeAPI, 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*', 'azure-devops/*']
+tools: [search/codebase, search, read/readFile, listDirectory, edit, editFiles, createFile, fetch, githubRepo, runCommands, runInTerminal, getTerminalOutput, runTasks, runTests, testFailure, terminalLastCommand, getTaskOutput, runSubagent, VSCodeAPI, 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*', 'azure-devops/*']
 ```
 
 **Used by**: CI/CD
