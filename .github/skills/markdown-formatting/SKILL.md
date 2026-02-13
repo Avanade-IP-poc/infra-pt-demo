@@ -86,10 +86,10 @@ _italic text_ ✅ Alternativa válida
 
 **Code Inline:**
 
-````markdown
+```markdown
 Use backticks para código en línea: `const x = 42`
 Para literal backtick: `` ` `` o ` `` `
-````
+```
 
 #### 3. Code Blocks (Bloques de Código)
 
@@ -129,7 +129,7 @@ npm install markdown-it
 
 **❌ NO usar indented code blocks:**
 
-````markdown
+`````markdown
 ❌ EVITAR:
 function hello() {
 return "world"
@@ -143,7 +143,9 @@ function hello() {
 }
 \```
 ````
-````
+`````
+
+`````
 
 **Beneficio:** Syntax highlighting + claridad del lenguaje.
 
@@ -405,8 +407,9 @@ block
 ---
 
 > Blockquote
-````
-````
+`````
+
+`````
 
 **Excepciones:**
 
@@ -454,7 +457,7 @@ O simplemente usa párrafos separados.
 _italic_ and _italic_ mixed
 
 - bullet and \* bullet mixed
-````
+`````
 
 #### Práctica 5: Link References al Final
 
@@ -597,19 +600,19 @@ markdownlint --fix document.md
 
 **Problema:**
 
-````markdown
+```markdown
 ❌ `
 code here
 \`
-````
+```
 
 **Solución:**
 
-````markdown
+```markdown
 ✅ `javascript
 code here
 \`
-````
+```
 
 #### Error 4: Listas sin líneas en blanco
 
