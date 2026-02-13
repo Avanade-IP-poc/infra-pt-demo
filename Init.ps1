@@ -5,46 +5,46 @@
 param(
     [Parameter(Mandatory = $true)]
     [string]$OutputDirectory,
-    
+
     [Parameter(Mandatory = $true)]
     [ValidateSet("green", "brown")]
     [string]$ProjectType,
-    
+
     [Parameter(Mandatory = $false)]
     [string]$SourceDirectory = "",
-    
+
     [Parameter(Mandatory = $false)]
     [ValidateSet("infra-only", "app-only", "full-stack")]
     [string]$Scope = "app-only",
-    
+
     [Parameter(Mandatory = $false)]
     [ValidateSet("csharp", "nodejs")]
     [string]$Backend = "csharp",
-    
+
     [Parameter(Mandatory = $false)]
     [ValidateSet("none", "react", "vue", "angular", "blazor")]
     [string]$Frontend = "none",
-    
+
     [Parameter(Mandatory = $false)]
     [ValidateSet("modular-monolith", "microservices", "monolith", "serverless", "event-driven")]
     [string]$Architecture = "modular-monolith",
-    
+
     [Parameter(Mandatory = $false)]
     [ValidateSet("landing-zone", "workload", "both")]
     [string]$InfraScope = "workload",
-    
+
     [Parameter(Mandatory = $false)]
     [ValidateSet("bicep", "terraform", "pulumi")]
     [string]$IaC = "bicep",
-    
+
     [Parameter(Mandatory = $false)]
     [ValidateSet("yes", "no")]
     [string]$Docker = "yes",
-    
+
     [Parameter(Mandatory = $false)]
     [ValidateSet("yes", "no")]
     [string]$CQRS = "no",
-    
+
     [Parameter(Mandatory = $false)]
     [switch]$Help
 )
@@ -67,14 +67,14 @@ function Show-Banner {
     Write-Host @"
 ╔═════════════════════════════════════════════════════════════╗
 ║                                                             ║
-║       █████╗ ██╗   ██╗██████╗  ██████╗ ██████╗  █████╗      ║
-║      ██╔══██╗██║   ██║██╔══██╗██╔═══██╗██╔══██╗██╔══██╗     ║
-║      ███████║██║   ██║██████╔╝██║   ██║██████╔╝███████║     ║
-║      ██╔══██║██║   ██║██╔══██╗██║   ██║██╔══██╗██╔══██║     ║
-║      ██║  ██║╚██████╔╝██║  ██║╚██████╔╝██║  ██║██║  ██║     ║
-║      ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝     ║
+║       ██████╗  ██████╗ ██╗  ████████╗    ███████╗           ║
+║       ██╔══██╗██╔═══██╗██║  ╚══██╔══╝    ██╔════╝           ║
+║       ██████╔╝██║   ██║██║     ██║       █████╗             ║
+║       ██╔══██╗██║   ██║██║     ██║       ██╔══╝             ║
+║       ██████╔╝╚██████╔╝███████╗██║       ██╗     ██║        ║
+║       ╚═════╝  ╚═════╝ ╚══════╝╚═╝       ╚═╝     ╚═╝        ║
 ║                                                             ║
-║          AI-Driven Development Lifecycle v1.0.0             ║
+║        Avanade AI-Driven Development Framework v1.0.1       ║
 ║                                                             ║
 ╚═════════════════════════════════════════════════════════════╝
 "@ -ForegroundColor Magenta
@@ -111,50 +111,50 @@ Examples:
 
 function Test-Prerequisites {
     Write-Step "Checking prerequisites..."
-    
+
     # Validate brownfield requirements
     if ($ProjectType -eq "brown" -and [string]::IsNullOrEmpty($SourceDirectory)) {
         Write-Error "SourceDirectory is required for brownfield projects"
         Show-Usage
         exit 1
     }
-    
+
     if ($ProjectType -eq "brown" -and -not (Test-Path $SourceDirectory)) {
         Write-Error "Source directory '$SourceDirectory' does not exist"
         exit 1
     }
-    
+
     # Ensure output directory doesn't exist
     if (Test-Path $OutputDirectory) {
         Write-Error "Output directory '$OutputDirectory' already exists"
         exit 1
     }
-    
+
     Write-Success "Prerequisites validated successfully"
 }
 
 function New-ProjectStructure {
     Write-Step "Creating project structure..."
-    
+
     # Create main directory
     New-Item -ItemType Directory -Path $OutputDirectory -Force | Out-Null
-    
+
     # Create basic structure based on scope
     if ($Scope -ne "infra-only") {
         New-Item -ItemType Directory -Path "$OutputDirectory\src\backend" -Force | Out-Null
         Write-Info "Created src\backend\ directory (PROJECT_SCOPE: $Scope)"
-        
+
         if ($Frontend -ne "none") {
             New-Item -ItemType Directory -Path "$OutputDirectory\src\frontend" -Force | Out-Null
             Write-Info "Created src\frontend\ directory"
         }
     }
-    
+
     if ($Scope -eq "infra-only" -or $Scope -eq "full-stack") {
         New-Item -ItemType Directory -Path "$OutputDirectory\infra" -Force | Out-Null
         Write-Info "Created infra\ directory"
     }
-    
+
     # Create project-type specific directories
     if ($ProjectType -eq "green") {
         New-Item -ItemType Directory -Path "$OutputDirectory\origin" -Force | Out-Null
@@ -164,15 +164,15 @@ function New-ProjectStructure {
         New-Item -ItemType Directory -Path "$OutputDirectory\migration" -Force | Out-Null
         Write-Info "Created legacy\ and migration\ directories for brownfield project"
     }
-    
+
     Write-Success "Project structure created successfully"
 }
 
 function New-ArchitectureStructure {
     if ($Scope -eq "infra-only") { return }
-    
+
     Write-Step "Generating project structure for $Backend + $Architecture..."
-    
+
     switch ($Backend) {
         "csharp" {
             switch ($Architecture) {
@@ -193,17 +193,17 @@ function New-ArchitectureStructure {
             }
         }
     }
-    
+
     Write-Success "Project structure generated!"
 }
 
 function New-CSharpModularMonolith {
     Write-Info "Creating C# Modular Monolith structure..."
-    
+
     @(
         "$OutputDirectory\src\backend\Shared\SharedKernel",
         "$OutputDirectory\src\backend\Modules\SampleModule\Domain",
-        "$OutputDirectory\src\backend\Modules\SampleModule\Application", 
+        "$OutputDirectory\src\backend\Modules\SampleModule\Application",
         "$OutputDirectory\src\backend\Modules\SampleModule\Infrastructure",
         "$OutputDirectory\src\backend\Modules\SampleModule\API"
     ) | ForEach-Object { New-Item -ItemType Directory -Path $_ -Force | Out-Null }
@@ -211,7 +211,7 @@ function New-CSharpModularMonolith {
 
 function New-CSharpMicroservices {
     Write-Info "Creating C# Microservices structure..."
-    
+
     @(
         "$OutputDirectory\src\backend\Shared\SharedKernel",
         "$OutputDirectory\src\backend\Services\SampleService\API",
@@ -224,7 +224,7 @@ function New-CSharpMicroservices {
 
 function New-CSharpMonolith {
     Write-Info "Creating C# Monolith structure..."
-    
+
     @(
         "$OutputDirectory\src\backend\SampleApp.API\Controllers",
         "$OutputDirectory\src\backend\SampleApp.Domain\Entities",
@@ -235,7 +235,7 @@ function New-CSharpMonolith {
 
 function New-CSharpServerless {
     Write-Info "Creating C# Serverless structure..."
-    
+
     @(
         "$OutputDirectory\src\backend\Functions\SampleFunctions",
         "$OutputDirectory\src\backend\Shared\Models",
@@ -245,7 +245,7 @@ function New-CSharpServerless {
 
 function New-CSharpEventDriven {
     Write-Info "Creating C# Event-Driven structure..."
-    
+
     @(
         "$OutputDirectory\src\backend\Events\Handlers",
         "$OutputDirectory\src\backend\Events\Publishers",
@@ -255,7 +255,7 @@ function New-CSharpEventDriven {
 
 function New-NodeJSModularMonolith {
     Write-Info "Creating Node.js Modular Monolith structure..."
-    
+
     @(
         "$OutputDirectory\src\backend\src\shared\domain",
         "$OutputDirectory\src\backend\src\shared\infrastructure",
@@ -268,7 +268,7 @@ function New-NodeJSModularMonolith {
 
 function New-NodeJSMicroservices {
     Write-Info "Creating Node.js Microservices structure..."
-    
+
     @(
         "$OutputDirectory\src\backend\shared\contracts",
         "$OutputDirectory\src\backend\shared\utils",
@@ -279,7 +279,7 @@ function New-NodeJSMicroservices {
 
 function New-NodeJSMonolith {
     Write-Info "Creating Node.js Monolith structure..."
-    
+
     @(
         "$OutputDirectory\src\backend\src\controllers",
         "$OutputDirectory\src\backend\src\services",
@@ -290,7 +290,7 @@ function New-NodeJSMonolith {
 
 function New-NodeJSServerless {
     Write-Info "Creating Node.js Serverless structure..."
-    
+
     @(
         "$OutputDirectory\src\backend\functions",
         "$OutputDirectory\src\backend\shared"
@@ -299,7 +299,7 @@ function New-NodeJSServerless {
 
 function New-NodeJSEventDriven {
     Write-Info "Creating Node.js Event-Driven structure..."
-    
+
     @(
         "$OutputDirectory\src\backend\events\handlers",
         "$OutputDirectory\src\backend\events\publishers",
@@ -309,24 +309,24 @@ function New-NodeJSEventDriven {
 
 function Copy-AuroraFramework {
     Write-Step "Copying complete AURORA-IA framework..."
-    
+
     $ScriptDir = $PSScriptRoot
     Write-Info "AURORA root detected: $ScriptDir"
-    
+
     # Copy .github directory
     if (Test-Path "$ScriptDir\.github") {
         Write-Info "Copying complete .github directory..."
         Copy-Item -Path "$ScriptDir\.github" -Destination "$OutputDirectory\.github" -Recurse -Force
         Write-Success "Complete .github directory copied successfully"
     }
-    
+
     # Copy .aurora directory
     if (Test-Path "$ScriptDir\.aurora") {
         Write-Info "Copying complete .aurora directory..."
         Copy-Item -Path "$ScriptDir\.aurora" -Destination "$OutputDirectory\.aurora" -Recurse -Force
         Write-Success ".aurora directory copied"
     }
-    
+
     # Copy framework documentation files from .aurora to project root
     Write-Info "Copying AURORA framework documentation..."
     @("README.md", "CHANGELOG.md", "CONTRIBUTING.md", "LICENSE", "PENDIENTES.md") | ForEach-Object {
@@ -335,7 +335,7 @@ function Copy-AuroraFramework {
             Write-Info "$_ copied to project root"
         }
     }
-    
+
     # Copy additional files from AURORA root
     @("INITIALIZER.md", "USAGE.md") | ForEach-Object {
         if (Test-Path "$ScriptDir\$_") {
@@ -343,13 +343,13 @@ function Copy-AuroraFramework {
             Write-Info "$_ copied to project root"
         }
     }
-    
+
     Write-Success "AURORA framework copied successfully"
 }
 
 function Copy-LegacySource {
     if ($ProjectType -ne "brown" -or [string]::IsNullOrEmpty($SourceDirectory)) { return }
-    
+
     Write-Step "Copying legacy source files to legacy\ directory..."
     Copy-Item -Path "$SourceDirectory\*" -Destination "$OutputDirectory\legacy\" -Recurse -Force
     Write-Success "Legacy source copied to legacy\"
@@ -357,15 +357,15 @@ function Copy-LegacySource {
 
 function Set-ConstitutionConfiguration {
     Write-Step "Customizing constitution.md with your configuration..."
-    
+
     $constitutionPath = "$OutputDirectory\.aurora\memory\constitution.md"
     if (-not (Test-Path $constitutionPath)) {
         Write-Warning "Constitution.md not found at $constitutionPath"
         return
     }
-    
+
     $content = Get-Content $constitutionPath -Raw
-    
+
     # Mark selected options
     switch ($Backend) {
         "csharp" {
@@ -376,7 +376,7 @@ function Set-ConstitutionConfiguration {
             $content = $content -replace '- \[ \] \*\*Node\.js / TypeScript\*\*', '- [x] **Node.js / TypeScript**'
         }
     }
-    
+
     # Mark architecture
     switch ($Architecture) {
         "modular-monolith" {
@@ -395,18 +395,18 @@ function Set-ConstitutionConfiguration {
             $content = $content -replace '- \[ \] \*\*Event-Driven\*\*', '- [x] **Event-Driven**'
         }
     }
-    
+
     # Mark Docker if enabled
     if ($Docker -eq "yes") {
         $content = $content -replace '- \[ \] \*\*Docker\*\*', '- [x] **Docker**'
         $content = $content -replace '- \[ \] \*\*Docker Compose\*\*', '- [x] **Docker Compose**'
     }
-    
+
     # Mark CQRS if enabled
     if ($CQRS -eq "yes") {
         $content = $content -replace '- \[ \] \*\*CQRS\*\*', '- [x] **CQRS**'
     }
-    
+
     Set-Content -Path $constitutionPath -Value $content -NoNewline
     Write-Success "Constitution.md customized with your configuration"
 }
@@ -414,10 +414,10 @@ function Set-ConstitutionConfiguration {
 function Add-DemoContent {
     if ($ProjectType -eq "green") {
         Write-Step "Copying greenfield demo from demo\from_rfp\..."
-        
+
         $ScriptDir = $PSScriptRoot
         $demoPath = "$ScriptDir\demo\from_rfp"
-        
+
         if (Test-Path $demoPath) {
             Copy-Item -Path "$demoPath\*" -Destination "$OutputDirectory\origin\" -Recurse -Force -ErrorAction SilentlyContinue
             Write-Success "Greenfield demo content copied from demo\from_rfp\"
@@ -430,12 +430,12 @@ function Add-DemoContent {
 
 function Add-BrownfieldContent {
     if ($ProjectType -ne "brown") { return }
-    
+
     Write-Step "Copying legacy demo code from demo\from_old_src\..."
-    
+
     $ScriptDir = $PSScriptRoot
     $demoPath = "$ScriptDir\demo\from_old_src"
-    
+
     if (Test-Path $demoPath) {
         Copy-Item -Path "$demoPath\*" -Destination "$OutputDirectory\legacy\" -Recurse -Force -ErrorAction SilentlyContinue
         Write-Success "Legacy demo code copied from demo\from_old_src\"
@@ -451,7 +451,7 @@ function Show-NextSteps {
     Write-Info "📁 1. Navigate to your project:"
     Write-Info "   cd $OutputDirectory"
     Write-Info ""
-    
+
     if ($ProjectType -eq "green") {
         Write-Info "🌱 GREENFIELD PROJECT SETUP:"
         Write-Info ""
@@ -479,7 +479,7 @@ function Show-NextSteps {
         Write-Info "🔄 BROWNFIELD MIGRATION SETUP:"
         Write-Info ""
         Write-Info "📋 2. Configure project constitution (MANDATORY FIRST STEP):"
-        Write-Info "   - Edit .aurora\memory\constitution.md"  
+        Write-Info "   - Edit .aurora\memory\constitution.md"
         Write-Info "   - Mark project scope (usually 💻 App-only for migrations)"
         Write-Info "   - Select target architecture: $Architecture"
         Write-Info "   - Choose modern tech stack vs legacy: $Backend"
@@ -503,7 +503,7 @@ function Show-NextSteps {
         Write-Info "🎯 6. Begin migration analysis:"
         Write-Info "   @Aurora Legacy"
     }
-    
+
     Write-Info ""
     Write-Info "🛠️  Available AURORA tools:"
     Write-Info "   .aurora\scripts\ - Development automation scripts"
@@ -519,9 +519,9 @@ function Main {
         Show-Usage
         return
     }
-    
+
     Show-Banner
-    
+
     Write-Info "Initializing AURORA-IA project..."
     Write-Info "  Output Directory: $OutputDirectory"
     if ($ProjectType -eq "green") {
@@ -531,7 +531,7 @@ function Main {
     }
     if ($SourceDirectory) { Write-Info "  Source Directory: $SourceDirectory" }
     Write-Info "Using command-line configuration"
-    
+
     Test-Prerequisites
     New-ProjectStructure
     New-ArchitectureStructure
@@ -540,7 +540,7 @@ function Main {
     Set-ConstitutionConfiguration
     Add-DemoContent
     Add-BrownfieldContent
-    
+
     Write-Success "AURORA-IA project initialization completed!"
     Write-Info "Project created in: $OutputDirectory"
     Write-Info ""
@@ -558,7 +558,7 @@ function Main {
         Write-Info "  - IaC Tool: $IaC"
     }
     Write-Info ""
-    
+
     Show-NextSteps
 }
 
