@@ -1,7 +1,19 @@
 ---
 name: Aurora Tasks
 description: ✅ Generate actionable Bolt task lists from implementation plan, optimized for AI-DLC micro-iterations
-tools: [search/codebase, search, read/readFile, usages, web, read/problems, changes, vscode, read/terminalLastCommand, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
+tools:
+  [
+    search,
+    read,
+    web,
+    problems,
+    vscode,
+    agent,
+    'github/*',
+    'context7/*',
+    'awesome-copilot/*',
+    'microsoftdocs/mcp/*',
+  ]
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Analyze Consistency
@@ -21,6 +33,7 @@ handoffs:
 ## Available Scripts
 
 When you need to check prerequisites, execute these scripts:
+
 - **Bash**: `scripts/bash/check-prerequisites.sh`
 - **PowerShell**: `scripts/powershell/Check-Prerequisites.ps1`
 
@@ -33,10 +46,12 @@ Transform implementation plan into executable Bolt task lists following the AURO
 ## Prerequisites
 
 Required files in `specs/[XXX-feature-name]/`:
+
 - `requirements/requirements.md` - Feature specification
 - `planning/plan.md` - Implementation plan
 
 Optional (enhance task generation):
+
 - `requirements/data-model.md` - Entity definitions
 - `contracts/` - API specifications
 - `planning/research.md` - Technical decisions
@@ -44,6 +59,7 @@ Optional (enhance task generation):
 ## Bolt Concept
 
 A **Bolt** is a micro-iteration of 2-3 days that produces:
+
 - Complete, tested code increment
 - Independently deployable (when possible)
 - Validated against acceptance criteria
@@ -53,6 +69,7 @@ A **Bolt** is a micro-iteration of 2-3 days that produces:
 ### 1. Load Context
 
 Read from `specs/[XXX-feature-name]/`:
+
 - `planning/plan.md` → Extract Bolts, tech stack, file structure
 - `requirements/requirements.md` → Extract user stories with priorities
 - `requirements/data-model.md` → Extract entities (if exists)
@@ -86,8 +103,10 @@ Create `specs/[XXX-feature-name]/planning/tasks.md`:
 
 All tasks use this format:
 ```
+
 - [ ] [TaskID] [P?] [Story?] Description with file path
-```
+
+````
 
 - `[TaskID]`: Sequential ID (T001, T002...)
 - `[P]`: Parallelizable task (optional)
@@ -201,9 +220,10 @@ For Node.js/TypeScript:
 ```bash
 npm install --save-dev @stryker-mutator/core @stryker-mutator/jest-runner @stryker-mutator/typescript-checker
 npx stryker init
-```
+````
 
 For .NET:
+
 ```bash
 dotnet tool install -g dotnet-stryker
 dotnet stryker init
@@ -217,25 +237,28 @@ dotnet stryker init
 
 ## Progress Tracking
 
-| Bolt | Tasks | Completed | Status |
-|------|-------|-----------|--------|
-| Bolt 1 | [N] | 0 | ⬜ Not Started |
-| Bolt 2 | [N] | 0 | ⬜ Not Started |
-| Bolt 3 | [N] | 0 | ⬜ Not Started |
+| Bolt   | Tasks | Completed | Status         |
+| ------ | ----- | --------- | -------------- |
+| Bolt 1 | [N]   | 0         | ⬜ Not Started |
+| Bolt 2 | [N]   | 0         | ⬜ Not Started |
+| Bolt 3 | [N]   | 0         | ⬜ Not Started |
 
 **Total Progress**: 0 / [Total] tasks (0%)
+
 ```
 
 ## Task Dependencies
 
 ```
+
 T001 (Init) ─┬─> T005 (Domain)
-             ├─> T006 (Application)  
-             └─> T007 (Infrastructure)
+├─> T006 (Application)
+└─> T007 (Infrastructure)
 
 T005 ──> T009 (Entity) ──> T012 (Service) ──> T017 (API)
-                       └──> T019 (Test)
-```
+└──> T019 (Test)
+
+````
 
 ## Output
 
@@ -262,9 +285,10 @@ After generating tasks:
 1. Review task breakdown
 2. Use @aurora-analyze to validate consistency
 3. Use @aurora-implement to start Bolt 1
-```
+````
 
 ## Prompts Reference
 
 For detailed planning guidance:
+
 - `#file:.github/prompts/aurora-planning.prompt.md`

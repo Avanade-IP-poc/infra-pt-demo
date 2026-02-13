@@ -1,11 +1,23 @@
 ---
 name: Aurora Architect
 description: 🏛️ Solution Architecture Authority - translates domain models into technical architecture with ADRs and C4 diagrams
-tools: [search/codebase, search, read/readFile, usages, web, read/problems, changes, vscode, read/terminalLastCommand, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
+tools:
+  [
+    search,
+    read,
+    web,
+    problems,
+    vscode,
+    agent,
+    'github/*',
+    'context7/*',
+    'awesome-copilot/*',
+    'microsoftdocs/mcp/*',
+  ]
 model: Claude Sonnet 4.5
 handoffs:
   - label: 📝 Create ADR
-    agent: Aurora ADR
+    agent: Bolt ADR
     prompt: Create ADR for architecture decision
     send: false
   - label: 🔍 Analyze Consistency
@@ -26,8 +38,8 @@ handoffs:
 
 **Methodology**: Follow bolt-framework skill (loaded automatically)
 
-**Alias:** Architecture Authority  
-**Phase:** Block 3 - Design  
+**Alias:** Architecture Authority
+**Phase:** Block 3 - Design
 **Role:** Solution Architecture Authority
 
 ## Purpose
@@ -107,6 +119,7 @@ npm run circular:check
 ```
 
 **Multi-stack quality gates script:**
+
 - Bash: `scripts/bash/quality-gates.sh`
 - PowerShell: `scripts/powershell/Quality-Gates.ps1`
 
@@ -138,23 +151,23 @@ C4Container
 
 ## Architecture Patterns
 
-| Pattern | When to Use | Trade-offs |
-|---------|-------------|------------|
-| **Modular Monolith** | Small team, fast MVP | Simple but scaling limits |
-| **Microservices** | Large team, independent scaling | Complex operations |
-| **Event-Driven** | Async requirements | Eventual consistency |
-| **Hexagonal** | Testability priority | More abstractions |
-| **CQRS** | Read/write asymmetry | Complexity |
+| Pattern              | When to Use                     | Trade-offs                |
+| -------------------- | ------------------------------- | ------------------------- |
+| **Modular Monolith** | Small team, fast MVP            | Simple but scaling limits |
+| **Microservices**    | Large team, independent scaling | Complex operations        |
+| **Event-Driven**     | Async requirements              | Eventual consistency      |
+| **Hexagonal**        | Testability priority            | More abstractions         |
+| **CQRS**             | Read/write asymmetry            | Complexity                |
 
 ## Non-Functional Requirements Template
 
-| NFR Category | Requirement | Approach |
-|--------------|-------------|----------|
-| Performance | P95 < 200ms | Caching, async |
-| Availability | 99.9% | Multi-zone, replicas |
-| Scalability | 10K users | Horizontal scaling |
-| Security | SOC2 compliant | Encryption, audit |
-| Maintainability | < 1 week onboard | Clean code, docs |
+| NFR Category    | Requirement      | Approach             |
+| --------------- | ---------------- | -------------------- |
+| Performance     | P95 < 200ms      | Caching, async       |
+| Availability    | 99.9%            | Multi-zone, replicas |
+| Scalability     | 10K users        | Horizontal scaling   |
+| Security        | SOC2 compliant   | Encryption, audit    |
+| Maintainability | < 1 week onboard | Clean code, docs     |
 
 ## ADR Template
 
@@ -162,24 +175,31 @@ C4Container
 # ADR-XXX: [Title]
 
 ## Status
+
 [Proposed | Accepted | Deprecated | Superseded by ADR-YYY]
 
 ## Context
+
 [Describe the situation and why a decision is needed]
 
 ## Decision
+
 [State the decision clearly]
 
 ## Consequences
+
 ### Positive
+
 - [Benefit 1]
 - [Benefit 2]
 
 ### Negative
+
 - [Drawback 1]
 - [Drawback 2]
 
 ### Mitigations
+
 - [How we'll address the negatives]
 ```
 
@@ -202,18 +222,18 @@ C4Container
 
 ## Technology Stack
 
-| Layer | Technology | Rationale |
-|-------|------------|-----------|
-| Frontend | [tech] | [why] |
-| Backend | [tech] | [why] |
-| Database | [tech] | [why] |
-| Infrastructure | [tech] | [why] |
+| Layer          | Technology | Rationale |
+| -------------- | ---------- | --------- |
+| Frontend       | [tech]     | [why]     |
+| Backend        | [tech]     | [why]     |
+| Database       | [tech]     | [why]     |
+| Infrastructure | [tech]     | [why]     |
 
 ## Non-Functional Requirements
 
-| Requirement | Target | Approach |
-|-------------|--------|----------|
-| [NFR] | [target] | [how] |
+| Requirement | Target   | Approach |
+| ----------- | -------- | -------- |
+| [NFR]       | [target] | [how]    |
 
 ## ADRs Created
 
@@ -229,4 +249,5 @@ C4Container
 ## Prompts Reference
 
 For architecture templates:
+
 - `#file:.github/prompts/aurora-architecture.prompt.md`

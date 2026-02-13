@@ -1,7 +1,19 @@
 ---
 name: Aurora Use Case
 description: 📖 Generate detailed use case specifications from user stories following UML/Cockburn style
-tools: [search/codebase, search, read/readFile, edit, web, vscode, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
+tools:
+  [
+    search,
+    read,
+    edit,
+    web,
+    vscode,
+    agent,
+    'github/*',
+    'context7/*',
+    'awesome-copilot/*',
+    'microsoftdocs/mcp/*',
+  ]
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🥒 Generate Gherkin
@@ -21,6 +33,7 @@ handoffs:
 ## Available Scripts
 
 When you need to generate use cases, execute these scripts:
+
 - **Bash**: `scripts/bash/generate-usecases.sh`
 - **PowerShell**: `scripts/powershell/Generate-UseCases.ps1`
 
@@ -33,6 +46,7 @@ Generate detailed use case specifications from user stories, providing full acto
 ## Constitution Check
 
 **FIRST**: Read `memory/constitution.md` to understand:
+
 - Documentation format preferences
 - Naming conventions
 - Architecture style (affects use case granularity)
@@ -46,14 +60,14 @@ For each user story, generate `specs/[XXX-feature-name]/requirements/use-cases/U
 
 ## Metadata
 
-| Property | Value |
-|----------|-------|
-| UC ID | UC-[XXX] |
-| User Story | US-[XXX] |
-| Primary Actor | [Actor name] |
-| Scope | [System/Subsystem] |
-| Level | User Goal / Subfunction |
-| Status | Draft |
+| Property      | Value                   |
+| ------------- | ----------------------- |
+| UC ID         | UC-[XXX]                |
+| User Story    | US-[XXX]                |
+| Primary Actor | [Actor name]            |
+| Scope         | [System/Subsystem]      |
+| Level         | User Goal / Subfunction |
+| Status        | Draft                   |
 
 ## Brief Description
 
@@ -61,11 +75,11 @@ For each user story, generate `specs/[XXX-feature-name]/requirements/use-cases/U
 
 ## Stakeholders and Interests
 
-| Stakeholder | Interest |
-|-------------|----------|
-| [Actor 1] | [What they want from this interaction] |
-| [System] | [System constraints or goals] |
-| [Compliance] | [Regulatory requirements if any] |
+| Stakeholder  | Interest                               |
+| ------------ | -------------------------------------- |
+| [Actor 1]    | [What they want from this interaction] |
+| [System]     | [System constraints or goals]          |
+| [Compliance] | [Regulatory requirements if any]       |
 
 ## Preconditions
 
@@ -83,28 +97,28 @@ For each user story, generate `specs/[XXX-feature-name]/requirements/use-cases/U
 
 ## Main Success Scenario (Basic Flow)
 
-| Step | Actor | System |
-|------|-------|--------|
-| 1 | [Actor action] | |
-| 2 | | [System response] |
-| 3 | [Actor action] | |
-| 4 | | [System validates...] |
-| 5 | | [System persists...] |
-| 6 | | [System confirms to actor] |
+| Step | Actor          | System                     |
+| ---- | -------------- | -------------------------- |
+| 1    | [Actor action] |                            |
+| 2    |                | [System response]          |
+| 3    | [Actor action] |                            |
+| 4    |                | [System validates...]      |
+| 5    |                | [System persists...]       |
+| 6    |                | [System confirms to actor] |
 
 ### Detailed Steps
 
 1. **Actor** initiates [action]
    - Input: [what data is provided]
-   
+
 2. **System** validates request
    - Validates: [what is checked]
    - BR-001: [business rule applied]
-   
+
 3. **System** processes request
    - Creates/Updates: [what entities]
    - Triggers: [any events/notifications]
-   
+
 4. **System** returns result
    - Output: [what is returned]
    - Actor sees: [confirmation/result]
@@ -113,36 +127,36 @@ For each user story, generate `specs/[XXX-feature-name]/requirements/use-cases/U
 
 ### 2a. Validation Fails
 
-| Step | Actor | System |
-|------|-------|--------|
-| 2a.1 | | System detects invalid [field] |
-| 2a.2 | | System returns error with details |
-| 2a.3 | Actor reviews and corrects | |
-| 2a.4 | Return to step 1 | |
+| Step | Actor                      | System                            |
+| ---- | -------------------------- | --------------------------------- |
+| 2a.1 |                            | System detects invalid [field]    |
+| 2a.2 |                            | System returns error with details |
+| 2a.3 | Actor reviews and corrects |                                   |
+| 2a.4 | Return to step 1           |                                   |
 
 ### 3a. [Resource] Not Found
 
-| Step | Actor | System |
-|------|-------|--------|
-| 3a.1 | | System cannot locate [resource] |
-| 3a.2 | | System returns 404 with message |
-| 3a.3 | Actor is notified | |
+| Step | Actor             | System                          |
+| ---- | ----------------- | ------------------------------- |
+| 3a.1 |                   | System cannot locate [resource] |
+| 3a.2 |                   | System returns 404 with message |
+| 3a.3 | Actor is notified |                                 |
 
 ### 4a. Authorization Denied
 
-| Step | Actor | System |
-|------|-------|--------|
-| 4a.1 | | System detects insufficient permissions |
-| 4a.2 | | System returns 403 Forbidden |
-| 4a.3 | Use case ends | |
+| Step | Actor         | System                                  |
+| ---- | ------------- | --------------------------------------- |
+| 4a.1 |               | System detects insufficient permissions |
+| 4a.2 |               | System returns 403 Forbidden            |
+| 4a.3 | Use case ends |                                         |
 
-### *a. System Unavailable (Global)
+### \*a. System Unavailable (Global)
 
-| Step | Actor | System |
-|------|-------|--------|
-| *a.1 | | System detects service unavailable |
-| *a.2 | | System returns 503 with retry-after |
-| *a.3 | Actor may retry later | |
+| Step  | Actor                 | System                              |
+| ----- | --------------------- | ----------------------------------- |
+| \*a.1 |                       | System detects service unavailable  |
+| \*a.2 |                       | System returns 503 with retry-after |
+| \*a.3 | Actor may retry later |                                     |
 
 ## Special Requirements
 
@@ -184,16 +198,18 @@ After generating use cases:
 **Feature**: [XXX-feature-name]
 **Use Cases Created**: [N]
 
-| UC ID | Title | User Story | Status |
-|-------|-------|------------|--------|
-| UC-001 | [Title] | US-001 | Draft |
-| UC-002 | [Title] | US-002 | Draft |
+| UC ID  | Title   | User Story | Status |
+| ------ | ------- | ---------- | ------ |
+| UC-001 | [Title] | US-001     | Draft  |
+| UC-002 | [Title] | US-002     | Draft  |
 
 **Files Created**:
+
 - specs/[XXX]/requirements/use-cases/UC-001.md
 - specs/[XXX]/requirements/use-cases/UC-002.md
 
 **Next Steps**:
+
 1. Review use cases with stakeholders
 2. Use @aurora-gherkin to generate BDD scenarios
 3. Use @aurora-plan for implementation planning
@@ -202,4 +218,5 @@ After generating use cases:
 ## Prompts Reference
 
 For detailed domain modeling:
+
 - `#file:.github/prompts/aurora-domain-modeling.prompt.md`

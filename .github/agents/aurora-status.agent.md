@@ -1,7 +1,19 @@
 ---
 name: Aurora Status
 description: 📊 Generate comprehensive project status reports across all AURORA lifecycle phases
-tools: [search/codebase, search, read/readFile, usages, web, read/problems, changes, vscode, read/terminalLastCommand, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
+tools:
+  [
+    search,
+    read,
+    web,
+    problems,
+    vscode,
+    agent,
+    'github/*',
+    'context7/*',
+    'awesome-copilot/*',
+    'microsoftdocs/mcp/*',
+  ]
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Run Analysis
@@ -29,6 +41,7 @@ handoffs:
 ## Available Scripts
 
 When you need to get project status, execute these scripts:
+
 - **Bash**: `scripts/bash/project-status.sh`
 - **PowerShell**: `scripts/powershell/Get-ProjectStatus.ps1`
 
@@ -40,13 +53,13 @@ Generate comprehensive project status reports across all AURORA lifecycle phases
 
 ## Status Dimensions
 
-| Dimension | Metrics | Source |
-|-----------|---------|--------|
-| **Phase Progress** | % complete per phase | Artifacts analysis |
-| **Quality** | Coverage, debt, issues | Code analysis |
-| **Velocity** | Stories/sprint, cycle time | Git history |
-| **Health** | Uptime, performance | Monitoring |
-| **Risk** | Blockers, dependencies | Issue tracker |
+| Dimension          | Metrics                    | Source             |
+| ------------------ | -------------------------- | ------------------ |
+| **Phase Progress** | % complete per phase       | Artifacts analysis |
+| **Quality**        | Coverage, debt, issues     | Code analysis      |
+| **Velocity**       | Stories/sprint, cycle time | Git history        |
+| **Health**         | Uptime, performance        | Monitoring         |
+| **Risk**           | Blockers, dependencies     | Issue tracker      |
 
 ## Analysis Process
 
@@ -57,20 +70,20 @@ artifacts:
   inception:
     constitution: .aurora/memory/constitution.md
     status: [exists|missing|outdated]
-    
+
   discovery:
     features: specs/*/requirements/requirements.md
     count: [N]
     complete: [N]
-    
+
   construction:
     implementations: src/**/*
     test_coverage: [X]%
-    
+
   transition:
     releases: CHANGELOG.md
     documentation: docs/*
-    
+
   production:
     deployments: [count]
     incidents: [count]
@@ -112,12 +125,12 @@ git branch -a --list "feature/*"
 ```markdown
 ## Executive Summary
 
-| Metric | Value | Trend | Status |
-|--------|-------|-------|--------|
-| Overall Health | [X]% | ↑/↓/→ | 🟢/🟡/🔴 |
-| Sprint Progress | [X]% | ↑/↓/→ | 🟢/🟡/🔴 |
-| Quality Score | [X]% | ↑/↓/→ | 🟢/🟡/🔴 |
-| Risk Level | LOW/MED/HIGH | ↑/↓/→ | 🟢/🟡/🔴 |
+| Metric          | Value        | Trend | Status   |
+| --------------- | ------------ | ----- | -------- |
+| Overall Health  | [X]%         | ↑/↓/→ | 🟢/🟡/🔴 |
+| Sprint Progress | [X]%         | ↑/↓/→ | 🟢/🟡/🔴 |
+| Quality Score   | [X]%         | ↑/↓/→ | 🟢/🟡/🔴 |
+| Risk Level      | LOW/MED/HIGH | ↑/↓/→ | 🟢/🟡/🔴 |
 ```
 
 ### Phase Status
@@ -127,39 +140,39 @@ git branch -a --list "feature/*"
 
 ### INCEPTION ✅
 
-| Artifact | Status | Notes |
-|----------|--------|-------|
-| Constitution | ✅ Complete | Last updated [date] |
-| Tech Stack | ✅ Defined | [stack summary] |
-| Standards | ✅ Documented | [X] rules |
+| Artifact     | Status        | Notes               |
+| ------------ | ------------- | ------------------- |
+| Constitution | ✅ Complete   | Last updated [date] |
+| Tech Stack   | ✅ Defined    | [stack summary]     |
+| Standards    | ✅ Documented | [X] rules           |
 
 ### DISCOVERY 🔄
 
-| Feature | Requirements | Gherkin | Plan | Status |
-|---------|--------------|---------|------|--------|
-| [F-001] | ✅ | ✅ | ✅ | Complete |
-| [F-002] | ✅ | 🔄 | ⬜ | In Progress |
-| [F-003] | ⬜ | ⬜ | ⬜ | Not Started |
+| Feature | Requirements | Gherkin | Plan | Status      |
+| ------- | ------------ | ------- | ---- | ----------- |
+| [F-001] | ✅           | ✅      | ✅   | Complete    |
+| [F-002] | ✅           | 🔄      | ⬜   | In Progress |
+| [F-003] | ⬜           | ⬜      | ⬜   | Not Started |
 
 **Progress**: 1/3 features ready (33%)
 
 ### CONSTRUCTION 🔄
 
-| Feature | Implemented | Tested | Reviewed | Status |
-|---------|-------------|--------|----------|--------|
-| [F-001] | ✅ 100% | ✅ 85% | ✅ | Complete |
-| [F-002] | 🔄 60% | ⬜ | ⬜ | In Progress |
+| Feature | Implemented | Tested | Reviewed | Status      |
+| ------- | ----------- | ------ | -------- | ----------- |
+| [F-001] | ✅ 100%     | ✅ 85% | ✅       | Complete    |
+| [F-002] | 🔄 60%      | ⬜     | ⬜       | In Progress |
 
 **Progress**: 1.6/2 features (80%)
 
 ### TRANSITION ⬜
 
-| Item | Status |
-|------|--------|
+| Item           | Status         |
+| -------------- | -------------- |
 | Release Branch | ⬜ Not created |
-| Changelog | ⬜ Not started |
-| Documentation | ⬜ Not started |
-| Deployment | ⬜ Pending |
+| Changelog      | ⬜ Not started |
+| Documentation  | ⬜ Not started |
+| Deployment     | ⬜ Pending     |
 
 ### PRODUCTION ⬜
 
@@ -173,26 +186,26 @@ Not yet in production.
 
 ### Code Quality
 
-| Metric | Current | Target | Status |
-|--------|---------|--------|--------|
-| Test Coverage | 78% | 80% | 🟡 |
-| Mutation Score | 72% | 70% | 🟢 |
-| Code Duplication | 3% | < 5% | 🟢 |
-| Complexity | B | B | 🟢 |
-| Tech Debt | 2d | < 5d | 🟢 |
+| Metric           | Current | Target | Status |
+| ---------------- | ------- | ------ | ------ |
+| Test Coverage    | 78%     | 80%    | 🟡     |
+| Mutation Score   | 72%     | 70%    | 🟢     |
+| Code Duplication | 3%      | < 5%   | 🟢     |
+| Complexity       | B       | B      | 🟢     |
+| Tech Debt        | 2d      | < 5d   | 🟢     |
 
 ### Security
 
-| Check | Status | Issues |
-|-------|--------|--------|
-| SAST | ✅ Pass | 0 critical |
+| Check        | Status     | Issues     |
+| ------------ | ---------- | ---------- |
+| SAST         | ✅ Pass    | 0 critical |
 | Dependencies | ⚠️ Warning | 2 moderate |
-| Secrets | ✅ Pass | 0 exposed |
+| Secrets      | ✅ Pass    | 0 exposed  |
 
 ### Performance
 
-| Metric | P50 | P95 | P99 | Target |
-|--------|-----|-----|-----|--------|
+| Metric        | P50  | P95   | P99   | Target  |
+| ------------- | ---- | ----- | ----- | ------- |
 | Response Time | 45ms | 120ms | 250ms | < 200ms |
 ```
 
@@ -203,15 +216,15 @@ Not yet in production.
 
 ### Active Risks
 
-| ID | Risk | Impact | Probability | Mitigation |
-|----|------|--------|-------------|------------|
-| R-001 | External API dependency | HIGH | MEDIUM | Implement fallback |
-| R-002 | Team availability | MEDIUM | LOW | Cross-training |
+| ID    | Risk                    | Impact | Probability | Mitigation         |
+| ----- | ----------------------- | ------ | ----------- | ------------------ |
+| R-001 | External API dependency | HIGH   | MEDIUM      | Implement fallback |
+| R-002 | Team availability       | MEDIUM | LOW         | Cross-training     |
 
 ### Blockers
 
-| ID | Blocker | Impact | Owner | ETA |
-|----|---------|--------|-------|-----|
+| ID    | Blocker                     | Impact       | Owner  | ETA    |
+| ----- | --------------------------- | ------------ | ------ | ------ |
 | B-001 | Waiting for API credentials | Blocks F-002 | DevOps | 2 days |
 ```
 
@@ -228,22 +241,22 @@ Not yet in production.
 
 **Overall Health**: [X]% [🟢/🟡/🔴]
 
-| Phase | Progress | Status |
-|-------|----------|--------|
-| Inception | 100% | ✅ |
-| Discovery | 67% | 🔄 |
-| Construction | 80% | 🔄 |
-| Transition | 0% | ⬜ |
-| Production | 0% | ⬜ |
+| Phase        | Progress | Status |
+| ------------ | -------- | ------ |
+| Inception    | 100%     | ✅     |
+| Discovery    | 67%      | 🔄     |
+| Construction | 80%      | 🔄     |
+| Transition   | 0%       | ⬜     |
+| Production   | 0%       | ⬜     |
 
 ## 📈 Key Metrics
 
-| Metric | Value | Trend |
-|--------|-------|-------|
-| Features Complete | 1/3 | → |
-| Test Coverage | 78% | ↑ |
-| Open Issues | 12 | ↓ |
-| Blockers | 1 | → |
+| Metric            | Value | Trend |
+| ----------------- | ----- | ----- |
+| Features Complete | 1/3   | →     |
+| Test Coverage     | 78%   | ↑     |
+| Open Issues       | 12    | ↓     |
+| Blockers          | 1     | →     |
 
 ## ⚠️ Attention Required
 
@@ -259,17 +272,17 @@ Not yet in production.
 
 ## 🎯 Next Milestones
 
-| Milestone | Target Date | Status |
-|-----------|-------------|--------|
-| F-002 Complete | [date] | 🔄 |
-| Release v1.0.0 | [date] | ⬜ |
+| Milestone      | Target Date | Status |
+| -------------- | ----------- | ------ |
+| F-002 Complete | [date]      | 🔄     |
+| Release v1.0.0 | [date]      | ⬜     |
 
 ## 👥 Team Activity
 
 | Contributor | Commits | Reviews |
-|-------------|---------|---------|
-| [name] | 12 | 5 |
-| [name] | 8 | 3 |
+| ----------- | ------- | ------- |
+| [name]      | 12      | 5       |
+| [name]      | 8       | 3       |
 
 ## 📎 Links
 
@@ -281,4 +294,5 @@ Not yet in production.
 ## Prompts Reference
 
 For status templates:
+
 - `#file:.github/prompts/aurora-status.prompt.md`

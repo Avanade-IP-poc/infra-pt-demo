@@ -5,21 +5,22 @@
 > **Correcciones aplicadas**: 7 correcciones de validación contra documentación oficial VS Code (Feb 2026)
 >
 > **Fuentes de validación**:
+>
 > - [Custom Agents](https://code.visualstudio.com/docs/copilot/customization/custom-agents)
 > - [Agent Skills](https://code.visualstudio.com/docs/copilot/customization/agent-skills) + [Agent Skills Open Standard](https://agentskills.io)
 > - [Agent Tools Reference](https://code.visualstudio.com/docs/copilot/reference/copilot-vscode-features#_chat-tools)
 
 ## 📊 Progress Tracker
 
-| # | Fase | Descripción | Estado | Progreso |
-|---|------|-------------|--------|----------|
-| 1 | **FASE 1** | Crear Infraestructura del Skill | ✅ Completado | 5/5 pasos |
-| 2 | **FASE 2** | Actualizar Agente Principal | ✅ Completado | 3/3 pasos |
-| 3 | **FASE 5** | Actualizar copilot-instructions.md | ✅ Completado | 3/3 pasos |
-| 4 | **FASE 3** | Actualizar Todos los Agentes (30) | ✅ Completado | 30/30 agentes |
-| 5 | **FASE 4** | Simplificar aurora.prompt.md | ✅ Completado | 1/1 pasos |
-| 6 | **FASE 6** | Actualizar Referencias | ✅ Completado | 2/2 archivos |
-| 7 | **FASE 7** | Validación y Testing | ✅ Completado | 10/10 tests |
+| #   | Fase       | Descripción                        | Estado        | Progreso      |
+| --- | ---------- | ---------------------------------- | ------------- | ------------- |
+| 1   | **FASE 1** | Crear Infraestructura del Skill    | ✅ Completado | 5/5 pasos     |
+| 2   | **FASE 2** | Actualizar Agente Principal        | ✅ Completado | 3/3 pasos     |
+| 3   | **FASE 5** | Actualizar copilot-instructions.md | ✅ Completado | 3/3 pasos     |
+| 4   | **FASE 3** | Actualizar Todos los Agentes (30)  | ✅ Completado | 30/30 agentes |
+| 5   | **FASE 4** | Simplificar aurora.prompt.md       | ✅ Completado | 1/1 pasos     |
+| 6   | **FASE 6** | Actualizar Referencias             | ✅ Completado | 2/2 archivos  |
+| 7   | **FASE 7** | Validación y Testing               | ✅ Completado | 10/10 tests   |
 
 ---
 
@@ -27,28 +28,28 @@
 
 ### 1. Tools Inconsistentes
 
-| Problema | Agentes Afectados | Impacto |
-|----------|-------------------|---------|
-| **Tools inválidas** | Mayoría de agentes usan `'vscode'`, `'execute'`, `'read'`, `'edit'` | Estas tools NO EXISTEN en VS Code |
-| **Falta MCP tools críticas** | `aurora-constitution`, `bolt-framework` | No pueden acceder a `context7/*` ni `awesome-copilot/*` |
-| **Toolsets mal configurados** | Varios agentes | No usan tool sets como `'edit'`, `'search'`, `'runCommands'` |
+| Problema                      | Agentes Afectados                                                   | Impacto                                                      |
+| ----------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------ |
+| **Tools inválidas**           | Mayoría de agentes usan `'vscode'`, `'execute'`, `'read'`, `'edit'` | Estas tools NO EXISTEN en VS Code                            |
+| **Falta MCP tools críticas**  | `aurora-constitution`, `bolt-framework`                             | No pueden acceder a `context7/*` ni `awesome-copilot/*`      |
+| **Toolsets mal configurados** | Varios agentes                                                      | No usan tool sets como `'edit'`, `'search'`, `'runCommands'` |
 
 ### 2. Handoffs Problemáticos
 
-| Problema | Ubicación | Recomendación |
-|----------|-----------|---------------|
-| **Self-handoff** | `aurora-security.agent.md` | Eliminar handoffs a sí mismo |
-| **Handoffs duplicados** | `aurora-gherkin.agent.md` | Consolidar múltiples handoffs al mismo agente |
-| **Nombres inconsistentes** | Varios agentes | Estandarizar todos los nombres |
+| Problema                   | Ubicación                  | Recomendación                                 |
+| -------------------------- | -------------------------- | --------------------------------------------- |
+| **Self-handoff**           | `aurora-security.agent.md` | Eliminar handoffs a sí mismo                  |
+| **Handoffs duplicados**    | `aurora-gherkin.agent.md`  | Consolidar múltiples handoffs al mismo agente |
+| **Nombres inconsistentes** | Varios agentes             | Estandarizar todos los nombres                |
 
 ### 3. Duplicación de Metodología
 
-| Contenido Duplicado | Ubicaciones | Líneas Duplicadas |
-|---------------------|-------------|-------------------|
-| **Lifecycle phases** | `aurora.agent.md`, `aurora.prompt.md`, varios agentes | ~150 líneas |
-| **Constitution checks** | `aurora.agent.md`, varios agentes | ~80 líneas |
-| **Quality gates** | `aurora-implement`, `aurora-testing`, `aurora-review` | ~120 líneas |
-| **Bolt workflow** | `aurora-implement`, `aurora-micro-iterator` | ~200 líneas |
+| Contenido Duplicado     | Ubicaciones                                           | Líneas Duplicadas |
+| ----------------------- | ----------------------------------------------------- | ----------------- |
+| **Lifecycle phases**    | `aurora.agent.md`, `aurora.prompt.md`, varios agentes | ~150 líneas       |
+| **Constitution checks** | `aurora.agent.md`, varios agentes                     | ~80 líneas        |
+| **Quality gates**       | `aurora-implement`, `aurora-testing`, `aurora-review` | ~120 líneas       |
+| **Bolt workflow**       | `aurora-implement`, `aurora-micro-iterator`           | ~200 líneas       |
 
 **Total duplicación estimada**: ~550 líneas de contenido metodológico repetido
 
@@ -91,11 +92,13 @@
 #### MCP Tools Fundamentales
 
 **Context7 MCP** - Documentación actualizada de librerías:
+
 - `context7/*` - Todas las tools
 - `context7/query-docs` - Buscar documentación
 - `context7/resolve-library-id` - Resolver IDs de librerías
 
 **Awesome Copilot MCP** - Ejemplos y colecciones:
+
 - `awesome-copilot/*` - Todas las tools
 - `awesome-copilot/list_collections` - Listar colecciones
 - `awesome-copilot/load_collection` - Cargar colección
@@ -103,6 +106,7 @@
 - `awesome-copilot/search_instructions` - Buscar instrucciones
 
 **Microsoft Docs MCP** - Documentación Microsoft/Azure:
+
 - `microsoftdocs/*` - Todas las tools
 - `microsoftdocs/microsoft_docs_search` - Buscar docs
 - `microsoftdocs/microsoft_docs_fetch` - Obtener página completa
@@ -116,29 +120,31 @@
 > Nota: `fileSearch` y `textSearch` están incluidos en el tool set `search`, por lo que no se agregan individualmente.
 
 **1. FULL_PLANNING** (Solo lectura):
+
 ```yaml
 tools:
-  - codebase              # Semantic code search
-  - search                # Tool set: file/text search
-  - usages                # Find references
-  - fetch                 # Web content
-  - githubRepo            # GitHub repos
-  - problems              # Problems panel
-  - changes               # Git changes
-  - readFile              # Read files
-  - listDirectory         # List dirs
-  - runSubagent           # Delegate tasks
-  - VSCodeAPI             # VS Code APIs
-  - terminalLastCommand   # Last terminal command output ⚡NEW
-  - searchResults         # Search view results ⚡NEW
-  - context7/*            # Documentation lookup
-  - awesome-copilot/*     # Examples
-  - microsoftdocs/*       # Microsoft docs
+  - codebase # Semantic code search
+  - search # Tool set: file/text search
+  - usages # Find references
+  - fetch # Web content
+  - githubRepo # GitHub repos
+  - problems # Problems panel
+  - changes # Git changes
+  - readFile # Read files
+  - listDirectory # List dirs
+  - runSubagent # Delegate tasks
+  - VSCodeAPI # VS Code APIs
+  - terminalLastCommand # Last terminal command output ⚡NEW
+  - searchResults # Search view results ⚡NEW
+  - context7/* # Documentation lookup
+  - awesome-copilot/* # Examples
+  - microsoftdocs/* # Microsoft docs
 ```
 
 **Usado por**: Plan, Analyze, Status, Alignment, Architect, Tasks, Improve, Retire, Deps
 
 **2. FULL_IMPLEMENTATION** (Read + Write + Execute):
+
 ```yaml
 tools:
   - codebase
@@ -150,29 +156,30 @@ tools:
   - changes
   - readFile
   - listDirectory
-  - edit                  # Tool set: editing
-  - editFiles             # Apply edits
-  - createFile            # Create files
-  - createDirectory       # Create dirs
-  - runCommands           # Tool set: terminal
-  - runInTerminal         # Execute commands
-  - getTerminalOutput     # Get output
-  - runTests              # Run tests
-  - runTasks              # Tool set: VS Code tasks ⚡NEW
-  - testFailure           # Test failure details ⚡NEW
-  - terminalLastCommand   # Last terminal output ⚡NEW
-  - getTaskOutput         # Task execution output ⚡NEW
-  - runSubagent           # Delegate
-  - todos                 # Track TODOs
-  - VSCodeAPI             # VS Code APIs
-  - context7/*            # Documentation
-  - awesome-copilot/*     # Examples
-  - microsoftdocs/*       # Microsoft docs
+  - edit # Tool set: editing
+  - editFiles # Apply edits
+  - createFile # Create files
+  - createDirectory # Create dirs
+  - runCommands # Tool set: terminal
+  - runInTerminal # Execute commands
+  - getTerminalOutput # Get output
+  - runTests # Run tests
+  - runTasks # Tool set: VS Code tasks ⚡NEW
+  - testFailure # Test failure details ⚡NEW
+  - terminalLastCommand # Last terminal output ⚡NEW
+  - getTaskOutput # Task execution output ⚡NEW
+  - runSubagent # Delegate
+  - todos # Track TODOs
+  - VSCodeAPI # VS Code APIs
+  - context7/* # Documentation
+  - awesome-copilot/* # Examples
+  - microsoftdocs/* # Microsoft docs
 ```
 
 **Usado por**: Implement, Testing, Review, Micro Iterator
 
 **3. SPEC_FOCUSED** (Especificaciones):
+
 ```yaml
 tools:
   - codebase
@@ -186,14 +193,15 @@ tools:
   - githubRepo
   - runSubagent
   - VSCodeAPI
-  - context7/*            # Research frameworks
-  - awesome-copilot/*     # Spec examples
-  - microsoftdocs/*       # Technical docs
+  - context7/* # Research frameworks
+  - awesome-copilot/* # Spec examples
+  - microsoftdocs/* # Technical docs
 ```
 
 **Usado por**: Feature, Specify, Clarify, Use Case, Gherkin, DDD
 
 **4. DOCS_FOCUSED** (Documentación):
+
 ```yaml
 tools:
   - codebase
@@ -207,14 +215,15 @@ tools:
   - githubRepo
   - runSubagent
   - VSCodeAPI
-  - context7/*            # API docs research
-  - awesome-copilot/*     # Doc templates
-  - microsoftdocs/*       # Microsoft docs
+  - context7/* # API docs research
+  - awesome-copilot/* # Doc templates
+  - microsoftdocs/* # Microsoft docs
 ```
 
 **Usado por**: Documentation, ADR, Postmortem
 
 **5. OPS_FOCUSED** (Operaciones):
+
 ```yaml
 tools:
   - codebase
@@ -229,18 +238,19 @@ tools:
   - runCommands
   - runInTerminal
   - getTerminalOutput
-  - runTasks              # VS Code tasks
-  - getTaskOutput         # Task execution output ⚡NEW
-  - terminalLastCommand   # Last terminal output ⚡NEW
+  - runTasks # VS Code tasks
+  - getTaskOutput # Task execution output ⚡NEW
+  - terminalLastCommand # Last terminal output ⚡NEW
   - runSubagent
   - VSCodeAPI
-  - context7/*            # Infrastructure docs
-  - microsoftdocs/*       # Azure operations docs
+  - context7/* # Infrastructure docs
+  - microsoftdocs/* # Azure operations docs
 ```
 
 **Usado por**: Ops, Release, Monitoring
 
 **6. CONSTITUTION_BUILDER** (⭐ Configuración proyecto):
+
 ```yaml
 tools:
   - codebase
@@ -255,14 +265,15 @@ tools:
   - githubRepo
   - runSubagent
   - VSCodeAPI
-  - context7/*            # Framework documentation
-  - awesome-copilot/*     # ⭐ CRITICAL - Constitution examples
-  - microsoftdocs/*       # Microsoft tech stacks
+  - context7/* # Framework documentation
+  - awesome-copilot/* # ⭐ CRITICAL - Constitution examples
+  - microsoftdocs/* # Microsoft tech stacks
 ```
 
 **Usado por**: Constitution
 
 **7. CICD_FOCUSED** (CI/CD):
+
 ```yaml
 tools:
   - codebase
@@ -279,19 +290,20 @@ tools:
   - getTerminalOutput
   - runTasks
   - runTests
-  - testFailure           # Test failures
-  - terminalLastCommand   # Last terminal output ⚡NEW
-  - getTaskOutput         # Task execution output ⚡NEW
+  - testFailure # Test failures
+  - terminalLastCommand # Last terminal output ⚡NEW
+  - getTaskOutput # Task execution output ⚡NEW
   - runSubagent
   - VSCodeAPI
-  - context7/*            # CI/CD framework docs
-  - awesome-copilot/*     # Pipeline examples
-  - microsoftdocs/*       # Azure DevOps docs
+  - context7/* # CI/CD framework docs
+  - awesome-copilot/* # Pipeline examples
+  - microsoftdocs/* # Azure DevOps docs
 ```
 
 **Usado por**: CI/CD
 
 **8. SECURITY_FOCUSED** (Seguridad):
+
 ```yaml
 tools:
   - codebase
@@ -303,16 +315,17 @@ tools:
   - changes
   - fetch
   - githubRepo
-  - terminalLastCommand   # Last terminal output ⚡NEW
+  - terminalLastCommand # Last terminal output ⚡NEW
   - runSubagent
   - VSCodeAPI
-  - context7/*            # Security framework docs
-  - microsoftdocs/*       # Microsoft security best practices
+  - context7/* # Security framework docs
+  - microsoftdocs/* # Microsoft security best practices
 ```
 
 **Usado por**: Security
 
 **9. INIT_WORKSPACE** (⭐⭐⭐ Inicialización):
+
 ```yaml
 tools:
   - codebase
@@ -326,16 +339,16 @@ tools:
   - runCommands
   - runInTerminal
   - getTerminalOutput
-  - terminalLastCommand   # Last terminal output ⚡NEW
-  - runTasks              # VS Code tasks ⚡NEW
-  - todos                 # Track TODOs ⚡NEW
+  - terminalLastCommand # Last terminal output ⚡NEW
+  - runTasks # VS Code tasks ⚡NEW
+  - todos # Track TODOs ⚡NEW
   - fetch
   - githubRepo
   - runSubagent
   - VSCodeAPI
-  - context7/*            # Framework docs
-  - awesome-copilot/*     # ⭐⭐⭐ CRITICAL - Templates completos
-  - microsoftdocs/*       # Microsoft tech docs
+  - context7/* # Framework docs
+  - awesome-copilot/* # ⭐⭐⭐ CRITICAL - Templates completos
+  - microsoftdocs/* # Microsoft tech docs
 ```
 
 **Usado por**: Bolt Framework, Templates
@@ -345,6 +358,7 @@ tools:
 > ⚠️ **CORRECCIÓN v2.0**: SKILL.md REQUIERE YAML frontmatter según [Agent Skills Open Standard](https://agentskills.io)
 
 **YAML Frontmatter Requerido**:
+
 ```yaml
 ---
 name: bolt-framework
@@ -358,6 +372,7 @@ description: >
 ```
 
 **Reglas del frontmatter**:
+
 - `name`: lowercase-hyphen, máximo 64 caracteres
 - `description`: máximo 1024 caracteres, DEBE incluir "when to use"
 - El skill se invoca como slash command: `/bolt-framework`
@@ -420,6 +435,7 @@ description: >
 **FROM: Bolt Framework** → TO: Cualquier agente especializado ✅
 
 **FROM: Feature** → TO:
+
 - ✅ Use Case (detallar casos de uso)
 - ✅ Gherkin (BDD scenarios)
 - ✅ Plan (implementation plan)
@@ -428,12 +444,14 @@ description: >
 - ❌ Ops (muy temprano en lifecycle)
 
 **FROM: Plan** → TO:
+
 - ✅ Tasks (breakdown en tasks)
 - ✅ Analyze (revisar consistencia)
 - ❌ Implement (debe ir a Tasks primero)
 - ❌ Release (muy temprano)
 
 **FROM: Implement** → TO:
+
 - ✅ Testing (generar tests)
 - ✅ Analyze (verificar consistencia)
 - ✅ Review (code review)
@@ -441,6 +459,7 @@ description: >
 - ❌ Plan (ya tiene plan)
 
 **FROM: Testing** → TO:
+
 - ✅ Implement (TDD green phase)
 - ✅ Gherkin (BDD scenarios)
 - ✅ Review (test quality)
@@ -448,18 +467,21 @@ description: >
 - ❌ Feature (tests vienen de feature)
 
 **FROM: Review** → TO:
+
 - ✅ Implement (fix issues)
 - ✅ Testing (mejorar coverage)
 - ✅ ADR (documentar decisión)
 - ❌ Feature (review no crea features)
 
 **FROM: Security** → TO:
+
 - ✅ Constitution (actualizar standards)
 - ✅ Implement (fix vulnerabilities)
 - ✅ Testing (security tests)
 - ❌ Self-handoff (INVÁLIDO)
 
 **FROM: Ops** → TO:
+
 - ✅ Improve (identificar mejoras)
 - ✅ Postmortem (análisis incidentes)
 - ✅ Status (estado general)
@@ -467,6 +489,7 @@ description: >
 - ❌ Feature (ops no crea features)
 
 **FROM: Status** → TO:
+
 - ✅ Analyze (análisis profundo)
 - ✅ Improve (oportunidades mejora)
 - ✅ Alignment (verificar alineación)
@@ -474,6 +497,7 @@ description: >
 - ❌ Implement (status es read-only)
 
 **Anti-Patterns** ❌:
+
 - Self-handoffs (agente a sí mismo)
 - Circular dependencies (A → B → C → A)
 - Cross-phase jumps (Discovery → Production sin Construction)
@@ -527,9 +551,9 @@ tools:
   - awesome-copilot/*
   - microsoftdocs/*
 # ⚠️ CORRECCIÓN v2.0: Nuevas propiedades del agente
-agents: ['*']                    # Permitir delegar a cualquier agente
-user-invokable: true             # Invocable por el usuario directamente
-model:                           # Array syntax para fallback chain
+agents: ['*'] # Permitir delegar a cualquier agente
+user-invokable: true # Invocable por el usuario directamente
+model: # Array syntax para fallback chain
   - Claude Sonnet 4.5
   - copilot-chat
 handoffs:
@@ -538,7 +562,7 @@ handoffs:
     agent: Aurora Constitution
     prompt: Create or update project constitution following bolt-framework methodology
     send: false
-  
+
   - label: ❓ Clarify Requirements
     agent: Aurora Clarify
     prompt: Clarify ambiguous requirements through structured questioning
@@ -549,17 +573,17 @@ handoffs:
     agent: Aurora Feature
     prompt: Create feature specification with stories and acceptance criteria
     send: false
-  
+
   - label: 📝 Create Specification
     agent: Aurora Specify
     prompt: Transform natural language into structured feature spec
     send: false
-  
+
   - label: 🗺️ Create Plan
     agent: Aurora Plan
     prompt: Create technical implementation plan from feature spec
     send: false
-  
+
   - label: ✅ Generate Tasks
     agent: Aurora Tasks
     prompt: Generate Bolt task breakdown from plan
@@ -570,12 +594,12 @@ handoffs:
     agent: Aurora Implement
     prompt: Implement code following specs and constitution
     send: false
-  
+
   - label: 🧪 Generate Tests
     agent: Aurora Testing
     prompt: Generate comprehensive test suites
     send: false
-  
+
   - label: 👀 Review Code
     agent: Aurora Review
     prompt: Perform code review with quality checks
@@ -592,12 +616,12 @@ handoffs:
     agent: Aurora Ops
     prompt: Manage operations and monitoring
     send: false
-  
+
   - label: 📊 Project Status
     agent: Aurora Status
     prompt: Show current project status and progress
     send: false
-  
+
   - label: 📈 Improvements
     agent: Aurora Improve
     prompt: Analyze and identify improvement opportunities
@@ -608,19 +632,19 @@ handoffs:
     agent: Aurora Analyze
     prompt: Perform consistency analysis across artifacts
     send: false
-  
+
   - label: ⚖️ Check Alignment
     agent: Aurora Alignment
     prompt: Verify business-technical alignment
     send: false
-  
+
   - label: 🔒 Security Analysis
     agent: Aurora Security
     prompt: Perform security analysis with OWASP compliance
     send: false
-  
+
   - label: 📜 Create ADR
-    agent: Aurora ADR
+    agent: Bolt ADR
     prompt: Create Architecture Decision Record
     send: false
 ---
@@ -637,11 +661,11 @@ Reducir de 296 a ~80 líneas:
 
 ## Available Scripts
 
-| Script | Bash | PowerShell |
-|--------|------|------------|
-| **Initialize** | `init.sh` | `Init.ps1` |
-| **Status** | `scripts/bash/project-status.sh` | `scripts/powershell/Get-ProjectStatus.ps1` |
-| **Quality Gates** | `scripts/bash/quality-gates.sh` | `scripts/powershell/Quality-Gates.ps1` |
+| Script            | Bash                             | PowerShell                                 |
+| ----------------- | -------------------------------- | ------------------------------------------ |
+| **Initialize**    | `init.sh`                        | `Init.ps1`                                 |
+| **Status**        | `scripts/bash/project-status.sh` | `scripts/powershell/Get-ProjectStatus.ps1` |
+| **Quality Gates** | `scripts/bash/quality-gates.sh`  | `scripts/powershell/Quality-Gates.ps1`     |
 
 ## Your Role
 
@@ -657,14 +681,18 @@ You are the Bolt Framework orchestrator, guiding development through AURORA-IA-D
 ## Quick Actions
 
 ### First Time in Project?
+
 Check if initialized: `ls memory/constitution.md specs/ src/`
 
 If missing, run init:
+
 - Bash: `./init.sh my-project green --scope full-stack`
 - PowerShell: `.\Init.ps1 -ProjectName "my-project" -Type greenfield`
 
 ### What Phase Am I In?
+
 Use skill to detect:
+
 - No constitution? → **PRE_INCEPTION** - Run init
 - Constitution but no specs? → **INCEPTION** - Define features
 - Specs but no code? → **DISCOVERY** - Plan implementation
@@ -673,6 +701,7 @@ Use skill to detect:
 - Deployed? → **PRODUCTION** - Monitor and improve
 
 ### Need Help?
+
 - New feature → Handoff to `Aurora Feature`
 - Implement code → Handoff to `Aurora Implement`
 - Project status → Handoff to `Aurora Status`
@@ -681,6 +710,7 @@ Use skill to detect:
 ## Methodology
 
 All details in **bolt-framework skill**. Follow for:
+
 - Lifecycle phases (6 phases)
 - Bolt workflows (micro-iterations)
 - Quality gates
@@ -700,38 +730,38 @@ All details in **bolt-framework skill**. Follow for:
 
 ### Agent-to-Toolset Mapping
 
-| Agente | Toolset | Notes |
-|--------|---------|-------|
-| Bolt Framework | INIT_WORKSPACE | ⭐⭐⭐ awesome-copilot crítico |
-| aurora-constitution | CONSTITUTION_BUILDER | ⭐ awesome-copilot importante |
-| aurora-templates | INIT_WORKSPACE | ⭐⭐ awesome-copilot muy importante |
-| aurora-plan | FULL_PLANNING | |
-| aurora-implement | FULL_IMPLEMENTATION | |
-| aurora-testing | FULL_IMPLEMENTATION | |
-| aurora-review | FULL_IMPLEMENTATION | |
-| aurora-feature | SPEC_FOCUSED | |
-| aurora-specify | SPEC_FOCUSED | |
-| aurora-clarify | SPEC_FOCUSED | |
-| aurora-usecase | SPEC_FOCUSED | |
-| aurora-gherkin | SPEC_FOCUSED | |
-| aurora-ddd | SPEC_FOCUSED | |
-| aurora-docs | DOCS_FOCUSED | |
-| aurora-adr | DOCS_FOCUSED | |
-| aurora-postmortem | DOCS_FOCUSED | |
-| aurora-ops | OPS_FOCUSED | No awesome-copilot |
-| aurora-release | OPS_FOCUSED | No awesome-copilot |
-| aurora-monitoring | OPS_FOCUSED | No awesome-copilot |
-| aurora-cicd | CICD_FOCUSED | |
-| aurora-security | SECURITY_FOCUSED | No awesome-copilot |
-| aurora-analyze | FULL_PLANNING | |
-| aurora-status | FULL_PLANNING | |
-| aurora-alignment | FULL_PLANNING | |
-| aurora-improve | FULL_PLANNING | |
-| aurora-tasks | FULL_PLANNING | |
-| aurora-micro-iterator | FULL_IMPLEMENTATION | |
-| aurora-architect | FULL_PLANNING | |
-| aurora-retire | FULL_PLANNING | |
-| aurora-deps | FULL_PLANNING | |
+| Agente                | Toolset              | Notes                               |
+| --------------------- | -------------------- | ----------------------------------- |
+| Bolt Framework        | INIT_WORKSPACE       | ⭐⭐⭐ awesome-copilot crítico      |
+| aurora-constitution   | CONSTITUTION_BUILDER | ⭐ awesome-copilot importante       |
+| aurora-templates      | INIT_WORKSPACE       | ⭐⭐ awesome-copilot muy importante |
+| aurora-plan           | FULL_PLANNING        |                                     |
+| aurora-implement      | FULL_IMPLEMENTATION  |                                     |
+| aurora-testing        | FULL_IMPLEMENTATION  |                                     |
+| aurora-review         | FULL_IMPLEMENTATION  |                                     |
+| aurora-feature        | SPEC_FOCUSED         |                                     |
+| aurora-specify        | SPEC_FOCUSED         |                                     |
+| aurora-clarify        | SPEC_FOCUSED         |                                     |
+| aurora-usecase        | SPEC_FOCUSED         |                                     |
+| aurora-gherkin        | SPEC_FOCUSED         |                                     |
+| aurora-ddd            | SPEC_FOCUSED         |                                     |
+| aurora-docs           | DOCS_FOCUSED         |                                     |
+| bolt-adr              | DOCS_FOCUSED         |                                     |
+| aurora-postmortem     | DOCS_FOCUSED         |                                     |
+| aurora-ops            | OPS_FOCUSED          | No awesome-copilot                  |
+| aurora-release        | OPS_FOCUSED          | No awesome-copilot                  |
+| aurora-monitoring     | OPS_FOCUSED          | No awesome-copilot                  |
+| aurora-cicd           | CICD_FOCUSED         |                                     |
+| aurora-security       | SECURITY_FOCUSED     | No awesome-copilot                  |
+| aurora-analyze        | FULL_PLANNING        |                                     |
+| aurora-status         | FULL_PLANNING        |                                     |
+| aurora-alignment      | FULL_PLANNING        |                                     |
+| aurora-improve        | FULL_PLANNING        |                                     |
+| aurora-tasks          | FULL_PLANNING        |                                     |
+| aurora-micro-iterator | FULL_IMPLEMENTATION  |                                     |
+| aurora-architect      | FULL_PLANNING        |                                     |
+| aurora-retire         | FULL_PLANNING        |                                     |
+| aurora-deps           | FULL_PLANNING        |                                     |
 
 ### Proceso de Refactorización por Agente
 
@@ -749,6 +779,7 @@ Para cada agente:
    - `handoffs.model` para override de modelo por handoff
 
 **Contenido a ELIMINAR**:
+
 - ❌ Explicación de lifecycle phases
 - ❌ Descripción de constitution
 - ❌ Quality gates generales
@@ -756,6 +787,7 @@ Para cada agente:
 - ❌ Project state detection
 
 **Contenido a MANTENER**:
+
 - ✅ Frontmatter (name, description, tools, handoffs)
 - ✅ Scripts específicos
 - ✅ Instrucciones específicas de tarea
@@ -764,10 +796,10 @@ Para cada agente:
 
 ### Ejemplo: aurora-implement.agent.md
 
-**ANTES**: 446 líneas  
+**ANTES**: 446 líneas
 **DESPUÉS**: ~200 líneas (55% reducción)
 
-```yaml
+````yaml
 ---
 name: Aurora Implement
 description: 🏗️ Execute implementation following Bolt task list
@@ -839,11 +871,12 @@ Auto-create BOLT branch:
 FEATURE_BRANCH=$(git branch --show-current)
 BOLT_BRANCH="${FEATURE_BRANCH}/bolt-${N}-${DESCRIPTION}"
 git checkout -b "$BOLT_BRANCH"
-```
+````
 
 ### 2. Implementation Cycle
 
 For each task:
+
 1. Read constitution for standards
 2. Write tests first (if TDD)
 3. Implement code
@@ -855,6 +888,7 @@ For each task:
 ### 3. Quality Gates
 
 Run before marking complete:
+
 ```bash
 ./scripts/bash/quality-gates.sh
 # or
@@ -862,6 +896,7 @@ Run before marking complete:
 ```
 
 Must pass:
+
 - [ ] Linting
 - [ ] Unit tests
 - [ ] Constitution compliance
@@ -870,6 +905,7 @@ Must pass:
 ### 4. Handoffs
 
 After Bolt complete:
+
 - Tests passing → `Aurora Review`
 - Need tests → `Aurora Testing`
 - Verify spec → `Aurora Analyze`
@@ -877,13 +913,15 @@ After Bolt complete:
 ## Constitution Compliance
 
 **ALWAYS verify**:
+
 - Using allowed tech stack?
 - Following naming conventions?
 - Meeting architecture patterns?
 - Passing quality criteria?
 
 See bolt-framework skill for methodology.
-```
+
+````
 
 ---
 
@@ -891,7 +929,7 @@ See bolt-framework skill for methodology.
 
 > 📊 **Progreso**: ✅ Completado | Pasos: 1/1 completados
 
-**ANTES**: 108 líneas  
+**ANTES**: 108 líneas
 **DESPUÉS**: ~15 líneas (86% reducción)
 
 ```markdown
@@ -915,7 +953,7 @@ All methodology is in bolt-framework skill.
 ---
 
 **Action**: Invoke `@Bolt Framework` with user's request.
-```
+````
 
 ---
 
@@ -931,10 +969,10 @@ All methodology is in bolt-framework skill.
 
 Skills se auto-descubren — solo actualizar la tabla informativa en `.github/copilot-instructions.md`:
 
-| Skill | Domain | Use When |
-|-------|--------|----------|
+| Skill                                            | Domain             | Use When                                       |
+| ------------------------------------------------ | ------------------ | ---------------------------------------------- |
 | [bolt-framework](.github/skills/bolt-framework/) | AURORA Methodology | Working on AURORA projects, managing lifecycle |
-| [skill-development](.github/skills/skill-development/) | Skill Creation | Creating or improving Copilot skills |
+| [new-skill](.github/skills/new-skill/)           | Skill Creation     | Creating or improving Copilot skills           |
 
 > **Nota**: Eliminar cualquier tag `<skill>` existente. Los skills se auto-descubren desde el directorio.
 
@@ -942,9 +980,9 @@ Skills se auto-descubren — solo actualizar la tabla informativa en `.github/co
 
 Actualizar tabla de agentes (30 agentes) y cambiar nombre del orchestrator a `@Bolt Framework`.
 
-### Paso 5.3: Agregar YAML frontmatter a skill-development
+### Paso 5.3: Agregar YAML frontmatter a new-skill
 
-Verificar que `skill-development/SKILL.md` tenga YAML frontmatter requerido.
+Verificar que `new-skill/SKILL.md` tenga YAML frontmatter requerido.
 
 > 📊 **Fin FASE 5**: Actualizar progreso al inicio del documento
 
@@ -955,16 +993,18 @@ Verificar que `skill-development/SKILL.md` tenga YAML frontmatter requerido.
 > 📊 **Progreso**: ✅ Completado | Archivos: 2/2 completados
 
 ### README.md
+
 - Cambiar `@AURORA` → `@Bolt Framework`
 - Agregar sección sobre skill
 - Actualizar tabla de agentes
 
 ### .github/agents/README.md
+
 ```markdown
 ### 🌌 Orchestrator
 
-| Agent | File | Purpose |
-|-------|------|---------|
+| Agent              | File                      | Purpose                                    |
+| ------------------ | ------------------------- | ------------------------------------------ |
 | **Bolt Framework** | `bolt-framework.agent.md` | Main orchestrator using AURORA methodology |
 ```
 
@@ -977,51 +1017,61 @@ Verificar que `skill-development/SKILL.md` tenga YAML frontmatter requerido.
 ### Tests Funcionales
 
 **Test 1: Skill Loading**
+
 - Acción: Preguntar sobre AURORA
 - Esperado: Copilot lee SKILL.md
 - Validación: Referencias al skill
 
 **Test 2: Routing**
+
 - Acción: Pedir crear feature
 - Esperado: Bolt Framework → Aurora Feature
 - Validación: Handoff correcto
 
 **Test 3: Tools Funcionan**
+
 - Acción: Buscar en awesome-copilot
 - Esperado: Encuentra collections
 - Validación: MCP tools activas
 
 **Test 4: MCP Integration**
+
 - Acción: Aurora Constitution crea constitution
 - Esperado: Usa awesome-copilot para ejemplos
 - Validación: Constitution basada en ejemplos
 
-### Test 5: Init Workspace**
+### Test 5: Init Workspace\*\*
+
 - Acción: Bolt Framework init workspace
 - Esperado: Usa awesome-copilot para templates
 - Validación: Agents/prompts/skills copiados
 
 **Test 6: Skill Auto-Discovery**
+
 - Acción: Verificar que el skill se carga sin tag `<skill>`
 - Esperado: Copilot auto-descubre bolt-framework desde `.github/skills/`
 - Validación: Slash command `/bolt-framework` disponible
 
 **Test 7: Agent New Properties**
+
 - Acción: Verificar frontmatter de bolt-framework.agent.md
 - Esperado: `agents: ['*']`, `user-invokable: true`, `model` array
 - Validación: Propiedades reconocidas por VS Code
 
 **Test 8: SKILL.md Frontmatter**
+
 - Acción: Verificar YAML frontmatter en SKILL.md
 - Esperado: `name: bolt-framework`, `description` con "when to use"
 - Validación: Skill reconocido por VS Code
 
 **Test 9: Handoff Matrix**
+
 - Acción: Verificar que no hay self-handoffs ni circulares
 - Esperado: Todos los handoffs siguen HANDOFF-MATRIX.md
 - Validación: No hay anti-patterns
 
 **Test 10: Content Reduction**
+
 - Acción: Verificar líneas por agente post-refactoring
 - Esperado: Promedio ≤ 140 líneas, sin duplicación de metodología
 - Validación: Métricas cumplen objetivos
@@ -1031,6 +1081,7 @@ Verificar que `skill-development/SKILL.md` tenga YAML frontmatter requerido.
 ## ✅ Checklist de Implementación
 
 ### Skill
+
 - [ ] SKILL.md creado (~500 líneas metodología)
 - [ ] TOOLSETS.md con tools correctas + MCP
 - [ ] HANDOFF-MATRIX.md validaciones
@@ -1038,12 +1089,14 @@ Verificar que `skill-development/SKILL.md` tenga YAML frontmatter requerido.
 - [ ] Templates creados (3 templates)
 
 ### Agente Principal
+
 - [ ] aurora.agent.md → bolt-framework.agent.md
 - [ ] Frontmatter con tools correctas
 - [ ] Contenido reducido (-73%)
 - [ ] Handoffs validados
 
 ### Agentes Especializados (30)
+
 - [ ] Tools correctas según toolset
 - [ ] MCP tools incluidas donde corresponde
 - [ ] Handoffs validados
@@ -1052,12 +1105,14 @@ Verificar que `skill-development/SKILL.md` tenga YAML frontmatter requerido.
 - [ ] Promedio -50% reducción
 
 ### Prompt y Referencias
+
 - [ ] aurora.prompt.md simplificado (-86%)
 - [ ] Skill registrado en copilot-instructions.md
 - [ ] README.md actualizado
 - [ ] .github/agents/README.md actualizado
 
 ### Testing
+
 - [ ] Skill loading funciona
 - [ ] Routing correcto
 - [ ] Tools correctas
@@ -1072,15 +1127,15 @@ Verificar que `skill-development/SKILL.md` tenga YAML frontmatter requerido.
 
 ### Métricas
 
-| Métrica | Antes | Después | Cambio |
-|---------|-------|---------|--------|
-| Líneas bolt-framework | 296 | ~80 | **-73%** |
-| Líneas aurora.prompt | 108 | ~15 | **-86%** |
-| Promedio/agente | ~280 | ~140 | **-50%** |
-| Total agentes (30) | ~8400 | ~4800 | **-43%** |
-| Líneas skill | 0 | ~500 | +500 |
-| Fuentes verdad | 4+ | 1 | **-75%** |
-| **Total documentación** | ~8228 | ~5655 | **-31%** |
+| Métrica                 | Antes | Después | Cambio   |
+| ----------------------- | ----- | ------- | -------- |
+| Líneas bolt-framework   | 296   | ~80     | **-73%** |
+| Líneas aurora.prompt    | 108   | ~15     | **-86%** |
+| Promedio/agente         | ~280  | ~140    | **-50%** |
+| Total agentes (30)      | ~8400 | ~4800   | **-43%** |
+| Líneas skill            | 0     | ~500    | +500     |
+| Fuentes verdad          | 4+    | 1       | **-75%** |
+| **Total documentación** | ~8228 | ~5655   | **-31%** |
 
 ### Beneficios
 
@@ -1095,18 +1150,21 @@ Verificar que `skill-development/SKILL.md` tenga YAML frontmatter requerido.
 ### Casos de Uso Mejorados
 
 **Crear Constitution**:
+
 1. Aurora Constitution busca ejemplos en awesome-copilot
 2. Investiga tech stacks con context7
 3. Verifica Microsoft guidelines con microsoftdocs
 4. Genera constitution personalizada
 
 **Init Workspace**:
+
 1. Bolt Framework busca templates en awesome-copilot
 2. Copia agentes/prompts/skills desde collections
 3. Adapta según tech stack elegido
 4. Ejecuta init script
 
 **Implementar Feature**:
+
 1. Aurora Implement consulta docs con context7
 2. Busca ejemplos de código con microsoftdocs
 3. Verifica patterns con awesome-copilot
@@ -1131,6 +1189,7 @@ Verificar que `skill-development/SKILL.md` tenga YAML frontmatter requerido.
 ### Tools Correctas de VS Code
 
 **NUNCA usar**:
+
 - ❌ `'vscode'` - No existe
 - ❌ `'execute'` - Usar `'runInTerminal'` o `'runCommands'`
 - ❌ `'read'` - Usar `'readFile'`
@@ -1140,6 +1199,7 @@ Verificar que `skill-development/SKILL.md` tenga YAML frontmatter requerido.
 - ❌ `'todo'` - Usar `'todos'`
 
 **SIEMPRE usar**:
+
 - ✅ Tool sets: `'edit'`, `'search'`, `'runCommands'`, `'runTasks'`, `'runNotebooks'`
 - ✅ Tools individuales: `'readFile'`, `'editFiles'`, `'createFile'`, `'runInTerminal'`, etc.
 - ✅ MCP wildcards: `'context7/*'`, `'awesome-copilot/*'`, `'microsoftdocs/*'`
@@ -1147,17 +1207,20 @@ Verificar que `skill-development/SKILL.md` tenga YAML frontmatter requerido.
 ### MCP Tools Críticas
 
 **context7** - SIEMPRE incluir para:
+
 - Agentes que implementan código
 - Agentes que crean specs técnicas
 - Agentes que necesitan docs actualizadas
 
 **awesome-copilot** - CRÍTICO para:
+
 - 🌟🌟🌟 Bolt Framework (Init Workspace)
 - 🌟 Aurora Constitution
 - 🌟🌟 Aurora Templates
 - Cualquier agente que necesite ejemplos
 
 **microsoftdocs** - Incluir para:
+
 - Stacks Microsoft (.NET, C#, Azure)
 - Ops y deployments Azure
 - Security best practices Microsoft
@@ -1165,6 +1228,7 @@ Verificar que `skill-development/SKILL.md` tenga YAML frontmatter requerido.
 ### Handoffs
 
 **Validar SIEMPRE**:
+
 - ❌ No self-handoffs
 - ❌ No circulares
 - ❌ No duplicados
@@ -1190,15 +1254,15 @@ Una vez ejecutado el plan:
 
 ## 📋 Resumen de Correcciones v2.0
 
-| # | Corrección | Área | Descripción |
-|---|-----------|------|-------------|
-| 1 | **Tools faltantes** | Toolsets | +5 tools: `terminalLastCommand`, `testFailure`, `searchResults`, `getTaskOutput`, `runTasks` (tool set) |
-| 2 | **Propiedades de agente** | Phase 2, 3 | Nuevos: `agents`, `user-invokable`, `disable-model-invocation`, `handoffs.model`, `model` array |
-| 3 | **SKILL.md frontmatter** | Phase 1 | YAML frontmatter REQUERIDO: `name` (max 64 chars) + `description` (max 1024 chars) |
-| 4 | **Skills auto-discovery** | Phase 5 | NO `<skill>` tags — auto-descubrimiento desde `.github/skills/<name>/SKILL.md` |
-| 5 | **Conteo de agentes** | Global | 30 agentes (no 29) — incluye `aurora-docs` |
-| 6 | **Nombre de archivo** | Ya correcto | `.agent.md` es correcto (antes `.chatmode.md`, renombrado en Feb 2026) |
-| 7 | **handoffs.model** | Phase 2 | Override de modelo por handoff disponible |
+| #   | Corrección                | Área        | Descripción                                                                                             |
+| --- | ------------------------- | ----------- | ------------------------------------------------------------------------------------------------------- |
+| 1   | **Tools faltantes**       | Toolsets    | +5 tools: `terminalLastCommand`, `testFailure`, `searchResults`, `getTaskOutput`, `runTasks` (tool set) |
+| 2   | **Propiedades de agente** | Phase 2, 3  | Nuevos: `agents`, `user-invokable`, `disable-model-invocation`, `handoffs.model`, `model` array         |
+| 3   | **SKILL.md frontmatter**  | Phase 1     | YAML frontmatter REQUERIDO: `name` (max 64 chars) + `description` (max 1024 chars)                      |
+| 4   | **Skills auto-discovery** | Phase 5     | NO `<skill>` tags — auto-descubrimiento desde `.github/skills/<name>/SKILL.md`                          |
+| 5   | **Conteo de agentes**     | Global      | 30 agentes (no 29) — incluye `aurora-docs`                                                              |
+| 6   | **Nombre de archivo**     | Ya correcto | `.agent.md` es correcto (antes `.chatmode.md`, renombrado en Feb 2026)                                  |
+| 7   | **handoffs.model**        | Phase 2     | Override de modelo por handoff disponible                                                               |
 
 ---
 
@@ -1208,64 +1272,64 @@ Una vez ejecutado el plan:
 
 ### 38 Tools Individuales
 
-| Tool | Descripción |
-|------|-------------|
-| `changes` | Git changes |
-| `codebase` | Semantic code search |
-| `createAndRunTask` | Create and run VS Code task |
-| `createDirectory` | Create directory |
-| `createFile` | Create new file |
-| `editFiles` | Apply file edits |
-| `editNotebook` | Edit notebook |
-| `extensions` | VS Code extensions |
-| `fetch` | Web content retrieval |
-| `fileSearch` | File search by pattern |
-| `getNotebookSummary` | Notebook summary |
-| `getProjectSetupInfo` | Project setup info |
-| `getTaskOutput` | Task execution output |
-| `getTerminalOutput` | Terminal output |
-| `githubRepo` | GitHub repos |
-| `installExtension` | Install extension |
-| `listDirectory` | List directory |
-| `newJupyterNotebook` | Create notebook |
-| `newWorkspace` | Create workspace |
-| `openSimpleBrowser` | Open browser |
-| `problems` | Problems panel |
-| `readFile` | Read file contents |
-| `readNotebookCellOutput` | Read notebook cell |
-| `runCell` | Run notebook cell |
-| `runInTerminal` | Execute terminal command |
-| `runSubagent` | Delegate to subagent |
-| `runTask` | Run VS Code task |
-| `runTests` | Run test suite |
-| `runVscodeCommand` | Execute VS Code command |
-| `searchResults` | Search view results |
-| `selection` | Current selection |
-| `terminalLastCommand` | Last terminal command |
-| `terminalSelection` | Terminal selection |
-| `testFailure` | Test failure details |
-| `textSearch` | Text search in files |
-| `todos` | Track TODOs |
-| `usages` | Find references |
-| `VSCodeAPI` | VS Code API access |
+| Tool                     | Descripción                 |
+| ------------------------ | --------------------------- |
+| `changes`                | Git changes                 |
+| `codebase`               | Semantic code search        |
+| `createAndRunTask`       | Create and run VS Code task |
+| `createDirectory`        | Create directory            |
+| `createFile`             | Create new file             |
+| `editFiles`              | Apply file edits            |
+| `editNotebook`           | Edit notebook               |
+| `extensions`             | VS Code extensions          |
+| `fetch`                  | Web content retrieval       |
+| `fileSearch`             | File search by pattern      |
+| `getNotebookSummary`     | Notebook summary            |
+| `getProjectSetupInfo`    | Project setup info          |
+| `getTaskOutput`          | Task execution output       |
+| `getTerminalOutput`      | Terminal output             |
+| `githubRepo`             | GitHub repos                |
+| `installExtension`       | Install extension           |
+| `listDirectory`          | List directory              |
+| `newJupyterNotebook`     | Create notebook             |
+| `newWorkspace`           | Create workspace            |
+| `openSimpleBrowser`      | Open browser                |
+| `problems`               | Problems panel              |
+| `readFile`               | Read file contents          |
+| `readNotebookCellOutput` | Read notebook cell          |
+| `runCell`                | Run notebook cell           |
+| `runInTerminal`          | Execute terminal command    |
+| `runSubagent`            | Delegate to subagent        |
+| `runTask`                | Run VS Code task            |
+| `runTests`               | Run test suite              |
+| `runVscodeCommand`       | Execute VS Code command     |
+| `searchResults`          | Search view results         |
+| `selection`              | Current selection           |
+| `terminalLastCommand`    | Last terminal command       |
+| `terminalSelection`      | Terminal selection          |
+| `testFailure`            | Test failure details        |
+| `textSearch`             | Text search in files        |
+| `todos`                  | Track TODOs                 |
+| `usages`                 | Find references             |
+| `VSCodeAPI`              | VS Code API access          |
 
 ### 5 Tool Sets
 
-| Tool Set | Includes |
-|----------|----------|
-| `edit` | `createFile`, `editFiles`, `createDirectory` |
-| `search` | `fileSearch`, `textSearch` |
-| `runCommands` | `runInTerminal`, `getTerminalOutput` |
-| `runTasks` | `runTask`, `getTaskOutput`, `createAndRunTask` |
+| Tool Set       | Includes                                                                                        |
+| -------------- | ----------------------------------------------------------------------------------------------- |
+| `edit`         | `createFile`, `editFiles`, `createDirectory`                                                    |
+| `search`       | `fileSearch`, `textSearch`                                                                      |
+| `runCommands`  | `runInTerminal`, `getTerminalOutput`                                                            |
+| `runTasks`     | `runTask`, `getTaskOutput`, `createAndRunTask`                                                  |
 | `runNotebooks` | `runCell`, `editNotebook`, `readNotebookCellOutput`, `getNotebookSummary`, `newJupyterNotebook` |
 
 ### 3 MCP Servers
 
-| MCP Server | Wildcard | Tools |
-|------------|----------|-------|
-| Context7 | `context7/*` | `query-docs`, `resolve-library-id` |
+| MCP Server      | Wildcard            | Tools                                                                            |
+| --------------- | ------------------- | -------------------------------------------------------------------------------- |
+| Context7        | `context7/*`        | `query-docs`, `resolve-library-id`                                               |
 | Awesome Copilot | `awesome-copilot/*` | `list_collections`, `load_collection`, `load_instruction`, `search_instructions` |
-| Microsoft Docs | `microsoftdocs/*` | `microsoft_docs_search`, `microsoft_docs_fetch`, `microsoft_code_sample_search` |
+| Microsoft Docs  | `microsoftdocs/*`   | `microsoft_docs_search`, `microsoft_docs_fetch`, `microsoft_code_sample_search`  |
 
 ---
 
@@ -1275,24 +1339,24 @@ Una vez ejecutado el plan:
 
 ```yaml
 ---
-name: Agent Name                    # Display name
-description: Description text       # Short description
-tools:                              # Available tools
+name: Agent Name # Display name
+description: Description text # Short description
+tools: # Available tools
   - toolName
-  - mcp-server/*                    # MCP wildcard
-agents:                             # ⚡NEW - Subagent control
-  - '*'                             # Allow all
-  - 'Specific Agent'                # Or specific ones
-user-invokable: true                # ⚡NEW - User can invoke directly
-disable-model-invocation: false     # ⚡NEW - LLM can invoke
-model:                              # Supports array for fallback
+  - mcp-server/* # MCP wildcard
+agents: # ⚡NEW - Subagent control
+  - '*' # Allow all
+  - 'Specific Agent' # Or specific ones
+user-invokable: true # ⚡NEW - User can invoke directly
+disable-model-invocation: false # ⚡NEW - LLM can invoke
+model: # Supports array for fallback
   - Claude Sonnet 4.5
   - copilot-chat
 handoffs:
   - label: 🏷️ Action Label
     agent: Target Agent
     prompt: Context for handoff
-    model: Override Model            # ⚡NEW - Per-handoff model
+    model: Override Model # ⚡NEW - Per-handoff model
     send: false
 ---
 ```
@@ -1305,14 +1369,15 @@ handoffs:
 
 ```yaml
 ---
-name: skill-name                    # lowercase-hyphen, max 64 chars
-description: >                      # max 1024 chars, include "when to use"
+name: skill-name # lowercase-hyphen, max 64 chars
+description: > # max 1024 chars, include "when to use"
   Description of the skill.
   Use when doing X, Y, or Z.
 ---
 ```
 
 **Reglas**:
+
 - Auto-discovery desde `.github/skills/<name>/SKILL.md`
 - Invocable como slash command: `/skill-name`
 - NO necesita registro `<skill>` en copilot-instructions.md

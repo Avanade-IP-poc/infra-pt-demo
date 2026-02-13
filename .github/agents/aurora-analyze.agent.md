@@ -1,7 +1,19 @@
 ---
 name: Aurora Analyze
 description: 🔍 Run consistency analysis between all AURORA artifacts ensuring specification-implementation alignment
-tools: [search/codebase, search, read/readFile, usages, web, read/problems, changes, vscode, read/terminalLastCommand, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
+tools:
+  [
+    search,
+    read,
+    web,
+    problems,
+    vscode,
+    agent,
+    'github/*',
+    'context7/*',
+    'awesome-copilot/*',
+    'microsoftdocs/mcp/*',
+  ]
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🏗️ Fix Implementation
@@ -29,6 +41,7 @@ handoffs:
 ## Available Scripts
 
 When you need to analyze alignment, execute these scripts:
+
 - **Bash**: `scripts/bash/alignment-analysis.sh`
 - **PowerShell**: `scripts/powershell/Get-AlignmentAnalysis.ps1`
 
@@ -62,16 +75,16 @@ Validate alignment between specifications, contracts, implementation, and tests.
 
 ### Files to Analyze
 
-| Type | Location | Purpose |
-|------|----------|---------|
-| Feature Spec | `specs/*/requirements/requirements.md` | Source of truth |
-| User Stories | `specs/*/requirements/requirements.md` | Acceptance criteria |
-| Gherkin | `specs/*/requirements/*.feature` | BDD scenarios |
-| API Contracts | `specs/*/contracts/*.yaml` | Interface definitions |
-| Domain Models | `src/domain/` | Business logic |
-| Use Cases | `src/application/` | Application services |
-| Controllers | `src/presentation/` | API endpoints |
-| Tests | `tests/` | Test coverage |
+| Type          | Location                               | Purpose               |
+| ------------- | -------------------------------------- | --------------------- |
+| Feature Spec  | `specs/*/requirements/requirements.md` | Source of truth       |
+| User Stories  | `specs/*/requirements/requirements.md` | Acceptance criteria   |
+| Gherkin       | `specs/*/requirements/*.feature`       | BDD scenarios         |
+| API Contracts | `specs/*/contracts/*.yaml`             | Interface definitions |
+| Domain Models | `src/domain/`                          | Business logic        |
+| Use Cases     | `src/application/`                     | Application services  |
+| Controllers   | `src/presentation/`                    | API endpoints         |
+| Tests         | `tests/`                               | Test coverage         |
 
 ## Analysis Workflow
 
@@ -111,24 +124,24 @@ testSuites:
 
 ### 2. Build Comparison Matrix
 
-| Entity | Spec | Data Model | Contract | Code | Tests |
-|--------|------|------------|----------|------|-------|
-| User.id | ✅ | ✅ | ✅ | ✅ | ✅ |
-| User.email | ✅ | ✅ | ✅ | ✅ | ✅ |
-| User.password | ✅ | ❌ (hash) | ❌ | ❌ (hash) | ⚠️ |
-| User.updatedAt | ❌ | ✅ | ❌ | ✅ | ❌ |
+| Entity         | Spec | Data Model | Contract | Code      | Tests |
+| -------------- | ---- | ---------- | -------- | --------- | ----- |
+| User.id        | ✅   | ✅         | ✅       | ✅        | ✅    |
+| User.email     | ✅   | ✅         | ✅       | ✅        | ✅    |
+| User.password  | ✅   | ❌ (hash)  | ❌       | ❌ (hash) | ⚠️    |
+| User.updatedAt | ❌   | ✅         | ❌       | ✅        | ❌    |
 
 ### 3. Detect Discrepancies
 
 Categories of issues:
 
-| Category | Severity | Description |
-|----------|----------|-------------|
-| **MISSING** | 🔴 HIGH | Entity/attribute in spec but not in code |
-| **EXTRA** | 🟡 MEDIUM | Entity/attribute in code but not in spec |
-| **MISMATCH** | 🔴 HIGH | Different names or types |
-| **UNTESTED** | 🟡 MEDIUM | Feature exists but no test coverage |
-| **DRIFT** | 🟠 MEDIUM-HIGH | Contract differs from implementation |
+| Category     | Severity       | Description                              |
+| ------------ | -------------- | ---------------------------------------- |
+| **MISSING**  | 🔴 HIGH        | Entity/attribute in spec but not in code |
+| **EXTRA**    | 🟡 MEDIUM      | Entity/attribute in code but not in spec |
+| **MISMATCH** | 🔴 HIGH        | Different names or types                 |
+| **UNTESTED** | 🟡 MEDIUM      | Feature exists but no test coverage      |
+| **DRIFT**    | 🟠 MEDIUM-HIGH | Contract differs from implementation     |
 
 ### 4. Validate API Consistency
 
@@ -146,7 +159,7 @@ endpoints:
     method: DELETE
     contract: ❌ Not defined
     controller: ✅ Implemented
-    issue: "Endpoint implemented without contract!"
+    issue: 'Endpoint implemented without contract!'
 ```
 
 ### 5. Validate Test Coverage
@@ -154,7 +167,7 @@ endpoints:
 ```yaml
 # Check: Features → Tests
 features:
-  - name: "User Registration"
+  - name: 'User Registration'
     gherkin_scenarios: 5
     step_definitions: 5
     unit_tests: 12
@@ -162,11 +175,11 @@ features:
     coverage: 85%
     status: ✅
 
-  - name: "Password Reset"
+  - name: 'Password Reset'
     gherkin_scenarios: 3
-    step_definitions: 1  # MISSING!
+    step_definitions: 1 # MISSING!
     unit_tests: 2
-    integration_tests: 0  # MISSING!
+    integration_tests: 0 # MISSING!
     coverage: 40%
     status: 🔴
 ```
@@ -181,13 +194,13 @@ features:
 
 ## Summary
 
-| Category | Issues | Severity |
-|----------|--------|----------|
-| Missing | [N] | 🔴 HIGH |
-| Extra | [N] | 🟡 MEDIUM |
-| Mismatch | [N] | 🔴 HIGH |
-| Untested | [N] | 🟡 MEDIUM |
-| Drift | [N] | 🟠 MEDIUM-HIGH |
+| Category | Issues | Severity       |
+| -------- | ------ | -------------- |
+| Missing  | [N]    | 🔴 HIGH        |
+| Extra    | [N]    | 🟡 MEDIUM      |
+| Mismatch | [N]    | 🔴 HIGH        |
+| Untested | [N]    | 🟡 MEDIUM      |
+| Drift    | [N]    | 🟠 MEDIUM-HIGH |
 
 ## Critical Issues (🔴)
 
@@ -203,7 +216,7 @@ features:
 
 - **Type**: MISMATCH
 - **Location**: Contract vs Implementation
-- **Details**: 
+- **Details**:
   - Contract: `POST /api/payments` returns `201`
   - Implementation: Returns `200`
 - **Impact**: API consumers may break
@@ -227,12 +240,12 @@ features:
 
 ## Consistency Score
 
-| Aspect | Score |
-|--------|-------|
-| Spec ↔ Implementation | [X]% |
-| Contract ↔ Implementation | [X]% |
-| Features ↔ Tests | [X]% |
-| **Overall** | **[X]%** |
+| Aspect                    | Score    |
+| ------------------------- | -------- |
+| Spec ↔ Implementation     | [X]%     |
+| Contract ↔ Implementation | [X]%     |
+| Features ↔ Tests          | [X]%     |
+| **Overall**               | **[X]%** |
 
 ## Next Steps
 
@@ -244,4 +257,5 @@ features:
 ## Prompts Reference
 
 For detailed analysis guidance:
+
 - `#file:.github/prompts/aurora-consistency-analysis.prompt.md`

@@ -1,7 +1,19 @@
 ---
 name: Aurora Constitution
 description: 📋 Create or update the AURORA-IA project constitution - the foundational document that governs all AI agents and development decisions
-tools: [search/codebase, search, read/readFile, edit, web, vscode, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
+tools:
+  [
+    search,
+    read,
+    edit,
+    web,
+    vscode,
+    agent,
+    'github/*',
+    'context7/*',
+    'awesome-copilot/*',
+    'microsoftdocs/mcp/*',
+  ]
 model: Claude Sonnet 4.5
 handoffs:
   - label: ✨ Build Specification
@@ -40,6 +52,7 @@ The Constitution defines:
 ### 1. Load or Create Constitution
 
 Check for existing constitution at `/.aurora/memory/constitution.md`:
+
 - If exists: Load and prepare for update
 - If not exists: Create from template
 
@@ -48,6 +61,7 @@ Check for existing constitution at `/.aurora/memory/constitution.md`:
 Collect technology decisions for each layer:
 
 #### Frontend Stack
+
 ```yaml
 Frontend:
   Framework: [React/Vue/Angular/Next.js/None]
@@ -58,6 +72,7 @@ Frontend:
 ```
 
 #### Backend Stack
+
 ```yaml
 Backend:
   Framework: [Node.js+Express/NestJS/FastAPI/Spring Boot/.NET]
@@ -68,6 +83,7 @@ Backend:
 ```
 
 #### Data Layer
+
 ```yaml
 Data:
   Primary Database: [PostgreSQL/MySQL/MongoDB/DynamoDB]
@@ -78,6 +94,7 @@ Data:
 ```
 
 #### Infrastructure
+
 ```yaml
 Infrastructure:
   Cloud Provider: [AWS/Azure/GCP/On-Premise]
@@ -88,6 +105,7 @@ Infrastructure:
 ```
 
 #### IoT/Edge (if applicable)
+
 ```yaml
 IoT:
   Protocols: [MQTT/CoAP/HTTP]
@@ -123,12 +141,12 @@ Code Standards:
     Classes: PascalCase
     Constants: UPPER_SNAKE_CASE
     Files: kebab-case
-  
+
   Documentation:
     Public APIs: JSDoc/TSDoc required
     Complex logic: Inline comments
     Decisions: ADRs in /docs/adr/
-  
+
   Formatting:
     Linter: ESLint/Pylint/ReSharper
     Formatter: Prettier/Black/dotnet format
@@ -140,19 +158,19 @@ Code Standards:
 ```yaml
 Quality Gates:
   Testing:
-    Unit test coverage: ">= 80%"
-    Integration test coverage: ">= 70%"
-    E2E critical paths: "100%"
-  
+    Unit test coverage: '>= 80%'
+    Integration test coverage: '>= 70%'
+    E2E critical paths: '100%'
+
   Static Analysis:
     No critical/high vulnerabilities: true
-    Code complexity: "< 15"
+    Code complexity: '< 15'
     No TODO in production code: true
-  
+
   Performance:
-    API response time: "p95 < 200ms"
-    Page load time: "< 3s"
-    Error rate: "< 0.1%"
+    API response time: 'p95 < 200ms'
+    Page load time: '< 3s'
+    Error rate: '< 0.1%'
 ```
 
 ### 6. Define Security Policies
@@ -163,16 +181,16 @@ Security:
     Method: [JWT/OAuth2/SAML]
     MFA: [Required/Optional/None]
     Session timeout: [Duration]
-  
+
   Authorization:
     Model: RBAC/ABAC/ACL
     Principle of least privilege: MUST
-  
+
   Data Protection:
     Encryption at rest: AES-256
     Encryption in transit: TLS 1.3
     PII handling: [GDPR/HIPAA/SOC2] compliant
-  
+
   Secrets:
     Storage: [AWS Secrets Manager/Azure Key Vault/HashiCorp Vault]
     No secrets in code: MUST
@@ -207,18 +225,21 @@ After constitution update:
 
 **Version**: X.Y.Z
 **Stack Summary**:
+
 - Frontend: [stack]
-- Backend: [stack]  
+- Backend: [stack]
 - Database: [stack]
 - Infrastructure: [stack]
 
 **Files Updated**:
+
 - /.aurora/memory/constitution.md (created/updated)
 - /.eslintrc.js (configured for stack)
 - /tsconfig.json (configured for stack)
 - /.github/workflows/ci.yml (gates configured)
 
 **Next Steps**:
+
 1. Use @aurora-specify to define features
 2. Review agent configurations
 3. Commit constitution changes
@@ -248,6 +269,7 @@ Before finalizing constitution:
 **THE CONSTITUTION IS LAW.**
 
 All agents MUST:
+
 1. Read constitution before any operation
 2. Validate decisions against constitution
 3. FAIL if violating constitution principles
@@ -269,6 +291,7 @@ To change the constitution:
 ## Prompts Reference
 
 For detailed guidance, reference:
+
 - `#file:.github/prompts/aurora-architecture.prompt.md` - Architecture patterns
 - `#file:.github/prompts/aurora-infrastructure.prompt.md` - Infrastructure setup
 - `#file:.github/prompts/aurora-security-review.prompt.md` - Security policies

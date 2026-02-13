@@ -1,7 +1,19 @@
 ---
 name: Aurora Clarify
 description: ❓ Structured questioning to resolve ambiguities and underspecified areas in requirements
-tools: [search/codebase, search, read/readFile, edit, web, vscode, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
+tools:
+  [
+    search,
+    read,
+    edit,
+    web,
+    vscode,
+    agent,
+    'github/*',
+    'context7/*',
+    'awesome-copilot/*',
+    'microsoftdocs/mcp/*',
+  ]
 model: Claude Sonnet 4.5
 handoffs:
   - label: 📝 Update Specification
@@ -26,13 +38,13 @@ Drive structured questioning to resolve ambiguities identified during specificat
 
 ## When to Use
 
-| Trigger | Source |
-|---------|--------|
-| Vague requirement | `@aurora-specify` |
+| Trigger                     | Source            |
+| --------------------------- | ----------------- |
+| Vague requirement           | `@aurora-specify` |
 | Missing acceptance criteria | `@aurora-analyze` |
-| Conflicting requirements | Analysis report |
-| Technical ambiguity | `@aurora-plan` |
-| Stakeholder misalignment | Review feedback |
+| Conflicting requirements    | Analysis report   |
+| Technical ambiguity         | `@aurora-plan`    |
+| Stakeholder misalignment    | Review feedback   |
 
 ## Question Categories
 
@@ -194,24 +206,26 @@ After clarification session:
 
 ### Resolved Items
 
-| ID | Question | Resolution | Updated In |
-|----|----------|------------|------------|
-| Q1 | [Question] | [Answer] | requirements.md |
-| Q2 | [Question] | [Answer] | data-model.md |
+| ID  | Question   | Resolution | Updated In      |
+| --- | ---------- | ---------- | --------------- |
+| Q1  | [Question] | [Answer]   | requirements.md |
+| Q2  | [Question] | [Answer]   | data-model.md   |
 
 ### Remaining Questions
 
-| ID | Question | Blocker Level | Owner |
-|----|----------|---------------|-------|
-| Q3 | [Question] | High/Medium/Low | [Person] |
+| ID  | Question   | Blocker Level   | Owner    |
+| --- | ---------- | --------------- | -------- |
+| Q3  | [Question] | High/Medium/Low | [Person] |
 
 ### Specification Updates
 
 Files to update based on clarifications:
+
 - [ ] `specs/[feature]/requirements/requirements.md`
 - [ ] `specs/[feature]/requirements/data-model.md`
 
 **Next Steps**:
+
 1. Update specifications with resolved items
 2. Schedule follow-up for remaining questions
 3. Proceed with planning once all blockers resolved
@@ -220,4 +234,5 @@ Files to update based on clarifications:
 ## Prompts Reference
 
 For detailed guidance:
+
 - `#file:.github/prompts/aurora-business-analysis.prompt.md`

@@ -1,7 +1,19 @@
 ---
 name: Aurora Specify
 description: 📝 Create or update feature specifications from natural language descriptions, aligned with AURORA-IA methodology
-tools: [search/codebase, search, read/readFile, edit, web, vscode, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
+tools:
+  [
+    search,
+    read,
+    edit,
+    web,
+    vscode,
+    agent,
+    'github/*',
+    'context7/*',
+    'awesome-copilot/*',
+    'microsoftdocs/mcp/*',
+  ]
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🗺️ Create Technical Plan
@@ -21,6 +33,7 @@ handoffs:
 ## Available Scripts
 
 When you need to create feature structures, execute these scripts:
+
 - **Bash**: `scripts/bash/create-new-feature.sh`
 - **PowerShell**: `scripts/powershell/Create-NewFeature.ps1`
 
@@ -40,6 +53,7 @@ Transform natural language feature descriptions into structured specification do
 ### 1. Parse Feature Description
 
 Extract from user input:
+
 - **Core Functionality**: What the feature does
 - **Actors**: Who uses it (users, systems, admins)
 - **Actions**: What actions are performed
@@ -49,12 +63,14 @@ Extract from user input:
 ### 2. Generate Feature Branch
 
 Create semantic branch name:
+
 ```
 Pattern: [NNN]-[short-name]
 Example: 001-user-authentication
 ```
 
 Rules:
+
 - Scan existing branches/specs for highest number
 - Increment by 1
 - Generate 2-4 word short name from description
@@ -86,50 +102,58 @@ Generate specification using the following template:
 ## Overview
 
 ### Context
+
 [Business context and motivation]
 
 ### Problem Statement
+
 [What problem does this solve]
 
 ### Proposed Solution
+
 [High-level solution description]
 
 ## Functional Requirements
 
 ### FR-001: [Requirement Name]
+
 **Priority**: P1/P2/P3
 **Description**: [Detailed description]
 **Acceptance Criteria**:
+
 - Given [context], when [action], then [outcome]
 
 ## Non-Functional Requirements
 
 ### NFR-001: [Requirement Name]
+
 **Category**: Performance/Security/Scalability
 **Requirement**: [Measurable requirement]
 
 ## User Stories
 
 ### US-001: [User Story Title]
+
 **As a** [actor]
 **I want to** [action]
 **So that** [benefit]
 
 **Acceptance Criteria**:
+
 - [ ] [Criterion 1]
 - [ ] [Criterion 2]
 
 ## Key Entities
 
-| Entity | Description | Key Attributes |
-|--------|-------------|----------------|
-| [Entity] | [Description] | [Attributes] |
+| Entity   | Description   | Key Attributes |
+| -------- | ------------- | -------------- |
+| [Entity] | [Description] | [Attributes]   |
 
 ## Edge Cases
 
 | Scenario | Expected Behavior |
-|----------|-------------------|
-| [Case] | [Behavior] |
+| -------- | ----------------- |
+| [Case]   | [Behavior]        |
 
 ## Out of Scope
 
@@ -143,6 +167,7 @@ Generate specification using the following template:
 ### 5. Constitution Alignment Check
 
 Validate spec against constitution:
+
 - [ ] Tech stack compatible
 - [ ] Architecture principles followed
 - [ ] Security requirements addressed
@@ -160,11 +185,13 @@ After creating specification:
 **Location**: specs/[XXX-feature-name]/requirements/requirements.md
 
 **Summary**:
+
 - [N] Functional Requirements
 - [N] Non-Functional Requirements
 - [N] User Stories
 
 **Next Steps**:
+
 1. Use @aurora-clarify if questions remain
 2. Use @aurora-plan for implementation planning
 3. Use @aurora-gherkin for BDD scenarios
@@ -176,5 +203,6 @@ docs(specs): add specification for [feature-name]
 ## Prompts Reference
 
 For detailed guidance:
+
 - `#file:.github/prompts/aurora-business-analysis.prompt.md`
 - `#file:.github/prompts/aurora-technical-discovery.prompt.md`

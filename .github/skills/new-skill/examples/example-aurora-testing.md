@@ -5,6 +5,7 @@ Este ejemplo muestra paso a paso cómo crear un skill completo para estrategias 
 ## Contexto
 
 Queremos crear un skill que guíe a Copilot en la creación de tests siguiendo:
+
 - Test-Driven Development (TDD)
 - Behavior-Driven Development (BDD)
 - Mutation Testing
@@ -12,9 +13,10 @@ Queremos crear un skill que guíe a Copilot en la creación de tests siguiendo:
 
 ## Paso 1: Identificar el Dominio
 
-**Dominio**: Testing Strategies para AURORA  
-**Nombre del skill**: `aurora-testing`  
+**Dominio**: Testing Strategies para AURORA
+**Nombre del skill**: `aurora-testing`
 **Casos de uso frecuentes**:
+
 - Generar tests unitarios
 - Crear tests de integración
 - Escribir specs de Gherkin
@@ -35,13 +37,15 @@ mkdir -p .github/skills/aurora-testing/templates
 
 ## Paso 3: Escribir el SKILL.md
 
-```markdown
+````markdown
 # Aurora Testing - Testing Strategies & Best Practices
 
 ## Descripción
+
 Guía completa para implementar testing en proyectos AURORA siguiendo TDD/BDD con mutation testing y cobertura ≥80%.
 
 ## Cuándo Usar Este Skill
+
 - Al generar tests unitarios o de integración
 - Al escribir especificaciones Gherkin/BDD
 - Al configurar pipelines de testing
@@ -51,6 +55,7 @@ Guía completa para implementar testing en proyectos AURORA siguiendo TDD/BDD co
 ## Instrucciones
 
 ### Requisitos Previos
+
 - [ ] Verificar que existe `memory/constitution.md` con frameworks de testing
 - [ ] Asegurar que la feature tiene especificación en `specs/`
 - [ ] Revisar que existen acceptance criteria definidos
@@ -60,12 +65,14 @@ Guía completa para implementar testing en proyectos AURORA siguiendo TDD/BDD co
 #### 1. Análisis de Requisitos de Testing
 
 Antes de escribir tests, identifica:
+
 - **Unidad bajo test**: ¿Qué función/clase/módulo?
 - **Casos límite**: ¿Qué inputs extremos pueden fallar?
 - **Dependencias**: ¿Qué mocks/stubs necesitas?
 - **Coverage objetivo**: Minimum 80%, aim for 95%+
 
 **Ejemplo de análisis:**
+
 ```typescript
 // Unidad: UserService.createUser()
 // Casos límite:
@@ -75,12 +82,14 @@ Antes de escribir tests, identifica:
 // - Nombre vacío
 // Dependencias: UserRepository, EmailService
 ```
+````
 
 #### 2. Escribir Tests Antes del Código (TDD)
 
 **Red → Green → Refactor**
 
 **Paso 2a: Red (Test que falla)**
+
 ```typescript
 describe('UserService', () => {
   describe('createUser', () => {
@@ -90,18 +99,18 @@ describe('UserService', () => {
       const invalidUser = {
         email: 'not-an-email',
         password: 'SecurePass123!',
-        name: 'John Doe'
+        name: 'John Doe',
       };
 
       // Act & Assert
-      await expect(service.createUser(invalidUser))
-        .rejects.toThrow('Invalid email format');
+      await expect(service.createUser(invalidUser)).rejects.toThrow('Invalid email format');
     });
   });
 });
 ```
 
 **Paso 2b: Green (Implementación mínima)**
+
 ```typescript
 class UserService {
   async createUser(data: CreateUserDto): Promise<User> {
@@ -118,6 +127,7 @@ class UserService {
 ```
 
 **Paso 2c: Refactor (Mejorar sin romper tests)**
+
 ```typescript
 // Extraer validación a un validator dedicado
 class EmailValidator {
@@ -138,13 +148,13 @@ it('should create user when data is valid', async () => {
   // Arrange - Preparar datos y mocks
   const mockRepo = {
     save: jest.fn().mockResolvedValue({ id: '123', ...userData }),
-    findByEmail: jest.fn().mockResolvedValue(null)
+    findByEmail: jest.fn().mockResolvedValue(null),
   };
   const service = new UserService(mockRepo);
   const userData = {
     email: 'john@example.com',
     password: 'SecurePass123!',
-    name: 'John Doe'
+    name: 'John Doe',
   };
 
   // Act - Ejecutar la acción
@@ -161,6 +171,7 @@ it('should create user when data is valid', async () => {
 #### 4. Testing de Casos Límite
 
 **SIEMPRE** testea:
+
 - ✅ Happy path (caso exitoso)
 - ✅ Boundary values (límites)
 - ✅ Error cases (errores esperados)
@@ -175,8 +186,9 @@ describe('UserService.createUser - Boundary Tests', () => {
 
   it('should reject password below minimum length', async () => {
     const user = { ...validUser, password: 'Aa1' }; // 7 chars
-    await expect(service.createUser(user))
-      .rejects.toThrow('Password must be at least 8 characters');
+    await expect(service.createUser(user)).rejects.toThrow(
+      'Password must be at least 8 characters'
+    );
   });
 
   it('should handle maximum name length', async () => {
@@ -186,8 +198,7 @@ describe('UserService.createUser - Boundary Tests', () => {
 
   it('should reject name exceeding maximum length', async () => {
     const user = { ...validUser, name: 'a'.repeat(256) };
-    await expect(service.createUser(user))
-      .rejects.toThrow('Name too long');
+    await expect(service.createUser(user)).rejects.toThrow('Name too long');
   });
 });
 ```
@@ -199,22 +210,23 @@ describe('UserService.createUser - Boundary Tests', () => {
 ```typescript
 // ✅ CORRECTO - Mock de dependencias
 const mockEmailService = {
-  sendWelcomeEmail: jest.fn().mockResolvedValue(true)
+  sendWelcomeEmail: jest.fn().mockResolvedValue(true),
 };
 const mockUserRepo = {
   save: jest.fn(),
-  findByEmail: jest.fn()
+  findByEmail: jest.fn(),
 };
 const service = new UserService(mockUserRepo, mockEmailService);
 
 // ❌ INCORRECTO - Mock de la unidad bajo test
 const mockService = {
-  createUser: jest.fn().mockResolvedValue({ id: '123' })
+  createUser: jest.fn().mockResolvedValue({ id: '123' }),
 };
 // Esto no prueba nada real!
 ```
 
 **Verificar interacciones con mocks:**
+
 ```typescript
 it('should send welcome email after user creation', async () => {
   await service.createUser(validUser);
@@ -222,7 +234,7 @@ it('should send welcome email after user creation', async () => {
   expect(mockEmailService.sendWelcomeEmail).toHaveBeenCalledWith(
     expect.objectContaining({
       to: validUser.email,
-      name: validUser.name
+      name: validUser.name,
     })
   );
 });
@@ -273,24 +285,25 @@ Feature: User Registration
 ```
 
 **Implementar step definitions:**
+
 ```typescript
 import { Given, When, Then } from '@cucumber/cucumber';
 
-Given('I am not registered', function() {
+Given('I am not registered', function () {
   this.mockUserRepo.findByEmail.mockResolvedValue(null);
 });
 
-When('I provide valid registration details:', async function(dataTable) {
+When('I provide valid registration details:', async function (dataTable) {
   const [data] = dataTable.hashes();
   this.result = await this.userService.createUser(data);
 });
 
-Then('my account should be created', function() {
+Then('my account should be created', function () {
   expect(this.result).toHaveProperty('id');
   expect(this.mockUserRepo.save).toHaveBeenCalled();
 });
 
-Then('I should receive a welcome email', function() {
+Then('I should receive a welcome email', function () {
   expect(this.mockEmailService.sendWelcomeEmail).toHaveBeenCalledWith(
     expect.objectContaining({ to: this.result.email })
   );
@@ -323,13 +336,11 @@ describe('User Registration Integration', () => {
 
   it('should create user end-to-end', async () => {
     // Act - Real HTTP request
-    const response = await request(app)
-      .post('/api/users')
-      .send({
-        email: 'john@example.com',
-        password: 'SecurePass123!',
-        name: 'John Doe'
-      });
+    const response = await request(app).post('/api/users').send({
+      email: 'john@example.com',
+      password: 'SecurePass123!',
+      name: 'John Doe',
+    });
 
     // Assert - HTTP response
     expect(response.status).toBe(201);
@@ -337,15 +348,14 @@ describe('User Registration Integration', () => {
 
     // Assert - Database state
     const savedUser = await database.users.findOne({
-      email: 'john@example.com'
+      email: 'john@example.com',
     });
     expect(savedUser).toBeDefined();
     expect(savedUser.name).toBe('John Doe');
 
     // Assert - Password is hashed
     expect(savedUser.password).not.toBe('SecurePass123!');
-    expect(await bcrypt.compare('SecurePass123!', savedUser.password))
-      .toBe(true);
+    expect(await bcrypt.compare('SecurePass123!', savedUser.password)).toBe(true);
   });
 });
 ```
@@ -371,6 +381,7 @@ npx stryker run
 ```
 
 **Interpretar resultados:**
+
 ```
 Mutants tested: 100
 Killed: 85 (tests detected the mutation)
@@ -380,6 +391,7 @@ No coverage: 3
 ```
 
 **Mejorar tests basado en mutantes supervivientes:**
+
 ```typescript
 // Mutante superviviente: > cambió a >=
 // Original: if (password.length > 8)
@@ -395,16 +407,18 @@ it('should validate password length', () => {
 // ✅ Test mejorado - detecta la mutación
 it('should require password longer than 8 characters', () => {
   expect(validatePassword('8chars!!')).toBe(false); // exactamente 8
-  expect(validatePassword('9chars!!!')).toBe(true);  // 9 chars
+  expect(validatePassword('9chars!!!')).toBe(true); // 9 chars
 });
 ```
 
 ### Mejores Prácticas
 
 #### Práctica 1: Tests Independientes y Aislados
+
 **Por qué**: Tests dependientes crean flakiness y dificultan debugging.
 
 **Cómo**:
+
 ```typescript
 // ❌ MAL - Tests dependientes
 let userId;
@@ -432,6 +446,7 @@ describe('UserService', () => {
 ```
 
 #### Práctica 2: Nombres Descriptivos
+
 **Por qué**: Tests son documentación viva del comportamiento del sistema.
 
 ```typescript
@@ -449,6 +464,7 @@ describe('UserService.createUser', () => {
 ```
 
 #### Práctica 3: One Assertion per Concept
+
 **Por qué**: Tests focaliza facilitan debugging cuando fallan.
 
 ```typescript
@@ -466,7 +482,7 @@ it('should create user with provided data', async () => {
   const user = await service.createUser(data);
   expect(user).toMatchObject({
     email: data.email,
-    name: data.name
+    name: data.name,
   });
 });
 
@@ -489,7 +505,9 @@ it('should log user creation event', async () => {
 ### Errores Comunes
 
 #### Error 1: Testing Implementation Details
+
 **Problema**:
+
 ```typescript
 // ❌ Test acoplado a implementación
 it('should call validateEmail method', () => {
@@ -500,16 +518,18 @@ it('should call validateEmail method', () => {
 ```
 
 **Solución**:
+
 ```typescript
 // ✅ Test del comportamiento
 it('should reject invalid email formats', async () => {
-  await expect(service.createUser({ ...data, email: 'invalid' }))
-    .rejects.toThrow('Invalid email');
+  await expect(service.createUser({ ...data, email: 'invalid' })).rejects.toThrow('Invalid email');
 });
 ```
 
 #### Error 2: Tests Flaky (Intermitentes)
+
 **Problema**:
+
 ```typescript
 // ❌ Depende de timing
 it('should process async task', async () => {
@@ -521,6 +541,7 @@ it('should process async task', async () => {
 ```
 
 **Solución**:
+
 ```typescript
 // ✅ Espera apropiada
 it('should process async task', async () => {
@@ -543,24 +564,29 @@ it('should process async task', async () => {
 ## Referencias
 
 ### Testing Frameworks
+
 - [Jest Documentation](https://jestjs.io/)
 - [Cucumber/Gherkin](https://cucumber.io/)
 - [Stryker Mutator](https://stryker-mutator.io/)
 
 ### Best Practices
+
 - [Test Pyramid](https://martinfowler.com/articles/practical-test-pyramid.html)
 - [TDD by Example](https://www.amazon.com/Test-Driven-Development-Kent-Beck/dp/0321146530)
 
 ### AURORA Related
+
 - Constitution: `memory/constitution.md`
 - Feature Specs: `specs/*/feature.md`
-- Skill: skill-development
+- Skill: new-skill
 
 ## Changelog
+
 - 2026-02-12: Versión inicial
 
 ---
-```
+
+````
 
 ## Paso 4: Registrar el Skill
 
@@ -571,34 +597,40 @@ Actualizar `.github/copilot-instructions.md`:
 
 | Skill | Domain | Use When |
 |-------|--------|----------|
-| [skill-development](.github/skills/skill-development/) | Skill Creation | Creating or improving Copilot skills |
+| [new-skill](.github/skills/new-skill/) | Skill Creation | Creating or improving Copilot skills |
 | [aurora-testing](.github/skills/aurora-testing/) | Testing Strategies | Writing unit/integration tests, BDD specs |
-```
+````
 
 ## Paso 5: Probar el Skill
 
 ### Test 1: Solicitud Simple
+
 **Input**: "Genera tests unitarios para la función calculateDiscount"
 
 **Verificación**:
+
 - ✅ Copilot lee `aurora-testing/SKILL.md`
 - ✅ Tests usan patrón AAA (Arrange-Act-Assert)
 - ✅ Incluye casos límite (0%, 100%, valores negativos)
 - ✅ Nombres descriptivos de tests
 
 ### Test 2: Solicitud BDD
+
 **Input**: "Crea una spec Gherkin para el checkout process"
 
 **Verificación**:
+
 - ✅ Copilot genera archivo .feature
 - ✅ Usa formato Given-When-Then
 - ✅ Incluye Background, Scenarios, y Scenario Outlines
 - ✅ Propone step definitions correspondientes
 
 ### Test 3: Validar Calidad
+
 **Input**: "Revisa estos tests y sugiere mejoras"
 
 **Verificación**:
+
 - ✅ Identifica tests acoplados a implementación
 - ✅ Sugiere agregar casos límite faltantes
 - ✅ Recomienda mutation testing
@@ -616,6 +648,7 @@ Después de implementar este skill:
 ## Iteraciones Futuras
 
 Basado en uso real, el skill puede evolucionar para incluir:
+
 - Patrones específicos de mocking para cada framework
 - Templates de tests para arquitecturas específicas (CQRS, Event Sourcing)
 - Integración con herramientas de CI/CD
@@ -623,6 +656,6 @@ Basado en uso real, el skill puede evolucionar para incluir:
 
 ---
 
-**Tiempo estimado de creación**: 2-3 horas  
-**Valor entregado**: Ahorra ~30 minutos por feature en testing  
+**Tiempo estimado de creación**: 2-3 horas
+**Valor entregado**: Ahorra ~30 minutos por feature en testing
 **ROI**: Positivo después de ~5-6 features

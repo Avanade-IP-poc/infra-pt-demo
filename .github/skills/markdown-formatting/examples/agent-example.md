@@ -73,10 +73,9 @@ describe('UserService', () => {
       // Arrange
       const service = new UserService();
       const invalidUser = { email: 'invalid', password: 'Pass123!' };
-      
+
       // Act & Assert
-      await expect(service.createUser(invalidUser))
-        .rejects.toThrow('Invalid email format');
+      await expect(service.createUser(invalidUser)).rejects.toThrow('Invalid email format');
     });
   });
 });
@@ -148,19 +147,19 @@ describe('[Module/Class Name]', () => {
     it('should [expected behavior] when [condition]', () => {
       // Arrange
       const [setup] = [values];
-      
+
       // Act
       const result = [execute];
-      
+
       // Assert
       expect(result).toBe([expected]);
     });
-    
+
     // Edge cases
     it('should [behavior] when [edge case]', () => {
       // ...
     });
-    
+
     // Error cases
     it('should throw [error] when [invalid condition]', () => {
       // ...
@@ -176,11 +175,11 @@ describe('[Feature] integration', () => {
   beforeEach(async () => {
     // Setup test environment
   });
-  
+
   afterEach(async () => {
     // Cleanup
   });
-  
+
   it('should [end-to-end behavior]', async () => {
     // Test across multiple modules
   });
@@ -262,94 +261,88 @@ describe('UserService', () => {
   let service: UserService;
   let mockUserRepo: jest.Mocked<UserRepository>;
   let mockEmailService: jest.Mocked<EmailService>;
-  
+
   beforeEach(() => {
     // Arrange - Create mocks
     mockUserRepo = {
       save: jest.fn(),
-      findByEmail: jest.fn()
+      findByEmail: jest.fn(),
     } as any;
-    
+
     mockEmailService = {
-      sendVerification: jest.fn()
+      sendVerification: jest.fn(),
     } as any;
-    
+
     service = new UserService(mockUserRepo, mockEmailService);
   });
-  
+
   describe('createUser', () => {
     const validUserData = {
       email: 'john@example.com',
       password: 'SecurePass123!',
-      name: 'John Doe'
+      name: 'John Doe',
     };
-    
+
     it('should create user with valid data', async () => {
       // Arrange
       mockUserRepo.findByEmail.mockResolvedValue(null);
-      mockUserRepo.save.mockResolvedValue({ 
-        id: '123', 
-        ...validUserData 
+      mockUserRepo.save.mockResolvedValue({
+        id: '123',
+        ...validUserData,
       });
-      
+
       // Act
       const result = await service.createUser(validUserData);
-      
+
       // Assert
       expect(result.id).toBe('123');
       expect(result.email).toBe(validUserData.email);
       expect(mockUserRepo.save).toHaveBeenCalledWith(
         expect.objectContaining({
           email: validUserData.email,
-          name: validUserData.name
+          name: validUserData.name,
         })
       );
-      expect(mockEmailService.sendVerification).toHaveBeenCalledWith(
-        validUserData.email
-      );
+      expect(mockEmailService.sendVerification).toHaveBeenCalledWith(validUserData.email);
     });
-    
+
     it('should reject invalid email format', async () => {
       // Arrange
-      const invalidData = { 
-        ...validUserData, 
-        email: 'not-an-email' 
+      const invalidData = {
+        ...validUserData,
+        email: 'not-an-email',
       };
-      
+
       // Act & Assert
-      await expect(service.createUser(invalidData))
-        .rejects
-        .toThrow('Invalid email format');
-      
+      await expect(service.createUser(invalidData)).rejects.toThrow('Invalid email format');
+
       expect(mockUserRepo.save).not.toHaveBeenCalled();
     });
-    
+
     it('should reject when email already exists', async () => {
       // Arrange
-      mockUserRepo.findByEmail.mockResolvedValue({ 
-        id: '456', 
-        email: validUserData.email 
+      mockUserRepo.findByEmail.mockResolvedValue({
+        id: '456',
+        email: validUserData.email,
       } as any);
-      
+
       // Act & Assert
-      await expect(service.createUser(validUserData))
-        .rejects
-        .toThrow('Email already registered');
-      
+      await expect(service.createUser(validUserData)).rejects.toThrow('Email already registered');
+
       expect(mockUserRepo.save).not.toHaveBeenCalled();
     });
-    
+
     it('should hash password before saving', async () => {
       // Arrange
       mockUserRepo.findByEmail.mockResolvedValue(null);
-      mockUserRepo.save.mockResolvedValue({ 
-        id: '123', 
-        ...validUserData 
+      mockUserRepo.save.mockResolvedValue({
+        id: '123',
+        ...validUserData,
       });
-      
+
       // Act
       await service.createUser(validUserData);
-      
+
       // Assert
       const savedUser = mockUserRepo.save.mock.calls[0][0];
       expect(savedUser.password).not.toBe(validUserData.password);
@@ -394,7 +387,7 @@ Given("the user's password is {string}", (password: string) => {
 When('the user submits the login form', async () => {
   this.response = await loginUser({
     email: 'john@example.com',
-    password: this.password
+    password: this.password,
   });
 });
 
@@ -426,13 +419,13 @@ Use when:
 
 ```typescript
 // Run all tests
-await runTests()
+await runTests();
 
 // Run specific file
-await runTests({ files: ['src/user.service.spec.ts'] })
+await runTests({ files: ['src/user.service.spec.ts'] });
 
 // With coverage
-await runTests({ mode: 'coverage' })
+await runTests({ mode: 'coverage' });
 ```
 
 ### edit/editFiles
@@ -468,15 +461,15 @@ Use when:
 ## Related Skills
 
 - **[bolt-framework](../../skills/bolt-framework/SKILL.md)** - AURORA methodology
-- **[skill-development](../../skills/skill-development/SKILL.md)** - Skill creation
+- **[new-skill](../../skills/new-skill/SKILL.md)** - Skill creation
 
 ## Version History
 
-| Version | Date | Changes | Author |
-|---------|------|---------|--------|
-| 1.0.0 | 2026-02-13 | Initial version with TDD/BDD support | AURORA Team |
+| Version | Date       | Changes                              | Author      |
+| ------- | ---------- | ------------------------------------ | ----------- |
+| 1.0.0   | 2026-02-13 | Initial version with TDD/BDD support | AURORA Team |
 
 ---
 
-**Maintained by:** AURORA AI Development Team  
+**Maintained by:** AURORA AI Development Team
 **Last Updated:** 2026-02-13

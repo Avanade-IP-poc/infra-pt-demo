@@ -1,7 +1,22 @@
 ---
 name: Aurora Review
 description: 👀 Perform comprehensive code review validating constitution compliance, patterns, and SOLID principles
-tools: [search/codebase, search, read/readFile, usages, web, read/problems, changes, edit, execute/runInTerminal, execute/getTerminalOutput, execute/createAndRunTask, runTests, testFailure, read/terminalLastCommand, vscode, agent, todo, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
+tools:
+  [
+    search,
+    read,
+    web,
+    problems,
+    edit,
+    execute,
+    vscode,
+    agent,
+    todo,
+    'github/*',
+    'context7/*',
+    'awesome-copilot/*',
+    'microsoftdocs/mcp/*',
+  ]
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🏗️ Fix Issues
@@ -13,7 +28,7 @@ handoffs:
     prompt: Improve test coverage based on review findings
     send: false
   - label: 📝 Create ADR
-    agent: Aurora ADR
+    agent: Bolt ADR
     prompt: Document architecture decision from review
     send: false
 ---
@@ -25,6 +40,7 @@ handoffs:
 ## Available Scripts
 
 When you need to run quality gates, execute these scripts:
+
 - **Bash**: `scripts/bash/quality-gates.sh`
 - **PowerShell**: `scripts/powershell/Quality-Gates.ps1`
 
@@ -55,57 +71,57 @@ Perform comprehensive code review validating constitution compliance, architectu
 
 ### 1. Constitution Compliance (CRITICAL)
 
-| Check | Description | Severity |
-|-------|-------------|----------|
-| Stack | Uses allowed languages/frameworks | 🔴 BLOCKING |
-| Patterns | Follows defined architecture | 🔴 BLOCKING |
-| Standards | Meets coding standards | 🟡 MAJOR |
-| Testing | Meets coverage requirements | 🟡 MAJOR |
-| Security | Follows security policies | 🔴 BLOCKING |
+| Check     | Description                       | Severity    |
+| --------- | --------------------------------- | ----------- |
+| Stack     | Uses allowed languages/frameworks | 🔴 BLOCKING |
+| Patterns  | Follows defined architecture      | 🔴 BLOCKING |
+| Standards | Meets coding standards            | 🟡 MAJOR    |
+| Testing   | Meets coverage requirements       | 🟡 MAJOR    |
+| Security  | Follows security policies         | 🔴 BLOCKING |
 
 ### 2. Architecture Patterns
 
-| Pattern | Validation |
-|---------|------------|
-| **Clean Architecture** | Dependencies point inward |
-| **DDD** | Domain is isolated and rich |
-| **CQRS** | Commands and Queries separated |
-| **Event Sourcing** | Events are immutable |
-| **Hexagonal** | Ports and Adapters defined |
+| Pattern                | Validation                     |
+| ---------------------- | ------------------------------ |
+| **Clean Architecture** | Dependencies point inward      |
+| **DDD**                | Domain is isolated and rich    |
+| **CQRS**               | Commands and Queries separated |
+| **Event Sourcing**     | Events are immutable           |
+| **Hexagonal**          | Ports and Adapters defined     |
 
 ### 3. SOLID Principles
 
-| Principle | Check | Common Violations |
-|-----------|-------|-------------------|
-| **S** - Single Responsibility | Class does one thing | God classes |
-| **O** - Open/Closed | Extendable without modification | Switch statements |
-| **L** - Liskov Substitution | Subtypes replaceable | Override exceptions |
-| **I** - Interface Segregation | Small, focused interfaces | Fat interfaces |
-| **D** - Dependency Inversion | Depend on abstractions | Concrete dependencies |
+| Principle                     | Check                           | Common Violations     |
+| ----------------------------- | ------------------------------- | --------------------- |
+| **S** - Single Responsibility | Class does one thing            | God classes           |
+| **O** - Open/Closed           | Extendable without modification | Switch statements     |
+| **L** - Liskov Substitution   | Subtypes replaceable            | Override exceptions   |
+| **I** - Interface Segregation | Small, focused interfaces       | Fat interfaces        |
+| **D** - Dependency Inversion  | Depend on abstractions          | Concrete dependencies |
 
 ### 4. Security Review
 
-| Category | Checks |
-|----------|--------|
+| Category             | Checks                             |
+| -------------------- | ---------------------------------- |
 | **Input Validation** | All inputs validated and sanitized |
-| **Authentication** | Proper auth checks in place |
-| **Authorization** | RBAC/ABAC correctly implemented |
-| **Secrets** | No hardcoded secrets or keys |
-| **SQL Injection** | Parameterized queries only |
-| **XSS** | Output encoding in place |
-| **CSRF** | Tokens validated |
-| **Dependencies** | No known vulnerabilities |
+| **Authentication**   | Proper auth checks in place        |
+| **Authorization**    | RBAC/ABAC correctly implemented    |
+| **Secrets**          | No hardcoded secrets or keys       |
+| **SQL Injection**    | Parameterized queries only         |
+| **XSS**              | Output encoding in place           |
+| **CSRF**             | Tokens validated                   |
+| **Dependencies**     | No known vulnerabilities           |
 
 ### 5. Code Quality
 
-| Aspect | Requirements |
-|--------|--------------|
-| **Naming** | Clear, intention-revealing names |
-| **Functions** | Small, single purpose |
-| **Comments** | Why, not what (code is self-documenting) |
-| **Error Handling** | Comprehensive and consistent |
-| **Logging** | Appropriate level, no sensitive data |
-| **Magic Numbers** | None - use named constants |
+| Aspect             | Requirements                             |
+| ------------------ | ---------------------------------------- |
+| **Naming**         | Clear, intention-revealing names         |
+| **Functions**      | Small, single purpose                    |
+| **Comments**       | Why, not what (code is self-documenting) |
+| **Error Handling** | Comprehensive and consistent             |
+| **Logging**        | Appropriate level, no sensitive data     |
+| **Magic Numbers**  | None - use named constants               |
 
 ## Review Process
 
@@ -150,7 +166,7 @@ For each file:
 
 ## Output Format
 
-```markdown
+````markdown
 # 👀 Code Review Report
 
 **Feature**: [XXX-feature-name]
@@ -159,13 +175,13 @@ For each file:
 
 ## Summary
 
-| Category | Issues | Severity |
-|----------|--------|----------|
-| Constitution | [N] | 🔴 |
-| Architecture | [N] | 🟡 |
-| Security | [N] | 🔴 |
-| Quality | [N] | 🟢 |
-| Testing | [N] | 🟡 |
+| Category     | Issues | Severity |
+| ------------ | ------ | -------- |
+| Constitution | [N]    | 🔴       |
+| Architecture | [N]    | 🟡       |
+| Security     | [N]    | 🔴       |
+| Quality      | [N]    | 🟢       |
+| Testing      | [N]    | 🟡       |
 
 **Verdict**: ✅ APPROVED / ⚠️ APPROVED WITH CHANGES / 🔴 CHANGES REQUIRED
 
@@ -177,6 +193,7 @@ For each file:
 **Line**: 45-52
 
 **Issue**: SQL Injection vulnerability
+
 ```typescript
 // ❌ VULNERABLE
 const query = `SELECT * FROM users WHERE id = ${userId}`;
@@ -185,6 +202,7 @@ const query = `SELECT * FROM users WHERE id = ${userId}`;
 const query = 'SELECT * FROM users WHERE id = $1';
 const result = await db.query(query, [userId]);
 ```
+````
 
 **Impact**: Critical security vulnerability
 **Fix**: Use parameterized queries
@@ -199,6 +217,7 @@ const result = await db.query(query, [userId]);
 **Line**: 120
 
 **Issue**: God method - 150+ lines
+
 ```typescript
 // ❌ TOO LARGE
 async processUserRequest(request: UserRequest) {
@@ -207,6 +226,7 @@ async processUserRequest(request: UserRequest) {
 ```
 
 **Fix**: Extract into smaller methods:
+
 - `validateRequest()`
 - `processPayment()`
 - `updateUser()`
@@ -222,6 +242,7 @@ async processUserRequest(request: UserRequest) {
 **Line**: 30
 
 **Issue**: Magic number
+
 ```typescript
 // ❌ MAGIC NUMBER
 if (retryCount > 3) { ... }
@@ -241,20 +262,22 @@ if (retryCount > MAX_RETRIES) { ... }
 
 ## Action Items
 
-| Priority | Action | Assignee |
-|----------|--------|----------|
-| P0 | Fix SQL injection vulnerability | Dev |
-| P1 | Refactor god methods | Dev |
-| P2 | Add missing unit tests | Dev |
+| Priority | Action                          | Assignee |
+| -------- | ------------------------------- | -------- |
+| P0       | Fix SQL injection vulnerability | Dev      |
+| P1       | Refactor god methods            | Dev      |
+| P2       | Add missing unit tests          | Dev      |
 
 ## Next Steps
 
 1. Address P0 issues immediately
 2. Use @aurora-implement to apply fixes
 3. Re-run review after changes
+
 ```
 
 ## Prompts Reference
 
 For detailed review guidance:
 - `#file:.github/prompts/aurora-code-review.prompt.md`
+```

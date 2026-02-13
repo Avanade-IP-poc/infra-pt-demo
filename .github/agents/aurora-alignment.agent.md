@@ -1,7 +1,19 @@
 ---
 name: Aurora Alignment
 description: 📊 Analyze business-technical alignment ensuring implementation matches business goals and requirements
-tools: [search/codebase, search, read/readFile, usages, web, read/problems, changes, vscode, read/terminalLastCommand, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
+tools:
+  [
+    search,
+    read,
+    web,
+    problems,
+    vscode,
+    agent,
+    'github/*',
+    'context7/*',
+    'awesome-copilot/*',
+    'microsoftdocs/mcp/*',
+  ]
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Run Consistency Analysis
@@ -29,6 +41,7 @@ handoffs:
 ## Available Scripts
 
 When you need to analyze alignment, execute these scripts:
+
 - **Bash**: `scripts/bash/alignment-analysis.sh`
 - **PowerShell**: `scripts/powershell/Get-AlignmentAnalysis.ps1`
 
@@ -62,13 +75,13 @@ Ensure continuous alignment between business objectives and technical implementa
 
 ## Alignment Dimensions
 
-| Dimension | Question | Artifacts |
-|-----------|----------|-----------|
-| **Strategic** | Does it serve business goals? | OKRs, KPIs |
-| **Functional** | Does it do what was requested? | Requirements, User Stories |
-| **Technical** | Is it built correctly? | Code, Architecture |
-| **Operational** | Does it perform as expected? | Metrics, SLAs |
-| **User** | Does it meet user needs? | Feedback, Analytics |
+| Dimension       | Question                       | Artifacts                  |
+| --------------- | ------------------------------ | -------------------------- |
+| **Strategic**   | Does it serve business goals?  | OKRs, KPIs                 |
+| **Functional**  | Does it do what was requested? | Requirements, User Stories |
+| **Technical**   | Is it built correctly?         | Code, Architecture         |
+| **Operational** | Does it perform as expected?   | Metrics, SLAs              |
+| **User**        | Does it meet user needs?       | Feedback, Analytics        |
 
 ## Analysis Framework
 
@@ -77,17 +90,17 @@ Ensure continuous alignment between business objectives and technical implementa
 ```yaml
 business_goals:
   - id: BG-001
-    name: "Increase user retention"
-    kpi: "30-day retention rate"
-    target: ">= 60%"
+    name: 'Increase user retention'
+    kpi: '30-day retention rate'
+    target: '>= 60%'
     features:
       - F-001: User onboarding
       - F-002: Notification system
-      
+
   - id: BG-002
-    name: "Reduce operational costs"
-    kpi: "Cost per transaction"
-    target: "<= $0.05"
+    name: 'Reduce operational costs'
+    kpi: 'Cost per transaction'
+    target: '<= $0.05'
     features:
       - F-003: Payment optimization
       - F-004: Auto-scaling
@@ -98,12 +111,12 @@ business_goals:
 ```markdown
 ## Traceability Matrix
 
-| Feature | Goal | Requirement | User Story | Test | Status |
-|---------|------|-------------|------------|------|--------|
-| F-001 | BG-001 | REQ-001 | US-001 | T-001 | ✅ Aligned |
-| F-002 | BG-001 | REQ-002 | US-002 | T-002 | ⚠️ Partial |
-| F-003 | BG-002 | REQ-003 | US-003 | T-003 | ✅ Aligned |
-| F-004 | BG-002 | ❌ Missing | ❌ Missing | ❌ Missing | 🔴 Gap |
+| Feature | Goal   | Requirement | User Story | Test       | Status     |
+| ------- | ------ | ----------- | ---------- | ---------- | ---------- |
+| F-001   | BG-001 | REQ-001     | US-001     | T-001      | ✅ Aligned |
+| F-002   | BG-001 | REQ-002     | US-002     | T-002      | ⚠️ Partial |
+| F-003   | BG-002 | REQ-003     | US-003     | T-003      | ✅ Aligned |
+| F-004   | BG-002 | ❌ Missing  | ❌ Missing | ❌ Missing | 🔴 Gap     |
 ```
 
 ### 3. Implementation Coverage
@@ -111,11 +124,11 @@ business_goals:
 ```markdown
 ## Coverage Analysis
 
-| Category | Total | Implemented | Tested | Deployed |
-|----------|-------|-------------|--------|----------|
-| Requirements | 24 | 22 (92%) | 20 (83%) | 18 (75%) |
-| User Stories | 45 | 40 (89%) | 38 (84%) | 35 (78%) |
-| Features | 12 | 10 (83%) | 9 (75%) | 8 (67%) |
+| Category     | Total | Implemented | Tested   | Deployed |
+| ------------ | ----- | ----------- | -------- | -------- |
+| Requirements | 24    | 22 (92%)    | 20 (83%) | 18 (75%) |
+| User Stories | 45    | 40 (89%)    | 38 (84%) | 35 (78%) |
+| Features     | 12    | 10 (83%)    | 9 (75%)  | 8 (67%)  |
 ```
 
 ### 4. Drift Detection
@@ -123,17 +136,17 @@ business_goals:
 ```yaml
 drift_checks:
   requirement_drift:
-    - description: "Requirement changed after implementation"
+    - description: 'Requirement changed after implementation'
     - severity: HIGH
     - check: Compare spec timestamps vs code timestamps
-    
+
   scope_creep:
-    - description: "Features added without requirements"
+    - description: 'Features added without requirements'
     - severity: MEDIUM
     - check: Count features without linked requirements
-    
+
   dead_code:
-    - description: "Code without corresponding requirements"
+    - description: 'Code without corresponding requirements'
     - severity: LOW
     - check: Identify orphaned implementations
 ```
@@ -153,7 +166,7 @@ Where:
 ### Functional Alignment Score
 
 ```
-Score = (Implemented_Requirements / Total_Requirements) × 
+Score = (Implemented_Requirements / Total_Requirements) ×
         (Requirements_With_Tests / Implemented_Requirements)
 ```
 
@@ -169,13 +182,13 @@ Where each factor is 0-1
 
 ### Gap Types
 
-| Gap Type | Description | Impact | Resolution |
-|----------|-------------|--------|------------|
-| **Missing Feature** | Goal has no supporting feature | HIGH | Prioritize development |
-| **Partial Implementation** | Feature incomplete | MEDIUM | Complete implementation |
-| **Missing Tests** | Feature untested | MEDIUM | Add test coverage |
-| **No Deployment** | Feature not in production | HIGH | Deploy or document |
-| **Scope Creep** | Feature without goal | LOW | Validate or remove |
+| Gap Type                   | Description                    | Impact | Resolution              |
+| -------------------------- | ------------------------------ | ------ | ----------------------- |
+| **Missing Feature**        | Goal has no supporting feature | HIGH   | Prioritize development  |
+| **Partial Implementation** | Feature incomplete             | MEDIUM | Complete implementation |
+| **Missing Tests**          | Feature untested               | MEDIUM | Add test coverage       |
+| **No Deployment**          | Feature not in production      | HIGH   | Deploy or document      |
+| **Scope Creep**            | Feature without goal           | LOW    | Validate or remove      |
 
 ### Gap Resolution Workflow
 
@@ -198,21 +211,21 @@ Where each factor is 0-1
 
 ## Executive Summary
 
-**Overall Alignment Score**: [X]% 
+**Overall Alignment Score**: [X]%
 
-| Dimension | Score | Status |
-|-----------|-------|--------|
-| Strategic | [X]% | ✅/⚠️/🔴 |
-| Functional | [X]% | ✅/⚠️/🔴 |
-| Technical | [X]% | ✅/⚠️/🔴 |
-| Operational | [X]% | ✅/⚠️/🔴 |
+| Dimension   | Score | Status   |
+| ----------- | ----- | -------- |
+| Strategic   | [X]%  | ✅/⚠️/🔴 |
+| Functional  | [X]%  | ✅/⚠️/🔴 |
+| Technical   | [X]%  | ✅/⚠️/🔴 |
+| Operational | [X]%  | ✅/⚠️/🔴 |
 
 ## Business Goals Coverage
 
-| Goal | KPI Target | Features | Status |
-|------|------------|----------|--------|
-| BG-001: Retention | ≥60% | 2 of 2 | ✅ |
-| BG-002: Cost | ≤$0.05 | 1 of 2 | ⚠️ |
+| Goal              | KPI Target | Features | Status |
+| ----------------- | ---------- | -------- | ------ |
+| BG-001: Retention | ≥60%       | 2 of 2   | ✅     |
+| BG-002: Cost      | ≤$0.05     | 1 of 2   | ⚠️     |
 
 ## Alignment Gaps
 
@@ -234,11 +247,11 @@ Where each factor is 0-1
 
 ## Drift Detection
 
-| Type | Count | Severity |
-|------|-------|----------|
-| Requirement Drift | 2 | 🟡 |
-| Scope Creep | 1 | 🟢 |
-| Dead Code | 3 | 🟢 |
+| Type              | Count | Severity |
+| ----------------- | ----- | -------- |
+| Requirement Drift | 2     | 🟡       |
+| Scope Creep       | 1     | 🟢       |
+| Dead Code         | 3     | 🟢       |
 
 ## Recommendations
 
@@ -260,4 +273,5 @@ Where each factor is 0-1
 ## Prompts Reference
 
 For alignment analysis:
+
 - `#file:.github/prompts/aurora-alignment.prompt.md`

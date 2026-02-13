@@ -1,7 +1,19 @@
 ---
 name: Aurora Plan
 description: 🗺️ Create technical implementation plan from feature specification, aligned with AURORA-IA AI-DLC methodology
-tools: [search/codebase, search, read/readFile, usages, web, read/problems, changes, vscode, read/terminalLastCommand, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
+tools:
+  [
+    search,
+    read,
+    web,
+    problems,
+    vscode,
+    agent,
+    'github/*',
+    'context7/*',
+    'awesome-copilot/*',
+    'microsoftdocs/mcp/*',
+  ]
 model: Claude Sonnet 4.5
 handoffs:
   - label: ✅ Generate Bolt Tasks
@@ -21,6 +33,7 @@ handoffs:
 ## Available Scripts
 
 When you need to setup planning, execute these scripts:
+
 - **Bash**: `scripts/bash/setup-plan.sh`
 - **PowerShell**: `scripts/powershell/Setup-Plan.ps1`
 
@@ -47,6 +60,7 @@ Transform a feature specification into a detailed technical implementation plan,
 User says: "Create implementation plan for user-authentication"
 
 You do (IN ORDER):
+
 ```bash
 # 1. Verify on correct branch
 git branch --show-current
@@ -85,10 +99,12 @@ fi
 ### 1. Load Context
 
 Read and analyze:
+
 - `/.aurora/memory/constitution.md` - Tech stack, principles, gates
 - `specs/[XXX-feature-name]/requirements/requirements.md` - Feature requirements
 
 Extract:
+
 - Tech stack from constitution
 - Functional requirements from spec
 - Non-functional requirements from spec
@@ -101,8 +117,8 @@ Validate against constitution principles:
 ```markdown
 ## Constitution Check
 
-| Principle | Status | Notes |
-|-----------|--------|-------|
+| Principle     | Status          | Notes   |
+| ------------- | --------------- | ------- |
 | [Principle 1] | ✓ PASS / ✗ FAIL | [Notes] |
 | [Principle 2] | ✓ PASS / ✗ FAIL | [Notes] |
 ```
@@ -117,20 +133,24 @@ Identify and document:
 ## Technical Context
 
 ### Stack Selection (from Constitution)
+
 - Frontend: [FRAMEWORK] + [LANGUAGE]
-- Backend: [FRAMEWORK] + [LANGUAGE]  
+- Backend: [FRAMEWORK] + [LANGUAGE]
 - Database: [DATABASE]
 - Infrastructure: [CLOUD] + [IAC]
 
 ### Dependencies
+
 - [Library 1]: [Version] - [Purpose]
 - [Library 2]: [Version] - [Purpose]
 
 ### Integration Points
+
 - [System 1]: [Protocol] - [Purpose]
 - [System 2]: [Protocol] - [Purpose]
 
 ### Unknown/Research Needed
+
 - [NEEDS RESEARCH: Topic 1]
 - [NEEDS RESEARCH: Topic 2]
 ```
@@ -151,16 +171,20 @@ Output: `specs/[XXX-feature-name]/planning/research.md`
 ## [Topic 1]
 
 ### Decision
+
 [What was chosen]
 
 ### Rationale
+
 [Why chosen]
 
 ### Alternatives Considered
+
 - [Alternative 1]: [Pros/Cons]
 - [Alternative 2]: [Pros/Cons]
 
 ### Risks
+
 - [Risk]: [Mitigation]
 ```
 
@@ -168,23 +192,25 @@ Output: `specs/[XXX-feature-name]/planning/research.md`
 
 From entities in spec, create: `specs/[XXX-feature-name]/requirements/data-model.md`
 
-```markdown
+````markdown
 # Data Model
 
 ## Entities
 
 ### [Entity Name]
 
-| Field | Type | Required | Constraints |
-|-------|------|----------|-------------|
-| id | UUID | Yes | Primary Key |
+| Field   | Type   | Required | Constraints   |
+| ------- | ------ | -------- | ------------- |
+| id      | UUID   | Yes      | Primary Key   |
 | [field] | [type] | [yes/no] | [constraints] |
 
 **Relationships**:
+
 - Has many [Related Entity]
 - Belongs to [Parent Entity]
 
 **Invariants**:
+
 - [Business rule that must always be true]
 
 ## Database Schema
@@ -194,7 +220,9 @@ CREATE TABLE [table_name] (
   ...
 );
 ```
-```
+````
+
+````
 
 ### 6. Phase 2: API Contract Design
 
@@ -223,11 +251,12 @@ paths:
       responses:
         '201':
           description: Created
-```
+````
 
 ### 7. Phase 3: Architecture Design
 
 Document in plan.md:
+
 - Component diagram
 - Sequence diagrams for key flows
 - Integration architecture
@@ -243,32 +272,37 @@ Organize implementation into Bolts (micro-iterations):
 ### BOLT Strategy & Branching
 
 **Each BOLT = Dedicated Branch Pattern:**
+
 - `feature/[feature-name]/bolt-1-foundation`
-- `feature/[feature-name]/bolt-2-domain` 
+- `feature/[feature-name]/bolt-2-domain`
 - `feature/[feature-name]/bolt-3-api`
 - `feature/[feature-name]/bolt-4-polish`
 
 **BOLT Examples:**
 
 ### Bolt 1: Foundation (1-2 days)
+
 - Project setup
 - Database schema
 - Base entities
 - **Branch**: `feature/[feature-name]/bolt-1-foundation`
 
 ### Bolt 2: Core Domain (2-3 days)
+
 - Domain entities
 - Business logic
 - Unit tests
 - **Branch**: `feature/[feature-name]/bolt-2-domain`
 
 ### Bolt 3: API Layer (2-3 days)
+
 - Controllers/Endpoints
 - DTOs
 - Integration tests
 - **Branch**: `feature/[feature-name]/bolt-3-api`
 
 ### Bolt 4: UI/Integration (2-3 days)
+
 - Frontend components
 - API integration
 - E2E tests
@@ -286,12 +320,12 @@ Create `specs/[XXX-feature-name]/planning/plan.md`:
 
 ## Overview
 
-| Property | Value |
-|----------|-------|
-| Feature | [Feature name] |
-| Estimated Duration | [X] days |
-| Bolts | [N] |
-| Priority | [P1/P2/P3] |
+| Property           | Value          |
+| ------------------ | -------------- |
+| Feature            | [Feature name] |
+| Estimated Duration | [X] days       |
+| Bolts              | [N]            |
+| Priority           | [P1/P2/P3]     |
 
 ## Constitution Alignment
 
@@ -300,15 +334,19 @@ Create `specs/[XXX-feature-name]/planning/plan.md`:
 ## Technical Decisions
 
 ### Architecture
+
 [Architecture pattern and rationale]
 
 ### Key Technologies
+
 [Technology choices from constitution]
 
 ### Data Model Summary
+
 [Link to data-model.md]
 
 ### API Summary
+
 [Link to openapi.yaml]
 
 ## Bolt Breakdown
@@ -317,9 +355,9 @@ Create `specs/[XXX-feature-name]/planning/plan.md`:
 
 ## Risks and Mitigations
 
-| Risk | Probability | Impact | Mitigation |
-|------|-------------|--------|------------|
-| [Risk] | H/M/L | H/M/L | [Strategy] |
+| Risk   | Probability | Impact | Mitigation |
+| ------ | ----------- | ------ | ---------- |
+| [Risk] | H/M/L       | H/M/L  | [Strategy] |
 
 ## Dependencies
 
@@ -336,5 +374,6 @@ Create `specs/[XXX-feature-name]/planning/plan.md`:
 ## Prompts Reference
 
 For detailed architecture guidance:
+
 - `#file:.github/prompts/aurora-architecture.prompt.md`
 - `#file:.github/prompts/aurora-planning.prompt.md`

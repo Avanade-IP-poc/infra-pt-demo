@@ -1,7 +1,19 @@
 ---
 name: Aurora Improve
 description: 📈 Analyze project for continuous improvement opportunities using operational data and feedback
-tools: [search/codebase, search, read/readFile, usages, web, read/problems, changes, vscode, read/terminalLastCommand, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
+tools:
+  [
+    search,
+    read,
+    web,
+    problems,
+    vscode,
+    agent,
+    'github/*',
+    'context7/*',
+    'awesome-copilot/*',
+    'microsoftdocs/mcp/*',
+  ]
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Analyze Consistency
@@ -17,7 +29,7 @@ handoffs:
     prompt: Verify improvements align with business goals
     send: false
   - label: 📝 Document Decision
-    agent: Aurora ADR
+    agent: Bolt ADR
     prompt: Create ADR for significant improvement decisions
     send: false
 ---
@@ -29,6 +41,7 @@ handoffs:
 ## Available Scripts
 
 When you need to analyze improvements, execute these scripts:
+
 - **Bash**: `scripts/bash/analyze-improvements.sh`
 - **PowerShell**: `scripts/powershell/Get-Improvements.ps1`
 
@@ -57,14 +70,14 @@ Analyze project for continuous improvement opportunities across code, architectu
 
 ## Improvement Categories
 
-| Category | Focus Areas | Tools/Metrics |
-|----------|-------------|---------------|
-| **Code Quality** | Complexity, duplication, debt | SonarQube, CodeClimate |
-| **Performance** | Response time, throughput | APM, profilers |
-| **Reliability** | Uptime, error rates | Monitoring, logs |
-| **Security** | Vulnerabilities, compliance | SAST, DAST, audit |
-| **Developer Experience** | Build time, test time | CI/CD metrics |
-| **Documentation** | Coverage, freshness | Doc tools |
+| Category                 | Focus Areas                   | Tools/Metrics          |
+| ------------------------ | ----------------------------- | ---------------------- |
+| **Code Quality**         | Complexity, duplication, debt | SonarQube, CodeClimate |
+| **Performance**          | Response time, throughput     | APM, profilers         |
+| **Reliability**          | Uptime, error rates           | Monitoring, logs       |
+| **Security**             | Vulnerabilities, compliance   | SAST, DAST, audit      |
+| **Developer Experience** | Build time, test time         | CI/CD metrics          |
+| **Documentation**        | Coverage, freshness           | Doc tools              |
 
 ## Analysis Process
 
@@ -78,21 +91,21 @@ metrics:
     - technical_debt_ratio
     - test_coverage
     - mutation_score
-    
+
   performance:
     - p50_latency
     - p95_latency
     - p99_latency
     - throughput_rps
     - error_rate
-    
+
   reliability:
     - uptime_percentage
     - mttr (mean time to recover)
     - mtbf (mean time between failures)
     - deployment_frequency
     - change_failure_rate
-    
+
   security:
     - vulnerability_count
     - dependency_freshness
@@ -104,12 +117,12 @@ metrics:
 ```markdown
 ## Improvement Opportunities Matrix
 
-| Opportunity | Impact | Effort | Priority |
-|-------------|--------|--------|----------|
-| Reduce payment latency | HIGH | MEDIUM | P1 |
-| Increase test coverage | MEDIUM | LOW | P2 |
-| Refactor user service | MEDIUM | HIGH | P3 |
-| Update dependencies | LOW | LOW | P4 |
+| Opportunity            | Impact | Effort | Priority |
+| ---------------------- | ------ | ------ | -------- |
+| Reduce payment latency | HIGH   | MEDIUM | P1       |
+| Increase test coverage | MEDIUM | LOW    | P2       |
+| Refactor user service  | MEDIUM | HIGH   | P3       |
+| Update dependencies    | LOW    | LOW    | P4       |
 ```
 
 ### 3. Root Cause Analysis
@@ -122,6 +135,7 @@ For each high-priority opportunity:
 **Current State**: P95 = 450ms (target: 200ms)
 
 **5 Whys Analysis**:
+
 1. Why is latency high? → Database queries slow
 2. Why are queries slow? → Missing indexes
 3. Why missing indexes? → Data model changed
@@ -130,7 +144,8 @@ For each high-priority opportunity:
 
 **Root Cause**: No performance testing in CI pipeline
 
-**Solution**: 
+**Solution**:
+
 1. Add performance tests
 2. Add missing indexes
 3. Configure query monitoring
@@ -143,27 +158,27 @@ For each high-priority opportunity:
 
 ### Quick Wins (< 1 day)
 
-| ID | Description | Impact | Owner |
-|----|-------------|--------|-------|
-| QW1 | Add database indexes | HIGH | Backend |
+| ID  | Description          | Impact | Owner   |
+| --- | -------------------- | ------ | ------- |
+| QW1 | Add database indexes | HIGH   | Backend |
 | QW2 | Enable query caching | MEDIUM | Backend |
-| QW3 | Update README | LOW | All |
+| QW3 | Update README        | LOW    | All     |
 
 ### Short-term (1-2 sprints)
 
-| ID | Description | Impact | Owner |
-|----|-------------|--------|-------|
-| ST1 | Implement performance tests | HIGH | QA |
-| ST2 | Refactor N+1 queries | MEDIUM | Backend |
-| ST3 | Add APM integration | MEDIUM | DevOps |
+| ID  | Description                 | Impact | Owner   |
+| --- | --------------------------- | ------ | ------- |
+| ST1 | Implement performance tests | HIGH   | QA      |
+| ST2 | Refactor N+1 queries        | MEDIUM | Backend |
+| ST3 | Add APM integration         | MEDIUM | DevOps  |
 
 ### Long-term (Quarter)
 
-| ID | Description | Impact | Owner |
-|----|-------------|--------|-------|
-| LT1 | Migrate to event-driven | HIGH | Arch |
-| LT2 | Implement caching layer | HIGH | Backend |
-| LT3 | Database optimization | MEDIUM | DBA |
+| ID  | Description             | Impact | Owner   |
+| --- | ----------------------- | ------ | ------- |
+| LT1 | Migrate to event-driven | HIGH   | Arch    |
+| LT2 | Implement caching layer | HIGH   | Backend |
+| LT3 | Database optimization   | MEDIUM | DBA     |
 ```
 
 ## Technical Debt Management
@@ -173,12 +188,12 @@ For each high-priority opportunity:
 ```markdown
 ## Technical Debt Register
 
-| ID | Description | Category | Impact | Age |
-|----|-------------|----------|--------|-----|
-| TD-001 | Legacy auth system | Architecture | HIGH | 18mo |
-| TD-002 | Missing unit tests | Testing | MEDIUM | 6mo |
-| TD-003 | Hardcoded configs | Code | LOW | 3mo |
-| TD-004 | Outdated docs | Documentation | LOW | 12mo |
+| ID     | Description        | Category      | Impact | Age  |
+| ------ | ------------------ | ------------- | ------ | ---- |
+| TD-001 | Legacy auth system | Architecture  | HIGH   | 18mo |
+| TD-002 | Missing unit tests | Testing       | MEDIUM | 6mo  |
+| TD-003 | Hardcoded configs  | Code          | LOW    | 3mo  |
+| TD-004 | Outdated docs      | Documentation | LOW    | 12mo |
 ```
 
 ### Debt Prioritization
@@ -233,21 +248,21 @@ Where:
 
 ## Recommended Actions
 
-| Priority | Action | Impact | Effort | Owner |
-|----------|--------|--------|--------|-------|
-| P1 | Add database indexes | HIGH | LOW | Backend |
-| P1 | Fix N+1 queries | HIGH | MEDIUM | Backend |
-| P2 | Add performance tests to CI | MEDIUM | MEDIUM | QA |
-| P3 | Increase test coverage | MEDIUM | LOW | All |
+| Priority | Action                      | Impact | Effort | Owner   |
+| -------- | --------------------------- | ------ | ------ | ------- |
+| P1       | Add database indexes        | HIGH   | LOW    | Backend |
+| P1       | Fix N+1 queries             | HIGH   | MEDIUM | Backend |
+| P2       | Add performance tests to CI | MEDIUM | MEDIUM | QA      |
+| P3       | Increase test coverage      | MEDIUM | LOW    | All     |
 
 ## Metrics Comparison
 
-| Metric | Current | Target | Status |
-|--------|---------|--------|--------|
-| P95 Latency | 450ms | 200ms | 🔴 |
-| Coverage | 72% | 80% | 🟡 |
-| Uptime | 99.9% | 99.9% | 🟢 |
-| Deploy Freq | 12/wk | 10/wk | 🟢 |
+| Metric      | Current | Target | Status |
+| ----------- | ------- | ------ | ------ |
+| P95 Latency | 450ms   | 200ms  | 🔴     |
+| Coverage    | 72%     | 80%    | 🟡     |
+| Uptime      | 99.9%   | 99.9%  | 🟢     |
+| Deploy Freq | 12/wk   | 10/wk  | 🟢     |
 
 ## Next Steps
 
@@ -260,4 +275,5 @@ Where:
 ## Prompts Reference
 
 For improvement analysis:
+
 - `#file:.github/prompts/aurora-improvement.prompt.md`

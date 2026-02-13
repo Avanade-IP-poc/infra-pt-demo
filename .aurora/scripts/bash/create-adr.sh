@@ -3,6 +3,10 @@
 # AURORA-IA / AI-DLC - Create ADR Script
 # =============================================================================
 # Creates a new Architectural Decision Record from template.
+# Follows MADR format as defined in skill-bolt-adr.
+#
+# Reference: .github/skills/skill-bolt-adr/SKILL.md
+# Templates: .github/skills/skill-bolt-adr/templates/
 #
 # Usage:
 #   ./create-adr.sh <adr-title>
@@ -44,7 +48,7 @@ mkdir -p "${ADR_DIR}"
 # Find next ADR number
 LAST_ADR=$(ls -1 "${ADR_DIR}"/ADR-*.md 2>/dev/null | sort -V | tail -1 | grep -oP 'ADR-\K[0-9]+' || echo "0")
 NEXT_NUM=$((LAST_ADR + 1))
-ADR_NUM=$(printf "%03d" $NEXT_NUM)
+ADR_NUM=$(printf "%04d" $NEXT_NUM)
 
 # Create filename
 ADR_SLUG=$(echo "${ADR_TITLE}" | tr '[:upper:]' '[:lower:]' | tr ' ' '-' | tr -cd '[:alnum:]-')

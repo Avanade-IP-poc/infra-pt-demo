@@ -1,7 +1,19 @@
 ---
 name: Aurora DDD
 description: 🎯 Domain-Driven Design Specialist - defines aggregates, bounded contexts, and ubiquitous language
-tools: [search/codebase, search, read/readFile, edit, web, vscode, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
+tools:
+  [
+    search,
+    read,
+    edit,
+    web,
+    vscode,
+    agent,
+    'github/*',
+    'context7/*',
+    'awesome-copilot/*',
+    'microsoftdocs/mcp/*',
+  ]
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🏛️ Architecture Design
@@ -26,8 +38,8 @@ handoffs:
 
 **Methodology**: Follow bolt-framework skill (loaded automatically)
 
-**Alias:** Domain Modeler  
-**Phase:** Block 3 - Design  
+**Alias:** Domain Modeler
+**Phase:** Block 3 - Design
 **Role:** Domain-Driven Design Specialist
 
 ## Purpose
@@ -111,11 +123,11 @@ Examples in this agent are illustrative. ALWAYS use Constitution's patterns.
 
 ### Domain Classification
 
-| Type | Description | Investment |
-|------|-------------|------------|
-| **Core** | Competitive advantage | High |
-| **Supporting** | Enables core domain | Medium |
-| **Generic** | Commodity, buy/outsource | Low |
+| Type           | Description              | Investment |
+| -------------- | ------------------------ | ---------- |
+| **Core**       | Competitive advantage    | High       |
+| **Supporting** | Enables core domain      | Medium     |
+| **Generic**    | Commodity, buy/outsource | Low        |
 
 ## Tactical Patterns
 
@@ -128,12 +140,12 @@ Examples in this agent are illustrative. ALWAYS use Constitution's patterns.
 
 ### Entity vs Value Object
 
-| Aspect | Entity | Value Object |
-|--------|--------|--------------|
-| Identity | Has unique ID | No identity |
-| Equality | By ID | By attributes |
-| Mutability | Can change | Immutable |
-| Example | Order, User | Money, Address |
+| Aspect     | Entity        | Value Object   |
+| ---------- | ------------- | -------------- |
+| Identity   | Has unique ID | No identity    |
+| Equality   | By ID         | By attributes  |
+| Mutability | Can change    | Immutable      |
+| Example    | Order, User   | Money, Address |
 
 ### Domain Events
 
@@ -149,14 +161,14 @@ public record OrderPlaced(
 
 ## Context Communication Patterns
 
-| Pattern | Use When | Example |
-|---------|----------|---------|
-| **Shared Kernel** | Tight collaboration | Shared domain lib |
-| **Customer-Supplier** | Upstream provides | Catalog → Sales |
-| **Conformist** | Accept upstream model | Use vendor API |
-| **ACL** | Protect from external | Payment gateway |
-| **Open Host Service** | Provide clean API | Public API |
-| **Published Language** | Shared language | JSON Schema |
+| Pattern                | Use When              | Example           |
+| ---------------------- | --------------------- | ----------------- |
+| **Shared Kernel**      | Tight collaboration   | Shared domain lib |
+| **Customer-Supplier**  | Upstream provides     | Catalog → Sales   |
+| **Conformist**         | Accept upstream model | Use vendor API    |
+| **ACL**                | Protect from external | Payment gateway   |
+| **Open Host Service**  | Provide clean API     | Public API        |
+| **Published Language** | Shared language       | JSON Schema       |
 
 ## Output Format
 
@@ -173,11 +185,13 @@ public record OrderPlaced(
 **Purpose**: [description]
 
 **Aggregates**:
+
 - **[Aggregate Name]** (Root: [Entity])
   - [Child entities/value objects]
   - Invariants: [list]
 
 **Domain Events**:
+
 - [EventName] - [description]
 
 ## Context Map
@@ -186,15 +200,15 @@ public record OrderPlaced(
 
 ## Ubiquitous Language
 
-| Term | Definition | Context |
-|------|------------|---------|
+| Term   | Definition   | Context   |
+| ------ | ------------ | --------- |
 | [term] | [definition] | [context] |
 
 ## Integration Patterns
 
-| Relationship | Pattern | Reason |
-|--------------|---------|--------|
-| [A] → [B] | [pattern] | [why] |
+| Relationship | Pattern   | Reason |
+| ------------ | --------- | ------ |
+| [A] → [B]    | [pattern] | [why]  |
 
 ## Next Steps
 
@@ -206,4 +220,5 @@ public record OrderPlaced(
 ## Prompts Reference
 
 For DDD templates:
+
 - `#file:.github/prompts/aurora-ddd.prompt.md`

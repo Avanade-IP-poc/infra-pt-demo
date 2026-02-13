@@ -1,7 +1,19 @@
 ---
 name: Aurora Retire
 description: 🌅 Plan and execute controlled retirement of systems, features, or entire projects following AURORA methodology
-tools: [search/codebase, search, read/readFile, usages, web, read/problems, changes, vscode, read/terminalLastCommand, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
+tools:
+  [
+    search,
+    read,
+    web,
+    problems,
+    vscode,
+    agent,
+    'github/*',
+    'context7/*',
+    'awesome-copilot/*',
+    'microsoftdocs/mcp/*',
+  ]
 model: Claude Sonnet 4.5
 handoffs:
   - label: 📦 Final Release
@@ -13,7 +25,7 @@ handoffs:
     prompt: Analyze retirement impact on dependent systems
     send: false
   - label: 📝 Document Decision
-    agent: Aurora ADR
+    agent: Bolt ADR
     prompt: Create ADR documenting retirement decision
     send: false
   - label: 📊 Project Status
@@ -29,6 +41,7 @@ handoffs:
 ## Available Scripts
 
 When you need to plan retirement, execute these scripts:
+
 - **Bash**: `scripts/bash/plan-retirement.sh`
 - **PowerShell**: `scripts/powershell/Plan-Retirement.ps1`
 
@@ -55,23 +68,23 @@ Plan and execute controlled retirement of systems, features, or projects.
 
 ## When to Retire
 
-| Signal | Indicator | Action |
-|--------|-----------|--------|
-| **Obsolescence** | Technology no longer supported | Plan migration |
-| **Replacement** | New system serves same purpose | Plan transition |
-| **Low Usage** | < 5% of peak usage | Evaluate necessity |
-| **High Cost** | Cost > Value delivered | Cost-benefit analysis |
-| **Technical Debt** | Unmaintainable codebase | Rebuild or retire |
-| **Business Change** | No longer serves business need | Document and retire |
+| Signal              | Indicator                      | Action                |
+| ------------------- | ------------------------------ | --------------------- |
+| **Obsolescence**    | Technology no longer supported | Plan migration        |
+| **Replacement**     | New system serves same purpose | Plan transition       |
+| **Low Usage**       | < 5% of peak usage             | Evaluate necessity    |
+| **High Cost**       | Cost > Value delivered         | Cost-benefit analysis |
+| **Technical Debt**  | Unmaintainable codebase        | Rebuild or retire     |
+| **Business Change** | No longer serves business need | Document and retire   |
 
 ## Retirement Types
 
-| Type | Scope | Complexity | Duration |
-|------|-------|------------|----------|
-| **Feature** | Single capability | LOW | Days-Weeks |
-| **Service** | Single microservice | MEDIUM | Weeks-Months |
-| **System** | Multiple services | HIGH | Months |
-| **Project** | Entire project | VERY HIGH | Months-Year |
+| Type        | Scope               | Complexity | Duration     |
+| ----------- | ------------------- | ---------- | ------------ |
+| **Feature** | Single capability   | LOW        | Days-Weeks   |
+| **Service** | Single microservice | MEDIUM     | Weeks-Months |
+| **System**  | Multiple services   | HIGH       | Months       |
+| **Project** | Entire project      | VERY HIGH  | Months-Year  |
 
 ## Retirement Process
 
@@ -81,10 +94,10 @@ Plan and execute controlled retirement of systems, features, or projects.
 assessment:
   scope:
     type: [feature|service|system|project]
-    name: "[name]"
+    name: '[name]'
     components:
       - [list of components]
-      
+
   impact:
     users:
       active: [count]
@@ -95,7 +108,7 @@ assessment:
     data:
       volume: [size]
       retention: [required period]
-      
+
   timeline:
     announcement: [date]
     deprecation: [date]
@@ -110,37 +123,38 @@ assessment:
 
 ### 1. Stakeholder Communication
 
-| Audience | Channel | Timing | Message |
-|----------|---------|--------|---------|
-| Internal teams | Email + Slack | T-90 days | Detailed plan |
-| External users | Email + Blog | T-60 days | Impact + alternatives |
-| Partners | Direct contact | T-60 days | Migration support |
+| Audience       | Channel        | Timing    | Message               |
+| -------------- | -------------- | --------- | --------------------- |
+| Internal teams | Email + Slack  | T-90 days | Detailed plan         |
+| External users | Email + Blog   | T-60 days | Impact + alternatives |
+| Partners       | Direct contact | T-60 days | Migration support     |
 
 ### 2. Migration Path
 
 **Current System**: [system name]
 **Target System**: [replacement or none]
 
-| Component | Source | Target | Migration Tool |
-|-----------|--------|--------|---------------|
-| Users | System A | System B | Auto-migrate |
-| Data | DB A | DB B | ETL script |
-| Integrations | API v1 | API v2 | Adapter |
+| Component    | Source   | Target   | Migration Tool |
+| ------------ | -------- | -------- | -------------- |
+| Users        | System A | System B | Auto-migrate   |
+| Data         | DB A     | DB B     | ETL script     |
+| Integrations | API v1   | API v2   | Adapter        |
 
 ### 3. Deprecation Schedule
 
-| Date | Milestone | Actions |
-|------|-----------|---------|
-| T-90 | Announcement | Notify all stakeholders |
-| T-60 | Deprecation | Add deprecation warnings |
-| T-30 | Feature freeze | No new features |
-| T-14 | Final warning | Urgent migration reminder |
-| T-7 | Read-only mode | Disable writes |
-| T-0 | Shutdown | Decommission |
+| Date | Milestone      | Actions                   |
+| ---- | -------------- | ------------------------- |
+| T-90 | Announcement   | Notify all stakeholders   |
+| T-60 | Deprecation    | Add deprecation warnings  |
+| T-30 | Feature freeze | No new features           |
+| T-14 | Final warning  | Urgent migration reminder |
+| T-7  | Read-only mode | Disable writes            |
+| T-0  | Shutdown       | Decommission              |
 
 ### 4. Rollback Plan
 
 If issues during retirement:
+
 1. Reactivate endpoints (< 24h)
 2. Restore from backup (< 48h)
 3. Full recovery (< 1 week)
@@ -155,19 +169,19 @@ execution_checklist:
     - [ ] Documentation updated
     - [ ] Support articles published
     - [ ] FAQ prepared
-    
+
   technical:
     - [ ] Deprecation warnings added
     - [ ] Analytics tracking enabled
     - [ ] Migration tools ready
     - [ ] Backup verified
-    
+
   migration:
     - [ ] User data migrated
     - [ ] Integrations switched
     - [ ] Verification complete
     - [ ] Sign-off received
-    
+
   shutdown:
     - [ ] Traffic redirected
     - [ ] Services stopped
@@ -180,21 +194,21 @@ execution_checklist:
 ```yaml
 archive:
   code:
-    location: "[archive repository]"
-    branch: "archive/[project-name]"
-    tag: "archive-[date]"
-    
+    location: '[archive repository]'
+    branch: 'archive/[project-name]'
+    tag: 'archive-[date]'
+
   documentation:
-    readme: "Why retired, where to find replacement"
-    adr: "docs/adr/NNNN-retire-[name].md"
-    lessons_learned: "docs/retrospectives/[name]-retirement.md"
-    
+    readme: 'Why retired, where to find replacement'
+    adr: 'docs/adr/NNNN-retire-[name].md'
+    lessons_learned: 'docs/retrospectives/[name]-retirement.md'
+
   data:
-    export: "[location]"
-    format: "[format]"
-    retention: "[period]"
-    access: "[who can access]"
-    
+    export: '[location]'
+    format: '[format]'
+    retention: '[period]'
+    access: '[who can access]'
+
   knowledge:
     wiki_archived: true
     confluence_exported: true
@@ -205,13 +219,13 @@ archive:
 
 ### Retention Requirements
 
-| Data Type | Retention Period | Reason | Storage |
-|-----------|-----------------|--------|---------|
-| User PII | 7 years | Legal compliance | Cold storage |
-| Financial | 10 years | Tax requirements | Secure archive |
-| Logs | 1 year | Debugging | Log archive |
-| Code | Indefinite | Reference | Git archive |
-| Docs | Indefinite | Knowledge | Wiki archive |
+| Data Type | Retention Period | Reason           | Storage        |
+| --------- | ---------------- | ---------------- | -------------- |
+| User PII  | 7 years          | Legal compliance | Cold storage   |
+| Financial | 10 years         | Tax requirements | Secure archive |
+| Logs      | 1 year           | Debugging        | Log archive    |
+| Code      | Indefinite       | Reference        | Git archive    |
+| Docs      | Indefinite       | Knowledge        | Wiki archive   |
 
 ### Data Handling
 
@@ -221,11 +235,11 @@ data_handling:
     - Format: Standard (CSV, JSON)
     - Encryption: AES-256
     - Verification: Checksums
-    
+
   anonymization:
     - PII removed or masked
     - Aggregation where possible
-    
+
   deletion:
     - Secure deletion (multi-pass)
     - Verification of deletion
@@ -250,45 +264,47 @@ data_handling:
 
 ## Impact Assessment
 
-| Category | Impact | Mitigation |
-|----------|--------|------------|
-| Users | [N] affected | Migration to [X] |
-| Systems | [N] dependent | Update integrations |
-| Data | [X]GB | Archive to [location] |
+| Category | Impact        | Mitigation            |
+| -------- | ------------- | --------------------- |
+| Users    | [N] affected  | Migration to [X]      |
+| Systems  | [N] dependent | Update integrations   |
+| Data     | [X]GB         | Archive to [location] |
 
 ## Timeline
 
-| Phase | Date | Status |
-|-------|------|--------|
-| Announcement | [date] | ⬜ |
-| Deprecation | [date] | ⬜ |
-| Migration Deadline | [date] | ⬜ |
-| Shutdown | [date] | ⬜ |
-| Archive Complete | [date] | ⬜ |
+| Phase              | Date   | Status |
+| ------------------ | ------ | ------ |
+| Announcement       | [date] | ⬜     |
+| Deprecation        | [date] | ⬜     |
+| Migration Deadline | [date] | ⬜     |
+| Shutdown           | [date] | ⬜     |
+| Archive Complete   | [date] | ⬜     |
 
 ## Migration Guide
 
 ### For Users
+
 [Step-by-step migration instructions]
 
 ### For Integrators
+
 [API migration guide]
 
 ## Communication Plan
 
-| Date | Audience | Channel | Message |
-|------|----------|---------|---------|
-| [date] | All | Email | Announcement |
-| [date] | Users | In-app | Warning |
-| [date] | All | Email | Final reminder |
+| Date   | Audience | Channel | Message        |
+| ------ | -------- | ------- | -------------- |
+| [date] | All      | Email   | Announcement   |
+| [date] | Users    | In-app  | Warning        |
+| [date] | All      | Email   | Final reminder |
 
 ## Archival Plan
 
-| Asset | Location | Retention |
-|-------|----------|-----------|
-| Code | [repo]/archive | Indefinite |
-| Data | [storage] | [period] |
-| Docs | [wiki]/archive | Indefinite |
+| Asset | Location       | Retention  |
+| ----- | -------------- | ---------- |
+| Code  | [repo]/archive | Indefinite |
+| Data  | [storage]      | [period]   |
+| Docs  | [wiki]/archive | Indefinite |
 
 ## Checklist
 
@@ -309,4 +325,5 @@ data_handling:
 ## Prompts Reference
 
 For retirement planning:
+
 - `#file:.github/prompts/aurora-retirement.prompt.md`

@@ -7,7 +7,7 @@
 AURORA-IA-DLC (AI-Driven Development Lifecycle) is an AI-powered software development methodology. It guides development through six phases:
 
 1. **INCEPTION** - Project definition and constitution
-2. **DISCOVERY** - Requirements, features, and planning  
+2. **DISCOVERY** - Requirements, features, and planning
 3. **CONSTRUCTION** - Implementation with quality gates
 4. **TRANSITION** - Release and documentation
 5. **PRODUCTION** - Operations and continuous improvement
@@ -16,17 +16,22 @@ AURORA-IA-DLC (AI-Driven Development Lifecycle) is an AI-powered software develo
 ## Key Concepts
 
 ### Constitution (`memory/constitution.md`)
+
 The project's DNA - defines tech stack, standards, and constraints. **ALWAYS read this first** before generating code.
 
 ### Features (`specs/XXX-feature-name/`)
+
 Each feature has its own directory with:
+
 - `feature.md` - Feature specification
 - `requirements/` - Detailed requirements
 - `planning/` - Tasks and implementation plan
 - `contracts/` - API contracts
 
 ### Agents (`@Aurora*`)
+
 Invoke AURORA workflows via agents:
+
 - `@Bolt Framework` - Main orchestrator
 - `@Aurora Feature` - Create feature
 - `@Aurora Implement` - Implement code
@@ -76,16 +81,16 @@ project/
 
 AURORA includes 30 specialized AI agents. Invoke them with `@AgentName`:
 
-| Topic | Agent |
-|-------|-------|
-| Orchestration | `@Bolt Framework` |
-| Architecture | `@Aurora Architect` |
-| Domain modeling | `@Aurora DDD` |
-| Testing | `@Aurora Testing` |
-| Implementation | `@Aurora Implement` |
-| Documentation | `@Aurora Documentation` |
-| Operations | `@Aurora Ops` |
-| Releases | `@Aurora Release` |
+| Topic           | Agent                   |
+| --------------- | ----------------------- |
+| Orchestration   | `@Bolt Framework`       |
+| Architecture    | `@Aurora Architect`     |
+| Domain modeling | `@Aurora DDD`           |
+| Testing         | `@Aurora Testing`       |
+| Implementation  | `@Aurora Implement`     |
+| Documentation   | `@Aurora Documentation` |
+| Operations      | `@Aurora Ops`           |
+| Releases        | `@Aurora Release`       |
 
 📚 **Full list**: [.github/agents/README.md](.github/agents/README.md)
 
@@ -95,20 +100,22 @@ AURORA includes specialized **skills** that are auto-discovered from `.github/sk
 
 ### Available Skills
 
-| Skill | Domain | Use When |
-|-------|--------|----------|
-| [bolt-framework](.github/skills/bolt-framework/) | AURORA Methodology | Working on AURORA projects, managing lifecycle |
-| [skill-development](.github/skills/skill-development/) | Skill Creation | Creating or improving Copilot skills |
-| [markdown-formatting](.github/skills/markdown-formatting/) | Markdown Best Practices | Writing or editing any Markdown document (.md, .agent.md, .prompt.md) |
+| Skill                                                      | Domain                        | Use When                                                                                         |
+| ---------------------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------ |
+| [bolt-framework](.github/skills/bolt-framework/)           | AURORA Methodology            | Working on AURORA projects, managing lifecycle                                                   |
+| [skill-bolt-adr](.github/skills/skill-bolt-adr/)           | Architecture Decision Records | Documenting architectural decisions, technology selections, or design patterns using MADR format |
+| [new-skill](.github/skills/new-skill/)                     | Skill Creation                | Creating or improving Copilot skills                                                             |
+| [markdown-formatting](.github/skills/markdown-formatting/) | Markdown Best Practices       | Writing or editing any Markdown document (.md, .agent.md, .prompt.md)                            |
 
 ### Creating Custom Skills
 
 Want to add a new skill? Ask Copilot:
+
 ```
 "Help me create a skill for [domain]"
 ```
 
-Copilot will guide you through the process using the skill-development guidelines.
+Copilot will guide you through the process using the new-skill guidelines.
 
 ## Remember
 
@@ -121,4 +128,4 @@ Copilot will guide you through the process using the skill-development guideline
 
 ---
 
-*AURORA-IA-DLC v1.0.0*
+_AURORA-IA-DLC v1.0.0_

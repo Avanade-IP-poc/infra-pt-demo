@@ -1126,7 +1126,7 @@ Al usar este skill, verifica que el documento cumpla:
 
 ### Skills Relacionados
 
-- Skill: `skill-development` - Cómo crear skills (usa Markdown)
+- Skill: `new-skill` - Cómo crear skills (usa Markdown)
 - Skill: `bolt-framework` - AURORA methodology (documentación en Markdown)
 
 ### Archivos del Proyecto AURORA
@@ -1172,5 +1172,5 @@ Al usar este skill, verifica que el documento cumpla:
 **Autor**: AURORA AI Development Team
 **Versión**: 1.0.0
 **Última actualización**: 2026-02-13
-**Revisado por**: GitHub Copilot + skill-development skill
+**Revisado por**: GitHub Copilot + new-skill skill
 ```

@@ -1,7 +1,22 @@
 ---
 name: Aurora Testing
 description: 🧪 Generate comprehensive test suites with coverage-first approach and mutation testing validation
-tools: [search/codebase, search, read/readFile, usages, web, read/problems, changes, edit, execute/runInTerminal, execute/getTerminalOutput, execute/createAndRunTask, runTests, testFailure, read/terminalLastCommand, vscode, agent, todo, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
+tools:
+  [
+    search,
+    read,
+    web,
+    problems,
+    edit,
+    execute,
+    vscode,
+    agent,
+    todo,
+    'github/*',
+    'context7/*',
+    'awesome-copilot/*',
+    'microsoftdocs/mcp/*',
+  ]
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🏗️ Implement (TDD Green)
@@ -29,6 +44,7 @@ handoffs:
 ## Available Scripts
 
 When you need to run tests, execute these scripts:
+
 - **Bash**: `.aurora/scripts/bash/generate-tests.sh`
 - **PowerShell**: `.aurora/scripts/powershell/Generate-Tests.ps1`
 
@@ -55,6 +71,7 @@ Generate test suites that achieve coverage targets and validate test quality thr
 User says: "Generate tests for UserService"
 
 You do (IN ORDER):
+
 ```bash
 # 1. Verify on correct branch
 git branch --show-current
@@ -73,6 +90,7 @@ npm test  # or equivalent from constitution
 ```
 
 **Output to user:**
+
 ```
 ✅ Generated: tests/unit/UserService.test.ts
 ✅ Tests: 12 tests created
@@ -83,29 +101,30 @@ npm test  # or equivalent from constitution
 ## Prerequisites
 
 Required files:
+
 - `specs/[XXX-feature-name]/requirements/requirements.md` - User stories with acceptance criteria
 - `.aurora/.aurora/memory/constitution.md` - Project governing document
 - **Must be on feature branch** - verify with `git branch --show-current`
 
 ## Quality Targets
 
-| Metric | Minimum | Recommended | Critical Paths |
-|--------|---------|-------------|----------------|
-| Line Coverage | 80% | 90% | 100% |
-| Branch Coverage | 75% | 85% | 100% |
-| Mutation Score | 70% | 80% | 90% |
-| Critical Paths | 100% | 100% | 100% |
+| Metric          | Minimum | Recommended | Critical Paths |
+| --------------- | ------- | ----------- | -------------- |
+| Line Coverage   | 80%     | 90%         | 100%           |
+| Branch Coverage | 75%     | 85%         | 100%           |
+| Mutation Score  | 70%     | 80%         | 90%            |
+| Critical Paths  | 100%    | 100%        | 100%           |
 
 ## Mutation Testing Tools by Language
 
-| Language | Mutation Tool | Coverage Tool | Config File |
-|----------|---------------|---------------|-------------|
-| **Java** | PIT (Pitest) | JaCoCo | `pom.xml` / `build.gradle` |
-| **.NET/C#** | Stryker.NET | coverlet | `stryker-config.json` |
-| **JavaScript** | Stryker Mutator | Istanbul/NYC | `stryker.conf.js` |
-| **TypeScript** | Stryker Mutator | Istanbul/NYC | `stryker.conf.js` |
-| **Python** | mutmut | coverage.py | `pyproject.toml` |
-| **Go** | go-mutesting | go test -cover | `Makefile` |
+| Language       | Mutation Tool   | Coverage Tool  | Config File                |
+| -------------- | --------------- | -------------- | -------------------------- |
+| **Java**       | PIT (Pitest)    | JaCoCo         | `pom.xml` / `build.gradle` |
+| **.NET/C#**    | Stryker.NET     | coverlet       | `stryker-config.json`      |
+| **JavaScript** | Stryker Mutator | Istanbul/NYC   | `stryker.conf.js`          |
+| **TypeScript** | Stryker Mutator | Istanbul/NYC   | `stryker.conf.js`          |
+| **Python**     | mutmut          | coverage.py    | `pyproject.toml`           |
+| **Go**         | go-mutesting    | go test -cover | `Makefile`                 |
 
 ## Testing Pyramid
 
@@ -121,14 +140,14 @@ Required files:
 
 ## TDD vs BDD Decision Matrix
 
-| Scenario | Approach | Command |
-|----------|----------|---------|
-| User story with ACs | **BDD** | Use @aurora-gherkin |
-| New algorithm/utility | **TDD** | Use @aurora-testing tdd |
+| Scenario               | Approach           | Command                      |
+| ---------------------- | ------------------ | ---------------------------- |
+| User story with ACs    | **BDD**            | Use @aurora-gherkin          |
+| New algorithm/utility  | **TDD**            | Use @aurora-testing tdd      |
 | Existing untested code | **Coverage-First** | Use @aurora-testing coverage |
-| Bug fix | **TDD** | Use @aurora-testing tdd |
-| API endpoint | **BDD + Contract** | Use @aurora-gherkin |
-| Domain entity | **TDD** | Use @aurora-testing tdd |
+| Bug fix                | **TDD**            | Use @aurora-testing tdd      |
+| API endpoint           | **BDD + Contract** | Use @aurora-gherkin          |
+| Domain entity          | **TDD**            | Use @aurora-testing tdd      |
 
 ## Test Categories
 
@@ -223,14 +242,14 @@ describe('User Registration Flow', () => {
   it('should complete registration successfully', async () => {
     // Navigate to registration
     await page.goto('/register');
-    
+
     // Fill form
     await page.fill('[name="email"]', 'new@example.com');
     await page.fill('[name="password"]', 'SecurePass123!');
-    
+
     // Submit
     await page.click('[type="submit"]');
-    
+
     // Verify success
     await expect(page).toHaveURL('/dashboard');
     await expect(page.locator('.welcome')).toContainText('Welcome');
@@ -272,11 +291,13 @@ After generating tests:
 | E2E | [N] | [X]% |
 
 **Quality Metrics**:
+
 - Line Coverage: [X]% (target: 80%)
 - Branch Coverage: [X]% (target: 75%)
 - Mutation Score: [X]% (target: 70%)
 
 **Next Steps**:
+
 1. Run mutation testing for quality validation
 2. Use @aurora-review to verify test quality
 3. Proceed to next implementation phase
@@ -285,4 +306,5 @@ After generating tests:
 ## Prompts Reference
 
 For detailed test guidance:
+
 - `#file:.github/prompts/aurora-test-generation.prompt.md`

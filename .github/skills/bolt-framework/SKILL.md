@@ -22,20 +22,49 @@ description: >
 
 ---
 
+## CRITICAL: Load Constitution First
+
+**MANDATORY FIRST STEP**: Before performing ANY work in an AURORA project, you MUST load the project constitution into memory:
+
+```
+Use the #tool:memory to store the contents of memory/constitution.md
+```
+
+**Why this is critical:**
+
+- The constitution defines the project's DNA (tech stack, standards, constraints)
+- All decisions, code generation, and architecture must comply with the constitution
+- Violating the constitution creates technical debt and inconsistencies
+- Loading it into memory ensures it's available for all subsequent operations
+
+**How to load it:**
+
+1. Read `memory/constitution.md` using the read_file tool
+2. Store its key contents in the 'memory' tool with appropriate context
+3. Reference constitution constraints in all decision-making
+
+**If constitution doesn't exist:**
+
+- This is a new project in INCEPTION phase
+- Use `@Aurora Constitution` agent to create it first
+- Do not proceed with implementation until constitution exists
+
+---
+
 ## 1. What is AURORA-IA-DLC?
 
 AURORA-IA-DLC (**AI-Driven Development Lifecycle**) is an AI-powered software development methodology that guides projects through six phases using specialized agents, quality gates, and micro-iterations called **Bolts**.
 
 ### Core Principles
 
-| Principle | Description |
-|-----------|-------------|
-| **Constitution is Law** | Every project has a constitution (`memory/constitution.md`) that governs all decisions |
-| **Specs Before Code** | Features need specifications before implementation |
-| **Micro-Iterations** | Work in small, shippable Bolts (2-3 days max) |
-| **Quality Gates** | Every Bolt must pass quality gates before completion |
-| **Agent Specialization** | Each agent has one responsibility; orchestrate via handoffs |
-| **Continuous Validation** | Test, review, and analyze at every step |
+| Principle                 | Description                                                                            |
+| ------------------------- | -------------------------------------------------------------------------------------- |
+| **Constitution is Law**   | Every project has a constitution (`memory/constitution.md`) that governs all decisions |
+| **Specs Before Code**     | Features need specifications before implementation                                     |
+| **Micro-Iterations**      | Work in small, shippable Bolts (2-3 days max)                                          |
+| **Quality Gates**         | Every Bolt must pass quality gates before completion                                   |
+| **Agent Specialization**  | Each agent has one responsibility; orchestrate via handoffs                            |
+| **Continuous Validation** | Test, review, and analyze at every step                                                |
 
 ### Project File Structure
 
@@ -60,7 +89,7 @@ project/
 └── .github/
     ├── agents/                  # AURORA agents (30)
     ├── prompts/                 # Reusable prompts
-    └── skills/                  # Skills (bolt-framework, skill-development)
+    └── skills/                  # Skills (bolt-framework, new-skill)
 ```
 
 ---
@@ -94,12 +123,13 @@ project/
 
 **Goal**: Define the project's DNA through its constitution.
 
-| Agent | Purpose |
-|-------|---------|
-| `@Aurora Constitution` | Define tech stack, standards, architecture, and constraints |
-| `@Aurora Clarify` | Resolve ambiguities in requirements through structured questioning |
+| Agent                  | Purpose                                                            |
+| ---------------------- | ------------------------------------------------------------------ |
+| `@Aurora Constitution` | Define tech stack, standards, architecture, and constraints        |
+| `@Aurora Clarify`      | Resolve ambiguities in requirements through structured questioning |
 
 **Key Artifacts**:
+
 - `memory/constitution.md` — The project's governing document
 - Project structure (memory/, specs/, src/, scripts/)
 
@@ -110,17 +140,18 @@ project/
 
 **Goal**: Transform ideas into actionable specifications.
 
-| Agent | Purpose |
-|-------|---------|
-| `@Aurora Feature` | Create feature specification with user stories and acceptance criteria |
-| `@Aurora Specify` | Transform natural language into structured feature spec |
-| `@Aurora Use Case` | Generate detailed use case specifications (UML/Cockburn style) |
-| `@Aurora Gherkin` | Generate BDD scenarios in Gherkin syntax with step definitions |
-| `@Aurora DDD` | Define domain model, aggregates, bounded contexts, ubiquitous language |
-| `@Aurora Plan` | Create technical implementation plan from feature spec |
-| `@Aurora Tasks` | Generate Bolt task breakdown from plan |
+| Agent              | Purpose                                                                |
+| ------------------ | ---------------------------------------------------------------------- |
+| `@Aurora Feature`  | Create feature specification with user stories and acceptance criteria |
+| `@Aurora Specify`  | Transform natural language into structured feature spec                |
+| `@Aurora Use Case` | Generate detailed use case specifications (UML/Cockburn style)         |
+| `@Aurora Gherkin`  | Generate BDD scenarios in Gherkin syntax with step definitions         |
+| `@Aurora DDD`      | Define domain model, aggregates, bounded contexts, ubiquitous language |
+| `@Aurora Plan`     | Create technical implementation plan from feature spec                 |
+| `@Aurora Tasks`    | Generate Bolt task breakdown from plan                                 |
 
 **Key Artifacts**:
+
 - `specs/XXX-feature-name/feature.md`
 - `specs/XXX-feature-name/requirements/requirements.md`
 - `specs/XXX-feature-name/planning/plan.md`
@@ -133,17 +164,18 @@ project/
 
 **Goal**: Build working, tested code through micro-iterations.
 
-| Agent | Purpose |
-|-------|---------|
-| `@Aurora Implement` | Execute Bolt implementations following specs and constitution |
-| `@Aurora Micro Iterator` | Manage micro-iteration (Bolt) lifecycle |
-| `@Aurora Testing` | Generate comprehensive test suites (TDD/BDD, coverage-first) |
-| `@Aurora Review` | Code review validating constitution compliance and quality |
-| `@Aurora Analyze` | Consistency analysis across all artifacts |
-| `@Aurora ADR` | Document Architecture Decision Records (MADR format) |
-| `@Aurora Architect` | Solution architecture, C4 diagrams, technical decisions |
+| Agent                    | Purpose                                                       |
+| ------------------------ | ------------------------------------------------------------- |
+| `@Aurora Implement`      | Execute Bolt implementations following specs and constitution |
+| `@Aurora Micro Iterator` | Manage micro-iteration (Bolt) lifecycle                       |
+| `@Aurora Testing`        | Generate comprehensive test suites (TDD/BDD, coverage-first)  |
+| `@Aurora Review`         | Code review validating constitution compliance and quality    |
+| `@Aurora Analyze`        | Consistency analysis across all artifacts                     |
+| `@Bolt ADR`              | Document Architecture Decision Records (MADR format)          |
+| `@Aurora Architect`      | Solution architecture, C4 diagrams, technical decisions       |
 
 **Key Artifacts**:
+
 - Source code in `src/`
 - Test suites
 - ADRs in `docs/adr/`
@@ -155,10 +187,10 @@ project/
 
 **Goal**: Package and deploy the software.
 
-| Agent | Purpose |
-|-------|---------|
+| Agent             | Purpose                                                       |
+| ----------------- | ------------------------------------------------------------- |
 | `@Aurora Release` | Orchestrate release process (semantic versioning, changelogs) |
-| `@Aurora CI/CD` | Pipeline automation and deployment configuration |
+| `@Aurora CI/CD`   | Pipeline automation and deployment configuration              |
 
 **Entry Criteria**: All tests passing, code reviewed
 **Exit Criteria**: Release tagged, deployed, documented
@@ -167,13 +199,13 @@ project/
 
 **Goal**: Monitor, maintain, and improve.
 
-| Agent | Purpose |
-|-------|---------|
-| `@Aurora Ops` | Operations, runbooks, incident response |
+| Agent                | Purpose                                         |
+| -------------------- | ----------------------------------------------- |
+| `@Aurora Ops`        | Operations, runbooks, incident response         |
 | `@Aurora Monitoring` | Observability, alerting, performance monitoring |
-| `@Aurora Improve` | Continuous improvement opportunities |
-| `@Aurora Alignment` | Business-technical alignment analysis |
-| `@Aurora Status` | Project status reports and progress tracking |
+| `@Aurora Improve`    | Continuous improvement opportunities            |
+| `@Aurora Alignment`  | Business-technical alignment analysis           |
+| `@Aurora Status`     | Project status reports and progress tracking    |
 
 **Entry Criteria**: Software deployed
 **Exit Criteria**: Ongoing (continuous improvement)
@@ -182,9 +214,9 @@ project/
 
 **Goal**: Gracefully retire systems.
 
-| Agent | Purpose |
-|-------|---------|
-| `@Aurora Retire` | Plan controlled decommissioning |
+| Agent                | Purpose                                                |
+| -------------------- | ------------------------------------------------------ |
+| `@Aurora Retire`     | Plan controlled decommissioning                        |
 | `@Aurora Postmortem` | Blameless postmortem for incidents or project failures |
 
 **Entry Criteria**: Decision to retire a component/system
@@ -229,6 +261,7 @@ function detectProjectPhase():
 ### Structure Verification Checklist
 
 Before proceeding, verify:
+
 - [ ] `memory/` folder exists
 - [ ] `specs/` folder exists
 - [ ] `src/` folder exists
@@ -243,12 +276,12 @@ A **Bolt** is the smallest shippable increment of work (2-3 days maximum).
 
 ### Bolt Properties
 
-| Property | Description |
-|----------|-------------|
-| **Duration** | 2-3 days maximum |
-| **Scope** | One user story or feature slice |
-| **Output** | Working, tested code |
-| **Deployable** | Can be shipped independently |
+| Property       | Description                       |
+| -------------- | --------------------------------- |
+| **Duration**   | 2-3 days maximum                  |
+| **Scope**      | One user story or feature slice   |
+| **Output**     | Working, tested code              |
+| **Deployable** | Can be shipped independently      |
 | **Reviewable** | Small enough for effective review |
 
 ### Bolt Lifecycle
@@ -273,6 +306,7 @@ A **Bolt** is the smallest shippable increment of work (2-3 days maximum).
 ### 1. Planning Phase (30 min)
 
 Define Bolt scope:
+
 ```markdown
 ## Bolt Planning
 
@@ -282,11 +316,13 @@ Define Bolt scope:
 **Estimated**: [1-3 days]
 
 ### Tasks
+
 - [ ] T1: [task description]
 - [ ] T2: [task description]
 - [ ] T3: [task description]
 
 ### Acceptance Criteria
+
 - [ ] AC1: [criterion]
 - [ ] AC2: [criterion]
 ```
@@ -294,6 +330,7 @@ Define Bolt scope:
 ### 2. Build Phase (Core Work)
 
 For each task:
+
 1. Write test first (if TDD)
 2. Write implementation code
 3. Run tests — ensure passing
@@ -354,13 +391,13 @@ git merge "$BOLT_BRANCH"
 
 ### Bolt States
 
-| State | Symbol | Meaning |
-|-------|--------|---------|
-| Planned | ⬜ | Tasks defined, not started |
-| In Progress | 🔄 | Work ongoing |
-| Complete | ✅ | All tasks done, quality gates passed |
-| Blocked | 🔴 | Cannot proceed, needs resolution |
-| At Risk | ⚠️ | Behind schedule, may need scope reduction |
+| State       | Symbol | Meaning                                   |
+| ----------- | ------ | ----------------------------------------- |
+| Planned     | ⬜     | Tasks defined, not started                |
+| In Progress | 🔄     | Work ongoing                              |
+| Complete    | ✅     | All tasks done, quality gates passed      |
+| Blocked     | 🔴     | Cannot proceed, needs resolution          |
+| At Risk     | ⚠️     | Behind schedule, may need scope reduction |
 
 ---
 
@@ -368,24 +405,26 @@ git merge "$BOLT_BRANCH"
 
 ### Mandatory Quality Gate Thresholds
 
-| Metric | Minimum | Recommended | Tool |
-|--------|---------|-------------|------|
-| Line Coverage | ≥ 80% | ≥ 90% | istanbul / coverlet |
-| Branch Coverage | ≥ 75% | ≥ 85% | istanbul / coverlet |
-| Mutation Score | ≥ 70% | ≥ 80% | Stryker |
-| Linting | 0 errors | 0 warnings | ESLint / dotnet format |
-| Security | 0 critical | 0 high | npm audit / dotnet list --vulnerable |
-| Layer Violations | 0 | 0 | dependency-cruiser / depend |
-| Circular Deps | 0 | 0 | madge / pydeps |
+| Metric           | Minimum    | Recommended | Tool                                 |
+| ---------------- | ---------- | ----------- | ------------------------------------ |
+| Line Coverage    | ≥ 80%      | ≥ 90%       | istanbul / coverlet                  |
+| Branch Coverage  | ≥ 75%      | ≥ 85%       | istanbul / coverlet                  |
+| Mutation Score   | ≥ 70%      | ≥ 80%       | Stryker                              |
+| Linting          | 0 errors   | 0 warnings  | ESLint / dotnet format               |
+| Security         | 0 critical | 0 high      | npm audit / dotnet list --vulnerable |
+| Layer Violations | 0          | 0           | dependency-cruiser / depend          |
+| Circular Deps    | 0          | 0           | madge / pydeps                       |
 
 ### Running Quality Gates
 
 **Bash**:
+
 ```bash
 ./scripts/bash/quality-gates.sh
 ```
 
 **PowerShell**:
+
 ```powershell
 .\scripts\powershell\Quality-Gates.ps1
 ```
@@ -401,7 +440,7 @@ git merge "$BOLT_BRANCH"
 5. **Security Standards**: No known vulnerabilities?
 6. **Documentation**: Required docs updated?
 
-Read the constitution: `memory/constitution.md`
+**Constitution source**: `memory/constitution.md` (should already be loaded in memory tool from step 1)
 
 ---
 
@@ -415,21 +454,25 @@ See `HANDOFF-MATRIX.md` in this skill for the complete handoff validation matrix
 ### Handoff Patterns
 
 **Sequential Flow** (most common):
+
 ```
 Feature → Plan → Tasks → Implement → Testing → Review → Release
 ```
 
 **TDD Flow**:
+
 ```
 Feature → Gherkin → Testing (red) → Implement (green) → Review
 ```
 
 **Hotfix Flow**:
+
 ```
 Implement (fix) → Testing → Review → Release
 ```
 
 **Legacy Modernization**:
+
 ```
 Constitution → Feature (map legacy) → Plan → Implement → Testing (parity)
 ```
@@ -445,6 +488,7 @@ Constitution → Feature (map legacy) → Plan → Implement → Testing (parity
 ### Agent Communication Pattern
 
 When handing off to an agent, provide:
+
 - **Context**: What has been done so far
 - **Input artifacts**: Which files to read
 - **Expected output**: What the agent should produce
@@ -513,11 +557,11 @@ When handing off to an agent, provide:
 
 ## 8. Scripts Reference
 
-| Script | Bash | PowerShell |
-|--------|------|------------|
-| **Initialize Project** | `init.sh` | `Init.ps1` |
-| **Project Status** | `scripts/bash/project-status.sh` | `scripts/powershell/Get-ProjectStatus.ps1` |
-| **Quality Gates** | `scripts/bash/quality-gates.sh` | `scripts/powershell/Quality-Gates.ps1` |
+| Script                 | Bash                             | PowerShell                                 |
+| ---------------------- | -------------------------------- | ------------------------------------------ |
+| **Initialize Project** | `init.sh`                        | `Init.ps1`                                 |
+| **Project Status**     | `scripts/bash/project-status.sh` | `scripts/powershell/Get-ProjectStatus.ps1` |
+| **Quality Gates**      | `scripts/bash/quality-gates.sh`  | `scripts/powershell/Quality-Gates.ps1`     |
 
 ---
 
@@ -527,6 +571,7 @@ See `TOOLSETS.md` in this skill folder for the complete toolset definitions
 including VS Code built-in tools and MCP server tools.
 
 Key MCP servers:
+
 - **context7** — Up-to-date library documentation
 - **awesome-copilot** — Templates, examples, and curated instructions
 - **microsoftdocs** — Official Microsoft/Azure documentation
@@ -535,16 +580,16 @@ Key MCP servers:
 
 ## 10. Quick Decision Guide
 
-| User Request | Route To | Phase |
-|-------------|----------|-------|
-| "Start new project" | Init script → `@Aurora Constitution` | INCEPTION |
-| "Add a feature" | `@Aurora Feature` | DISCOVERY |
-| "Plan implementation" | `@Aurora Plan` → `@Aurora Tasks` | DISCOVERY |
-| "Implement this" | `@Aurora Implement` | CONSTRUCTION |
-| "Write tests" | `@Aurora Testing` | CONSTRUCTION |
-| "Review code" | `@Aurora Review` | CONSTRUCTION |
-| "Deploy / release" | `@Aurora Release` | TRANSITION |
-| "Check status" | `@Aurora Status` | PRODUCTION |
-| "Fix security issue" | `@Aurora Security` | Cross-Phase |
-| "Document decision" | `@Aurora ADR` | Cross-Phase |
-| "Retire system" | `@Aurora Retire` | RETIREMENT |
+| User Request          | Route To                             | Phase        |
+| --------------------- | ------------------------------------ | ------------ |
+| "Start new project"   | Init script → `@Aurora Constitution` | INCEPTION    |
+| "Add a feature"       | `@Aurora Feature`                    | DISCOVERY    |
+| "Plan implementation" | `@Aurora Plan` → `@Aurora Tasks`     | DISCOVERY    |
+| "Implement this"      | `@Aurora Implement`                  | CONSTRUCTION |
+| "Write tests"         | `@Aurora Testing`                    | CONSTRUCTION |
+| "Review code"         | `@Aurora Review`                     | CONSTRUCTION |
+| "Deploy / release"    | `@Aurora Release`                    | TRANSITION   |
+| "Check status"        | `@Aurora Status`                     | PRODUCTION   |
+| "Fix security issue"  | `@Aurora Security`                   | Cross-Phase  |
+| "Document decision"   | `@Bolt ADR`                          | Cross-Phase  |
+| "Retire system"       | `@Aurora Retire`                     | RETIREMENT   |

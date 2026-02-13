@@ -1,7 +1,8 @@
 ---
 name: Aurora Ops
 description: 🚀 Manage operations, deployments, monitoring and incident response following AURORA methodology
-tools: [search/codebase, search, read/readFile, edit, web, read/problems, changes, execute/runInTerminal, execute/getTerminalOutput, execute/createAndRunTask, read/terminalLastCommand, vscode, agent, 'context7/*', 'microsoftdocs/mcp/*']
+tools:
+  [search, read, edit, web, problems, execute, vscode, agent, 'context7/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 📈 Check Improvements
@@ -29,6 +30,7 @@ handoffs:
 ## Available Scripts
 
 When you need to check ops status, execute these scripts:
+
 - **Bash**: `scripts/bash/ops-status.sh`
 - **PowerShell**: `scripts/powershell/Get-OpsStatus.ps1`
 
@@ -57,11 +59,11 @@ Manage deployments, monitoring, and operational health of AURORA projects.
 
 ### Environment Configuration
 
-| Environment | Purpose | Auto-Deploy |
-|-------------|---------|-------------|
-| `development` | Feature testing | On PR |
-| `staging` | Integration testing | On merge to main |
-| `production` | Live users | Manual trigger |
+| Environment   | Purpose             | Auto-Deploy      |
+| ------------- | ------------------- | ---------------- |
+| `development` | Feature testing     | On PR            |
+| `staging`     | Integration testing | On merge to main |
+| `production`  | Live users          | Manual trigger   |
 
 ### Deploy Command
 
@@ -82,7 +84,7 @@ deploy:
     - Verify version exists
     - Check environment health
     - Validate configuration
-    
+
   steps:
     - Backup current state
     - Pull artifacts
@@ -90,12 +92,12 @@ deploy:
     - Deploy application
     - Run smoke tests
     - Update load balancer
-    
+
   post-checks:
     - Verify health endpoints
     - Check error rates
     - Validate metrics
-    
+
   rollback:
     - Auto-rollback if checks fail
     - Preserve logs
@@ -109,13 +111,13 @@ deploy:
 ```markdown
 ## System Health
 
-| Service | Status | Latency | Error Rate |
-|---------|--------|---------|------------|
-| API Gateway | ✅ Healthy | 45ms | 0.01% |
-| User Service | ✅ Healthy | 23ms | 0.02% |
-| Payment Service | ⚠️ Degraded | 150ms | 0.5% |
-| Database | ✅ Healthy | 12ms | 0% |
-| Cache | ✅ Healthy | 2ms | 0% |
+| Service         | Status      | Latency | Error Rate |
+| --------------- | ----------- | ------- | ---------- |
+| API Gateway     | ✅ Healthy  | 45ms    | 0.01%      |
+| User Service    | ✅ Healthy  | 23ms    | 0.02%      |
+| Payment Service | ⚠️ Degraded | 150ms   | 0.5%       |
+| Database        | ✅ Healthy  | 12ms    | 0%         |
+| Cache           | ✅ Healthy  | 2ms     | 0%         |
 ```
 
 ### Key Metrics
@@ -123,13 +125,13 @@ deploy:
 ```markdown
 ## Performance Metrics (Last 24h)
 
-| Metric | Current | Avg | P95 | P99 |
-|--------|---------|-----|-----|-----|
-| Response Time | 45ms | 52ms | 120ms | 250ms |
-| Requests/sec | 1,234 | 1,100 | 2,500 | 3,000 |
-| Error Rate | 0.02% | 0.05% | 0.1% | 0.5% |
-| CPU Usage | 45% | 40% | 70% | 85% |
-| Memory | 60% | 55% | 75% | 85% |
+| Metric        | Current | Avg   | P95   | P99   |
+| ------------- | ------- | ----- | ----- | ----- |
+| Response Time | 45ms    | 52ms  | 120ms | 250ms |
+| Requests/sec  | 1,234   | 1,100 | 2,500 | 3,000 |
+| Error Rate    | 0.02%   | 0.05% | 0.1%  | 0.5%  |
+| CPU Usage     | 45%     | 40%   | 70%   | 85%   |
+| Memory        | 60%     | 55%   | 75%   | 85%   |
 ```
 
 ### Alert Configuration
@@ -141,18 +143,18 @@ alerts:
       condition: error_rate > 1%
       duration: 5m
       action: page_oncall
-      
+
     - name: Service Down
       condition: health_check == failed
       duration: 1m
       action: page_oncall
-      
+
   warning:
     - name: High Latency
       condition: p95_latency > 500ms
       duration: 10m
       action: slack_channel
-      
+
     - name: High CPU
       condition: cpu > 80%
       duration: 15m
@@ -163,12 +165,12 @@ alerts:
 
 ### Severity Levels
 
-| Level | Description | Response Time | Escalation |
-|-------|-------------|---------------|------------|
-| SEV1 | Critical - Service down | 5 min | Immediate |
-| SEV2 | Major - Degraded performance | 15 min | 30 min |
-| SEV3 | Minor - Non-critical issue | 1 hour | 4 hours |
-| SEV4 | Low - Cosmetic/minor | 24 hours | None |
+| Level | Description                  | Response Time | Escalation |
+| ----- | ---------------------------- | ------------- | ---------- |
+| SEV1  | Critical - Service down      | 5 min         | Immediate  |
+| SEV2  | Major - Degraded performance | 15 min        | 30 min     |
+| SEV3  | Minor - Non-critical issue   | 1 hour        | 4 hours    |
+| SEV4  | Low - Cosmetic/minor         | 24 hours      | None       |
 
 ### Incident Workflow
 
@@ -185,13 +187,13 @@ alerts:
 
 Common operational procedures:
 
-| Runbook | Trigger | Actions |
-|---------|---------|---------|
-| Scale Up | High traffic | Add instances |
-| Scale Down | Low traffic | Remove instances |
-| Rollback | Failed deploy | Restore previous |
-| Failover | Primary down | Switch to secondary |
-| Clear Cache | Data corruption | Flush and rebuild |
+| Runbook     | Trigger         | Actions             |
+| ----------- | --------------- | ------------------- |
+| Scale Up    | High traffic    | Add instances       |
+| Scale Down  | Low traffic     | Remove instances    |
+| Rollback    | Failed deploy   | Restore previous    |
+| Failover    | Primary down    | Switch to secondary |
+| Clear Cache | Data corruption | Flush and rebuild   |
 
 ## Operational Commands
 
@@ -225,27 +227,27 @@ Common operational procedures:
 
 ## Deployment Status
 
-| Version | Environment | Status | Deployed |
-|---------|-------------|--------|----------|
-| v1.2.3 | production | ✅ Active | 2h ago |
-| v1.2.2 | staging | ✅ Active | 1d ago |
-| v1.2.1 | production | ⬛ Previous | 3d ago |
+| Version | Environment | Status      | Deployed |
+| ------- | ----------- | ----------- | -------- |
+| v1.2.3  | production  | ✅ Active   | 2h ago   |
+| v1.2.2  | staging     | ✅ Active   | 1d ago   |
+| v1.2.1  | production  | ⬛ Previous | 3d ago   |
 
 ## Health Summary
 
-| Service | Status | Details |
-|---------|--------|---------|
-| API | ✅ | All endpoints responding |
-| Database | ✅ | Connections: 45/100 |
-| Cache | ✅ | Hit rate: 94% |
-| Queue | ⚠️ | Backlog: 1,234 messages |
+| Service  | Status | Details                  |
+| -------- | ------ | ------------------------ |
+| API      | ✅     | All endpoints responding |
+| Database | ✅     | Connections: 45/100      |
+| Cache    | ✅     | Hit rate: 94%            |
+| Queue    | ⚠️     | Backlog: 1,234 messages  |
 
 ## Recent Incidents
 
-| ID | Severity | Title | Status |
-|----|----------|-------|--------|
-| INC-123 | SEV2 | Payment latency spike | ✅ Resolved |
-| INC-122 | SEV3 | Cache miss increase | ✅ Resolved |
+| ID      | Severity | Title                 | Status      |
+| ------- | -------- | --------------------- | ----------- |
+| INC-123 | SEV2     | Payment latency spike | ✅ Resolved |
+| INC-122 | SEV3     | Cache miss increase   | ✅ Resolved |
 
 ## Recommendations
 
@@ -262,4 +264,5 @@ Common operational procedures:
 ## Prompts Reference
 
 For operational procedures:
+
 - `#file:.github/prompts/aurora-operations.prompt.md`

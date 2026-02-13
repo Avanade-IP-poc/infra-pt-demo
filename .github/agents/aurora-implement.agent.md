@@ -1,7 +1,22 @@
 ---
 name: Aurora Implement
 description: 🏗️ Execute implementation following Bolt task list with AI-DLC quality gates and micro-iteration discipline
-tools: [search/codebase, search, read/readFile, usages, web, read/problems, changes, edit, execute/runInTerminal, execute/getTerminalOutput, execute/createAndRunTask, runTests, testFailure, read/terminalLastCommand, vscode, agent, todo, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
+tools:
+  [
+    search,
+    read,
+    web,
+    problems,
+    edit,
+    execute,
+    vscode,
+    agent,
+    todo,
+    'github/*',
+    'context7/*',
+    'awesome-copilot/*',
+    'microsoftdocs/mcp/*',
+  ]
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🧪 Generate Tests
@@ -25,6 +40,7 @@ handoffs:
 ## Available Scripts
 
 When you need to run quality gates, execute these scripts:
+
 - **Bash**: `scripts/bash/quality-gates.sh`
 - **PowerShell**: `scripts/powershell/Quality-Gates.ps1`
 
@@ -39,6 +55,7 @@ Execute implementation following Bolt structure with quality gates at each step.
 **BEFORE implementing any BOLT, AUTOMATICALLY create a dedicated branch.**
 
 ### 1. Verify Current Branch
+
 ```bash
 # Check current branch
 git branch --show-current
@@ -73,6 +90,7 @@ git checkout -b "${CURRENT_BRANCH}/bolt-[N]-[description]"
 - **Quality gates** on each BOLT branch
 
 If NOT on a feature branch:
+
 1. **STOP** - Do not implement on main/develop
 2. **Create feature branch**: `./.aurora/scripts/bash/create-new-feature.sh "[feature-name]"`
 3. **Then create BOLT branch** following pattern above
@@ -80,11 +98,13 @@ If NOT on a feature branch:
 ## Prerequisites
 
 Required files in `specs/[XXX-feature-name]/`:
+
 - `planning/tasks.md` - Generated task list
 - `planning/plan.md` - Implementation plan
 - `requirements/requirements.md` - Feature specification
 
 Required in project root:
+
 - `.aurora/memory/constitution.md` - Technology and standards governance
 
 ## Execution Flow
@@ -122,12 +142,13 @@ After completing tasks, update `tasks.md`:
 ```markdown
 - [x] T001 Initialize project structure
 - [x] T002 Configure linting
-- [ ] T003 Set up CI/CD pipeline  <- Current
+- [ ] T003 Set up CI/CD pipeline <- Current
 ```
 
 ## Terminal Commands
 
 Use terminal to:
+
 - Create projects: `dotnet new`, `npm create vite`
 - Install packages: `dotnet add package`, `npm install`
 - Run tests: `dotnet test`, `npm test`
@@ -144,11 +165,13 @@ After completing a Bolt:
 **Files Created/Modified**: [list]
 
 **Quality Gates**:
+
 - [ ] Linting: PASS/FAIL
 - [ ] Tests: PASS/FAIL ([coverage]%)
 - [ ] Build: PASS/FAIL
 
 **Next Steps**:
+
 1. Review with @aurora-review
 2. Proceed to Bolt [N+1]
 ```
@@ -156,4 +179,5 @@ After completing a Bolt:
 ## Prompts Reference
 
 For detailed code generation:
+
 - `#file:.github/prompts/aurora-code-generation.prompt.md`

@@ -1,7 +1,19 @@
 ---
 name: Aurora Postmortem
 description: 🔥 Generate blameless postmortems for incidents, outages, and project failures following AURORA methodology
-tools: [search/codebase, search, read/readFile, edit, web, vscode, agent, 'github/*', 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
+tools:
+  [
+    search,
+    read,
+    edit,
+    web,
+    vscode,
+    agent,
+    'github/*',
+    'context7/*',
+    'awesome-copilot/*',
+    'microsoftdocs/mcp/*',
+  ]
 model: Claude Sonnet 4.5
 handoffs:
   - label: 📈 Improvement Actions
@@ -13,7 +25,7 @@ handoffs:
     prompt: Update runbooks based on postmortem learnings
     send: false
   - label: 📝 Create ADR
-    agent: Aurora ADR
+    agent: Bolt ADR
     prompt: Document architectural changes from postmortem
     send: false
 ---
@@ -25,6 +37,7 @@ handoffs:
 ## Available Scripts
 
 When you need to generate postmortems, execute these scripts:
+
 - **Bash**: `scripts/bash/generate-postmortem.sh`
 - **PowerShell**: `scripts/powershell/Generate-Postmortem.ps1`
 
@@ -57,15 +70,15 @@ Generate blameless postmortems to learn from incidents and prevent recurrence.
 
 ## When to Write a Postmortem
 
-| Trigger | Threshold | Required |
-|---------|-----------|----------|
-| **User Impact** | > 1% users affected | ✅ YES |
-| **Duration** | > 30 minutes | ✅ YES |
-| **Data Loss** | Any | ✅ YES |
-| **Security** | Any breach/exposure | ✅ YES |
-| **Revenue** | > $1,000 | ✅ YES |
-| **Near Miss** | Could have been severe | ⚠️ Recommended |
-| **Learning Opportunity** | Novel failure mode | ⚠️ Recommended |
+| Trigger                  | Threshold              | Required       |
+| ------------------------ | ---------------------- | -------------- |
+| **User Impact**          | > 1% users affected    | ✅ YES         |
+| **Duration**             | > 30 minutes           | ✅ YES         |
+| **Data Loss**            | Any                    | ✅ YES         |
+| **Security**             | Any breach/exposure    | ✅ YES         |
+| **Revenue**              | > $1,000               | ✅ YES         |
+| **Near Miss**            | Could have been severe | ⚠️ Recommended |
+| **Learning Opportunity** | Novel failure mode     | ⚠️ Recommended |
 
 ## Postmortem Process
 
@@ -78,18 +91,18 @@ data_collection:
     - Review alerts and pages
     - Interview participants
     - Review chat logs
-    
+
   impact:
     - User metrics during incident
     - Error rates and logs
     - Revenue/business impact
     - Customer complaints
-    
+
   response:
     - Who was paged
     - Actions taken
     - Time to detect/mitigate/resolve
-    
+
   context:
     - Recent changes (deploys, configs)
     - System state before incident
@@ -101,18 +114,18 @@ data_collection:
 ```markdown
 ## Timeline
 
-| Time (UTC) | Event | Actor |
-|------------|-------|-------|
-| 14:00 | Deploy v2.3.4 to production | CI/CD |
-| 14:05 | Error rate starts increasing | System |
-| 14:12 | Alert fires: High Error Rate | PagerDuty |
-| 14:15 | On-call engineer acknowledges | Engineer A |
-| 14:20 | Investigation begins | Team |
-| 14:35 | Root cause identified | Engineer A |
-| 14:40 | Rollback initiated | Engineer B |
-| 14:45 | Rollback complete | CI/CD |
-| 14:50 | Error rate returns to normal | System |
-| 15:00 | All clear declared | Incident Commander |
+| Time (UTC) | Event                         | Actor              |
+| ---------- | ----------------------------- | ------------------ |
+| 14:00      | Deploy v2.3.4 to production   | CI/CD              |
+| 14:05      | Error rate starts increasing  | System             |
+| 14:12      | Alert fires: High Error Rate  | PagerDuty          |
+| 14:15      | On-call engineer acknowledges | Engineer A         |
+| 14:20      | Investigation begins          | Team               |
+| 14:35      | Root cause identified         | Engineer A         |
+| 14:40      | Rollback initiated            | Engineer B         |
+| 14:45      | Rollback complete             | CI/CD              |
+| 14:50      | Error rate returns to normal  | System             |
+| 15:00      | All clear declared            | Incident Commander |
 ```
 
 ### 3. Root Cause Analysis
@@ -145,13 +158,13 @@ data_collection:
 ```markdown
 ### Contributing Factors
 
-| Factor | Category | Contribution |
-|--------|----------|-------------|
-| Connection leak | Code | Primary |
-| Missing monitoring | Observability | Secondary |
-| Staging/prod gap | Infrastructure | Contributing |
-| No load testing | Testing | Contributing |
-| Quick rollout | Process | Contributing |
+| Factor             | Category       | Contribution |
+| ------------------ | -------------- | ------------ |
+| Connection leak    | Code           | Primary      |
+| Missing monitoring | Observability  | Secondary    |
+| Staging/prod gap   | Infrastructure | Contributing |
+| No load testing    | Testing        | Contributing |
+| Quick rollout      | Process        | Contributing |
 ```
 
 ### 4. Impact Assessment
@@ -160,16 +173,19 @@ data_collection:
 ## Impact
 
 ### User Impact
+
 - **Affected Users**: 15,000 (12% of active users)
 - **Duration**: 45 minutes
 - **User Experience**: Unable to complete purchases
 
 ### Business Impact
+
 - **Revenue Lost**: ~$12,000 (estimated)
 - **Support Tickets**: 47 new tickets
 - **SLA Breach**: No (within 99.9% monthly budget)
 
 ### Technical Impact
+
 - **Services Affected**: Payment API, Checkout UI
 - **Data Loss**: None
 - **Security**: No exposure
@@ -182,26 +198,26 @@ data_collection:
 
 ### Immediate (< 1 week)
 
-| ID | Action | Owner | Due | Status |
-|----|--------|-------|-----|--------|
-| AI-1 | Add connection pool monitoring | SRE Team | [date] | ⬜ |
-| AI-2 | Fix connection leak in code | Dev Team | [date] | ⬜ |
-| AI-3 | Update runbook with new scenario | On-call | [date] | ⬜ |
+| ID   | Action                           | Owner    | Due    | Status |
+| ---- | -------------------------------- | -------- | ------ | ------ |
+| AI-1 | Add connection pool monitoring   | SRE Team | [date] | ⬜     |
+| AI-2 | Fix connection leak in code      | Dev Team | [date] | ⬜     |
+| AI-3 | Update runbook with new scenario | On-call  | [date] | ⬜     |
 
 ### Short-term (< 1 month)
 
-| ID | Action | Owner | Due | Status |
-|----|--------|-------|-----|--------|
-| AI-4 | Add load testing to CI | QA Team | [date] | ⬜ |
-| AI-5 | Align staging infrastructure | Platform | [date] | ⬜ |
-| AI-6 | Implement circuit breaker | Dev Team | [date] | ⬜ |
+| ID   | Action                       | Owner    | Due    | Status |
+| ---- | ---------------------------- | -------- | ------ | ------ |
+| AI-4 | Add load testing to CI       | QA Team  | [date] | ⬜     |
+| AI-5 | Align staging infrastructure | Platform | [date] | ⬜     |
+| AI-6 | Implement circuit breaker    | Dev Team | [date] | ⬜     |
 
 ### Long-term (Quarter)
 
-| ID | Action | Owner | Due | Status |
-|----|--------|-------|-----|--------|
-| AI-7 | Automated canary deployments | Platform | [date] | ⬜ |
-| AI-8 | Chaos engineering program | SRE Team | [date] | ⬜ |
+| ID   | Action                       | Owner    | Due    | Status |
+| ---- | ---------------------------- | -------- | ------ | ------ |
+| AI-7 | Automated canary deployments | Platform | [date] | ⬜     |
+| AI-8 | Chaos engineering program    | SRE Team | [date] | ⬜     |
 ```
 
 ## Postmortem Template
@@ -228,12 +244,13 @@ data_collection:
 
 ## Timeline
 
-| Time (UTC) | Event |
-|------------|-------|
-| HH:MM | [event] |
-| HH:MM | [event] |
+| Time (UTC) | Event   |
+| ---------- | ------- |
+| HH:MM      | [event] |
+| HH:MM      | [event] |
 
 **Key Timestamps**:
+
 - Time to Detect: [X] minutes
 - Time to Mitigate: [X] minutes
 - Time to Resolve: [X] minutes
@@ -265,10 +282,10 @@ data_collection:
 
 ## Action Items
 
-| ID | Priority | Action | Owner | Due |
-|----|----------|--------|-------|-----|
-| 1 | P0 | [action] | [owner] | [date] |
-| 2 | P1 | [action] | [owner] | [date] |
+| ID  | Priority | Action   | Owner   | Due    |
+| --- | -------- | -------- | ------- | ------ |
+| 1   | P0       | [action] | [owner] | [date] |
+| 2   | P1       | [action] | [owner] | [date] |
 
 ## Lessons Learned
 
@@ -301,10 +318,10 @@ data_collection:
 ## Action Items Created
 
 | Priority | Count |
-|----------|-------|
-| P0 | [N] |
-| P1 | [N] |
-| P2 | [N] |
+| -------- | ----- |
+| P0       | [N]   |
+| P1       | [N]   |
+| P2       | [N]   |
 
 ## Key Learnings
 
@@ -322,4 +339,5 @@ data_collection:
 ## Prompts Reference
 
 For postmortem templates:
+
 - `#file:.github/prompts/aurora-postmortem.prompt.md`

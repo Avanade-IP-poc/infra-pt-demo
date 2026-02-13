@@ -324,58 +324,51 @@ Microsoft SQL Server operations.
 ## VS Code Built-in Tools
 
 > ⚠️ **IMPORTANT**: All tool names below are the OFFICIAL VS Code tool names.
-> Do NOT use short names like `vscode`, `execute`, `read`, `edit`, `web`, `agent`, `todo` - these are NOT recognized by VS Code.
+> Do NOT use short names in isolation - these are NOT recognized by VS Code.
 
-### Tool Sets (Multi-Tool Shortcuts)
+### Tool Namespace Shortcuts
 
-| Tool                     | Description                    | Category  |
-| ------------------------ | ------------------------------ | --------- |
-| `search/codebase`        | Semantic code search           | Read-only |
-| `changes`                | Git changes                    | Read-only |
-| `extensions`             | VS Code extensions             | Read-only |
-| `installExtension`       | Install extension              | Execute   |
-| `problems`               | Problems panel errors/warnings | Read-only |
-| `runTests`               | Run test suite                 | Execute   |
-| `testFailure`            | Test failure details           | Read-only |
-| `terminalLastCommand`    | Last terminal command output   | Read-only |
-| `terminalSelection`      | Terminal selection text        | Read-only |
-| `selection`              | Current editor selection       | Read-only |
-| `usages`                 | Find references/usages         | Read-only |
-| `getProjectSetupInfo`    | Project setup info             | Read-only |
-| `editNotebook`           | Edit notebook                  | Write     |
-| `readNotebookCellOutput` | Read notebook cell output      | Read-only |
-| `getNotebookSummary`     | Notebook summary               | Read-only |
-| `newJupyterNotebook`     | Create Jupyter notebook        | Write     |
-| `newWorkspace`           | Create workspace               | Write     |
+**Namespace shortcuts** automatically include ALL their subtools:
+
+- `search` → includes `search/codebase`, `search/usages`, `search/changes`, and all other search tools
+- `execute` → includes `execute/runTests`, `execute/testFailure`, `execute/runInTerminal`, `execute/getTerminalOutput`, `execute/createAndRunTask`, and all other execute tools
+- `read` → includes all read/ prefixed tools
+- `edit` → includes all edit/ prefixed tools
+
+**Use shortcuts in agent definitions** instead of listing individual subtools.
+
+### Specialized Tools (Not Covered by Shortcuts)
+
+| Tool                     | Description                    | Category   |
+| ------------------------ | ------------------------------ | ---------- |
+| `extensions`             | VS Code extensions             | Read-only  |
+| `installExtension`       | Install extension              | Execute    |
+| `problems`               | Problems panel errors/warnings | Read-only  |
+| `terminalLastCommand`    | Last terminal command output   | Read-only  |
+| `terminalSelection`      | Terminal selection text        | Read-only  |
+| `selection`              | Current editor selection       | Read-only  |
+| `getProjectSetupInfo`    | Project setup info             | Read-only  |
+| `editNotebook`           | Edit notebook                  | Write      |
+| `readNotebookCellOutput` | Read notebook cell output      | Read-only  |
+| `getNotebookSummary`     | Notebook summary               | Read-only  |
+| `newJupyterNotebook`     | Create Jupyter notebook        | Write      |
+| `newWorkspace`           | Create workspace               | Write      |
+| `vscode`                 | VS Code API operations         | Multi-tool |
+| `agent`                  | Agent operations               | Multi-tool |
+| `todo`                   | Task management                | Multi-tool |
+| `web`                    | Web fetch operations           | Multi-tool |
+| `memory`                 | Context memory operations      | Multi-tool |
 
 ---
 
 ## Toolset Categories for AURORA Agents
 
-> **IMPORTANT**: All tool names below are OFFICIAL VS Code tool names. Do NOT use short names like `vscode`, `execute`, `read`, `edit`, `web`, `agent`, `todo`.
+> **RECOMMENDED**: Use namespace shortcuts (`search`, `execute`, `read`, `edit`) instead of specific subtools for cleaner, future-proof definitions.
 
 ### 1. FULL_PLANNING (Read-Only Analysis)
 
 ```yaml
-tools:
-  [
-    search/codebase,
-    search,
-    usages,
-    fetch,
-    githubRepo,
-    problems,
-    changes,
-    readFile,
-    listDirectory,
-    runSubagent,
-    VSCodeAPI,
-    terminalLastCommand,
-    searchResults,
-    'context7/*',
-    'awesome-copilot/*',
-    'microsoftdocs/mcp/*',
-  ]
+tools: [search, read, problems, agent, 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
 ```
 
 **Used by**: Plan, Analyze, Status, Alignment, Architect, Tasks, Improve, Retire, Deps
@@ -385,30 +378,13 @@ tools:
 ```yaml
 tools:
   [
-    search/codebase,
     search,
-    usages,
-    fetch,
-    githubRepo,
-    problems,
-    changes,
-    readFile,
-    listDirectory,
+    read,
     edit,
-    editFiles,
-    createFile,
-    createDirectory,
-    runCommands,
-    runInTerminal,
-    getTerminalOutput,
-    runTests,
-    runTasks,
-    testFailure,
-    terminalLastCommand,
-    getTaskOutput,
-    runSubagent,
-    todos,
-    VSCodeAPI,
+    execute,
+    problems,
+    todo,
+    agent,
     'context7/*',
     'awesome-copilot/*',
     'microsoftdocs/mcp/*',
@@ -421,22 +397,7 @@ tools:
 
 ```yaml
 tools:
-  [
-    search/codebase,
-    search,
-    read/readFile,
-    listDirectory,
-    edit,
-    editFiles,
-    createFile,
-    fetch,
-    githubRepo,
-    runSubagent,
-    VSCodeAPI,
-    'context7/*',
-    'awesome-copilot/*',
-    'microsoftdocs/mcp/*',
-  ]
+  [search, read, edit, web, agent, vscode, 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
 ```
 
 **Used by**: Feature, Specify, Clarify, Use Case, Gherkin, DDD
@@ -445,22 +406,7 @@ tools:
 
 ```yaml
 tools:
-  [
-    search/codebase,
-    search,
-    read/readFile,
-    listDirectory,
-    edit,
-    editFiles,
-    createFile,
-    fetch,
-    githubRepo,
-    runSubagent,
-    VSCodeAPI,
-    'context7/*',
-    'awesome-copilot/*',
-    'microsoftdocs/mcp/*',
-  ]
+  [search, read, edit, web, agent, vscode, 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
 ```
 
 **Used by**: Documentation, ADR, Postmortem
@@ -468,28 +414,7 @@ tools:
 ### 5. OPS_FOCUSED (Operations)
 
 ```yaml
-tools:
-  [
-    search/codebase,
-    search,
-    read/readFile,
-    listDirectory,
-    edit,
-    editFiles,
-    fetch,
-    problems,
-    changes,
-    runCommands,
-    runInTerminal,
-    getTerminalOutput,
-    runTasks,
-    getTaskOutput,
-    terminalLastCommand,
-    runSubagent,
-    VSCodeAPI,
-    'context7/*',
-    'microsoftdocs/mcp/*',
-  ]
+tools: [search, read, edit, execute, problems, agent, vscode, 'context7/*', 'microsoftdocs/mcp/*']
 ```
 
 **Used by**: Ops, Release, Monitoring
@@ -498,23 +423,7 @@ tools:
 
 ```yaml
 tools:
-  [
-    search/codebase,
-    search,
-    read/readFile,
-    listDirectory,
-    edit,
-    editFiles,
-    createFile,
-    createDirectory,
-    fetch,
-    githubRepo,
-    runSubagent,
-    VSCodeAPI,
-    'context7/*',
-    'awesome-copilot/*',
-    'microsoftdocs/mcp/*',
-  ]
+  [search, read, edit, web, agent, vscode, 'context7/*', 'awesome-copilot/*', 'microsoftdocs/mcp/*']
 ```
 
 **Used by**: Constitution
@@ -524,25 +433,13 @@ tools:
 ```yaml
 tools:
   [
-    search/codebase,
     search,
-    read/readFile,
-    listDirectory,
+    read,
     edit,
-    editFiles,
-    createFile,
-    fetch,
-    githubRepo,
-    runCommands,
-    runInTerminal,
-    getTerminalOutput,
-    runTasks,
-    runTests,
-    testFailure,
-    terminalLastCommand,
-    getTaskOutput,
-    runSubagent,
-    VSCodeAPI,
+    execute,
+    web,
+    agent,
+    vscode,
     'context7/*',
     'awesome-copilot/*',
     'microsoftdocs/mcp/*',
@@ -555,22 +452,7 @@ tools:
 ### 8. SECURITY_FOCUSED (Security Analysis)
 
 ```yaml
-tools:
-  [
-    search/codebase,
-    search,
-    read/readFile,
-    usages,
-    read/problems,
-    changes,
-    web,
-    'github/*',
-    read/terminalLastCommand,
-    vscode,
-    agent,
-    'context7/*',
-    'microsoftdocs/mcp/*',
-  ]
+tools: [search, read, problems, web, vscode, agent, 'github/*', 'context7/*', 'microsoftdocs/mcp/*']
 ```
 
 **Used by**: Security
@@ -580,23 +462,19 @@ tools:
 ```yaml
 tools:
   [
-    search/codebase,
     search,
-    read/readFile,
+    read,
     edit,
-    execute/runInTerminal,
-    execute/getTerminalOutput,
-    execute/createAndRunTask,
-    read/terminalLastCommand,
+    execute,
     todo,
     web,
-    'github/*',
     vscode,
     agent,
+    memory,
+    'github/*',
     'context7/*',
     'awesome-copilot/*',
     'microsoftdocs/mcp/*',
-    memory,
   ]
 ```
 
@@ -606,20 +484,7 @@ tools:
 
 ```yaml
 tools:
-  [
-    search/codebase,
-    search,
-    read/readFile,
-    edit,
-    execute/runInTerminal,
-    execute/getTerminalOutput,
-    web,
-    vscode,
-    agent,
-    'azure-mcp/*',
-    'bicep/*',
-    'microsoftdocs/mcp/*',
-  ]
+  [search, read, edit, execute, web, vscode, agent, 'azure-mcp/*', 'bicep/*', 'microsoftdocs/mcp/*']
 ```
 
 **Use when**: Azure cloud development, Bicep IaC, Azure resource operations
@@ -629,16 +494,13 @@ tools:
 ```yaml
 tools:
   [
-    search/codebase,
     search,
-    read/readFile,
+    read,
     edit,
-    execute/runInTerminal,
-    execute/getTerminalOutput,
+    execute,
     web,
     vscode,
     agent,
-    runTests,
     'angular-cli/*',
     'primeng/*',
     'context7/*',
@@ -651,8 +513,7 @@ tools:
 ### 12. DATABASE_OPS (Database Operations)
 
 ```yaml
-tools:
-  [search/codebase, search, read/readFile, edit, vscode, agent, 'ms-mssql.mssql/*', 'context7/*']
+tools: [search, read, edit, vscode, agent, 'ms-mssql.mssql/*', 'context7/*']
 ```
 
 **Use when**: Database operations, SQL queries, schema management
@@ -678,7 +539,7 @@ tools:
 | aurora-gherkin        | SPEC_FOCUSED         | context7, awesome-copilot, microsoftdocs               |
 | aurora-ddd            | SPEC_FOCUSED         | context7, awesome-copilot, microsoftdocs               |
 | aurora-docs           | DOCS_FOCUSED         | context7, awesome-copilot, microsoftdocs               |
-| aurora-adr            | DOCS_FOCUSED         | context7, awesome-copilot, microsoftdocs               |
+| bolt-adr              | DOCS_FOCUSED         | context7, awesome-copilot, microsoftdocs               |
 | aurora-postmortem     | DOCS_FOCUSED         | context7, awesome-copilot, microsoftdocs               |
 | aurora-ops            | OPS_FOCUSED          | context7, microsoftdocs                                |
 | aurora-release        | OPS_FOCUSED          | context7, microsoftdocs                                |
@@ -698,13 +559,19 @@ tools:
 
 ## Tool Name Reference
 
-### Short Names (Workspace Convention)
+### Namespace Shortcuts (Recommended for Agents)
 
-✅ `vscode`, `execute`, `read`, `edit`, `search`, `web`, `agent`, `todo`, `memory`
+✅ `search`, `execute`, `read`, `edit`, `web`, `vscode`, `agent`, `todo`, `memory`
 
-### Official Names (Specialized Tools)
+**Benefits:**
 
-✅ `search/codebase`, `usages`, `problems`, `changes`, `runTests`, `testFailure`, `terminalLastCommand`, `selection`, `extensions`, `installExtension`, `getProjectSetupInfo`, `editNotebook`, `readNotebookCellOutput`, `getNotebookSummary`, `newJupyterNotebook`, `newWorkspace`
+- Each namespace includes ALL its subtools automatically
+- Shorter, cleaner agent definitions
+- Future-proof (new subtools automatically included)
+
+### Specialized Tools (Not in Namespaces)
+
+✅ `problems`, `terminalLastCommand`, `selection`, `extensions`, `installExtension`, `getProjectSetupInfo`, `editNotebook`, `readNotebookCellOutput`, `getNotebookSummary`, `newJupyterNotebook`, `newWorkspace`
 
 ### MCP Servers (Always Quote Wildcards)
 

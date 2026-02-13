@@ -4,8 +4,10 @@
 
 .DESCRIPTION
     Creates a new Architectural Decision Record from template.
+    Follows MADR format as defined in skill-bolt-adr.
 
-.PARAMETER Title
+    Reference: .github/skills/skill-bolt-adr/SKILL.md
+    Templates: .github/skills/skill-bolt-adr/templates/
     The title of the ADR decision.
 
 .EXAMPLE
@@ -40,7 +42,7 @@ foreach ($adr in $ExistingADRs) {
     }
 }
 $NextNum = $LastNum + 1
-$ADRNum = "{0:D3}" -f $NextNum
+$ADRNum = "{0:D4}" -f $NextNum
 
 # Create slug and filename
 $ADRSlug = $Title.ToLower() -replace ' ', '-' -replace '[^a-z0-9-]', ''

@@ -1,7 +1,8 @@
 ---
 name: Aurora Release
 description: 📦 Orchestrate release process following semantic versioning and AURORA methodology
-tools: [search/codebase, search, read/readFile, edit, web, read/problems, changes, execute/runInTerminal, execute/getTerminalOutput, execute/createAndRunTask, read/terminalLastCommand, vscode, agent, 'context7/*', 'microsoftdocs/mcp/*']
+tools:
+  [search, read, edit, web, problems, execute, vscode, agent, 'context7/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Pre-release Check
@@ -29,6 +30,7 @@ handoffs:
 ## Available Scripts
 
 When you need to create releases, execute these scripts:
+
 - **Bash**: `scripts/bash/create-release.sh`
 - **PowerShell**: `scripts/powershell/Create-Release.ps1`
 
@@ -59,13 +61,13 @@ Orchestrate release process with proper versioning, changelog, and artifacts.
 
 ## Release Types
 
-| Type | Version Bump | Trigger | Example |
-|------|--------------|---------|---------|
-| **Major** | X.0.0 | Breaking changes | Remove API endpoint |
-| **Minor** | x.Y.0 | New features | Add new endpoint |
-| **Patch** | x.y.Z | Bug fixes | Fix validation |
-| **Pre-release** | x.y.z-alpha.N | Testing | 1.0.0-alpha.1 |
-| **RC** | x.y.z-rc.N | Release candidate | 1.0.0-rc.1 |
+| Type            | Version Bump  | Trigger           | Example             |
+| --------------- | ------------- | ----------------- | ------------------- |
+| **Major**       | X.0.0         | Breaking changes  | Remove API endpoint |
+| **Minor**       | x.Y.0         | New features      | Add new endpoint    |
+| **Patch**       | x.y.Z         | Bug fixes         | Fix validation      |
+| **Pre-release** | x.y.z-alpha.N | Testing           | 1.0.0-alpha.1       |
+| **RC**          | x.y.z-rc.N    | Release candidate | 1.0.0-rc.1          |
 
 ## Pre-Release Checklist
 
@@ -116,11 +118,11 @@ npm ci
 
 Based on commits since last release:
 
-| Commit Type | Version Impact |
-|-------------|----------------|
-| `feat!:` or `BREAKING CHANGE:` | MAJOR |
-| `feat:` | MINOR |
-| `fix:` | PATCH |
+| Commit Type                    | Version Impact   |
+| ------------------------------ | ---------------- |
+| `feat!:` or `BREAKING CHANGE:` | MAJOR            |
+| `feat:`                        | MINOR            |
+| `fix:`                         | PATCH            |
 | `docs:`, `style:`, `refactor:` | PATCH (optional) |
 
 ### Step 2: Generate Changelog
@@ -131,23 +133,29 @@ Based on commits since last release:
 ## [x.y.z] - YYYY-MM-DD
 
 ### Added
+
 - New feature A (#123)
 - New feature B (#124)
 
 ### Changed
+
 - Updated behavior X (#125)
 
 ### Fixed
+
 - Bug fix Y (#126)
 - Bug fix Z (#127)
 
 ### Deprecated
+
 - Feature W (will be removed in vX+1)
 
 ### Removed
+
 - Removed feature V
 
 ### Security
+
 - Fixed vulnerability (#128)
 ```
 
@@ -225,31 +233,34 @@ npm pack
 ## Changes Since v[previous]
 
 ### Features
+
 - [Feature list]
 
 ### Fixes
+
 - [Fix list]
 
 ### Breaking Changes
+
 - [Breaking changes if any]
 
 ## Quality Gates
 
-| Check | Status |
-|-------|--------|
-| Tests | ✅ PASS |
-| Coverage | ✅ 85% |
-| Linting | ✅ PASS |
+| Check    | Status                |
+| -------- | --------------------- |
+| Tests    | ✅ PASS               |
+| Coverage | ✅ 85%                |
+| Linting  | ✅ PASS               |
 | Security | ✅ No vulnerabilities |
-| Build | ✅ SUCCESS |
+| Build    | ✅ SUCCESS            |
 
 ## Artifacts
 
-| Artifact | Location |
-|----------|----------|
-| Tag | `v[x.y.z]` |
-| Changelog | `CHANGELOG.md` |
-| Package | `[package-name]-[x.y.z].tgz` |
+| Artifact  | Location                     |
+| --------- | ---------------------------- |
+| Tag       | `v[x.y.z]`                   |
+| Changelog | `CHANGELOG.md`               |
+| Package   | `[package-name]-[x.y.z].tgz` |
 
 ## Next Steps
 
@@ -262,4 +273,5 @@ npm pack
 ## Prompts Reference
 
 For release templates:
+
 - `#file:.github/prompts/aurora-release.prompt.md`

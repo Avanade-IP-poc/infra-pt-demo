@@ -1,5 +1,5 @@
 ---
-name: skill-development
+name: new-skill
 description: >
   Guide for creating, structuring, and deploying custom GitHub Copilot skills.
   Covers SKILL.md format with YAML frontmatter, progressive disclosure,
@@ -43,6 +43,7 @@ Un archivo `SKILL.md` debe contener las siguientes secciones:
 # Nombre del Skill
 
 ## Descripción
+
 Una breve explicación (2-3 líneas) de qué hace este skill y cuándo usarlo.
 ```
 
@@ -52,6 +53,7 @@ Una breve explicación (2-3 líneas) de qué hace este skill y cuándo usarlo.
 ## Cuándo Usar Este Skill
 
 Lista clara de casos de uso:
+
 - Cuando el usuario solicita X
 - Para tareas relacionadas con Y
 - Al trabajar con el dominio Z
@@ -63,15 +65,18 @@ Lista clara de casos de uso:
 ## Instrucciones
 
 ### Requisitos Previos
+
 - Verificar que [condición]
 - Asegurar que [requisito]
 
 ### Proceso Paso a Paso
+
 1. Primer paso con detalles específicos
 2. Segundo paso con ejemplos
 3. Tercer paso con validaciones
 
 ### Mejores Prácticas
+
 - Práctica 1: Explicación y justificación
 - Práctica 2: Ejemplos concretos
 - Práctica 3: Casos de error comunes a evitar
@@ -83,16 +88,21 @@ Lista clara de casos de uso:
 ## Ejemplos
 
 ### Ejemplo 1: [Caso de Uso]
+
 [Descripción del escenario]
 
 **Entrada del Usuario:**
 ```
+
 [ejemplo de solicitud]
+
 ```
 
 **Salida Esperada:**
 ```
+
 [ejemplo de respuesta]
+
 ```
 
 ### Ejemplo 2: [Otro Caso]
@@ -114,11 +124,13 @@ Lista clara de casos de uso:
 ### Paso 1: Identificar el Dominio
 
 Antes de crear un skill, identifica:
+
 - ¿Qué dominio o capacidad cubre?
 - ¿Es lo suficientemente específico pero no demasiado estrecho?
 - ¿Se usará frecuentemente?
 
 **Buenos candidatos para skills:**
+
 - Testing strategies (unit, integration, E2E)
 - API design patterns
 - Security best practices
@@ -128,6 +140,7 @@ Antes de crear un skill, identifica:
 - UI/UX patterns
 
 **No crear skills para:**
+
 - Tareas únicas o muy raras
 - Conocimiento que cambia constantemente
 - Información ya cubierta por la constitution
@@ -187,6 +200,7 @@ Actualiza `.github/copilot-instructions.md` para incluir referencia al nuevo ski
    - ❌ "Diseña buenos endpoints"
 
 3. **Ejemplos reales**: Incluye código y casos de uso
+
    ```typescript
    // ✅ Ejemplo concreto
    interface User {
@@ -216,16 +230,19 @@ Actualiza `.github/copilot-instructions.md` para incluir referencia al nuevo ski
 Los skills se integran con AURORA de la siguiente manera:
 
 ### Durante DISCOVERY
+
 - Skills de análisis de requisitos
 - Skills de diseño de features
 - Skills de especificación técnica
 
 ### Durante CONSTRUCTION
+
 - Skills de patrones de código
 - Skills de testing
 - Skills de revisión de código
 
 ### Durante TRANSITION
+
 - Skills de documentación
 - Skills de deployment
 - Skills de release notes
@@ -241,13 +258,15 @@ Los skills se integran con AURORA de la siguiente manera:
 
 ## Plantilla Completa
 
-```markdown
+````markdown
 # [Nombre del Skill]
 
 ## Descripción
+
 [2-3 líneas explicando qué hace este skill]
 
 ## Cuándo Usar Este Skill
+
 - Cuando [caso 1]
 - Para [caso 2]
 - Al [caso 3]
@@ -255,50 +274,62 @@ Los skills se integran con AURORA de la siguiente manera:
 ## Instrucciones
 
 ### Requisitos Previos
+
 - [ ] Verificar [requisito 1]
 - [ ] Asegurar [requisito 2]
 
 ### Proceso Paso a Paso
 
 #### 1. [Primer paso]
+
 [Explicación detallada]
 
 **Ejemplo:**
+
 ```[lenguaje]
 [código de ejemplo]
 ```
+````
 
 #### 2. [Segundo paso]
+
 [Explicación detallada]
 
 **Validación:**
+
 - Criterio 1
 - Criterio 2
 
 ### Mejores Prácticas
 
 #### Práctica 1: [Nombre]
+
 **Por qué:** [Justificación]
 
 **Cómo:** [Implementación]
 
 **Ejemplo:**
+
 ```[lenguaje]
 [código]
 ```
 
 #### Práctica 2: [Nombre]
+
 [Repetir formato]
 
 ### Errores Comunes
 
 #### Error 1: [Descripción]
+
 **Problema:**
+
 ```[lenguaje]
 [código problemático]
 ```
 
 **Solución:**
+
 ```[lenguaje]
 [código correcto]
 ```
@@ -306,68 +337,82 @@ Los skills se integran con AURORA de la siguiente manera:
 ## Ejemplos
 
 ### Ejemplo Completo 1: [Escenario]
+
 [Descripción del caso de uso]
 
 **Contexto:**
 [Situación]
 
 **Solicitud:**
+
 ```
 [Lo que pide el usuario]
 ```
 
 **Respuesta Esperada:**
+
 ```
 [Salida completa siguiendo el skill]
 ```
 
 ## Referencias
+
 - [Recurso 1](url)
 - [Recurso 2](url)
 - Skill relacionado: [nombre]
 
 ## Changelog
+
 - [Fecha]: Versión inicial
 - [Fecha]: Actualización [descripción]
-```
+
+````
 
 ## Comandos Útiles
 
 ### Listar todos los skills
 ```bash
 find .github/skills -name "SKILL.md"
-```
+````
 
 ### Validar formato de un skill
+
 ```bash
 # Verificar que tenga las secciones requeridas
 grep -E "^## (Descripción|Cuándo Usar|Instrucciones|Ejemplos)" .github/skills/*/SKILL.md
 ```
 
 ### Crear nuevo skill desde plantilla
+
 ```bash
 # Copiar plantilla
-cp .github/skills/skill-development/templates/skill-template.md .github/skills/nuevo-skill/SKILL.md
+cp .github/skills/new-skill/templates/skill-template.md .github/skills/nuevo-skill/SKILL.md
 ```
 
 ## FAQ
 
 ### ¿Cuántos skills debería tener?
+
 Crea skills cuando identifiques patrones repetitivos en las solicitudes. Comienza con 5-10 skills corecubriendo tus dominios más frecuentes.
 
 ### ¿Qué tan largo debe ser un skill?
+
 Entre 100-500 líneas. Si es más largo, considera dividirlo en múltiples skills.
 
 ### ¿Puedo combinar skills?
+
 Sí, Copilot puede cargar múltiples skills si una solicitud aplica a varios dominios.
 
 ### ¿Cómo sé si mi skill funciona?
+
 Haz una solicitud específica y verifica:
+
 1. Que Copilot lea el archivo SKILL.md
 2. Que la respuesta siga las instrucciones del skill
 3. Que la calidad mejore comparado con no tener el skill
 
 ### ¿Debo versionar los skills?
+
 Sí, incluye un changelog en cada SKILL.md y usa versionado semántico en los commits que los modifican.
 
 ## Ejemplos de Skills Útiles para AURORA
@@ -399,6 +444,6 @@ Los skills son una herramienta poderosa para estandarizar y mejorar la calidad d
 
 ---
 
-**Autor**: AURORA AI Assistant  
-**Versión**: 1.0.0  
+**Autor**: AURORA AI Assistant
+**Versión**: 1.0.0
 **Fecha**: 2026-02-12

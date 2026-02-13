@@ -25,7 +25,7 @@ markdownlint --fix document.md
 
 ## Common Fixes
 
-### 1. Add Space After Heading #
+### 1. Add Space After Heading
 
 ❌ Before:
 
@@ -38,6 +38,7 @@ markdownlint --fix document.md
 
 ```markdown
 # Heading
+
 ## Subheading
 ```
 
@@ -46,17 +47,19 @@ markdownlint --fix document.md
 ❌ Before:
 
 ````markdown
-```
+````
 function hello() {}
 \```
+````
 ````
 
 ✅ After:
 
 ````markdown
-```javascript
+````javascript
 function hello() {}
 \```
+````
 ````
 
 ### 3. Add Blank Lines Around Lists
@@ -65,9 +68,10 @@ function hello() {}
 
 ```markdown
 Some text.
+
 - Item 1
 - Item 2
-More text.
+  More text.
 ```
 
 ✅ After:
@@ -107,6 +111,7 @@ Visit [the documentation](https://example.com) for more info.
 
 ```markdown
 # First Title
+
 # Second Title
 ```
 
@@ -114,7 +119,9 @@ Visit [the documentation](https://example.com) for more info.
 
 ```markdown
 # Document Title
+
 ## First Section
+
 ## Second Section
 ```
 
@@ -183,11 +190,11 @@ code docs/adrs/015-my-decision.md
 
 ## AURORA Document Types
 
-| Document Type | Template | Example |
-|---------------|----------|---------|
-| Feature Spec | [feature-spec-template.md](templates/feature-spec-template.md) | [feature-spec-example.md](examples/feature-spec-example.md) |
-| Agent Definition | [agent-template.md](templates/agent-template.md) | [agent-example.md](examples/agent-example.md) |
-| ADR | [adr-template.md](templates/adr-template.md) | [adr-example.md](examples/adr-example.md) |
+| Document Type    | Template                                                       | Example                                                     |
+| ---------------- | -------------------------------------------------------------- | ----------------------------------------------------------- |
+| Feature Spec     | [feature-spec-template.md](templates/feature-spec-template.md) | [feature-spec-example.md](examples/feature-spec-example.md) |
+| Agent Definition | [agent-template.md](templates/agent-template.md)               | [agent-example.md](examples/agent-example.md)               |
+| ADR              | [adr-template.md](templates/adr-template.md)                   | [adr-example.md](examples/adr-example.md)                   |
 
 ## Pre-commit Hook
 
@@ -237,22 +244,22 @@ jobs:
 
 ### Common Linting Rules
 
-| Rule | Description |
-|------|-------------|
-| MD001 | Heading levels increment by one |
-| MD003 | ATX style headings |
-| MD022 | Headings surrounded by blank lines |
-| MD025 | Single H1 per document |
+| Rule  | Description                             |
+| ----- | --------------------------------------- |
+| MD001 | Heading levels increment by one         |
+| MD003 | ATX style headings                      |
+| MD022 | Headings surrounded by blank lines      |
+| MD025 | Single H1 per document                  |
 | MD031 | Fenced code blocks surrounded by blanks |
 | MD040 | Fenced code blocks should have language |
-| MD047 | Files should end with newline |
+| MD047 | Files should end with newline           |
 
 ## Getting Help
 
 - **Full Documentation**: [SKILL.md](SKILL.md)
 - **Examples**: [examples/](examples/)
 - **Templates**: [templates/](templates/)
-- **Skill Development**: [../skill-development/](../skill-development/)
+- **Skill Development**: [../new-skill/](../new-skill/)
 
 ## Troubleshooting
 
@@ -281,5 +288,5 @@ See [markdownlint custom rules](https://github.com/DavidAnson/markdownlint/blob/
 
 ---
 
-**Version**: 1.0.0  
+**Version**: 1.0.0
 **Last Updated**: 2026-02-13

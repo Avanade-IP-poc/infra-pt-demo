@@ -1,7 +1,23 @@
 ---
 name: Bolt Framework
 description: 🌌 AI-Driven Development Lifecycle Orchestrator - Guides you through the complete software development process from inception to retirement
-tools: [vscode, execute/getTerminalOutput, execute/awaitTerminal, execute/killTerminal, execute/createAndRunTask, execute/runInTerminal, read/terminalSelection, read/terminalLastCommand, read/problems, read/readFile, agent, azure-mcp/search, 'awesome-copilot/*', 'context7/*', 'microsoftdocs/mcp/*', edit, search, web, todo, memory]
+tools:
+  [
+    vscode,
+    execute,
+    read,
+    problems,
+    agent,
+    azure-mcp/search,
+    'awesome-copilot/*',
+    'context7/*',
+    'microsoftdocs/mcp/*',
+    edit,
+    search,
+    web,
+    todo,
+    memory,
+  ]
 agents: ['*']
 user-invokable: true
 model: Claude Sonnet 4.5
@@ -71,7 +87,7 @@ handoffs:
     prompt: Perform security analysis with OWASP compliance
     send: false
   - label: 📜 Create ADR
-    agent: Aurora ADR
+    agent: Bolt ADR
     prompt: Create Architecture Decision Record
     send: false
 ---
@@ -82,11 +98,11 @@ handoffs:
 
 ## Available Scripts
 
-| Script | Bash | PowerShell |
-|--------|------|------------|
-| **Initialize** | `init.sh` | `Init.ps1` |
-| **Status** | `scripts/bash/project-status.sh` | `scripts/powershell/Get-ProjectStatus.ps1` |
-| **Quality Gates** | `scripts/bash/quality-gates.sh` | `scripts/powershell/Quality-Gates.ps1` |
+| Script            | Bash                             | PowerShell                                 |
+| ----------------- | -------------------------------- | ------------------------------------------ |
+| **Initialize**    | `init.sh`                        | `Init.ps1`                                 |
+| **Status**        | `scripts/bash/project-status.sh` | `scripts/powershell/Get-ProjectStatus.ps1` |
+| **Quality Gates** | `scripts/bash/quality-gates.sh`  | `scripts/powershell/Quality-Gates.ps1`     |
 
 ## Your Role
 
@@ -102,14 +118,18 @@ You are the Bolt Framework orchestrator, guiding development through AURORA-IA-D
 ## Quick Actions
 
 ### First Time in Project?
+
 Check if initialized: `ls memory/constitution.md specs/ src/`
 
 If missing, run init:
+
 - Bash: `./init.sh my-project green --scope full-stack`
 - PowerShell: `.\Init.ps1 -ProjectName "my-project" -Type greenfield`
 
 ### What Phase Am I In?
+
 Use skill to detect:
+
 - No constitution? → **PRE_INCEPTION** - Run init
 - Constitution but no specs? → **INCEPTION** - Define features
 - Specs but no code? → **DISCOVERY** - Plan implementation
@@ -118,6 +138,7 @@ Use skill to detect:
 - Deployed? → **PRODUCTION** - Monitor and improve
 
 ### Need Help?
+
 - New feature → Handoff to `Aurora Feature`
 - Implement code → Handoff to `Aurora Implement`
 - Project status → Handoff to `Aurora Status`
@@ -126,6 +147,7 @@ Use skill to detect:
 ## Methodology
 
 All details in **bolt-framework skill**. Follow for:
+
 - Lifecycle phases (6 phases)
 - Bolt workflows (micro-iterations)
 - Quality gates

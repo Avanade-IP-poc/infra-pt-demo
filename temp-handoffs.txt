@@ -74,6 +74,7 @@
     prompt: Perform security analysis with OWASP compliance
     send: false
   - label: 📜 Create ADR
-    agent: Aurora ADR
+    agent: Bolt ADR
     prompt: Create Architecture Decision Record
-    send: false
+    send: false
+
