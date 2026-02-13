@@ -1,5 +1,28 @@
 # Plan: Refactorización Arquitectura AURORA → Bolt Framework
 
+> **Versión**: 2.0 | **Fecha**: 2026-02-13 | **Estado**: EN PROGRESO
+>
+> **Correcciones aplicadas**: 7 correcciones de validación contra documentación oficial VS Code (Feb 2026)
+>
+> **Fuentes de validación**:
+> - [Custom Agents](https://code.visualstudio.com/docs/copilot/customization/custom-agents)
+> - [Agent Skills](https://code.visualstudio.com/docs/copilot/customization/agent-skills) + [Agent Skills Open Standard](https://agentskills.io)
+> - [Agent Tools Reference](https://code.visualstudio.com/docs/copilot/reference/copilot-vscode-features#_chat-tools)
+
+## 📊 Progress Tracker
+
+| # | Fase | Descripción | Estado | Progreso |
+|---|------|-------------|--------|----------|
+| 1 | **FASE 1** | Crear Infraestructura del Skill | ⬜ Pendiente | 0/5 pasos |
+| 2 | **FASE 2** | Actualizar Agente Principal | ⬜ Pendiente | 0/3 pasos |
+| 3 | **FASE 5** | Actualizar copilot-instructions.md | ⬜ Pendiente | 0/3 pasos |
+| 4 | **FASE 3** | Actualizar Todos los Agentes (30) | ⬜ Pendiente | 0/30 agentes |
+| 5 | **FASE 4** | Simplificar aurora.prompt.md | ⬜ Pendiente | 0/1 pasos |
+| 6 | **FASE 6** | Actualizar Referencias | ⬜ Pendiente | 0/2 archivos |
+| 7 | **FASE 7** | Validación y Testing | ⬜ Pendiente | 0/10 tests |
+
+---
+
 ## 🔍 Problemas Identificados en la Arquitectura Actual
 
 ### 1. Tools Inconsistentes
@@ -44,6 +67,8 @@
 
 ## 📋 FASE 1: Crear Infraestructura del Skill
 
+> 📊 **Progreso**: ⬜ No iniciado | Pasos: 0/5 completados
+
 ### Paso 1.1: Crear Estructura de Carpetas
 
 ```
@@ -85,6 +110,11 @@
 
 #### Toolset Categories
 
+> ⚠️ **CORRECCIÓN v2.0**: Se agregan tools faltantes validadas contra la [referencia oficial](https://code.visualstudio.com/docs/copilot/reference/copilot-vscode-features#_chat-tools):
+> `terminalLastCommand`, `testFailure`, `searchResults`, `getTaskOutput`, `runTasks` (tool set)
+>
+> Nota: `fileSearch` y `textSearch` están incluidos en el tool set `search`, por lo que no se agregan individualmente.
+
 **1. FULL_PLANNING** (Solo lectura):
 ```yaml
 tools:
@@ -99,6 +129,8 @@ tools:
   - listDirectory         # List dirs
   - runSubagent           # Delegate tasks
   - VSCodeAPI             # VS Code APIs
+  - terminalLastCommand   # Last terminal command output ⚡NEW
+  - searchResults         # Search view results ⚡NEW
   - context7/*            # Documentation lookup
   - awesome-copilot/*     # Examples
   - microsoftdocs/*       # Microsoft docs
@@ -126,6 +158,10 @@ tools:
   - runInTerminal         # Execute commands
   - getTerminalOutput     # Get output
   - runTests              # Run tests
+  - runTasks              # Tool set: VS Code tasks ⚡NEW
+  - testFailure           # Test failure details ⚡NEW
+  - terminalLastCommand   # Last terminal output ⚡NEW
+  - getTaskOutput         # Task execution output ⚡NEW
   - runSubagent           # Delegate
   - todos                 # Track TODOs
   - VSCodeAPI             # VS Code APIs
@@ -194,6 +230,8 @@ tools:
   - runInTerminal
   - getTerminalOutput
   - runTasks              # VS Code tasks
+  - getTaskOutput         # Task execution output ⚡NEW
+  - terminalLastCommand   # Last terminal output ⚡NEW
   - runSubagent
   - VSCodeAPI
   - context7/*            # Infrastructure docs
@@ -242,6 +280,8 @@ tools:
   - runTasks
   - runTests
   - testFailure           # Test failures
+  - terminalLastCommand   # Last terminal output ⚡NEW
+  - getTaskOutput         # Task execution output ⚡NEW
   - runSubagent
   - VSCodeAPI
   - context7/*            # CI/CD framework docs
@@ -263,6 +303,7 @@ tools:
   - changes
   - fetch
   - githubRepo
+  - terminalLastCommand   # Last terminal output ⚡NEW
   - runSubagent
   - VSCodeAPI
   - context7/*            # Security framework docs
@@ -285,6 +326,9 @@ tools:
   - runCommands
   - runInTerminal
   - getTerminalOutput
+  - terminalLastCommand   # Last terminal output ⚡NEW
+  - runTasks              # VS Code tasks ⚡NEW
+  - todos                 # Track TODOs ⚡NEW
   - fetch
   - githubRepo
   - runSubagent
@@ -298,7 +342,28 @@ tools:
 
 ### Paso 1.3: Escribir SKILL.md
 
-**Estructura del SKILL.md** (~500 líneas):
+> ⚠️ **CORRECCIÓN v2.0**: SKILL.md REQUIERE YAML frontmatter según [Agent Skills Open Standard](https://agentskills.io)
+
+**YAML Frontmatter Requerido**:
+```yaml
+---
+name: bolt-framework
+description: >
+  AURORA-IA-DLC methodology - AI-Driven Development Lifecycle.
+  Defines 6 lifecycle phases (Inception, Discovery, Construction, Transition,
+  Production, Retirement), Bolt micro-iterations, quality gates, and
+  constitution compliance. Use when orchestrating AURORA projects, routing
+  between agents, implementing workflows, or enforcing methodology.
+---
+```
+
+**Reglas del frontmatter**:
+- `name`: lowercase-hyphen, máximo 64 caracteres
+- `description`: máximo 1024 caracteres, DEBE incluir "when to use"
+- El skill se invoca como slash command: `/bolt-framework`
+- Auto-discovery desde `.github/skills/bolt-framework/SKILL.md` (no necesita registro manual)
+
+**Estructura del contenido** (~500 líneas):
 
 1. **Descripción y Cuándo Usar** (30 líneas)
    - Qué es AURORA-IA-DLC
@@ -310,7 +375,7 @@ tools:
    - Features (specs/XXX-feature-name/)
    - Bolts (micro-iterations)
    - Quality Gates
-   - Agents Ecosystem (29 agentes)
+   - Agents Ecosystem (30 agentes, incluye aurora-docs)
 
 3. **Lifecycle Phases Detallado** (150 líneas)
    - **INCEPTION**: Constitution, Clarify
@@ -426,6 +491,8 @@ tools:
 
 ## 📋 FASE 2: Actualizar Agente Principal
 
+> 📊 **Progreso**: ⬜ No iniciado | Pasos: 0/3 completados
+
 ### Paso 2.1: Renombrar Archivo
 
 ```
@@ -459,7 +526,12 @@ tools:
   - context7/*
   - awesome-copilot/*
   - microsoftdocs/*
-model: Claude Sonnet 4.5
+# ⚠️ CORRECCIÓN v2.0: Nuevas propiedades del agente
+agents: ['*']                    # Permitir delegar a cualquier agente
+user-invokable: true             # Invocable por el usuario directamente
+model:                           # Array syntax para fallback chain
+  - Claude Sonnet 4.5
+  - copilot-chat
 handoffs:
   # INCEPTION Phase
   - label: 📋 Define Constitution
@@ -622,7 +694,9 @@ All details in **bolt-framework skill**. Follow for:
 
 ---
 
-## 📋 FASE 3: Actualizar Todos los Agentes
+## 📋 FASE 3: Actualizar Todos los Agentes (30)
+
+> 📊 **Progreso**: ⬜ No iniciado | Agentes: 0/30 completados
 
 ### Agent-to-Toolset Mapping
 
@@ -668,6 +742,11 @@ Para cada agente:
 3. **Eliminar metodología duplicada**
 4. **Mantener contenido específico**
 5. **Agregar referencia al skill**
+6. **Agregar nuevas propiedades** ⚡NEW (donde aplique):
+   - `agents: ['*']` para agentes que delegan (orchestrators)
+   - `user-invokable: true/false` para controlar acceso directo
+   - `model` array syntax para fallback chain
+   - `handoffs.model` para override de modelo por handoff
 
 **Contenido a ELIMINAR**:
 - ❌ Explicación de lifecycle phases
@@ -810,6 +889,8 @@ See bolt-framework skill for methodology.
 
 ## 📋 FASE 4: Simplificar aurora.prompt.md
 
+> 📊 **Progreso**: ⬜ No iniciado | Pasos: 0/1 completados
+
 **ANTES**: 108 líneas  
 **DESPUÉS**: ~15 líneas (86% reducción)
 
@@ -838,21 +919,40 @@ All methodology is in bolt-framework skill.
 
 ---
 
-## 📋 FASE 5: Registrar Skill
+## 📋 FASE 5: Actualizar copilot-instructions.md
 
-Actualizar `.github/copilot-instructions.md`:
+> 📊 **Progreso**: ⬜ No iniciado | Pasos: 0/3 completados
 
-```markdown
-<skill>
-<name>bolt-framework</name>
-<description>AURORA-IA-DLC methodology - AI-Driven Development Lifecycle. Defines 6 lifecycle phases (Inception, Discovery, Construction, Transition, Production, Retirement), Bolt micro-iterations, quality gates, and constitution compliance. Use when orchestrating AURORA projects, routing between agents, implementing workflows, or enforcing methodology.</description>
-<file>f:\repos\aurora-ai\.github\skills\bolt-framework\SKILL.md</file>
-</skill>
-```
+> ⚠️ **CORRECCIÓN v2.0**: Los skills se **auto-descubren** por convención de directorio.
+> NO se necesitan tags `<skill>`. Los skills se descubren desde `.github/skills/<name>/SKILL.md`.
+> Fuente: [Agent Skills Open Standard](https://agentskills.io)
+
+### Paso 5.1: Actualizar tabla de Skills
+
+Skills se auto-descubren — solo actualizar la tabla informativa en `.github/copilot-instructions.md`:
+
+| Skill | Domain | Use When |
+|-------|--------|----------|
+| [bolt-framework](.github/skills/bolt-framework/) | AURORA Methodology | Working on AURORA projects, managing lifecycle |
+| [skill-development](.github/skills/skill-development/) | Skill Creation | Creating or improving Copilot skills |
+
+> **Nota**: Eliminar cualquier tag `<skill>` existente. Los skills se auto-descubren desde el directorio.
+
+### Paso 5.2: Actualizar tabla de Agentes
+
+Actualizar tabla de agentes (30 agentes) y cambiar nombre del orchestrator a `@Bolt Framework`.
+
+### Paso 5.3: Agregar YAML frontmatter a skill-development
+
+Verificar que `skill-development/SKILL.md` tenga YAML frontmatter requerido.
+
+> 📊 **Fin FASE 5**: Actualizar progreso al inicio del documento
 
 ---
 
 ## 📋 FASE 6: Actualizar Referencias
+
+> 📊 **Progreso**: ⬜ No iniciado | Archivos: 0/2 completados
 
 ### README.md
 - Cambiar `@AURORA` → `@Bolt Framework`
@@ -871,6 +971,8 @@ Actualizar `.github/copilot-instructions.md`:
 ---
 
 ## 📋 FASE 7: Validación y Testing
+
+> 📊 **Progreso**: ⬜ No iniciado | Tests: 0/10 completados
 
 ### Tests Funcionales
 
@@ -899,6 +1001,31 @@ Actualizar `.github/copilot-instructions.md`:
 - Esperado: Usa awesome-copilot para templates
 - Validación: Agents/prompts/skills copiados
 
+**Test 6: Skill Auto-Discovery**
+- Acción: Verificar que el skill se carga sin tag `<skill>`
+- Esperado: Copilot auto-descubre bolt-framework desde `.github/skills/`
+- Validación: Slash command `/bolt-framework` disponible
+
+**Test 7: Agent New Properties**
+- Acción: Verificar frontmatter de bolt-framework.agent.md
+- Esperado: `agents: ['*']`, `user-invokable: true`, `model` array
+- Validación: Propiedades reconocidas por VS Code
+
+**Test 8: SKILL.md Frontmatter**
+- Acción: Verificar YAML frontmatter en SKILL.md
+- Esperado: `name: bolt-framework`, `description` con "when to use"
+- Validación: Skill reconocido por VS Code
+
+**Test 9: Handoff Matrix**
+- Acción: Verificar que no hay self-handoffs ni circulares
+- Esperado: Todos los handoffs siguen HANDOFF-MATRIX.md
+- Validación: No hay anti-patterns
+
+**Test 10: Content Reduction**
+- Acción: Verificar líneas por agente post-refactoring
+- Esperado: Promedio ≤ 140 líneas, sin duplicación de metodología
+- Validación: Métricas cumplen objetivos
+
 ---
 
 ## ✅ Checklist de Implementación
@@ -916,7 +1043,7 @@ Actualizar `.github/copilot-instructions.md`:
 - [ ] Contenido reducido (-73%)
 - [ ] Handoffs validados
 
-### Agentes Especializados (29)
+### Agentes Especializados (30)
 - [ ] Tools correctas según toolset
 - [ ] MCP tools incluidas donde corresponde
 - [ ] Handoffs validados
@@ -950,7 +1077,7 @@ Actualizar `.github/copilot-instructions.md`:
 | Líneas bolt-framework | 296 | ~80 | **-73%** |
 | Líneas aurora.prompt | 108 | ~15 | **-86%** |
 | Promedio/agente | ~280 | ~140 | **-50%** |
-| Total agentes (29) | ~8120 | ~4640 | **-43%** |
+| Total agentes (30) | ~8400 | ~4800 | **-43%** |
 | Líneas skill | 0 | ~500 | +500 |
 | Fuentes verdad | 4+ | 1 | **-75%** |
 | **Total documentación** | ~8228 | ~5655 | **-31%** |
@@ -991,8 +1118,8 @@ Actualizar `.github/copilot-instructions.md`:
 
 1. **FASE 1** - Crear infraestructura skill (base fundamental)
 2. **FASE 2** - Actualizar agente principal (orchestrator)
-3. **FASE 5** - Registrar skill (habilitar auto-load)
-4. **FASE 3** - Actualizar agentes especializados (batch)
+3. **FASE 5** - Actualizar copilot-instructions.md (auto-discovery, sin tags `<skill>`)
+4. **FASE 3** - Actualizar agentes especializados (30 agentes, batch)
 5. **FASE 4** - Simplificar prompt
 6. **FASE 6** - Actualizar referencias
 7. **FASE 7** - Testing y validación
@@ -1058,3 +1185,136 @@ Una vez ejecutado el plan:
 6. Crear guías de uso
 
 **¿Listo para ejecutar?**
+
+---
+
+## 📋 Resumen de Correcciones v2.0
+
+| # | Corrección | Área | Descripción |
+|---|-----------|------|-------------|
+| 1 | **Tools faltantes** | Toolsets | +5 tools: `terminalLastCommand`, `testFailure`, `searchResults`, `getTaskOutput`, `runTasks` (tool set) |
+| 2 | **Propiedades de agente** | Phase 2, 3 | Nuevos: `agents`, `user-invokable`, `disable-model-invocation`, `handoffs.model`, `model` array |
+| 3 | **SKILL.md frontmatter** | Phase 1 | YAML frontmatter REQUERIDO: `name` (max 64 chars) + `description` (max 1024 chars) |
+| 4 | **Skills auto-discovery** | Phase 5 | NO `<skill>` tags — auto-descubrimiento desde `.github/skills/<name>/SKILL.md` |
+| 5 | **Conteo de agentes** | Global | 30 agentes (no 29) — incluye `aurora-docs` |
+| 6 | **Nombre de archivo** | Ya correcto | `.agent.md` es correcto (antes `.chatmode.md`, renombrado en Feb 2026) |
+| 7 | **handoffs.model** | Phase 2 | Override de modelo por handoff disponible |
+
+---
+
+## 📚 Referencia Rápida: Tools Válidas de VS Code (Feb 2026)
+
+> Fuente: [Chat Tools Reference](https://code.visualstudio.com/docs/copilot/reference/copilot-vscode-features#_chat-tools)
+
+### 38 Tools Individuales
+
+| Tool | Descripción |
+|------|-------------|
+| `changes` | Git changes |
+| `codebase` | Semantic code search |
+| `createAndRunTask` | Create and run VS Code task |
+| `createDirectory` | Create directory |
+| `createFile` | Create new file |
+| `editFiles` | Apply file edits |
+| `editNotebook` | Edit notebook |
+| `extensions` | VS Code extensions |
+| `fetch` | Web content retrieval |
+| `fileSearch` | File search by pattern |
+| `getNotebookSummary` | Notebook summary |
+| `getProjectSetupInfo` | Project setup info |
+| `getTaskOutput` | Task execution output |
+| `getTerminalOutput` | Terminal output |
+| `githubRepo` | GitHub repos |
+| `installExtension` | Install extension |
+| `listDirectory` | List directory |
+| `newJupyterNotebook` | Create notebook |
+| `newWorkspace` | Create workspace |
+| `openSimpleBrowser` | Open browser |
+| `problems` | Problems panel |
+| `readFile` | Read file contents |
+| `readNotebookCellOutput` | Read notebook cell |
+| `runCell` | Run notebook cell |
+| `runInTerminal` | Execute terminal command |
+| `runSubagent` | Delegate to subagent |
+| `runTask` | Run VS Code task |
+| `runTests` | Run test suite |
+| `runVscodeCommand` | Execute VS Code command |
+| `searchResults` | Search view results |
+| `selection` | Current selection |
+| `terminalLastCommand` | Last terminal command |
+| `terminalSelection` | Terminal selection |
+| `testFailure` | Test failure details |
+| `textSearch` | Text search in files |
+| `todos` | Track TODOs |
+| `usages` | Find references |
+| `VSCodeAPI` | VS Code API access |
+
+### 5 Tool Sets
+
+| Tool Set | Includes |
+|----------|----------|
+| `edit` | `createFile`, `editFiles`, `createDirectory` |
+| `search` | `fileSearch`, `textSearch` |
+| `runCommands` | `runInTerminal`, `getTerminalOutput` |
+| `runTasks` | `runTask`, `getTaskOutput`, `createAndRunTask` |
+| `runNotebooks` | `runCell`, `editNotebook`, `readNotebookCellOutput`, `getNotebookSummary`, `newJupyterNotebook` |
+
+### 3 MCP Servers
+
+| MCP Server | Wildcard | Tools |
+|------------|----------|-------|
+| Context7 | `context7/*` | `query-docs`, `resolve-library-id` |
+| Awesome Copilot | `awesome-copilot/*` | `list_collections`, `load_collection`, `load_instruction`, `search_instructions` |
+| Microsoft Docs | `microsoftdocs/*` | `microsoft_docs_search`, `microsoft_docs_fetch`, `microsoft_code_sample_search` |
+
+---
+
+## 📚 Referencia: Formato Agent (.agent.md)
+
+> Fuente: [Custom Agents](https://code.visualstudio.com/docs/copilot/customization/custom-agents)
+
+```yaml
+---
+name: Agent Name                    # Display name
+description: Description text       # Short description
+tools:                              # Available tools
+  - toolName
+  - mcp-server/*                    # MCP wildcard
+agents:                             # ⚡NEW - Subagent control
+  - '*'                             # Allow all
+  - 'Specific Agent'                # Or specific ones
+user-invokable: true                # ⚡NEW - User can invoke directly
+disable-model-invocation: false     # ⚡NEW - LLM can invoke
+model:                              # Supports array for fallback
+  - Claude Sonnet 4.5
+  - copilot-chat
+handoffs:
+  - label: 🏷️ Action Label
+    agent: Target Agent
+    prompt: Context for handoff
+    model: Override Model            # ⚡NEW - Per-handoff model
+    send: false
+---
+```
+
+---
+
+## 📚 Referencia: Formato SKILL.md
+
+> Fuente: [Agent Skills](https://code.visualstudio.com/docs/copilot/customization/agent-skills) + [agentskills.io](https://agentskills.io)
+
+```yaml
+---
+name: skill-name                    # lowercase-hyphen, max 64 chars
+description: >                      # max 1024 chars, include "when to use"
+  Description of the skill.
+  Use when doing X, Y, or Z.
+---
+```
+
+**Reglas**:
+- Auto-discovery desde `.github/skills/<name>/SKILL.md`
+- Invocable como slash command: `/skill-name`
+- NO necesita registro `<skill>` en copilot-instructions.md
+- Progressive disclosure: 3 niveles (discovery → instructions → resources)
+- `SKILL.md` es REQUERIDO, `examples/` y `templates/` son opcionales
