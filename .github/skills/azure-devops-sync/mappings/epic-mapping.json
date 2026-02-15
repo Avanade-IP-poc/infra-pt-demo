@@ -1,0 +1,119 @@
+{
+  "$schema": "./mapping-schema.json",
+  "workItemType": "Epic",
+  "referenceName": "Microsoft.VSTS.WorkItemTypes.Epic",
+  "description": "A large body of work that can be broken down into smaller units of work. Relates to business objective or a major investment",
+  "color": "FF7B00",
+  "icon": "icon_crown",
+  "auroraArtifact": "None - Epics are not directly managed in AURORA",
+  "mappings": {
+    "core": {
+      "System.Title": {
+        "auroraSource": null,
+        "description": "Epic title",
+        "required": true,
+        "transformation": null
+      },
+      "System.Description": {
+        "auroraSource": null,
+        "description": "Epic description",
+        "required": false,
+        "transformation": "html"
+      },
+      "System.State": {
+        "auroraSource": null,
+        "description": "Epic state",
+        "required": true,
+        "allowedValues": ["New", "Active", "Resolved", "Closed"],
+        "defaultValue": "New"
+      },
+      "System.AssignedTo": {
+        "auroraSource": null,
+        "description": "Assigned to",
+        "required": false
+      }
+    },
+    "planning": {
+      "Microsoft.VSTS.Scheduling.StartDate": {
+        "auroraSource": null,
+        "description": "Start date",
+        "required": false,
+        "type": "datetime"
+      },
+      "Microsoft.VSTS.Scheduling.TargetDate": {
+        "auroraSource": null,
+        "description": "Target date",
+        "required": false,
+        "type": "datetime"
+      },
+      "Microsoft.VSTS.Common.Priority": {
+        "auroraSource": null,
+        "description": "Priority",
+        "required": false,
+        "allowedValues": [1, 2, 3, 4],
+        "defaultValue": 2
+      },
+      "Microsoft.VSTS.Scheduling.Effort": {
+        "auroraSource": null,
+        "description": "Effort estimate",
+        "required": false,
+        "type": "double"
+      }
+    },
+    "business": {
+      "Microsoft.VSTS.Common.BusinessValue": {
+        "auroraSource": null,
+        "description": "Business value",
+        "required": false,
+        "type": "integer"
+      },
+      "Microsoft.VSTS.Common.TimeCriticality": {
+        "auroraSource": null,
+        "description": "Time criticality",
+        "required": false,
+        "type": "double"
+      },
+      "Microsoft.VSTS.Common.ValueArea": {
+        "auroraSource": null,
+        "description": "Value area",
+        "required": false,
+        "allowedValues": ["Business", "Architectural"],
+        "defaultValue": "Business"
+      }
+    },
+    "criteria": {
+      "Microsoft.VSTS.Common.AcceptanceCriteria": {
+        "auroraSource": null,
+        "description": "Acceptance criteria",
+        "required": false,
+        "transformation": "html"
+      }
+    },
+    "classification": {
+      "System.AreaPath": {
+        "auroraSource": null,
+        "description": "Area path",
+        "required": true,
+        "transformation": "path"
+      },
+      "System.IterationPath": {
+        "auroraSource": null,
+        "description": "Iteration path",
+        "required": false,
+        "transformation": "path"
+      },
+      "System.Tags": {
+        "auroraSource": null,
+        "description": "Tags",
+        "required": false,
+        "transformation": "semicolon-separated",
+        "defaultValue": "Bolt Framework"
+      }
+    }
+  },
+  "notes": [
+    "Epics are typically not created from AURORA specs directly",
+    "Epics represent higher-level business objectives that span multiple features",
+    "For AURORA methodology, Features in Azure DevOps map to AURORA feature specs"
+  ]
+}
