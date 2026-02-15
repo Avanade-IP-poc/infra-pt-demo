@@ -1,33 +1,33 @@
 version: 1
-scope: integration
-description: Integraciones y sincronización entre artefactos AURORA y herramientas externas.
+scope: work-management
+description: Sincronización de features, use cases, bolts, tareas y dependencias con sistemas de gestión (Azure DevOps, GitHub Projects, Jira).
 items:
-  - id: integration-mcp-settings-local
+  - id: work-management-mcp-settings-local
     kind: templates
     enabled: false
     tags: ['mcp', 'settings']
     source:
       type: local_file
-      path: scopes/integration/mcp-tools/default.mcp.settings.json
+      path: scopes/work-management/mcp-tools/default.mcp.settings.json
     destination:
       folder: .vscode
       name: settings.json
 
-  - id: integration-mcp-servers-local
+  - id: work-management-mcp-servers-local
     kind: templates
     enabled: false
     tags: ['mcp', 'servers']
     source:
       type: local_file
-      path: scopes/integration/mcp-tools/default.mcp.servers.json
+      path: scopes/work-management/mcp-tools/default.mcp.servers.json
     destination:
       folder: .vscode
       name: mcp.json
 
-  - id: integration-azure-devops-sync-skill
+  - id: work-management-azure-devops-sync-skill
     kind: skills
     enabled: false
-    tags: ['integration', 'azure-devops']
+    tags: ['azure-devops', 'sync']
     source:
       type: local_folder
       path: available-skills/azure-devops-sync
@@ -35,36 +35,43 @@ items:
       folder: .github/skills
       name: azure-devops-sync
 
-  - id: integration-azure-wiki-agent-skill
-    kind: skills
-    enabled: false
-    tags: ['integration', 'wiki']
-    source:
-      type: local_folder
-      path: available-skills/azure-wiki-agent
-    destination:
-      folder: .github/skills
-      name: azure-wiki-agent
-
-  - id: integration-azure-devops-pipelines-context7
+  - id: work-management-azure-boards-context7
     kind: prompts
     enabled: false
-    tags: ['integration', 'pipelines']
+    tags: ['azure-devops', 'boards']
     source:
       type: context7
       library: /microsoftdocs/azure-docs
-      query: Orchestrate Multi-Stage Deployment to Azure Web Apps in YAML
-      resolved_url: https://learn.microsoft.com/azure/devops/pipelines/process/stages
+      query: Azure Boards work items queries iterations sprints backlog management
+      resolved_url: https://learn.microsoft.com/azure/devops/boards/work-items/about-work-items
       resolved_ref: latest
-      resolved_doc_id: azure-devops-pipelines-stages
+      resolved_doc_id: azure-devops-boards-work-items
       content_hash: ''
       fetched_at: ''
       license: Microsoft Learn terms
     destination:
       folder: .github/prompts
-      name: azure-devops-multistage-deploy.prompt.md
+      name: azure-boards-work-items.prompt.md
 
-  - id: integration-spec-driven-workflow-awesome
+  - id: work-management-github-projects-context7
+    kind: prompts
+    enabled: false
+    tags: ['github', 'projects']
+    source:
+      type: context7
+      library: /github/docs
+      query: GitHub Projects v2 workflows automation custom fields views
+      resolved_url: https://docs.github.com/issues/planning-and-tracking-with-projects
+      resolved_ref: latest
+      resolved_doc_id: github-projects-v2-planning
+      content_hash: ''
+      fetched_at: ''
+      license: GitHub terms
+    destination:
+      folder: .github/prompts
+      name: github-projects-v2.prompt.md
+
+  - id: work-management-spec-driven-workflow-awesome
     kind: instructions
     enabled: false
     tags: ['planning', 'workflow']
@@ -82,7 +89,7 @@ items:
       folder: .github/instructions
       name: spec-driven-workflow-v1.instructions.md
 
-  - id: integration-planning-with-files-awesome-skills
+  - id: work-management-planning-with-files-awesome-skills
     kind: skills
     enabled: false
     tags: ['planning', 'workflow']
@@ -102,13 +109,13 @@ items:
       folder: .github/skills
       name: planning-with-files
 
-  - id: integration-constitution
+  - id: work-management-constitution
     kind: templates
     enabled: true
     tags: ['constitution', 'memory']
     source:
       type: local_file
-      path: scopes/integration/memory/constitution.md
+      path: scopes/work-management/memory/constitution.md
     destination:
       folder: memory
       name: constitution.md

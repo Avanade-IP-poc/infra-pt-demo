@@ -77,6 +77,17 @@ items:
       folder: .github/instructions
       name: csharp.instructions.md
 
+  - id: <scope-name>-constitution
+    kind: templates
+    enabled: true
+    tags: ['constitution', 'memory']
+    source:
+      type: local_file
+      path: scopes/<scope-name>/memory/constitution.md
+    destination:
+      folder: memory
+      name: constitution.md
+
   - id: <awesome-skills-item-id>
     kind: skills
     enabled: false

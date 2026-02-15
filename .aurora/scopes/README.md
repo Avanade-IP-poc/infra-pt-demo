@@ -67,6 +67,50 @@ Campos recomendados por item:
   - `folder`: ruta de carpeta destino (ej. `.github/instructions`)
   - `name`: nombre final de fichero/carpeta en destino.
 
+## Convención `memory/constitution.md` (Scope Constitution)
+
+Cada scope incluye un fichero `memory/constitution.md` que contiene **únicamente los artículos relevantes** extraídos de la constitución maestra (`.aurora/memory/constitution.md`).
+
+### Estructura
+
+- **Secciones comunes 🔄** — Presentes en TODOS los scopes:
+  - Preamble, Article I §1.0, Article X (Environments), Article XI (CI/CD), Article XII §12.1-12.2 (Observability), Article XVI (Security), Article XIX (Governance), Signatories, Revision History.
+- **Secciones específicas del scope** — Extraídas según la tabla de mapeo:
+
+| Scope             | Artículos específicos                                                                        |
+| ----------------- | -------------------------------------------------------------------------------------------- |
+| `backend`         | II §2.1, III §3.1/3.3/3.4, IV, V, VI, VII, VIII, XIII §13.1-13.3, XIV, XV (A-D), XVII, XVIII |
+| `frontend`        | II §2.2-2.3, III §3.2, VII §7.3-7.4, XIII (E2E), XIV, XV (frontend)                          |
+| `cloud-platform`  | I §1.0.1, VIII, IX, XII §12.3, XIII §13.4, XV (E-F)                                          |
+| `data`            | V, VI                                                                                        |
+| `integration`     | IV, XVII, XVIII                                                                              |
+| `ai`              | XIX §19.2 (emphasis)                                                                         |
+| `crm`             | VII                                                                                          |
+| `work-management` | XI (emphasis), XIX (emphasis)                                                                |
+
+- **Gaps 🆕** — Artículos propuestos con alternativas Microsoft/Azure para áreas no cubiertas por la constitución maestra.
+
+### Registro en `scope.yaml`
+
+Cada `scope.yaml` incluye un item `memory` para el fichero de constitución:
+
+```yaml
+- id: <scope>-constitution
+  kind: templates
+  enabled: true
+  tags: ['constitution', 'memory']
+  source:
+    type: local_file
+    path: scopes/<scope>/memory/constitution.md
+  destination:
+    folder: memory
+    name: constitution.md
+```
+
+### Backup
+
+La constitución maestra original se conserva en `.aurora/memory/constitution.original.md`.
+
 ## Reglas
 
 - No copiar skills de `.aurora/available-skills` salvo decisión de inicialización o del agente Bolt Framework.

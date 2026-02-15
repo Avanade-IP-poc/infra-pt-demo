@@ -115,3 +115,14 @@ items:
     destination:
       folder: .github/skills
       name: trailofbits-static-analysis
+
+  - id: backend-constitution
+    kind: templates
+    enabled: true
+    tags: ['constitution', 'memory']
+    source:
+      type: local_file
+      path: scopes/backend/memory/constitution.md
+    destination:
+      folder: memory
+      name: constitution.md

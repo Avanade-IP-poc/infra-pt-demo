@@ -97,3 +97,14 @@ items:
     destination:
       folder: .github/skills
       name: csv-data-summarizer
+
+  - id: data-constitution
+    kind: templates
+    enabled: true
+    tags: ['constitution', 'memory']
+    source:
+      type: local_file
+      path: scopes/data/memory/constitution.md
+    destination:
+      folder: memory
+      name: constitution.md

@@ -115,3 +115,14 @@ items:
     destination:
       folder: .github/skills
       name: terraform-style-guide
+
+  - id: cloud-platform-constitution
+    kind: templates
+    enabled: true
+    tags: ['constitution', 'memory']
+    source:
+      type: local_file
+      path: scopes/cloud-platform/memory/constitution.md
+    destination:
+      folder: memory
+      name: constitution.md

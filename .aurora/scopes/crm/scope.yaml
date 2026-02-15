@@ -97,3 +97,14 @@ items:
     destination:
       folder: .github/skills
       name: internal-comms
+
+  - id: crm-constitution
+    kind: templates
+    enabled: true
+    tags: ['constitution', 'memory']
+    source:
+      type: local_file
+      path: scopes/crm/memory/constitution.md
+    destination:
+      folder: memory
+      name: constitution.md
