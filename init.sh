@@ -25,7 +25,6 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # --- Decision variables -------------------------------------------------------
 D_PROJECT_TYPE=""
-D_INFRA_SCOPE=""
 D_SCOPES=()
 D_ENVIRONMENTS=()
 D_CONFIG_MANAGEMENT=""
@@ -231,23 +230,7 @@ check_prerequisites() {
 collect_all_decisions() {
 
     echo ""
-    log_step "Article I — Project Scope & Type"
-
-    read_choice "§1.0  Project type" 2 \
-        "Infrastructure Only  (Landing Zone / Platform / IaC)" \
-        "Application Development Only  (on existing infra)" \
-        "Full Stack  (App + Infrastructure)" \
-        --- "infra-only" "app-only" "full-stack"
-    D_PROJECT_TYPE="$REPLY_CHOICE"
-
-    if [[ "$D_PROJECT_TYPE" == "infra-only" || "$D_PROJECT_TYPE" == "full-stack" ]]; then
-        read_choice "§1.0.1  Infrastructure scope" 2 \
-            "Landing Zone" "Workload Infrastructure" "Both" \
-            --- "landing-zone" "workload" "both"
-        D_INFRA_SCOPE="$REPLY_CHOICE"
-    else
-        D_INFRA_SCOPE="none"
-    fi
+    log_step "Article I — Active Scopes"
 
     read_multi_choice "§1.1  Active scopes (select all that apply)" \
         "backend        — Server-side APIs, services, domain logic" \
@@ -263,6 +246,20 @@ collect_all_decisions() {
     if [[ ${#D_SCOPES[@]} -eq 0 ]]; then
         log_warn "No scopes selected -- defaulting to 'backend'"
         D_SCOPES=("backend")
+    fi
+
+    # Derive project type from selected scopes (replaces former §1.0)
+    local has_cloud=false has_app_scope=false
+    for s in "${D_SCOPES[@]}"; do
+        [[ "$s" == "cloud-platform" ]] && has_cloud=true
+        [[ "$s" == "backend" || "$s" == "frontend" || "$s" == "ai" ]] && has_app_scope=true
+    done
+    if [[ "$has_cloud" == "true" && "$has_app_scope" == "true" ]]; then
+        D_PROJECT_TYPE="full-stack"
+    elif [[ "$has_cloud" == "true" ]]; then
+        D_PROJECT_TYPE="infra-only"
+    else
+        D_PROJECT_TYPE="app-only"
     fi
 
     echo ""
@@ -352,7 +349,6 @@ collect_all_decisions() {
     for s in "${D_SCOPES[@]}"; do
         [[ "$s" == "cloud-platform" ]] && has_infra=true
     done
-    [[ "$D_PROJECT_TYPE" == "infra-only" || "$D_PROJECT_TYPE" == "full-stack" ]] && has_infra=true
     if [[ "$has_infra" == "true" ]]; then
         read_multi_choice "§11.2  Infrastructure pipeline stages" \
             "IaC Lint" "IaC Validation" "Security Scan" \
@@ -395,7 +391,6 @@ collect_all_decisions() {
     for s in "${D_SCOPES[@]}"; do
         [[ "$s" == "cloud-platform" ]] && has_infra2=true
     done
-    [[ "$D_PROJECT_TYPE" == "infra-only" || "$D_PROJECT_TYPE" == "full-stack" ]] && has_infra2=true
     if [[ "$has_infra2" == "true" ]]; then
         read_multi_choice "§12.3  Infrastructure monitoring components" \
             "Resource Health (Azure Resource Health)" \
@@ -480,7 +475,7 @@ create_project_structure() {
     if has_scope "frontend"; then
         mkdir -p "$OUTPUT_DIR/src/frontend"
     fi
-    if has_scope "cloud-platform" || [[ "$D_PROJECT_TYPE" == "infra-only" || "$D_PROJECT_TYPE" == "full-stack" ]]; then
+    if has_scope "cloud-platform"; then
         mkdir -p "$OUTPUT_DIR/infra"
     fi
     if has_scope "data"; then
@@ -567,8 +562,7 @@ generate_scopes_yaml() {
 # =============================================================================
 
 project:
-  type: ${D_PROJECT_TYPE}
-  infra-scope: ${D_INFRA_SCOPE}
+  type: ${D_PROJECT_TYPE}               # derived from scopes
   migration-type: ${PROJECT_TYPE}   # green | brown
 
 active-scopes:
@@ -642,20 +636,6 @@ prefill_constitution() {
     # Use a temp file for sed operations
     local tmp="${path}.tmp"
     cp "$path" "$tmp"
-
-    # Article I §1.0 -- Project Type
-    case "$D_PROJECT_TYPE" in
-        infra-only)  sed -i 's/- \[ \] \*\*🏗️ Infrastructure Only\*\*/- [x] **🏗️ Infrastructure Only**/' "$tmp" ;;
-        app-only)    sed -i 's/- \[ \] \*\*💻 Application Development Only\*\*/- [x] **💻 Application Development Only**/' "$tmp" ;;
-        full-stack)  sed -i 's/- \[ \] \*\*🚀 Full Stack (App + Infrastructure)\*\*/- [x] **🚀 Full Stack (App + Infrastructure)**/' "$tmp" ;;
-    esac
-
-    # Article I §1.0.1 -- Infra scope
-    case "$D_INFRA_SCOPE" in
-        landing-zone) sed -i 's/- \[ \] \*\*Landing Zone\*\*/- [x] **Landing Zone**/' "$tmp" ;;
-        workload)     sed -i 's/- \[ \] \*\*Workload Infrastructure\*\*/- [x] **Workload Infrastructure**/' "$tmp" ;;
-        both)         sed -i 's/- \[ \] \*\*Both\*\* - Landing Zone + Workload/- [x] **Both** - Landing Zone + Workload/' "$tmp" ;;
-    esac
 
     # Article I §1.1 -- Active Scopes
     for scope in "${D_SCOPES[@]}"; do
@@ -753,10 +733,10 @@ prefill_constitution() {
 
     # Thresholds
     if [[ "$D_UNIT_TEST_COVERAGE" -gt 0 ]]; then
-        sed -i "s/Coverage >= __\%/Coverage >= ${D_UNIT_TEST_COVERAGE}%/" "$tmp"
+        sed -i "s/Coverage >= \\_\\_%/Coverage >= ${D_UNIT_TEST_COVERAGE}%/" "$tmp"
     fi
     if [[ "$D_MUTATION_SCORE" -gt 0 ]]; then
-        sed -i "s/Score >= __\%/Score >= ${D_MUTATION_SCORE}%/" "$tmp"
+        sed -i "s/Score >= \\_\\_%/Score >= ${D_MUTATION_SCORE}%/" "$tmp"
     fi
 
     # Article XI §11.2 -- Infra Pipeline Stages

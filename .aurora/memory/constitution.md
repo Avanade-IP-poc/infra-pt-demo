@@ -19,38 +19,7 @@ This Constitution establishes the governing principles, technology decisions, an
 
 ## Article I: Project Scope & Type
 
-> **⚠️ IMPORTANT**: Define the project scope and active scopes FIRST. This determines which articles and scope constitutions apply.
-
-### Section 1.0: Project Type
-
-Select ONE base type that describes the overall nature of the project:
-
-- [ ] **🏗️ Infrastructure Only** - Landing Zone, Platform, IaC
-  - _Requires scope_: `cloud-platform`
-  - _Skip_: Application development articles (II-VII, XIII-XIV)
-
-- [ ] **💻 Application Development Only** - App code on existing infrastructure
-  - _Requires scope_: At least one of `backend`, `frontend`, or `ai`
-  - _Skip_: Infrastructure articles (VIII, IX), assumes infra exists
-
-- [ ] **🚀 Full Stack (App + Infrastructure)** - Complete project
-  - _Requires scope_: `cloud-platform` + at least one of `backend`, `frontend`, or `ai`
-  - _Recommended for_: Greenfield projects, complete solutions
-
-### Section 1.0.1: Infrastructure Scope (if Infrastructure or Full Stack)
-
-- [ ] **Landing Zone** - Enterprise-scale foundation
-  - Management Groups, Subscriptions, Policies
-  - Hub-Spoke / Virtual WAN networking
-  - Identity foundation (Entra ID integration)
-  - Governance, Cost Management, Security Center
-
-- [ ] **Workload Infrastructure** - Application-specific resources
-  - Compute, Storage, Databases
-  - Networking (VNets, Subnets, NSGs)
-  - Identity (Managed Identities, RBAC)
-
-- [ ] **Both** - Landing Zone + Workload
+> **⚠️ IMPORTANT**: Define the active scopes FIRST. This determines which articles and scope constitutions apply. The project type (Infrastructure / Application / Full Stack) is automatically derived from the selected scopes.
 
 ### Section 1.1: Active Scopes
 
@@ -60,7 +29,7 @@ Select ONE or MORE scopes. Each active scope injects its own constitution sectio
 | --- | ------------------ | ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- |
 | [ ] | **backend**        | Server-side APIs, services, domain logic                     | Articles II §2.1, III §3.1/3.3/3.4, IV, V, VI, VII, VIII, XIII §13.1-13.3, XIV, XV (A-D), XVII, XVIII |
 | [ ] | **frontend**       | Web/mobile UI, SPA, design system                            | Articles II §2.2-2.3, III §3.2, VII §7.3-7.4, XIII (E2E), XIV, XV (frontend)                          |
-| [ ] | **cloud-platform** | Infrastructure, Landing Zones, IaC, platform engineering     | Articles I §1.0.1, VIII, IX, XII §12.3, XIII §13.4, XV (E-F)                                          |
+| [ ] | **cloud-platform** | Infrastructure, Landing Zones, IaC, platform engineering     | Articles VIII, IX, XII §12.3, XIII §13.4, XV (E-F)                                                    |
 | [ ] | **data**           | Databases, ETL/ELT, analytics, data governance               | Articles V, VI                                                                                        |
 | [ ] | **integration**    | API management, messaging, external system connectors        | Articles IV, XVII, XVIII                                                                              |
 | [ ] | **ai**             | AI/ML models, agents, prompt engineering, responsible AI     | Article XIX §19.2 (emphasis) + AI-specific extensions                                                 |

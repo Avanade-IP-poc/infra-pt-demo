@@ -148,32 +148,9 @@ function Get-AllDecisions {
     #>
     $d = @{}
 
-    # ── Article I §1.0 — Project Type ───────────────────────────────────────
+    # ── Article I §1.1 — Active Scopes ──────────────────────────────────────
     Write-Host ""
-    Write-Step "Article I — Project Scope & Type"
-
-    $d.ProjectType = Read-Choice `
-        -Title "§1.0  Project type" `
-        -Options @(
-            "Infrastructure Only  (Landing Zone / Platform / IaC)",
-            "Application Development Only  (on existing infra)",
-            "Full Stack  (App + Infrastructure)"
-        ) `
-        -Values @("infra-only", "app-only", "full-stack") `
-        -Default 2
-
-    # ── Article I §1.0.1 — Infra scope (conditional) ───────────────────────
-    if ($d.ProjectType -eq "infra-only" -or $d.ProjectType -eq "full-stack") {
-        $d.InfraScope = Read-Choice `
-            -Title "§1.0.1  Infrastructure scope" `
-            -Options @("Landing Zone", "Workload Infrastructure", "Both") `
-            -Values @("landing-zone", "workload", "both") `
-            -Default 2
-    } else {
-        $d.InfraScope = "none"
-    }
-
-    # ── Article I §1.1 — Active Scopes (multi-select) ──────────────────────
+    Write-Step "Article I — Active Scopes"
     $d.Scopes = Read-MultiChoice `
         -Title "§1.1  Active scopes (select all that apply)" `
         -Options @(
@@ -191,6 +168,13 @@ function Get-AllDecisions {
         Write-Warn "No scopes selected — defaulting to 'backend'"
         $d.Scopes = @("backend")
     }
+
+    # Derive project type from selected scopes (replaces former §1.0)
+    $hasCloudPlatform = $d.Scopes -contains "cloud-platform"
+    $hasAppScopes = ($d.Scopes | Where-Object { $_ -in @("backend","frontend","ai") }).Count -gt 0
+    if ($hasCloudPlatform -and $hasAppScopes) { $d.ProjectType = "full-stack" }
+    elseif ($hasCloudPlatform)                { $d.ProjectType = "infra-only" }
+    else                                      { $d.ProjectType = "app-only" }
 
     # ── Article X — Environments & Configuration ────────────────────────────
     Write-Host ""
@@ -289,7 +273,7 @@ function Get-AllDecisions {
     }
 
     # ── §11.2 — Pipeline Stages (Infrastructure) ───────────────────────
-    $hasInfra = $d.Scopes -contains "cloud-platform" -or $d.ProjectType -in @("infra-only","full-stack")
+    $hasInfra = $d.Scopes -contains "cloud-platform"
     if ($hasInfra) {
         $d.InfraPipelineStages = Read-MultiChoice `
             -Title "§11.2  Infrastructure pipeline stages" `
@@ -342,7 +326,7 @@ function Get-AllDecisions {
         -Default 1
 
     # ── §12.3 — Infrastructure Monitoring (conditional) ─────────────────
-    $hasInfra2 = $d.Scopes -contains "cloud-platform" -or $d.ProjectType -in @("infra-only","full-stack")
+    $hasInfra2 = $d.Scopes -contains "cloud-platform"
     if ($hasInfra2) {
         $d.InfraMonitoring = Read-MultiChoice `
             -Title "§12.3  Infrastructure monitoring components" `
@@ -440,7 +424,7 @@ function New-ProjectStructure {
     if ($Decisions.Scopes -contains "frontend") {
         New-Item -ItemType Directory -Path "$OutputDirectory\src\frontend" -Force | Out-Null
     }
-    if ($Decisions.Scopes -contains "cloud-platform" -or $Decisions.ProjectType -in @("infra-only","full-stack")) {
+    if ($Decisions.Scopes -contains "cloud-platform") {
         New-Item -ItemType Directory -Path "$OutputDirectory\infra" -Force | Out-Null
     }
     if ($Decisions.Scopes -contains "data") {
@@ -499,8 +483,7 @@ function New-ScopesYaml {
 # =============================================================================
 
 project:
-  type: $($Decisions.ProjectType)
-  infra-scope: $($Decisions.InfraScope)
+  type: $($Decisions.ProjectType)       # derived from scopes
   migration-type: $ProjectType   # green | brown
 
 active-scopes:
@@ -577,20 +560,6 @@ function Set-ConstitutionDecisions {
     }
 
     $c = Get-Content $path -Raw
-
-    # ── Article I §1.0 — Project Type ────────────────────────────────────
-    switch ($D.ProjectType) {
-        "infra-only"  { $c = $c -replace '\- \[ \] \*\*🏗️ Infrastructure Only\*\*',                '- [x] **🏗️ Infrastructure Only**' }
-        "app-only"    { $c = $c -replace '\- \[ \] \*\*💻 Application Development Only\*\*',       '- [x] **💻 Application Development Only**' }
-        "full-stack"  { $c = $c -replace '\- \[ \] \*\*🚀 Full Stack \(App \+ Infrastructure\)\*\*', '- [x] **🚀 Full Stack (App + Infrastructure)**' }
-    }
-
-    # ── Article I §1.0.1 — Infra scope ──────────────────────────────────
-    switch ($D.InfraScope) {
-        "landing-zone" { $c = $c -replace '\- \[ \] \*\*Landing Zone\*\*',              '- [x] **Landing Zone**' }
-        "workload"     { $c = $c -replace '\- \[ \] \*\*Workload Infrastructure\*\*',   '- [x] **Workload Infrastructure**' }
-        "both"         { $c = $c -replace '\- \[ \] \*\*Both\*\* - Landing Zone \+ Workload', '- [x] **Both** - Landing Zone + Workload' }
-    }
 
     # ── Article I §1.1 — Active Scopes ──────────────────────────────────
     foreach ($scope in $D.Scopes) {
@@ -690,10 +659,10 @@ function Set-ConstitutionDecisions {
 
     # Thresholds
     if ($D.UnitTestCoverage -gt 0) {
-        $c = $c -replace 'Coverage >= \_\_%', "Coverage >= $($D.UnitTestCoverage)%"
+        $c = $c -replace 'Coverage >= \\_\\_%', "Coverage >= $($D.UnitTestCoverage)%"
     }
     if ($D.MutationScore -gt 0) {
-        $c = $c -replace 'Score >= \_\_%', "Score >= $($D.MutationScore)%"
+        $c = $c -replace 'Score >= \\_\\_%', "Score >= $($D.MutationScore)%"
     }
 
     # ── Article XI §11.2 — Infra Pipeline Stages ────────────────────────
