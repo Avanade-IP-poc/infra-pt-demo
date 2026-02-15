@@ -13,6 +13,17 @@ items:
       folder: .vscode
       name: settings.json
 
+  - id: backend-mcp-servers-local
+    kind: templates
+    enabled: false
+    tags: ['mcp', 'servers']
+    source:
+      type: local_file
+      path: scopes/backend/mcp-tools/default.mcp.servers.json
+    destination:
+      folder: .vscode
+      name: mcp.json
+
   - id: backend-minimal-api-openapi-context7
     kind: prompts
     enabled: false

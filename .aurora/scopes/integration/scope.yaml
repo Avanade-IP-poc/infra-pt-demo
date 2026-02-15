@@ -13,6 +13,17 @@ items:
       folder: .vscode
       name: settings.json
 
+  - id: integration-mcp-servers-local
+    kind: templates
+    enabled: false
+    tags: ['mcp', 'servers']
+    source:
+      type: local_file
+      path: scopes/integration/mcp-tools/default.mcp.servers.json
+    destination:
+      folder: .vscode
+      name: mcp.json
+
   - id: integration-azure-devops-sync-skill
     kind: skills
     enabled: false

@@ -13,6 +13,17 @@ items:
       folder: .vscode
       name: settings.json
 
+  - id: ai-mcp-servers-local
+    kind: templates
+    enabled: false
+    tags: ['mcp', 'servers']
+    source:
+      type: local_file
+      path: scopes/ai/mcp-tools/default.mcp.servers.json
+    destination:
+      folder: .vscode
+      name: mcp.json
+
   - id: ai-task-implementation-awesome
     kind: instructions
     enabled: false

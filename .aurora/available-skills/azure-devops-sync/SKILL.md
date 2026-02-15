@@ -18,47 +18,44 @@ description: Bidirectional sync between AURORA specs/ and Azure DevOps work item
 
 ## Setup
 
+### Environment Variables
+
+All scripts (PowerShell and Bash) rely on environment variables for configuration.
+A template is provided at `.github/skills/azure-devops-sync/templates/template.env`.
+
+```bash
+# Copy the template to the project root
+cp .github/skills/azure-devops-sync/templates/template.env .env
+# Edit .env and set your PAT (NEVER commit this file)
+```
+
+| Variable                    | Required | Default                       | Description                          |
+| --------------------------- | -------- | ----------------------------- | ------------------------------------ |
+| `AZURE_DEVOPS_EXT_PAT`      | **Yes**  | —                             | Personal Access Token for DevOps CLI |
+| `AZURE_DEVOPS_ORG`          | No       | `https://dev.azure.com/<org>` | Organization URL                     |
+| `AZURE_DEVOPS_PROJECT`      | No       | `<project-name>`              | Project name                         |
+| `AZURE_DEVOPS_AREA_PATH`    | No       | Same as project name          | Default Area Path                    |
+| `AZURE_DEVOPS_ITERATION`    | No       | Same as project name          | Default root Iteration Path          |
+| `AZURE_DEVOPS_REQUIRED_TAG` | No       | `Bolt Framework`              | Tag applied to ALL work items        |
+
+Bash scripts auto-load `.env` via the shared `_env-loader.sh` helper.
+PowerShell scripts read `AZURE_DEVOPS_EXT_PAT` from the environment; set it before running.
+
+### Prerequisites
+
 ```powershell
-# Install CLI
+# Windows — Install Azure CLI + DevOps extension
 winget install -e --id Microsoft.AzureCLI
 az extension add --name azure-devops
-
-# Configure (create PAT at https://dev.azure.com/<your-org>/_usersSettings/tokens)
-$env:AZURE_DEVOPS_EXT_PAT = "your-pat-here"  # Never commit
 az devops configure --defaults organization=https://dev.azure.com/<your-org> project="<your-project>"
-
-# Verify configuration
-az devops project list --output table
 ```
 
-## Discovery Scripts
-
-Before syncing, use these scripts to explore your Azure DevOps configuration:
-
-```powershell
-# Discover available work item types
-.\scripts\Get-DevOpsWorkItemTypes.ps1
-
-# Discover all fields for a work item type
-.\scripts\Get-DevOpsFields.ps1 -WorkItemType "Feature"
-
-# List sprints/iterations
-.\scripts\Get-DevOpsSprints.ps1
-
-# List areas
-.\scripts\Get-DevOpsAreas.ps1
-```
-
-## Resource Creation
-
-Create sprints and areas as needed:
-
-```powershell
-# Create a new sprint/iteration
-.\scripts\New-DevOpsSprint.ps1 -Name "Sprint 1" -StartDate "2026-03-01" -EndDate "2026-03-14"
-
-# Create a new area
-.\scripts\New-DevOpsArea.ps1 -Name "Backend" -ParentPath "ProjectName"
+```bash
+# Linux/macOS — Install Azure CLI + DevOps extension + jq
+curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash   # Debian/Ubuntu
+az extension add --name azure-devops
+sudo apt-get install -y jq   # or: brew install jq
+az devops configure --defaults organization=https://dev.azure.com/<your-org> project="<your-project>"
 ```
 
 ## Mappings
@@ -73,26 +70,93 @@ Create sprints and areas as needed:
 
 ## Usage
 
+### PowerShell (Windows)
+
 ```powershell
 # Push specs to DevOps
-.\scripts\Sync-AuroraToDevOps.ps1 -FeaturePath "specs/001-feature-name"
+.\.github\skills\azure-devops-sync\scripts\powershell\Sync-AuroraToDevOps.ps1 -FeaturePath "specs/001-time-tracking"
 
 # Pull status updates
-.\scripts\Sync-DevOpsStatus.ps1 -FeaturePath "specs/001-feature-name"
+.\.github\skills\azure-devops-sync\scripts\powershell\Sync-DevOpsStatus.ps1 -FeaturePath "specs/001-time-tracking"
 
 # Import existing work item
-.\scripts\Import-DevOpsToAurora.ps1 -WorkItemId 12345 -OutputPath "specs/002-imported"
+.\.github\skills\azure-devops-sync\scripts\powershell\Import-DevOpsToAurora.ps1 -WorkItemId 12345 -OutputPath "specs/002-imported"
+
+# Assign work items to a sprint
+.\.github\skills\azure-devops-sync\scripts\powershell\Assign-WorkItemsToSprint.ps1 -StartId 31530 -EndId 31604 -SprintNumber 1
+
+# Fix tags and parent-child relationships
+.\.github\skills\azure-devops-sync\scripts\powershell\Fix-DevOpsWorkItems.ps1 -StartId 31530 -EndId 31604
+
+# Verify parent-child link integrity
+.\.github\skills\azure-devops-sync\scripts\powershell\Verify-ParentChildLinks.ps1
+```
+
+### Bash (Linux / macOS / WSL / Git Bash)
+
+All bash scripts auto-load `.env` from the project root via `_env-loader.sh`. Pass `-h` to any script for help.
+
+```bash
+# Push specs to DevOps
+.github/skills/azure-devops-sync/scripts/bash/sync-aurora-to-devops.sh \
+  -f "specs/001-time-tracking"
+
+# Push specs (dry-run preview)
+.github/skills/azure-devops-sync/scripts/bash/sync-aurora-to-devops.sh \
+  -f "specs/001-time-tracking" -d
+
+# Push specs (full sync, skip confirmation)
+.github/skills/azure-devops-sync/scripts/bash/sync-aurora-to-devops.sh \
+  -f "specs/001-time-tracking" -m full --force
+
+# Pull status updates for one feature
+.github/skills/azure-devops-sync/scripts/bash/sync-devops-status.sh \
+  -f "specs/001-time-tracking"
+
+# Pull status for ALL features and auto-commit
+.github/skills/azure-devops-sync/scripts/bash/sync-devops-status.sh -c
+
+# Import existing DevOps Feature into AURORA format
+.github/skills/azure-devops-sync/scripts/bash/import-devops-to-aurora.sh \
+  -i 12345 -o "specs/002-imported"
+
+# Import without children (Feature only)
+.github/skills/azure-devops-sync/scripts/bash/import-devops-to-aurora.sh \
+  -i 12345 -o "specs/002-imported" --no-children
+
+# Assign work items to Sprint 1
+.github/skills/azure-devops-sync/scripts/bash/assign-work-items-to-sprint.sh \
+  -s 31530 -e 31604 -n 1
+
+# Assign (dry-run preview)
+.github/skills/azure-devops-sync/scripts/bash/assign-work-items-to-sprint.sh \
+  -s 31530 -e 31604 -n 1 -d
+
+# Fix tags and parent-child relationships
+.github/skills/azure-devops-sync/scripts/bash/fix-devops-work-items.sh \
+  -s 31530 -e 31604
+
+# Fix (dry-run preview)
+.github/skills/azure-devops-sync/scripts/bash/fix-devops-work-items.sh \
+  -s 31530 -e 31604 -d
+
+# Verify parent-child links (default range 31534-31604)
+.github/skills/azure-devops-sync/scripts/bash/verify-parent-child-links.sh
+
+# Verify with custom range
+.github/skills/azure-devops-sync/scripts/bash/verify-parent-child-links.sh \
+  -s 31534 -e 31604
 ```
 
 ## Git Integration
 
-Link commits to work items using the `AB#` syntax:
+Link commits to work items:
 
 ```bash
 git commit -m "feat(AB#12345): Implement core feature logic"
 ```
 
-**Note:** Replace `AB#` with your organization's prefix (e.g., `WI#`, `ID#`, etc.)
+**Note:** Replace `AB#` with your organization's work item prefix (e.g., `WI#`, `ID#`, etc.)
 
 ## Work flow
 
@@ -112,12 +176,33 @@ git commit -m "feat(AB#12345): Implement core feature logic"
 ## Relationships
 
 - All work items MUST be created with the appropriate parent-child relationships to maintain a clear hierarchy and traceability between features, user stories, and tasks. This ensures that the work items are organized correctly and can be easily navigated within Azure DevOps.
-- All work items MSUT be updated with dependences using 'predecessor' and 'successor' links to ensure that the relationships between work items are accurately represented and can be easily tracked within Azure DevOps. This is crucial for effective project management and ensuring that all team members have a clear understanding of the dependencies between different pieces of work.
+- All work items MUST be updated with dependences using ['Predecessor-Successor'](https://learn.microsoft.com/en-us/azure/devops/boards/backlogs/add-link?view=azure-devops&tabs=browser#link-several-work-items) [link types](https://learn.microsoft.com/en-us/azure/devops/boards/queries/link-type-reference?view=azure-devops&source=recommendations) to ensure that the relationships between work items are accurately represented and can be easily tracked within Azure DevOps. This is crucial for effective project management and ensuring that all team members have a clear understanding of the dependencies between different pieces of work.
 
 ## Sprints
 
 - All work items MUST be assigned to the correct sprint based on the current development phase and timeline. This ensures that the work is properly scheduled and can be tracked effectively within Azure DevOps, allowing for better planning and resource allocation throughout the project lifecycle.
-- The synchronizatiion process MUST review first which Sprints are already available in Azure DevOps and create any missing ones based on the AURORA documentation. This ensures that all work items are assigned to the correct sprint and that the project timeline is accurately reflected in Azure DevOps, facilitating better project management and tracking.
+- The synchronization process MUST review first which Sprints are already available in Azure DevOps and create any missing ones based on the AURORA documentation. This ensures that all work items are assigned to the correct sprint and that the project timeline is accurately reflected in Azure DevOps, facilitating better project management and tracking.
+
+### Iteration Path Format (CRITICAL)
+
+> **IMPORTANT**: The `System.IterationPath` field does **NOT** include the `\Iteration\` segment from the classification tree path.
+
+| Context                                                  | Format              | Example                                           |
+| -------------------------------------------------------- | ------------------- | ------------------------------------------------- |
+| Classification tree (`az boards iteration project list`) | `\Project\Sprint N` | `\YourProject\Sprint 1`                           |
+| `System.IterationPath` field value                       | `Project\Sprint N`  | `YourProject\Sprint 1`                            |
+| `az boards work-item update --iteration`                 | `Project\Sprint N`  | `YourProject\Sprint 1`                            |
+| WIQL queries                                             | `Project\Sprint N`  | `[System.IterationPath] = 'YourProject\Sprint 1'` |
+
+```powershell
+# CORRECT - works for both CLI and REST API
+az boards work-item update --id 12345 --iteration "YourProject\Sprint 1"
+
+# WRONG - causes TF401347 error
+az boards work-item update --id 12345 --iteration "YourProject\Sprint 1"
+az boards work-item update --id 12345 --iteration "\YourProject\Sprint 1"
+az boards work-item update --id 12345 --iteration "Sprint 1"
+```
 
 ## Areas
 
@@ -128,9 +213,47 @@ git commit -m "feat(AB#12345): Implement core feature logic"
 - Any work item created MUST include the tag 'Bolt Framework' to ensure it is easily identifiable and can be managed appropriately within Azure DevOps.
 - All commits that reference a work item MUST be linked to that work item in Azure DevOps to maintain traceability between code changes and the corresponding work items, facilitating better project management and tracking of progress.
 
+## Scripts Inventory
+
+Scripts are available in both **PowerShell** and **Bash**. Both versions are functionally equivalent.
+All scripts load configuration from the project-root `.env` file via shared loaders:
+
+- **PowerShell**: `_EnvLoader.ps1` — dot-sourced automatically, builds `$script:Config`, provides `Write-StatusMessage`
+- **Bash**: `_env-loader.sh` — sourced automatically, exports `$ORG`, `$PROJECT`, etc.
+
+### PowerShell (`scripts/powershell/`)
+
+| Script                         | Purpose                                                             |
+| ------------------------------ | ------------------------------------------------------------------- |
+| `_EnvLoader.ps1`               | Shared helper: loads `.env`, builds `$script:Config`, validates PAT |
+| `Sync-AuroraToDevOps.ps1`      | Push AURORA specs to Azure DevOps work items                        |
+| `Sync-DevOpsStatus.ps1`        | Pull task status from DevOps and update AURORA specs                |
+| `Import-DevOpsToAurora.ps1`    | Import existing DevOps work items into AURORA format                |
+| `Assign-WorkItemsToSprint.ps1` | Bulk assign work items to a sprint/iteration                        |
+| `Fix-DevOpsWorkItems.ps1`      | Fix tags ("Bolt Framework") and parent-child relationships          |
+| `Verify-ParentChildLinks.ps1`  | Verify parent-child link integrity for tasks                        |
+
+Template versions of the core sync scripts are preserved as `*.template.ps1` for reference.
+
+### Bash (`scripts/bash/`)
+
+| Script                           | Purpose                                                    |
+| -------------------------------- | ---------------------------------------------------------- |
+| `_env-loader.sh`                 | Shared helper: loads `.env`, sets config vars, validates   |
+| `sync-aurora-to-devops.sh`       | Push AURORA specs to Azure DevOps work items               |
+| `sync-devops-status.sh`          | Pull task status from DevOps and update AURORA specs       |
+| `import-devops-to-aurora.sh`     | Import existing DevOps work items into AURORA format       |
+| `assign-work-items-to-sprint.sh` | Bulk assign work items to a sprint/iteration               |
+| `fix-devops-work-items.sh`       | Fix tags ("Bolt Framework") and parent-child relationships |
+| `verify-parent-child-links.sh`   | Verify parent-child link integrity for tasks               |
+
+> See [`templates/template.env`](templates/template.env) for a documented list of all environment variables.
+
 ## References
 
 - [Azure DevOps CLI Docs](https://learn.microsoft.com/en-us/cli/azure/devops)
-- [Work Items REST API](https://learn.microsoft.com/en-us/rest/api/azure/devops/wit/work-items)
-- Scripts: `.github/skills/azure-devops-sync/scripts/`
+- PowerShell scripts: `.github/skills/azure-devops-sync/scripts/powershell/`
+- Bash scripts: `.github/skills/azure-devops-sync/scripts/bash/`
+- Environment template: `.github/skills/azure-devops-sync/templates/template.env`
 - Mappings: `.github/skills/azure-devops-sync/mappings/`
+- [Link Types References](https://learn.microsoft.com/en-us/azure/devops/boards/queries/link-type-reference?view=azure-devops&source=recommendations)

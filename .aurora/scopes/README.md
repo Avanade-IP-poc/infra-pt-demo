@@ -21,7 +21,14 @@ Para aplicar uno de estos JSON al proyecto destino, añade un `item` en `scope.y
 - `destination.folder: .vscode`
 - `destination.name: settings.json`
 
-Esto permite versionar presets MCP por scope y proyectarlos en `.vscode/settings.json` del proyecto generado.
+Para alinear nombres entre `chat.mcp.access.allowedServers` y la configuración real de servidores en VS Code, añade además un segundo `item` con:
+
+- `source.type: local_file`
+- `source.path: scopes/<scope>/mcp-tools/default.mcp.servers.json`
+- `destination.folder: .vscode`
+- `destination.name: mcp.json`
+
+Esto permite versionar presets MCP por scope y proyectarlos en `.vscode/settings.json` y `.vscode/mcp.json` del proyecto generado.
 
 ## Archivo de configuración
 

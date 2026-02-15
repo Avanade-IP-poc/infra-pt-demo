@@ -19,11 +19,11 @@ This skill enables seamless integration between AURORA methodology artifacts and
 
 ### 📋 Artifact Mappings
 
-| AURORA Artifact                  | Azure DevOps Work Item | Relationship    |
-| -------------------------------- | ---------------------- | --------------- |
-| `specs/XXX-feature-name/`        | **Feature** (or Epic)  | 1:1             |
-| User Story in `requirements.md`  | **User Story**         | N:1 (to Feature)|
-| Bolt task in `planning/tasks.md` | **Task**               | N:1 (to Story)  |
+| AURORA Artifact                  | Azure DevOps Work Item | Relationship     |
+| -------------------------------- | ---------------------- | ---------------- |
+| `specs/XXX-feature-name/`        | **Feature** (or Epic)  | 1:1              |
+| User Story in `requirements.md`  | **User Story**         | N:1 (to Feature) |
+| Bolt task in `planning/tasks.md` | **Task**               | N:1 (to Story)   |
 
 ## Quick Start
 
@@ -34,25 +34,25 @@ This skill enables seamless integration between AURORA methodology artifacts and
 winget install -e --id Microsoft.AzureCLI
 az extension add --name azure-devops
 
-# Create PAT at: https://dev.azure.com/jdmveira/_usersSettings/tokens
+# Create PAT at: https://dev.azure.com/<your-org>/_usersSettings/tokens
 # Scopes: Work Items (Read, Write, & Manage)
 
 # Configure
 $env:AZURE_DEVOPS_EXT_PAT = "your-pat-token"
-az devops configure --defaults organization=https://dev.azure.com/jdmveira project="Registro Horario"
+az devops configure --defaults organization=https://dev.azure.com/<your-org> project="<your-project>"
 
 # Verify
-az devops project show --project "Registro Horario"
+az devops project show --project "<your-project>"
 ```
 
 ### 2. Push AURORA Feature to DevOps
 
 ```powershell
 # After creating a feature with @Aurora Feature
-.\scripts\powershell\Sync-AuroraToDevOps.ps1 -FeaturePath "specs/001-time-tracking" -DryRun
+.\.github\skills\azure-devops-sync\scripts\powershell\Sync-AuroraToDevOps.ps1 -FeaturePath "specs/001-time-tracking" -DryRun
 
 # If preview looks good, execute:
-.\scripts\powershell\Sync-AuroraToDevOps.ps1 -FeaturePath "specs/001-time-tracking"
+.\.github\skills\azure-devops-sync\scripts\powershell\Sync-AuroraToDevOps.ps1 -FeaturePath "specs/001-time-tracking"
 ```
 
 **Result**: Creates Feature work item with child User Stories and Tasks, generates `.metadata/devops-sync.json`
@@ -61,10 +61,10 @@ az devops project show --project "Registro Horario"
 
 ```powershell
 # Sync task completion states (run in CI/CD or manually)
-.\scripts\powershell\Sync-DevOpsStatus.ps1 -FeaturePath "specs/001-time-tracking"
+.\.github\skills\azure-devops-sync\scripts\powershell\Sync-DevOpsStatus.ps1 -FeaturePath "specs/001-time-tracking"
 
 # Auto-commit changes
-.\scripts\powershell\Sync-DevOpsStatus.ps1 -AutoCommit
+.\.github\skills\azure-devops-sync\scripts\powershell\Sync-DevOpsStatus.ps1 -AutoCommit
 ```
 
 **Result**: Updates checkboxes in `planning/tasks.md` based on DevOps task states
@@ -78,7 +78,7 @@ az boards work-item query `
   --output table
 
 # Import Feature #12345
-.\scripts\powershell\Import-DevOpsToAurora.ps1 `
+.\.github\skills\azure-devops-sync\scripts\powershell\Import-DevOpsToAurora.ps1 `
   -WorkItemId 12345 `
   -OutputPath "specs/001-time-tracking" `
   -IncludeChildren
@@ -109,8 +109,8 @@ specs/001-time-tracking/
   "version": "1.0.0",
   "auroraFeatureId": "001-time-tracking",
   "azureDevOps": {
-    "organization": "https://dev.azure.com/jdmveira",
-    "project": "Registro Horario",
+    "organization": "https://dev.azure.com/<your-org>",
+    "project": "<your-project>",
     "featureWorkItemId": 12345,
     "userStories": [
       {
@@ -141,14 +141,16 @@ specs/001-time-tracking/
 **Purpose**: Push AURORA specs → Azure DevOps
 
 **Parameters**:
+
 - `-FeaturePath` (required): Path to feature folder
 - `-Mode` (Full|Incremental): Sync mode (default: Incremental)
 - `-DryRun`: Preview changes without creating work items
 - `-Force`: Skip confirmation prompts
 
 **Example**:
+
 ```powershell
-.\scripts\powershell\Sync-AuroraToDevOps.ps1 `
+.\.github\skills\azure-devops-sync\scripts\powershell\Sync-AuroraToDevOps.ps1 `
   -FeaturePath "specs/001-time-tracking" `
   -Mode Incremental `
   -DryRun
@@ -159,14 +161,16 @@ specs/001-time-tracking/
 **Purpose**: Pull Azure DevOps work items → AURORA specs
 
 **Parameters**:
+
 - `-WorkItemId` (required): Feature work item ID
 - `-OutputPath` (required): Target spec folder path
 - `-IncludeChildren`: Import User Stories and Tasks (default: true)
 - `-Force`: Overwrite existing folder
 
 **Example**:
+
 ```powershell
-.\scripts\powershell\Import-DevOpsToAurora.ps1 `
+.\.github\skills\azure-devops-sync\scripts\powershell\Import-DevOpsToAurora.ps1 `
   -WorkItemId 12345 `
   -OutputPath "specs/001-time-tracking" `
   -IncludeChildren
@@ -177,16 +181,18 @@ specs/001-time-tracking/
 **Purpose**: Update task statuses from Azure DevOps
 
 **Parameters**:
+
 - `-FeaturePath` (optional): Specific feature (omit for all)
 - `-AutoCommit`: Automatically commit changes to git
 
 **Example**:
+
 ```powershell
 # Sync all features
-.\scripts\powershell\Sync-DevOpsStatus.ps1 -AutoCommit
+.\.github\skills\azure-devops-sync\scripts\powershell\Sync-DevOpsStatus.ps1 -AutoCommit
 
 # Sync specific feature
-.\scripts\powershell\Sync-DevOpsStatus.ps1 -FeaturePath "specs/001-time-tracking"
+.\.github\skills\azure-devops-sync\scripts\powershell\Sync-DevOpsStatus.ps1 -FeaturePath "specs/001-time-tracking"
 ```
 
 ## Best Practices
@@ -230,10 +236,10 @@ Related: specs/001-time-tracking/"
 
 ```powershell
 # Preview
-.\scripts\powershell\Sync-AuroraToDevOps.ps1 -FeaturePath "specs/001-time-tracking" -DryRun
+.\.github\skills\azure-devops-sync\scripts\powershell\Sync-AuroraToDevOps.ps1 -FeaturePath "specs/001-time-tracking" -DryRun
 
 # Review output, then execute if correct
-.\scripts\powershell\Sync-AuroraToDevOps.ps1 -FeaturePath "specs/001-time-tracking"
+.\.github\skills\azure-devops-sync\scripts\powershell\Sync-AuroraToDevOps.ps1 -FeaturePath "specs/001-time-tracking"
 ```
 
 ## CI/CD Integration
@@ -259,16 +265,16 @@ steps:
     displayName: 'Sync Task Statuses from DevOps'
     inputs:
       targetType: 'filePath'
-      filePath: 'scripts/powershell/Sync-DevOpsStatus.ps1'
+      filePath: '.github/skills/azure-devops-sync/scripts/powershell/Sync-DevOpsStatus.ps1'
       arguments: '-AutoCommit'
     env:
-      AZURE_DEVOPS_EXT_PAT: $(DevOpsPAT)  # Secure variable
+      AZURE_DEVOPS_EXT_PAT: $(DevOpsPAT) # Secure variable
 
   - task: PowerShell@2
     displayName: 'Push New Features to DevOps'
     inputs:
       targetType: 'filePath'
-      filePath: 'scripts/powershell/Sync-AuroraToDevOps.ps1'
+      filePath: '.github/skills/azure-devops-sync/scripts/powershell/Sync-AuroraToDevOps.ps1'
       arguments: '-Mode Incremental'
     env:
       AZURE_DEVOPS_EXT_PAT: $(DevOpsPAT)
@@ -283,6 +289,7 @@ ERROR: Failed to connect to Azure DevOps
 ```
 
 **Solution**:
+
 ```powershell
 # Verify PAT is set
 $env:AZURE_DEVOPS_EXT_PAT | Out-Null
@@ -292,7 +299,7 @@ if (-not $?) { Write-Host "PAT not set!" }
 az devops configure --list
 
 # Re-authenticate
-az devops login --organization https://dev.azure.com/jdmveira
+az devops login --organization https://dev.azure.com/<your-org>
 ```
 
 ### Duplicate Work Items
@@ -316,6 +323,7 @@ Both AURORA and DevOps modified simultaneously
 ⚠️ **NEVER commit PAT to git repository**
 
 ✅ **Secure PAT storage options**:
+
 - Azure Key Vault
 - GitHub Secrets (for Actions)
 - Azure DevOps Variable Groups (secure variables)
@@ -329,11 +337,11 @@ Both AURORA and DevOps modified simultaneously
 
 - [SKILL.md](.github/skills/azure-devops-sync/SKILL.md) - Complete documentation
 - [Constitution Article XI](memory/constitution.md#article-xi-cicd) - DevOps configuration
-- [Azure DevOps Project](https://dev.azure.com/jdmveira/Registro%20Horario)
 - [Azure DevOps CLI Docs](https://learn.microsoft.com/en-us/cli/azure/devops)
+- [Work Items REST API](https://learn.microsoft.com/en-us/rest/api/azure/devops/wit/work-items)
 
 ---
 
-**Skill Version**: 1.0.0  
-**Last Updated**: 2026-02-13  
+**Skill Version**: 1.0.0
+**Last Updated**: 2026-02-13
 **AURORA Compatibility**: 1.0.0+

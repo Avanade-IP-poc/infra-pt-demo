@@ -19,6 +19,17 @@ items:
       folder: .vscode
       name: settings.json
 
+  - id: <scope-name>-mcp-servers-local
+    kind: templates
+    enabled: false
+    tags: ['mcp', 'servers']
+    source:
+      type: local_file
+      path: scopes/<scope-name>/mcp-tools/default.mcp.servers.json
+    destination:
+      folder: .vscode
+      name: mcp.json
+
   - id: <unique-id>
     kind: instructions
     enabled: false

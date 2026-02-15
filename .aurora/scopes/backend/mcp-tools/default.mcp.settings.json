@@ -1,20 +1,27 @@
 {
     "chat.mcp.access": {
         "allowedServers": [
-            "my-custom-server"
+            "github",
+            "context7",
+            "dbhub",
+            "mongoDb"
         ],
         "blockedServers": [
-            "experimental-server"
+            "playwright"
         ]
     },
     "chat.mcp.tools": {
         "enabled": [
-            "summarize",
-            "generateCode"
+            "repoRead",
+            "issueRead",
+            "pullRequestRead",
+            "databaseRead",
+            "docsFetch"
         ],
         "disabled": [
-            "translate",
-            "debug"
+            "databaseDrop",
+            "databaseDelete",
+            "repoAdminWrite"
         ]
     }
 }

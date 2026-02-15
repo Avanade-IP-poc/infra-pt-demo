@@ -13,6 +13,17 @@ items:
       folder: .vscode
       name: settings.json
 
+  - id: data-mcp-servers-local
+    kind: templates
+    enabled: false
+    tags: ['mcp', 'servers']
+    source:
+      type: local_file
+      path: scopes/data/mcp-tools/default.mcp.servers.json
+    destination:
+      folder: .vscode
+      name: mcp.json
+
   - id: data-sql-optimization-awesome
     kind: prompts
     enabled: false
