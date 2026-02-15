@@ -1,11 +1,13 @@
 #!/bin/bash
 # =============================================================================
-# AURORA-IA / AI-DLC - Project Initialization Script v1.0.0
+# Bolt Framework - Project Initialization Script v2.0.0
+# =============================================================================
+# Simplified: fills base constitution articles + generates scopes.yaml
 # =============================================================================
 
 set -e
 
-# Colors for output
+# --- Colors -------------------------------------------------------------------
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -13,942 +15,917 @@ BLUE='\033[0;34m'
 CYAN='\033[0;36m'
 MAGENTA='\033[0;35m'
 WHITE='\033[1;37m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
-# Configuration variables
-PROJECT_SCOPE=""
-INFRA_SCOPE=""
-BACKEND_LANGUAGE=""
-BACKEND_VERSION=""
-BACKEND_FRAMEWORK=""
-ARCHITECTURE=""
-FRONTEND_FRAMEWORK=""
-CQRS_ENABLED=""
-DOCKER_ENABLED=""
-ORCHESTRATION=""
-IAC_TOOL=""
-CICD_PLATFORM=""
-DATABASE=""
-DATA_ACCESS=""
-ENVIRONMENTS=""
-OBSERVABILITY=""
-AUTO_MODE=false
-AUTO_PROFILE=""
+# --- Script globals -----------------------------------------------------------
 OUTPUT_DIR=""
 PROJECT_TYPE=""
 SOURCE_DIR=""
-AURORA_ROOT=""
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Logging functions
-log_info() { echo -e "${BLUE}[INFO]${NC} $1"; }
-log_success() { echo -e "${GREEN}[SUCCESS]${NC} $1"; }
-log_warning() { echo -e "${YELLOW}[WARNING]${NC} $1"; }
-log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
-log_step() { echo -e "${CYAN}[STEP]${NC} $1"; }
+# --- Decision variables -------------------------------------------------------
+D_PROJECT_TYPE=""
+D_INFRA_SCOPE=""
+D_SCOPES=()
+D_ENVIRONMENTS=()
+D_CONFIG_MANAGEMENT=""
+D_SECRETS_DEV=""
+D_FEATURE_FLAGS=""
+D_CICD_PLATFORM=""
+D_DEPLOY_STRATEGY=""
+D_BRANCH_STRATEGY=""
+D_OBSERVABILITY=""
+D_VNET=""
+D_PRIVATE_ENDPOINTS=""
+D_WAF=""
+D_ENCRYPTION_KEYS=""
+D_PII_HANDLING=""
+D_COMPLIANCE=()
+D_AUTO_DEPLOY_DEV=""
+D_AUTO_DEPLOY_UAT=""
+D_AUTO_DEPLOY_PRE=""
+D_AUTO_DEPLOY_PROD=""
+D_APP_PIPELINE_STAGES=()
+D_UNIT_TEST_COVERAGE=0
+D_MUTATION_SCORE=0
+D_INFRA_PIPELINE_STAGES=()
+D_DEPLOY_PIPELINE_STAGES=()
+D_INFRA_MONITORING=()
 
-print_banner() {
+# --- Logging ------------------------------------------------------------------
+log_info()    { echo -e "${BLUE}[INFO]${NC} $1"; }
+log_success() { echo -e "${GREEN}[OK]  ${NC} $1"; }
+log_warn()    { echo -e "${YELLOW}[WARN]${NC} $1"; }
+log_error()   { echo -e "${RED}[ERR] ${NC} $1"; }
+log_step()    { echo -e "${CYAN}[STEP]${NC} $1"; }
+
+# --- Banner -------------------------------------------------------------------
+show_banner() {
     echo -e "${MAGENTA}"
-    echo "╔═════════════════════════════════════════════════════════════╗"
-    echo "║                                                             ║"
-    echo "║       ██████╗  ██████╗ ██╗  ████████╗    ███████╗           ║"
-    echo "║       ██╔══██╗██╔═══██╗██║  ╚══██╔══╝    ██╔════╝           ║"
-    echo "║       ██████╔╝██║   ██║██║     ██║       █████╗             ║"
-    echo "║       ██╔══██╗██║   ██║██║     ██║       ██╔══╝             ║"
-    echo "║       ██████╔╝╚██████╔╝███████╗██║       ██╗     ██║        ║"
-    echo "║       ╚═════╝  ╚═════╝ ╚══════╝╚═╝       ╚═╝     ╚═╝        ║"
-    echo "║                                                             ║"
-    echo "║        Avanade AI-Driven Development Framework v1.0.1       ║"
-    echo "║                                                             ║"
-    echo "╚═════════════════════════════════════════════════════════════╝"
+    cat << 'EOF'
+╔═════════════════════════════════════════════════════════════╗
+║                                                             ║
+║       ██████╗  ██████╗ ██╗  ████████╗    ███████╗           ║
+║       ██╔══██╗██╔═══██╗██║  ╚══██╔══╝    ██╔════╝           ║
+║       ██████╔╝██║   ██║██║     ██║       █████╗             ║
+║       ██╔══██╗██║   ██║██║     ██║       ██╔══╝             ║
+║       ██████╔╝╚██████╔╝███████╗██║       ██╗     ██║        ║
+║       ╚═════╝  ╚═════╝ ╚══════╝╚═╝       ╚═╝     ╚═╝        ║
+║                                                             ║
+║           Bolt Framework — AI-DLC v2.0.0                    ║
+║                                                             ║
+╚═════════════════════════════════════════════════════════════╝
+EOF
     echo -e "${NC}"
 }
 
-validate_command_line_config() {
-    # Set defaults if not specified
-    [ -z "$PROJECT_SCOPE" ] && PROJECT_SCOPE="app-only"
-    [ -z "$FRONTEND_FRAMEWORK" ] && FRONTEND_FRAMEWORK="none"
-    [ -z "$BACKEND_LANGUAGE" ] && BACKEND_LANGUAGE="csharp"
-    [ -z "$ARCHITECTURE" ] && ARCHITECTURE="modular-monolith"
-    [ -z "$INFRA_SCOPE" ] && INFRA_SCOPE="workload"
-    [ -z "$IAC_TOOL" ] && IAC_TOOL="bicep"
-    [ -z "$DOCKER_ENABLED" ] && DOCKER_ENABLED="yes"
-    [ -z "$CQRS_ENABLED" ] && CQRS_ENABLED="no"
-
-    # Validate project scope
-    if [[ "$PROJECT_SCOPE" != "infra-only" && "$PROJECT_SCOPE" != "app-only" && "$PROJECT_SCOPE" != "full-stack" ]]; then
-        log_error "Invalid --scope value: $PROJECT_SCOPE. Must be: infra-only, app-only, or full-stack"
-        exit 1
-    fi
-
-    # Validate backend language
-    if [[ "$BACKEND_LANGUAGE" != "csharp" && "$BACKEND_LANGUAGE" != "nodejs" ]]; then
-        log_error "Invalid --backend value: $BACKEND_LANGUAGE. Must be: csharp or nodejs"
-        exit 1
-    fi
-
-    # Validate frontend framework
-    if [[ "$FRONTEND_FRAMEWORK" != "none" && "$FRONTEND_FRAMEWORK" != "react" && "$FRONTEND_FRAMEWORK" != "vue" && "$FRONTEND_FRAMEWORK" != "angular" && "$FRONTEND_FRAMEWORK" != "blazor" ]]; then
-        log_error "Invalid --frontend value: $FRONTEND_FRAMEWORK. Must be: none, react, vue, angular, or blazor"
-        exit 1
-    fi
-
-    # Validate architecture
-    if [[ "$ARCHITECTURE" != "modular-monolith" && "$ARCHITECTURE" != "microservices" && "$ARCHITECTURE" != "monolith" && "$ARCHITECTURE" != "serverless" && "$ARCHITECTURE" != "event-driven" ]]; then
-        log_error "Invalid --architecture value: $ARCHITECTURE. Must be: modular-monolith, microservices, monolith, serverless, or event-driven"
-        exit 1
-    fi
-
-    # Validate infra scope
-    if [[ "$INFRA_SCOPE" != "landing-zone" && "$INFRA_SCOPE" != "workload" && "$INFRA_SCOPE" != "both" ]]; then
-        log_error "Invalid --infra-scope value: $INFRA_SCOPE. Must be: landing-zone, workload, or both"
-        exit 1
-    fi
-
-    # Validate IAC tool
-    if [[ "$IAC_TOOL" != "bicep" && "$IAC_TOOL" != "terraform" && "$IAC_TOOL" != "pulumi" ]]; then
-        log_error "Invalid --iac value: $IAC_TOOL. Must be: bicep, terraform, or pulumi"
-        exit 1
-    fi
-
-    # Validate boolean flags
-    if [[ "$DOCKER_ENABLED" != "yes" && "$DOCKER_ENABLED" != "no" ]]; then
-        log_error "Invalid --docker value: $DOCKER_ENABLED. Must be: yes or no"
-        exit 1
-    fi
-
-    if [[ "$CQRS_ENABLED" != "yes" && "$CQRS_ENABLED" != "no" ]]; then
-        log_error "Invalid --cqrs value: $CQRS_ENABLED. Must be: yes or no"
-        exit 1
-    fi
-
-    # Set derived values
-    if [ "$BACKEND_LANGUAGE" = "csharp" ]; then
-        BACKEND_VERSION=".NET 10"
-        BACKEND_FRAMEWORK="Minimal APIs"
-        DATA_ACCESS="Entity Framework Core"
-    else
-        BACKEND_VERSION="Node.js 22"
-        BACKEND_FRAMEWORK="NestJS"
-        DATA_ACCESS="Prisma"
-    fi
-
-    DATABASE="PostgreSQL"
-    ORCHESTRATION="Docker Compose"
-    CICD_PLATFORM="GitHub Actions"
-    ENVIRONMENTS="dev,staging,prod"
-    OBSERVABILITY="Application Insights"
-
-    log_success "Command-line configuration validated successfully"
-}
-
-apply_auto_profile() {
-    local profile="$1"
-    log_step "Applying auto profile: $profile"
-
-    case "$profile" in
-        "app-dotnet")
-            PROJECT_SCOPE="app-only"
-            BACKEND_LANGUAGE="csharp"
-            ARCHITECTURE="modular-monolith"
-            FRONTEND_FRAMEWORK="none"
-            DOCKER_ENABLED="yes"
-            CQRS_ENABLED="no"
-            ;;
-        "app-node")
-            PROJECT_SCOPE="app-only"
-            BACKEND_LANGUAGE="nodejs"
-            ARCHITECTURE="modular-monolith"
-            FRONTEND_FRAMEWORK="none"
-            DOCKER_ENABLED="yes"
-            CQRS_ENABLED="no"
-            ;;
-        "infra-landing")
-            PROJECT_SCOPE="infra-only"
-            INFRA_SCOPE="landing-zone"
-            IAC_TOOL="bicep"
-            FRONTEND_FRAMEWORK="none"
-            ;;
-        "infra-workload")
-            PROJECT_SCOPE="infra-only"
-            INFRA_SCOPE="workload"
-            IAC_TOOL="bicep"
-            FRONTEND_FRAMEWORK="none"
-            ;;
-        "fullstack-react")
-            PROJECT_SCOPE="full-stack"
-            BACKEND_LANGUAGE="csharp"
-            ARCHITECTURE="modular-monolith"
-            FRONTEND_FRAMEWORK="react"
-            DOCKER_ENABLED="yes"
-            CQRS_ENABLED="yes"
-            IAC_TOOL="bicep"
-            ;;
-        "fullstack-vue")
-            PROJECT_SCOPE="full-stack"
-            BACKEND_LANGUAGE="csharp"
-            ARCHITECTURE="modular-monolith"
-            FRONTEND_FRAMEWORK="vue"
-            DOCKER_ENABLED="yes"
-            CQRS_ENABLED="yes"
-            IAC_TOOL="bicep"
-            ;;
-        *)
-            log_error "Unknown auto profile: $profile"
-            exit 1
-            ;;
-    esac
-
-    # Apply validation after setting profile values
-    validate_command_line_config
-
-    log_success "Auto profile '$profile' applied successfully"
-}
-
-create_project_structure() {
-    log_step "Creating new project structure..."
-
-    mkdir -p "$OUTPUT_DIR"
-    mkdir -p "$OUTPUT_DIR/docs"
-
-    if [ "$PROJECT_SCOPE" = "app-only" ] || [ "$PROJECT_SCOPE" = "full-stack" ]; then
-        mkdir -p "$OUTPUT_DIR/src/backend"
-        log_info "Created src/backend/ directory (PROJECT_SCOPE: $PROJECT_SCOPE)"
-    fi
-
-    if [ "$FRONTEND_FRAMEWORK" != "none" ] && ([ "$PROJECT_SCOPE" = "app-only" ] || [ "$PROJECT_SCOPE" = "full-stack" ]); then
-        mkdir -p "$OUTPUT_DIR/src/frontend"
-        log_info "Created src/frontend/ directory (FRONTEND_FRAMEWORK: $FRONTEND_FRAMEWORK)"
-    fi
-
-    if [ "$PROJECT_SCOPE" = "infra-only" ] || [ "$PROJECT_SCOPE" = "full-stack" ]; then
-        mkdir -p "$OUTPUT_DIR/infra"
-        log_info "Created infra/ directory (PROJECT_SCOPE: $PROJECT_SCOPE)"
-    fi
-
-    if [ "$PROJECT_TYPE" = "brown" ]; then
-        mkdir -p "$OUTPUT_DIR/legacy"
-        log_info "Created legacy/ directory for brownfield project"
-    else
-        mkdir -p "$OUTPUT_DIR/origin"
-        log_info "Created origin/ directory for greenfield project"
-    fi
-
-    log_success "Project structure created successfully"
-}
-
-copy_legacy_source() {
-    if [ "$PROJECT_TYPE" = "brown" ] && [ -n "$SOURCE_DIR" ] && [ -d "$SOURCE_DIR" ]; then
-        log_step "Copying legacy source files to legacy/ directory..."
-        cp -r "$SOURCE_DIR/"* "$OUTPUT_DIR/legacy/" 2>/dev/null || true
-        log_success "Legacy source copied to legacy/"
-    fi
-}
-
-copy_aurora_framework() {
-    log_step "Copying complete AURORA-IA framework..."
-
-    AURORA_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    log_info "AURORA root detected: $AURORA_ROOT"
-
-    log_info "Copying complete .github directory..."
-    if [ -d "$AURORA_ROOT/.github" ]; then
-        rm -rf "$OUTPUT_DIR/.github" 2>/dev/null || true
-        cp -r "$AURORA_ROOT/.github" "$OUTPUT_DIR/" 2>/dev/null || true
-        log_success "Complete .github directory copied successfully"
-    fi
-
-    log_info "Copying complete .aurora directory..."
-    if [ -d "$AURORA_ROOT/.aurora" ]; then
-        rm -rf "$OUTPUT_DIR/.aurora" 2>/dev/null || true
-        cp -r "$AURORA_ROOT/.aurora" "$OUTPUT_DIR/" 2>/dev/null || true
-        log_success ".aurora directory copied"
-    fi
-
-    # Copy framework documentation files from .aurora to project root
-    log_info "Copying AURORA framework documentation..."
-    if [ -f "$AURORA_ROOT/.aurora/README.md" ]; then
-        cp "$AURORA_ROOT/.aurora/README.md" "$OUTPUT_DIR/" 2>/dev/null || true
-        log_info "README.md copied to project root"
-    fi
-    if [ -f "$AURORA_ROOT/.aurora/CHANGELOG.md" ]; then
-        cp "$AURORA_ROOT/.aurora/CHANGELOG.md" "$OUTPUT_DIR/" 2>/dev/null || true
-        log_info "CHANGELOG.md copied to project root"
-    fi
-    if [ -f "$AURORA_ROOT/.aurora/CONTRIBUTING.md" ]; then
-        cp "$AURORA_ROOT/.aurora/CONTRIBUTING.md" "$OUTPUT_DIR/" 2>/dev/null || true
-        log_info "CONTRIBUTING.md copied to project root"
-    fi
-    if [ -f "$AURORA_ROOT/.aurora/LICENSE" ]; then
-        cp "$AURORA_ROOT/.aurora/LICENSE" "$OUTPUT_DIR/" 2>/dev/null || true
-        log_info "LICENSE copied to project root"
-    fi
-    if [ -f "$AURORA_ROOT/.aurora/PENDIENTES.md" ]; then
-        cp "$AURORA_ROOT/.aurora/PENDIENTES.md" "$OUTPUT_DIR/" 2>/dev/null || true
-        log_info "PENDIENTES.md copied to project root"
-    fi
-
-    # Copy additional files from AURORA root
-    if [ -f "$AURORA_ROOT/INITIALIZER.md" ]; then
-        cp "$AURORA_ROOT/INITIALIZER.md" "$OUTPUT_DIR/" 2>/dev/null || true
-        log_info "INITIALIZER.md copied to project root"
-    fi
-    if [ -f "$AURORA_ROOT/USAGE.md" ]; then
-        cp "$AURORA_ROOT/USAGE.md" "$OUTPUT_DIR/" 2>/dev/null || true
-        log_info "USAGE.md copied to project root"
-    fi
-
-    log_success "AURORA framework copied successfully"
-}
-
-prefill_constitution() {
-    log_step "Customizing constitution.md with your configuration..."
-
-    local constitution_file="$OUTPUT_DIR/.aurora/memory/constitution.md"
-
-    if [ ! -f "$constitution_file" ]; then
-        log_warning "Constitution file not found: $constitution_file"
-        return
-    fi
-
-    # ─────────────────────────────────────────────────────────────────────────
-    # PROJECT SCOPE
-    # ─────────────────────────────────────────────────────────────────────────
-    case "$PROJECT_SCOPE" in
-        "infra-only")
-            sed -i 's/- \[ \] \*\*🏗️ Infrastructure Only\*\*/- [x] **🏗️ Infrastructure Only**/' "$constitution_file"
-            ;;
-        "app-only")
-            sed -i 's/- \[ \] \*\*💻 Application Development Only\*\*/- [x] **💻 Application Development Only**/' "$constitution_file"
-            ;;
-        "full-stack")
-            sed -i 's/- \[ \] \*\*🚀 Full Stack (App + Infrastructure)\*\*/- [x] **🚀 Full Stack (App + Infrastructure)**/' "$constitution_file"
-            ;;
-    esac
-
-    # ─────────────────────────────────────────────────────────────────────────
-    # INFRASTRUCTURE SCOPE (for infra-only and full-stack)
-    # ─────────────────────────────────────────────────────────────────────────
-    if [ "$PROJECT_SCOPE" = "infra-only" ] || [ "$PROJECT_SCOPE" = "full-stack" ]; then
-        case "$INFRA_SCOPE" in
-            "landing-zone")
-                sed -i 's/- \[ \] \*\*Landing Zone\*\*/- [x] **Landing Zone**/' "$constitution_file"
-                ;;
-            "workload")
-                sed -i 's/- \[ \] \*\*Workload Infrastructure\*\*/- [x] **Workload Infrastructure**/' "$constitution_file"
-                ;;
-            "both")
-                sed -i 's/- \[ \] \*\*Both\*\* - Landing Zone + Workload/- [x] **Both** - Landing Zone + Workload/' "$constitution_file"
-                ;;
-        esac
-
-        # IaC Tool
-        case "$IAC_TOOL" in
-            "bicep")
-                sed -i 's/- \[ \] \*\*Azure Bicep\*\*/- [x] **Azure Bicep**/' "$constitution_file"
-                ;;
-            "terraform")
-                sed -i 's/- \[ \] \*\*Terraform\*\*/- [x] **Terraform**/' "$constitution_file"
-                ;;
-            "pulumi")
-                sed -i 's/- \[ \] \*\*Pulumi\*\*/- [x] **Pulumi**/' "$constitution_file"
-                ;;
-        esac
-    fi
-
-    # ─────────────────────────────────────────────────────────────────────────
-    # BACKEND CONFIGURATION (for app-only and full-stack)
-    # ─────────────────────────────────────────────────────────────────────────
-    if [ "$PROJECT_SCOPE" = "app-only" ] || [ "$PROJECT_SCOPE" = "full-stack" ]; then
-        # Backend Language
-        if [ "$BACKEND_LANGUAGE" = "csharp" ]; then
-            sed -i 's/- \[ \] \*\*C# \/ \.NET\*\*/- [x] **C# \/ .NET**/' "$constitution_file"
-            sed -i 's/Version: \[ \] \.NET 10/Version: [x] .NET 10/' "$constitution_file"
-            sed -i 's/API Style: \[ \] Minimal APIs/API Style: [x] Minimal APIs/' "$constitution_file"
-            sed -i 's/ORM: \[ \] Entity Framework Core/ORM: [x] Entity Framework Core/' "$constitution_file"
-        elif [ "$BACKEND_LANGUAGE" = "nodejs" ]; then
-            sed -i 's/- \[ \] \*\*Node\.js \/ TypeScript\*\*/- [x] **Node.js \/ TypeScript**/' "$constitution_file"
-            sed -i 's/Version: \[ \] Node\.js 22/Version: [x] Node.js 22/' "$constitution_file"
-            sed -i 's/Framework: \[ \] NestJS/Framework: [x] NestJS/' "$constitution_file"
-            sed -i 's/ORM: \[ \] Prisma/ORM: [x] Prisma/' "$constitution_file"
-        fi
-
-        # Architecture Pattern
-        case "$ARCHITECTURE" in
-            "modular-monolith")
-                sed -i 's/- \[ \] \*\*Modular Monolith\*\*/- [x] **Modular Monolith**/' "$constitution_file"
-                ;;
-            "microservices")
-                sed -i 's/- \[ \] \*\*Microservices\*\*/- [x] **Microservices**/' "$constitution_file"
-                ;;
-            "monolith")
-                sed -i 's/- \[ \] \*\*Monolith\*\*/- [x] **Monolith**/' "$constitution_file"
-                ;;
-            "serverless")
-                sed -i 's/- \[ \] \*\*Serverless\*\*/- [x] **Serverless**/' "$constitution_file"
-                ;;
-            "event-driven")
-                sed -i 's/- \[ \] \*\*Event-Driven\*\*/- [x] **Event-Driven**/' "$constitution_file"
-                ;;
-        esac
-
-        # CQRS
-        if [ "$CQRS_ENABLED" = "yes" ]; then
-            sed -i 's/- \[ \] \*\*CQRS + Event Sourcing\*\*/- [x] **CQRS + Event Sourcing**/' "$constitution_file"
-        fi
-
-        # Docker
-        if [ "$DOCKER_ENABLED" = "yes" ]; then
-            sed -i 's/- \[ \] \*\*Docker\*\*/- [x] **Docker**/' "$constitution_file"
-            sed -i 's/- \[ \] \*\*Docker Compose\*\*/- [x] **Docker Compose**/' "$constitution_file"
-        fi
-    fi
-
-    # ─────────────────────────────────────────────────────────────────────────
-    # FRONTEND FRAMEWORK
-    # ─────────────────────────────────────────────────────────────────────────
-    if [ "$FRONTEND_FRAMEWORK" != "none" ]; then
-        case "$FRONTEND_FRAMEWORK" in
-            "react")
-                sed -i 's/- \[ \] \*\*React\*\*/- [x] **React**/' "$constitution_file"
-                ;;
-            "vue")
-                sed -i 's/- \[ \] \*\*Vue\.js\*\*/- [x] **Vue.js**/' "$constitution_file"
-                ;;
-            "angular")
-                sed -i 's/- \[ \] \*\*Angular\*\*/- [x] **Angular**/' "$constitution_file"
-                ;;
-            "blazor")
-                sed -i 's/- \[ \] \*\*Blazor\*\*/- [x] **Blazor**/' "$constitution_file"
-                ;;
-        esac
-    fi
-
-    log_success "Constitution.md customized with your configuration"
-}
-
-generate_project_structure() {
-    log_step "Generating project structure for $BACKEND_LANGUAGE + $ARCHITECTURE..."
-
-    # ─────────────────────────────────────────────────────────────────────────
-    # INFRASTRUCTURE ONLY
-    # ─────────────────────────────────────────────────────────────────────────
-    if [ "$PROJECT_SCOPE" = "infra-only" ]; then
-        generate_infrastructure_only_structure
-        return
-    fi
-
-    # ─────────────────────────────────────────────────────────────────────────
-    # C# / .NET STRUCTURES
-    # ─────────────────────────────────────────────────────────────────────────
-    if [ "$BACKEND_LANGUAGE" = "csharp" ]; then
-        case "$ARCHITECTURE" in
-            "modular-monolith")
-                generate_csharp_modular_monolith
-                ;;
-            "microservices")
-                generate_csharp_microservices
-                ;;
-            "monolith")
-                generate_csharp_monolith
-                ;;
-            "serverless")
-                generate_csharp_serverless
-                ;;
-            "event-driven")
-                generate_csharp_modular_monolith  # Uses modular + CQRS+ES
-                ;;
-        esac
-    # ─────────────────────────────────────────────────────────────────────────
-    # NODE.JS / TYPESCRIPT STRUCTURES
-    # ─────────────────────────────────────────────────────────────────────────
-    else
-        case "$ARCHITECTURE" in
-            "modular-monolith")
-                generate_nodejs_modular_monolith
-                ;;
-            "microservices")
-                generate_nodejs_microservices
-                ;;
-            "monolith")
-                generate_nodejs_monolith
-                ;;
-            "serverless")
-                generate_nodejs_serverless
-                ;;
-            "event-driven")
-                generate_nodejs_modular_monolith  # Uses modular + CQRS+ES
-                ;;
-        esac
-    fi
-
-    # ─────────────────────────────────────────────────────────────────────────
-    # INFRASTRUCTURE (for full-stack)
-    # ─────────────────────────────────────────────────────────────────────────
-    if [ "$PROJECT_SCOPE" = "full-stack" ]; then
-        generate_infrastructure_structure
-    fi
-
-    # ─────────────────────────────────────────────────────────────────────────
-    # FRONTEND (if selected)
-    # ─────────────────────────────────────────────────────────────────────────
-    if [ "$FRONTEND_FRAMEWORK" != "none" ]; then
-        generate_frontend_placeholder
-    fi
-
-    log_success "Project structure generated!"
-}
-
-populate_origin_directory() {
-    if [ "$PROJECT_TYPE" = "green" ]; then
-        log_step "Copying greenfield demo from demo/from_rfp/..."
-
-        # Get script directory to find demo files
-        SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-        # Copy RFP demo content ONLY what actually exists
-        if [ -d "$SCRIPT_DIR/demo/from_rfp" ]; then
-            cp -r "$SCRIPT_DIR/demo/from_rfp/"* "$OUTPUT_DIR/origin/" 2>/dev/null || true
-            log_success "Greenfield demo content copied from demo/from_rfp/"
-        else
-            log_warning "demo/from_rfp/ directory not found"
-            echo "# Place your RFP and initial project documents here" > "$OUTPUT_DIR/origin/README.md"
-        fi
-    fi
-}
-
-enhance_brownfield_structure() {
-    if [ "$PROJECT_TYPE" = "brown" ]; then
-        log_step "Copying legacy demo code from demo/from_old_src/..."
-
-        # Get script directory to find demo files
-        SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-        # Copy legacy COBOL demo content ONLY what actually exists
-        if [ -d "$SCRIPT_DIR/demo/from_old_src" ]; then
-            cp -r "$SCRIPT_DIR/demo/from_old_src/"* "$OUTPUT_DIR/legacy/" 2>/dev/null || true
-            log_success "Legacy demo code copied from demo/from_old_src/"
-        else
-            log_warning "demo/from_old_src/ directory not found"
-            echo "# Place your legacy source code here for analysis" > "$OUTPUT_DIR/legacy/README.md"
-        fi
-    fi
-}
-
-generate_infrastructure_only_structure() {
-    log_info "Creating infrastructure-only project structure..."
-
-    case "$INFRA_SCOPE" in
-        "landing-zone")
-            generate_landing_zone_structure
-            ;;
-        "workload")
-            generate_workload_infra_structure
-            ;;
-        "both")
-            generate_landing_zone_structure
-            generate_workload_infra_structure
-            ;;
-    esac
-}
-
-generate_landing_zone_structure() {
-    log_info "Creating Landing Zone structure..."
-
-    mkdir -p "$OUTPUT_DIR/infra/landing-zone/bicep/modules"
-    mkdir -p "$OUTPUT_DIR/infra/landing-zone/policies"
-    mkdir -p "$OUTPUT_DIR/infra/landing-zone/rbac"
-    mkdir -p "$OUTPUT_DIR/infra/landing-zone/scripts"
-
-    if [ "$IAC_TOOL" = "terraform" ]; then
-        mkdir -p "$OUTPUT_DIR/infra/landing-zone/terraform/modules"
-    fi
-}
-
-generate_workload_infra_structure() {
-    log_info "Creating Workload Infrastructure structure..."
-
-    mkdir -p "$OUTPUT_DIR/infra/workload/compute"
-    mkdir -p "$OUTPUT_DIR/infra/workload/storage"
-    mkdir -p "$OUTPUT_DIR/infra/workload/networking"
-    mkdir -p "$OUTPUT_DIR/infra/workload/security"
-    mkdir -p "$OUTPUT_DIR/infra/workload/monitoring"
-
-    if [ "$IAC_TOOL" = "terraform" ]; then
-        mkdir -p "$OUTPUT_DIR/infra/workload/terraform"
-    fi
-}
-
-generate_infrastructure_structure() {
-    log_info "Creating infrastructure structure for full-stack..."
-
-    mkdir -p "$OUTPUT_DIR/infra/bicep"
-    mkdir -p "$OUTPUT_DIR/infra/scripts"
-    mkdir -p "$OUTPUT_DIR/infra/environments/dev"
-    mkdir -p "$OUTPUT_DIR/infra/environments/staging"
-    mkdir -p "$OUTPUT_DIR/infra/environments/prod"
-
-    if [ "$IAC_TOOL" = "terraform" ]; then
-        mkdir -p "$OUTPUT_DIR/infra/terraform"
-    fi
-}
-
-generate_csharp_modular_monolith() {
-    log_info "Creating C# Modular Monolith structure..."
-
-    # Shared Kernel with CQRS
-    mkdir -p "$OUTPUT_DIR/src/backend/Shared/SharedKernel/CQRS"
-    mkdir -p "$OUTPUT_DIR/src/backend/Shared/SharedKernel/Domain"
-    mkdir -p "$OUTPUT_DIR/src/backend/Shared/SharedKernel/Results"
-    mkdir -p "$OUTPUT_DIR/src/backend/Shared/Contracts/IntegrationEvents"
-
-    # Sample module structure
-    mkdir -p "$OUTPUT_DIR/src/backend/Modules/SampleModule/SampleModule.Domain/Entities"
-    mkdir -p "$OUTPUT_DIR/src/backend/Modules/SampleModule/SampleModule.Domain/ValueObjects"
-    mkdir -p "$OUTPUT_DIR/src/backend/Modules/SampleModule/SampleModule.Domain/Events"
-    mkdir -p "$OUTPUT_DIR/src/backend/Modules/SampleModule/SampleModule.Application/Commands"
-    mkdir -p "$OUTPUT_DIR/src/backend/Modules/SampleModule/SampleModule.Application/Queries"
-    mkdir -p "$OUTPUT_DIR/src/backend/Modules/SampleModule/SampleModule.Infrastructure/Persistence"
-    mkdir -p "$OUTPUT_DIR/src/backend/Modules/SampleModule/SampleModule.Infrastructure/External"
-
-    # API Host
-    mkdir -p "$OUTPUT_DIR/src/backend/Host/SampleApp.Host"
-}
-
-generate_csharp_microservices() {
-    log_info "Creating C# Microservices structure..."
-
-    # Shared libraries
-    mkdir -p "$OUTPUT_DIR/src/backend/Shared/SharedKernel"
-    mkdir -p "$OUTPUT_DIR/src/backend/Shared/Contracts"
-    mkdir -p "$OUTPUT_DIR/src/backend/Shared/EventBus"
-
-    # Sample microservice
-    mkdir -p "$OUTPUT_DIR/src/backend/Services/SampleService/SampleService.API"
-    mkdir -p "$OUTPUT_DIR/src/backend/Services/SampleService/SampleService.Domain"
-    mkdir -p "$OUTPUT_DIR/src/backend/Services/SampleService/SampleService.Application"
-    mkdir -p "$OUTPUT_DIR/src/backend/Services/SampleService/SampleService.Infrastructure"
-
-    # API Gateway
-    mkdir -p "$OUTPUT_DIR/src/backend/Gateway/ApiGateway"
-}
-
-generate_csharp_monolith() {
-    log_info "Creating C# Monolith structure..."
-
-    mkdir -p "$OUTPUT_DIR/src/backend/SampleApp.API/Controllers"
-    mkdir -p "$OUTPUT_DIR/src/backend/SampleApp.Domain/Entities"
-    mkdir -p "$OUTPUT_DIR/src/backend/SampleApp.Application/Services"
-    mkdir -p "$OUTPUT_DIR/src/backend/SampleApp.Infrastructure/Data"
-}
-
-generate_csharp_serverless() {
-    log_info "Creating C# Serverless structure..."
-
-    mkdir -p "$OUTPUT_DIR/src/backend/Functions/SampleFunctions"
-    mkdir -p "$OUTPUT_DIR/src/backend/Shared/Models"
-    mkdir -p "$OUTPUT_DIR/src/backend/Shared/Services"
-}
-
-generate_nodejs_modular_monolith() {
-    log_info "Creating Node.js Modular Monolith structure..."
-
-    mkdir -p "$OUTPUT_DIR/src/backend/src/shared/domain"
-    mkdir -p "$OUTPUT_DIR/src/backend/src/shared/infrastructure"
-    mkdir -p "$OUTPUT_DIR/src/backend/src/modules/sample-module/domain"
-    mkdir -p "$OUTPUT_DIR/src/backend/src/modules/sample-module/application"
-    mkdir -p "$OUTPUT_DIR/src/backend/src/modules/sample-module/infrastructure"
-    mkdir -p "$OUTPUT_DIR/src/backend/src/modules/sample-module/presentation"
-}
-
-generate_nodejs_microservices() {
-    log_info "Creating Node.js Microservices structure..."
-
-    mkdir -p "$OUTPUT_DIR/src/backend/shared/contracts"
-    mkdir -p "$OUTPUT_DIR/src/backend/shared/utils"
-    mkdir -p "$OUTPUT_DIR/src/backend/services/sample-service/src"
-    mkdir -p "$OUTPUT_DIR/src/backend/gateway/api-gateway/src"
-}
-
-generate_nodejs_monolith() {
-    log_info "Creating Node.js Monolith structure..."
-
-    mkdir -p "$OUTPUT_DIR/src/backend/src/controllers"
-    mkdir -p "$OUTPUT_DIR/src/backend/src/services"
-    mkdir -p "$OUTPUT_DIR/src/backend/src/models"
-    mkdir -p "$OUTPUT_DIR/src/backend/src/middleware"
-}
-
-generate_nodejs_serverless() {
-    log_info "Creating Node.js Serverless structure..."
-
-    mkdir -p "$OUTPUT_DIR/src/backend/functions"
-    mkdir -p "$OUTPUT_DIR/src/backend/shared"
-    mkdir -p "$OUTPUT_DIR/src/backend/layers"
-}
-
-generate_frontend_placeholder() {
-    log_info "Creating frontend placeholder for $FRONTEND_FRAMEWORK..."
-
-    cat > "$OUTPUT_DIR/src/frontend/README.md" << EOF
-# Frontend - $FRONTEND_FRAMEWORK
-
-> **Note**: This is a placeholder. Generate the actual frontend using:
-
-## React
-\`\`\`bash
-cd src/frontend && npm create vite@latest . -- --template react-ts
-\`\`\`
-
-## Vue.js
-\`\`\`bash
-cd src/frontend && npm create vue@latest .
-\`\`\`
-
-## Angular
-\`\`\`bash
-cd src/frontend && npx @angular/cli new app --directory .
-\`\`\`
-
-## Blazor
-\`\`\`bash
-cd src/frontend && dotnet new blazorserver  # or blazorwasm
-\`\`\`
+# --- Usage --------------------------------------------------------------------
+show_usage() {
+    cat << EOF
+Usage:
+  ./init.sh --output <path> --type <green|brown> [--source <path>] [--help]
+
+Parameters:
+  --output, -o   Where to create the new project
+  --type, -t     'green' (new) or 'brown' (migration from legacy)
+  --source, -s   Required for 'brown' -- directory with legacy code
+  --help, -h     Show this message
+
+The wizard walks you through the mandatory constitution decisions
+and generates a scopes.yaml with the selected scopes.
 EOF
 }
 
-show_usage() {
-    echo "Usage: $0 <output-directory> <project-type> [source-directory] [OPTIONS]"
-    echo ""
-    echo "Parameters:"
-    echo "  output-directory  : Where to create the project structure"
-    echo "  project-type      : 'brown' for Brownfield, 'green' for Greenfield"
-    echo "  source-directory  : (Required for brown) Directory with existing code/docs"
-    echo ""
-    echo "Options:"
-    echo "  --auto <profile>        : Use predefined configuration profile"
-    echo "  --scope <scope>         : Project scope (infra-only, app-only, full-stack)"
-    echo "  --backend <lang>        : Backend language (csharp, nodejs)"
-    echo "  --frontend <fw>         : Frontend framework (none, react, vue, angular, blazor)"
-    echo "  --architecture <arch>   : Architecture pattern (modular-monolith, microservices, monolith, serverless, event-driven)"
-    echo "  --infra-scope <scope>   : Infrastructure scope for infra-only (landing-zone, workload, both)"
-    echo "  --iac <tool>            : Infrastructure as Code tool (bicep, terraform, pulumi)"
-    echo "  --docker <yes/no>       : Enable Docker support"
-    echo "  --cqrs <yes/no>         : Enable CQRS pattern"
-    echo ""
-    echo "Examples:"
-    echo "  $0 ~/my-app green --scope app-only --backend csharp --architecture modular-monolith"
-    echo "  $0 ~/my-app green --scope full-stack --backend nodejs --frontend react --docker yes"
-    echo "  $0 ~/my-infra green --scope infra-only --infra-scope landing-zone --iac bicep"
-    exit 1
+# --- Parse arguments ----------------------------------------------------------
+parse_args() {
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --output|-o)  OUTPUT_DIR="$2";   shift 2 ;;
+            --type|-t)    PROJECT_TYPE="$2"; shift 2 ;;
+            --source|-s)  SOURCE_DIR="$2";   shift 2 ;;
+            --help|-h)    show_usage; exit 0 ;;
+            *) log_error "Unknown option: $1"; show_usage; exit 1 ;;
+        esac
+    done
 }
 
-# Parse arguments
-if [ $# -lt 2 ]; then
-    log_error "Missing required arguments"
-    show_usage
-fi
+# --- Interactive helpers ------------------------------------------------------
 
-OUTPUT_DIR="$1"
-PROJECT_TYPE="$2"
-shift 2
+REPLY_CHOICE=""
+read_choice() {
+    local title="$1"; shift
+    local default_idx="$1"; shift
+    local -a options=()
+    local -a values=()
 
-# Parse source directory (positional argument before flags)
-if [ -n "$1" ] && [[ "$1" != --* ]]; then
-    SOURCE_DIR="$1"
+    while [[ $# -gt 0 && "$1" != "---" ]]; do
+        options+=("$1"); shift
+    done
+    shift  # consume ---
+    while [[ $# -gt 0 ]]; do
+        values+=("$1"); shift
+    done
+
+    echo ""
+    echo -e "  ${CYAN}${title}${NC}"
+    for i in "${!options[@]}"; do
+        local n=$(($i + 1))
+        local marker=""
+        [[ $n -eq $default_idx ]] && marker=" (default)"
+        echo "    ${n}. ${options[$i]}${marker}"
+    done
+
+    echo -ne "${YELLOW}  Select [1-${#options[@]}] > ${NC}"
+    read -r input
+    if [[ -z "$input" ]]; then
+        input=$default_idx
+    fi
+    local idx=$(($input - 1))
+    if [[ $idx -lt 0 || $idx -ge ${#values[@]} ]]; then
+        idx=$(($default_idx - 1))
+    fi
+    REPLY_CHOICE="${values[$idx]}"
+}
+
+REPLY_MULTI=()
+read_multi_choice() {
+    local title="$1"; shift
+    local -a options=()
+    local -a values=()
+
+    while [[ $# -gt 0 && "$1" != "---" ]]; do
+        options+=("$1"); shift
+    done
     shift
-fi
+    while [[ $# -gt 0 ]]; do
+        values+=("$1"); shift
+    done
 
-# Parse command-line options
-while [[ $# -gt 0 ]]; do
-    case $1 in
-        --auto)
-            AUTO_MODE=true
-            AUTO_PROFILE="$2"
-            shift 2
-            ;;
-        --scope)
-            PROJECT_SCOPE="$2"
-            shift 2
-            ;;
-        --backend)
-            BACKEND_LANGUAGE="$2"
-            shift 2
-            ;;
-        --frontend)
-            FRONTEND_FRAMEWORK="$2"
-            shift 2
-            ;;
-        --architecture)
-            ARCHITECTURE="$2"
-            shift 2
-            ;;
-        --infra-scope)
-            INFRA_SCOPE="$2"
-            shift 2
-            ;;
-        --iac)
-            IAC_TOOL="$2"
-            shift 2
-            ;;
-        --docker)
-            DOCKER_ENABLED="$2"
-            shift 2
-            ;;
-        --cqrs)
-            CQRS_ENABLED="$2"
-            shift 2
-            ;;
-        *)
-            log_error "Unknown option: $1"
-            show_usage
-            ;;
+    echo ""
+    echo -e "  ${CYAN}${title}${NC}"
+    for i in "${!options[@]}"; do
+        echo "    $(($i + 1)). ${options[$i]}"
+    done
+
+    echo -ne "${YELLOW}  Select (comma-separated, e.g. 1,2,4) > ${NC}"
+    read -r raw
+
+    REPLY_MULTI=()
+    IFS=',' read -ra tokens <<< "$raw"
+    for tok in "${tokens[@]}"; do
+        tok=$(echo "$tok" | tr -d ' ')
+        if [[ "$tok" =~ ^[0-9]+$ ]]; then
+            local idx=$(($tok - 1))
+            if [[ $idx -ge 0 && $idx -lt ${#values[@]} ]]; then
+                REPLY_MULTI+=("${values[$idx]}")
+            fi
+        fi
+    done
+}
+
+REPLY_YN=""
+read_yes_no() {
+    local question="$1"
+    local default_val="$2"
+    local hint="y/N"
+    [[ "$default_val" == "true" ]] && hint="Y/n"
+
+    echo -ne "${YELLOW}  ${question} [${hint}] > ${NC}"
+    read -r ans
+    if [[ -z "$ans" ]]; then
+        REPLY_YN="$default_val"
+        return
+    fi
+    ans=$(echo "$ans" | tr '[:upper:]' '[:lower:]')
+    if [[ "$ans" == "y" ]]; then
+        REPLY_YN="true"
+    else
+        REPLY_YN="false"
+    fi
+}
+
+# --- Prerequisite checks -----------------------------------------------------
+check_prerequisites() {
+    if [[ -z "$OUTPUT_DIR" ]]; then
+        log_error "OutputDirectory is required (--output)"; exit 1
+    fi
+    if [[ -z "$PROJECT_TYPE" ]]; then
+        log_error "ProjectType is required (--type)"; exit 1
+    fi
+    if [[ "$PROJECT_TYPE" != "green" && "$PROJECT_TYPE" != "brown" ]]; then
+        log_error "ProjectType must be 'green' or 'brown'"; exit 1
+    fi
+    if [[ "$PROJECT_TYPE" == "brown" && -z "$SOURCE_DIR" ]]; then
+        log_error "SourceDirectory is required for brownfield projects (--source)"; exit 1
+    fi
+    if [[ "$PROJECT_TYPE" == "brown" && ! -d "$SOURCE_DIR" ]]; then
+        log_error "Source directory '$SOURCE_DIR' does not exist"; exit 1
+    fi
+    if [[ -d "$OUTPUT_DIR" ]]; then
+        log_error "Output directory '$OUTPUT_DIR' already exists"; exit 1
+    fi
+}
+
+# --- Collect decisions --------------------------------------------------------
+
+collect_all_decisions() {
+
+    echo ""
+    log_step "Article I — Project Scope & Type"
+
+    read_choice "§1.0  Project type" 2 \
+        "Infrastructure Only  (Landing Zone / Platform / IaC)" \
+        "Application Development Only  (on existing infra)" \
+        "Full Stack  (App + Infrastructure)" \
+        --- "infra-only" "app-only" "full-stack"
+    D_PROJECT_TYPE="$REPLY_CHOICE"
+
+    if [[ "$D_PROJECT_TYPE" == "infra-only" || "$D_PROJECT_TYPE" == "full-stack" ]]; then
+        read_choice "§1.0.1  Infrastructure scope" 2 \
+            "Landing Zone" "Workload Infrastructure" "Both" \
+            --- "landing-zone" "workload" "both"
+        D_INFRA_SCOPE="$REPLY_CHOICE"
+    else
+        D_INFRA_SCOPE="none"
+    fi
+
+    read_multi_choice "§1.1  Active scopes (select all that apply)" \
+        "backend        — Server-side APIs, services, domain logic" \
+        "frontend       — Web/mobile UI, SPA, design system" \
+        "cloud-platform — Infrastructure, Landing Zones, IaC" \
+        "data           — Databases, ETL/ELT, analytics" \
+        "integration    — API management, messaging, connectors" \
+        "ai             — AI/ML models, agents, prompt engineering" \
+        "crm            — Dynamics 365, Power Platform, Dataverse" \
+        --- "backend" "frontend" "cloud-platform" "data" "integration" "ai" "crm"
+    D_SCOPES=("${REPLY_MULTI[@]}")
+
+    if [[ ${#D_SCOPES[@]} -eq 0 ]]; then
+        log_warn "No scopes selected -- defaulting to 'backend'"
+        D_SCOPES=("backend")
+    fi
+
+    echo ""
+    log_step "Article X — Environments & Configuration"
+
+    read_multi_choice "§10.1  Enabled environments" \
+        "dev" "uat" "pre" "prod" \
+        --- "dev" "uat" "pre" "prod"
+    D_ENVIRONMENTS=("${REPLY_MULTI[@]}")
+    [[ ${#D_ENVIRONMENTS[@]} -eq 0 ]] && D_ENVIRONMENTS=("dev" "prod")
+
+    # §10.1 Auto-Deploy per environment
+    declare -A trigger_map=(["dev"]="On commit to develop" ["uat"]="On PR merge" ["pre"]="Manual trigger" ["prod"]="Manual approval")
+    for env in "${D_ENVIRONMENTS[@]}"; do
+        local def="false"
+        [[ "$env" == "dev" ]] && def="true"
+        read_yes_no "§10.1  Auto-deploy ${env}: ${trigger_map[$env]}?" "$def"
+        eval "D_AUTO_DEPLOY_${env^^}=\"$REPLY_YN\""
+    done
+
+    read_choice "§10.2  Configuration management" 4 \
+        "Azure App Configuration (centralized, feature flags)" \
+        "Environment Variables" \
+        "appsettings / .env files" \
+        "Combination: App Config + Key Vault (recommended)" \
+        --- "azure-app-config" "env-vars" "config-files" "combination"
+    D_CONFIG_MANAGEMENT="$REPLY_CHOICE"
+
+    read_choice "§10.3  Local dev secrets" 1 \
+        "User Secrets (.NET: dotnet user-secrets)" \
+        ".env files (gitignored)" \
+        "Local Key Vault (dev instance)" \
+        --- "user-secrets" "env-files" "local-keyvault"
+    D_SECRETS_DEV="$REPLY_CHOICE"
+
+    read_choice "§10.4  Feature flag provider" 1 \
+        "None" "Azure App Configuration" "LaunchDarkly" "Unleash" \
+        --- "none" "azure-app-config" "launchdarkly" "unleash"
+    D_FEATURE_FLAGS="$REPLY_CHOICE"
+
+    echo ""
+    log_step "Article XI — CI/CD Pipeline"
+
+    read_choice "§11.1  CI/CD platform" 1 \
+        "GitHub Actions" "Azure DevOps Pipelines" \
+        --- "github-actions" "azure-devops"
+    D_CICD_PLATFORM="$REPLY_CHOICE"
+
+    # §11.2 Pipeline Stages — Application
+    local has_app=false
+    for s in "${D_SCOPES[@]}"; do
+        [[ "$s" == "backend" || "$s" == "frontend" || "$s" == "ai" ]] && has_app=true
+    done
+    if [[ "$has_app" == "true" ]]; then
+        read_multi_choice "§11.2  Application pipeline stages" \
+            "Build" "Lint/Format" "Unit Tests" "Integration Tests" \
+            "Architecture Tests" "Mutation Tests" "Security Scan" \
+            "Container Build" "Container Scan" \
+            --- "build" "lint-format" "unit-tests" "integration-tests" \
+            "architecture-tests" "mutation-tests" "security-scan" \
+            "container-build" "container-scan"
+        D_APP_PIPELINE_STAGES=("${REPLY_MULTI[@]}")
+        if [[ ${#D_APP_PIPELINE_STAGES[@]} -eq 0 ]]; then
+            D_APP_PIPELINE_STAGES=("build" "lint-format" "unit-tests" "security-scan")
+        fi
+
+        # Thresholds
+        local has_ut=false has_mut=false
+        for st in "${D_APP_PIPELINE_STAGES[@]}"; do
+            [[ "$st" == "unit-tests" ]] && has_ut=true
+            [[ "$st" == "mutation-tests" ]] && has_mut=true
+        done
+        if [[ "$has_ut" == "true" ]]; then
+            echo -ne "${YELLOW}  §11.2  Unit test coverage threshold (%) [80] > ${NC}"
+            read -r cov
+            D_UNIT_TEST_COVERAGE="${cov:-80}"
+        fi
+        if [[ "$has_mut" == "true" ]]; then
+            echo -ne "${YELLOW}  §11.2  Mutation test score threshold (%) [60] > ${NC}"
+            read -r mut
+            D_MUTATION_SCORE="${mut:-60}"
+        fi
+    fi
+
+    # §11.2 Pipeline Stages — Infrastructure
+    local has_infra=false
+    for s in "${D_SCOPES[@]}"; do
+        [[ "$s" == "cloud-platform" ]] && has_infra=true
+    done
+    [[ "$D_PROJECT_TYPE" == "infra-only" || "$D_PROJECT_TYPE" == "full-stack" ]] && has_infra=true
+    if [[ "$has_infra" == "true" ]]; then
+        read_multi_choice "§11.2  Infrastructure pipeline stages" \
+            "IaC Lint" "IaC Validation" "Security Scan" \
+            "Cost Estimation" "Compliance Check" \
+            --- "iac-lint" "iac-validation" "security-scan" \
+            "cost-estimation" "compliance-check"
+        D_INFRA_PIPELINE_STAGES=("${REPLY_MULTI[@]}")
+        if [[ ${#D_INFRA_PIPELINE_STAGES[@]} -eq 0 ]]; then
+            D_INFRA_PIPELINE_STAGES=("iac-lint" "iac-validation" "security-scan")
+        fi
+    fi
+
+    # §11.2 Deployment Stages (derived from environments)
+    D_DEPLOY_PIPELINE_STAGES=("${D_ENVIRONMENTS[@]}")
+
+    read_choice "§11.3  Deployment strategy" 1 \
+        "Rolling Update" "Blue-Green" "Canary" "Feature Flags" \
+        --- "rolling" "blue-green" "canary" "feature-flags"
+    D_DEPLOY_STRATEGY="$REPLY_CHOICE"
+
+    read_choice "§11.4  Branch strategy" 2 \
+        "GitFlow  (feature/, develop, release/, main)" \
+        "GitHub Flow  (feature/, main)" \
+        "Trunk-Based  (short-lived branches, main)" \
+        --- "gitflow" "github-flow" "trunk-based"
+    D_BRANCH_STRATEGY="$REPLY_CHOICE"
+
+    echo ""
+    log_step "Article XII — Observability"
+
+    read_choice "§12.1  Observability strategy" 1 \
+        "Azure-Native (Azure Monitor + Application Insights)" \
+        "OpenTelemetry -> Azure Monitor Exporter" \
+        "OpenTelemetry -> Grafana Stack (self-hosted)" \
+        --- "azure-native" "otel-azure" "otel-grafana"
+    D_OBSERVABILITY="$REPLY_CHOICE"
+
+    # §12.3 Infrastructure Monitoring (conditional)
+    local has_infra2=false
+    for s in "${D_SCOPES[@]}"; do
+        [[ "$s" == "cloud-platform" ]] && has_infra2=true
+    done
+    [[ "$D_PROJECT_TYPE" == "infra-only" || "$D_PROJECT_TYPE" == "full-stack" ]] && has_infra2=true
+    if [[ "$has_infra2" == "true" ]]; then
+        read_multi_choice "§12.3  Infrastructure monitoring components" \
+            "Resource Health (Azure Resource Health)" \
+            "Activity Logs (Azure Monitor)" \
+            "Diagnostics (Log Analytics)" \
+            "Alerts (Azure Monitor Alerts)" \
+            "Dashboards (Azure Workbooks / Grafana)" \
+            --- "resource-health" "activity-logs" "diagnostics" "alerts" "dashboards"
+        D_INFRA_MONITORING=("${REPLY_MULTI[@]}")
+        if [[ ${#D_INFRA_MONITORING[@]} -eq 0 ]]; then
+            D_INFRA_MONITORING=("resource-health" "activity-logs" "diagnostics" "alerts" "dashboards")
+        fi
+    fi
+
+    echo ""
+    log_step "Article XVI — Security Policies"
+
+    read_yes_no "§16.1  Azure Virtual Network?" "true"
+    D_VNET="$REPLY_YN"
+
+    read_yes_no "§16.1  Private Endpoints?" "true"
+    D_PRIVATE_ENDPOINTS="$REPLY_YN"
+
+    read_yes_no "§16.1  Web Application Firewall (Front Door)?" "false"
+    D_WAF="$REPLY_YN"
+
+    read_choice "§16.2  Encryption at rest" 1 \
+        "Azure-managed keys" "Customer-managed keys" \
+        --- "azure-managed" "customer-managed"
+    D_ENCRYPTION_KEYS="$REPLY_CHOICE"
+
+    read_choice "§16.2  PII handling" 3 \
+        "Anonymization" "Pseudonymization" "Encryption" \
+        --- "anonymization" "pseudonymization" "encryption"
+    D_PII_HANDLING="$REPLY_CHOICE"
+
+    read_multi_choice "§16.3  Compliance requirements" \
+        "GDPR" "HIPAA" "SOC 2" "PCI-DSS" "None" \
+        --- "gdpr" "hipaa" "soc2" "pci-dss" "none"
+    D_COMPLIANCE=("${REPLY_MULTI[@]}")
+    [[ ${#D_COMPLIANCE[@]} -eq 0 ]] && D_COMPLIANCE=("none")
+}
+
+# --- Copy Bolt Framework ------------------------------------------------------
+
+copy_bolt_framework() {
+    log_step "Copying Bolt Framework..."
+
+    [[ -d "$SCRIPT_DIR/.github" ]] && cp -r "$SCRIPT_DIR/.github" "$OUTPUT_DIR/.github"
+    [[ -d "$SCRIPT_DIR/.aurora" ]] && cp -r "$SCRIPT_DIR/.aurora" "$OUTPUT_DIR/.aurora"
+
+    for f in README.md CHANGELOG.md CONTRIBUTING.md LICENSE PENDIENTES.md; do
+        [[ -f "$SCRIPT_DIR/.aurora/$f" ]] && cp "$SCRIPT_DIR/.aurora/$f" "$OUTPUT_DIR/$f"
+    done
+    for f in INITIALIZER.md USAGE.md; do
+        [[ -f "$SCRIPT_DIR/$f" ]] && cp "$SCRIPT_DIR/$f" "$OUTPUT_DIR/$f"
+    done
+
+    log_success "Bolt Framework copied"
+}
+
+# --- Create directory structure -----------------------------------------------
+
+create_project_structure() {
+    log_step "Creating project structure..."
+
+    mkdir -p "$OUTPUT_DIR"
+
+    if [[ "$PROJECT_TYPE" == "green" ]]; then
+        mkdir -p "$OUTPUT_DIR/origin"
+    else
+        mkdir -p "$OUTPUT_DIR/legacy"
+        mkdir -p "$OUTPUT_DIR/migration"
+    fi
+
+    local has_scope
+    has_scope() { printf '%s\n' "${D_SCOPES[@]}" | grep -qx "$1"; }
+
+    if has_scope "backend" || has_scope "ai"; then
+        mkdir -p "$OUTPUT_DIR/src/backend"
+    fi
+    if has_scope "frontend"; then
+        mkdir -p "$OUTPUT_DIR/src/frontend"
+    fi
+    if has_scope "cloud-platform" || [[ "$D_PROJECT_TYPE" == "infra-only" || "$D_PROJECT_TYPE" == "full-stack" ]]; then
+        mkdir -p "$OUTPUT_DIR/infra"
+    fi
+    if has_scope "data"; then
+        mkdir -p "$OUTPUT_DIR/data"
+    fi
+
+    mkdir -p "$OUTPUT_DIR/docs"
+
+    log_success "Project structure created"
+}
+
+# --- Generate scopes.yaml ----------------------------------------------------
+
+generate_scopes_yaml() {
+    log_step "Generating scopes.yaml..."
+
+    local scopes_dir="$OUTPUT_DIR/.aurora"
+    mkdir -p "$scopes_dir"
+
+    local scopes_yaml=""
+    for s in "${D_SCOPES[@]}"; do
+        scopes_yaml+="  - ${s}
+"
+    done
+
+    # Pre-compute yaml fragments
+    local env_list=""
+    for e in "${D_ENVIRONMENTS[@]}"; do
+        [[ -n "$env_list" ]] && env_list+=", "
+        env_list+="$e"
+    done
+
+    local auto_deploy_lines=""
+    for env in "${D_ENVIRONMENTS[@]}"; do
+        local varname="D_AUTO_DEPLOY_${env^^}"
+        local val="${!varname:-false}"
+        auto_deploy_lines+="      ${env}: ${val}
+"
+    done
+
+    local app_stages=""
+    for st in "${D_APP_PIPELINE_STAGES[@]}"; do
+        [[ -n "$app_stages" ]] && app_stages+=", "
+        app_stages+="$st"
+    done
+    [[ -z "$app_stages" ]] && app_stages=""
+
+    local infra_stages=""
+    for st in "${D_INFRA_PIPELINE_STAGES[@]}"; do
+        [[ -n "$infra_stages" ]] && infra_stages+=", "
+        infra_stages+="$st"
+    done
+    [[ -z "$infra_stages" ]] && infra_stages=""
+
+    local deploy_stages=""
+    for env in "${D_DEPLOY_PIPELINE_STAGES[@]}"; do
+        [[ -n "$deploy_stages" ]] && deploy_stages+=", "
+        deploy_stages+="deploy-${env}"
+    done
+    [[ -z "$deploy_stages" ]] && deploy_stages=""
+
+    local infra_mon=""
+    for m in "${D_INFRA_MONITORING[@]}"; do
+        [[ -n "$infra_mon" ]] && infra_mon+=", "
+        infra_mon+="$m"
+    done
+    [[ -z "$infra_mon" ]] && infra_mon=""
+
+    local compliance=""
+    for c in "${D_COMPLIANCE[@]}"; do
+        [[ -n "$compliance" ]] && compliance+=", "
+        compliance+="$c"
+    done
+
+    cat > "$scopes_dir/scopes.yaml" << YAML
+# =============================================================================
+# Bolt Framework -- Active Scopes Configuration
+# Generated: $(date '+%Y-%m-%d %H:%M:%S')
+# =============================================================================
+# This file declares which scopes are active and records all wizard decisions.
+# Each scope injects its own constitution sections from
+#   .aurora/scopes/<scope>/memory/constitution.md
+# The work-management scope is always active (transversal).
+# =============================================================================
+
+project:
+  type: ${D_PROJECT_TYPE}
+  infra-scope: ${D_INFRA_SCOPE}
+  migration-type: ${PROJECT_TYPE}   # green | brown
+
+active-scopes:
+${scopes_yaml}
+# Transversal (always active, not selectable)
+transversal-scopes:
+  - work-management
+
+# --- Wizard Decisions --------------------------------------------------------
+# These capture every choice made during initialization so downstream agents
+# can read them without re-parsing the constitution markdown.
+
+decisions:
+  # Article X -- Environments & Configuration
+  environments:
+    enabled: [${env_list}]
+    auto-deploy:
+${auto_deploy_lines}  config-management: ${D_CONFIG_MANAGEMENT}
+  secrets-dev: ${D_SECRETS_DEV}
+  feature-flags: ${D_FEATURE_FLAGS}
+
+  # Article XI -- CI/CD Pipeline
+  cicd:
+    platform: ${D_CICD_PLATFORM}
+    deploy-strategy: ${D_DEPLOY_STRATEGY}
+    branch-strategy: ${D_BRANCH_STRATEGY}
+    pipeline-stages:
+      application: [${app_stages}]
+      infrastructure: [${infra_stages}]
+      deployment: [${deploy_stages}]
+    thresholds:
+      unit-test-coverage: ${D_UNIT_TEST_COVERAGE}
+      mutation-score: ${D_MUTATION_SCORE}
+
+  # Article XII -- Observability
+  observability: ${D_OBSERVABILITY}
+  infra-monitoring: [${infra_mon}]
+
+  # Article XVI -- Security Policies
+  security:
+    vnet: ${D_VNET}
+    private-endpoints: ${D_PRIVATE_ENDPOINTS}
+    waf: ${D_WAF}
+    encryption-keys: ${D_ENCRYPTION_KEYS}
+    pii-handling: ${D_PII_HANDLING}
+    compliance: [${compliance}]
+
+# Base constitution articles (always present):
+#   I   -- Project Scope & Type
+#   X   -- Environments & Configuration
+#   XI  -- CI/CD Pipeline
+#   XII -- Observability
+#   XVI -- Security Policies
+#   XIX -- Governance
+YAML
+
+    log_success "scopes.yaml generated at .aurora/scopes.yaml"
+}
+
+# --- Prefill constitution -----------------------------------------------------
+
+prefill_constitution() {
+    log_step "Prefilling constitution with your decisions..."
+
+    local path="$OUTPUT_DIR/.aurora/memory/constitution.md"
+    if [[ ! -f "$path" ]]; then
+        log_warn "constitution.md not found -- skipping prefill"
+        return
+    fi
+
+    # Use a temp file for sed operations
+    local tmp="${path}.tmp"
+    cp "$path" "$tmp"
+
+    # Article I §1.0 -- Project Type
+    case "$D_PROJECT_TYPE" in
+        infra-only)  sed -i 's/- \[ \] \*\*🏗️ Infrastructure Only\*\*/- [x] **🏗️ Infrastructure Only**/' "$tmp" ;;
+        app-only)    sed -i 's/- \[ \] \*\*💻 Application Development Only\*\*/- [x] **💻 Application Development Only**/' "$tmp" ;;
+        full-stack)  sed -i 's/- \[ \] \*\*🚀 Full Stack (App + Infrastructure)\*\*/- [x] **🚀 Full Stack (App + Infrastructure)**/' "$tmp" ;;
     esac
-done
 
-# Validate arguments
-if [ "$PROJECT_TYPE" != "green" ] && [ "$PROJECT_TYPE" != "brown" ]; then
-    log_error "project-type must be 'green' or 'brown'"
-    show_usage
-fi
+    # Article I §1.0.1 -- Infra scope
+    case "$D_INFRA_SCOPE" in
+        landing-zone) sed -i 's/- \[ \] \*\*Landing Zone\*\*/- [x] **Landing Zone**/' "$tmp" ;;
+        workload)     sed -i 's/- \[ \] \*\*Workload Infrastructure\*\*/- [x] **Workload Infrastructure**/' "$tmp" ;;
+        both)         sed -i 's/- \[ \] \*\*Both\*\* - Landing Zone + Workload/- [x] **Both** - Landing Zone + Workload/' "$tmp" ;;
+    esac
 
-if [ "$PROJECT_TYPE" = "brown" ] && [ -z "$SOURCE_DIR" ]; then
-    log_error "source-directory is required for brownfield projects"
-    show_usage
-fi
+    # Article I §1.1 -- Active Scopes
+    for scope in "${D_SCOPES[@]}"; do
+        sed -i "s/| \[ \] | \*\*${scope}\*\*/| [x] | **${scope}**/" "$tmp"
+    done
 
-if [ "$PROJECT_TYPE" = "brown" ] && [ ! -d "$SOURCE_DIR" ]; then
-    log_error "source-directory '$SOURCE_DIR' does not exist"
-    exit 1
-fi
+    # Article X §10.1 -- Environments
+    for env in "${D_ENVIRONMENTS[@]}"; do
+        sed -i "s/\(\*\*${env}\*\*[^|]*|[^|]*|\) \[ \] Yes/\1 [x] Yes/" "$tmp"
+    done
+
+    # Article X §10.1 -- Auto-Deploy
+    for env in "${D_ENVIRONMENTS[@]}"; do
+        local varname="D_AUTO_DEPLOY_${env^^}"
+        local val="${!varname}"
+        if [[ "$val" == "true" ]]; then
+            sed -i "s/\(\*\*${env}\*\*.*\[x\] Yes |\) \[ \]/\1 [x]/" "$tmp"
+        fi
+    done
+
+    # Article X §10.2 -- Config management
+    local config_label=""
+    case "$D_CONFIG_MANAGEMENT" in
+        azure-app-config) config_label="Azure App Configuration" ;;
+        env-vars)         config_label="Environment Variables" ;;
+        config-files)     config_label="appsettings" ;;
+        combination)      config_label="Combination" ;;
+    esac
+    [[ -n "$config_label" ]] && sed -i "s/- \[ \] \*\*${config_label}/- [x] **${config_label}/" "$tmp"
+
+    # Article X §10.3 -- Local dev secrets
+    local secret_label=""
+    case "$D_SECRETS_DEV" in
+        user-secrets)   secret_label="User Secrets" ;;
+        env-files)      secret_label="\.env files" ;;
+        local-keyvault) secret_label="Local Key Vault" ;;
+    esac
+    [[ -n "$secret_label" ]] && sed -i "s/- \[ \] \*\*${secret_label}/- [x] **${secret_label}/" "$tmp"
+
+    # Article X §10.4 -- Feature flags
+    local ff_label=""
+    case "$D_FEATURE_FLAGS" in
+        none)             ff_label="None" ;;
+        azure-app-config) ff_label="Azure App Configuration" ;;
+        launchdarkly)     ff_label="LaunchDarkly" ;;
+        unleash)          ff_label="Unleash" ;;
+    esac
+    [[ -n "$ff_label" ]] && sed -i "s/- \[ \] \*\*${ff_label}\*\*/- [x] **${ff_label}**/" "$tmp"
+
+    # Article XI §11.1 -- CI/CD
+    local cicd_label=""
+    case "$D_CICD_PLATFORM" in
+        github-actions) cicd_label="GitHub Actions" ;;
+        azure-devops)   cicd_label="Azure DevOps Pipelines" ;;
+    esac
+    [[ -n "$cicd_label" ]] && sed -i "s/- \[ \] \*\*${cicd_label}\*\*/- [x] **${cicd_label}**/" "$tmp"
+
+    # Article XI §11.3 -- Deploy strategy
+    local deploy_label=""
+    case "$D_DEPLOY_STRATEGY" in
+        rolling)       deploy_label="Rolling Update" ;;
+        blue-green)    deploy_label="Blue-Green" ;;
+        canary)        deploy_label="Canary" ;;
+        feature-flags) deploy_label="Feature Flags" ;;
+    esac
+    [[ -n "$deploy_label" ]] && sed -i "s/- \[ \] \*\*${deploy_label}\*\*/- [x] **${deploy_label}**/" "$tmp"
+
+    # Article XI §11.4 -- Branch strategy
+    local branch_label=""
+    case "$D_BRANCH_STRATEGY" in
+        gitflow)     branch_label="GitFlow" ;;
+        github-flow) branch_label="GitHub Flow" ;;
+        trunk-based) branch_label="Trunk-Based" ;;
+    esac
+    [[ -n "$branch_label" ]] && sed -i "s/- \[ \] \*\*${branch_label}\*\*/- [x] **${branch_label}**/" "$tmp"
+
+    # Article XI §11.2 -- App Pipeline Stages
+    declare -A app_stage_map=(
+        ["build"]="Build" ["lint-format"]="Lint/Format"
+        ["unit-tests"]="Unit Tests" ["integration-tests"]="Integration Tests"
+        ["architecture-tests"]="Architecture Tests" ["mutation-tests"]="Mutation Tests"
+        ["container-build"]="Container Build" ["container-scan"]="Container Scan"
+    )
+    for stage in "${D_APP_PIPELINE_STAGES[@]}"; do
+        if [[ "$stage" == "security-scan" ]]; then
+            # Disambiguate: app table has "0 Critical"
+            sed -i 's/\(\*\*Security Scan\*\*\s*|\)\s*\[ \] Yes\(\s*|\s*0 Critical\)/\1 [x] Yes\2/' "$tmp"
+            continue
+        fi
+        local label="${app_stage_map[$stage]}"
+        if [[ -n "$label" ]]; then
+            sed -i "s/\(\*\*${label}\*\*\s*|\)\s*\[ \] Yes/\1 [x] Yes/" "$tmp"
+        fi
+    done
+
+    # Thresholds
+    if [[ "$D_UNIT_TEST_COVERAGE" -gt 0 ]]; then
+        sed -i "s/Coverage >= __\%/Coverage >= ${D_UNIT_TEST_COVERAGE}%/" "$tmp"
+    fi
+    if [[ "$D_MUTATION_SCORE" -gt 0 ]]; then
+        sed -i "s/Score >= __\%/Score >= ${D_MUTATION_SCORE}%/" "$tmp"
+    fi
+
+    # Article XI §11.2 -- Infra Pipeline Stages
+    declare -A infra_stage_map=(
+        ["iac-lint"]="IaC Lint" ["iac-validation"]="IaC Validation"
+        ["cost-estimation"]="Cost Estimation" ["compliance-check"]="Compliance Check"
+    )
+    for stage in "${D_INFRA_PIPELINE_STAGES[@]}"; do
+        if [[ "$stage" == "security-scan" ]]; then
+            # Disambiguate: infra table has "Checkov"
+            sed -i 's/\(\*\*Security Scan\*\*\s*|\)\s*\[ \] Yes\(\s*|\s*Checkov\)/\1 [x] Yes\2/' "$tmp"
+            continue
+        fi
+        local label="${infra_stage_map[$stage]}"
+        if [[ -n "$label" ]]; then
+            sed -i "s/\(\*\*${label}\*\*\s*|\)\s*\[ \] Yes/\1 [x] Yes/" "$tmp"
+        fi
+    done
+
+    # Article XI §11.2 -- Deploy Stages
+    declare -A deploy_stage_map=(
+        ["dev"]="Deploy Dev" ["uat"]="Deploy UAT"
+        ["pre"]="Deploy Pre" ["prod"]="Deploy Prod"
+    )
+    for env in "${D_DEPLOY_PIPELINE_STAGES[@]}"; do
+        local label="${deploy_stage_map[$env]}"
+        if [[ -n "$label" ]]; then
+            sed -i "s/\(\*\*${label}\*\*\s*|\)\s*\[ \] Yes/\1 [x] Yes/" "$tmp"
+        fi
+    done
+
+    # Article XII §12.1 -- Observability
+    local obs_label=""
+    case "$D_OBSERVABILITY" in
+        azure-native) obs_label="Azure-Native" ;;
+        otel-azure)   obs_label="OpenTelemetry → Azure" ;;
+        otel-grafana) obs_label="OpenTelemetry → Grafana Stack" ;;
+    esac
+    [[ -n "$obs_label" ]] && sed -i "s/- \[ \] \*\*${obs_label}\*\*/- [x] **${obs_label}**/" "$tmp"
+
+    # Article XII §12.3 -- Infra Monitoring
+    declare -A monitor_map=(
+        ["resource-health"]="Resource Health" ["activity-logs"]="Activity Logs"
+        ["diagnostics"]="Diagnostics" ["alerts"]="Alerts"
+        ["dashboards"]="Dashboards"
+    )
+    for mon in "${D_INFRA_MONITORING[@]}"; do
+        local label="${monitor_map[$mon]}"
+        if [[ -n "$label" ]]; then
+            sed -i "s/\(${label}\s*|[^|]*|\)\s*\[ \] Yes/\1 [x] Yes/" "$tmp"
+        fi
+    done
+
+    # Article XVI §16.1 -- Network security
+    if [[ "$D_VNET" == "true" ]]; then
+        sed -i 's/\[ \] Azure VNet/[x] Azure VNet/' "$tmp"
+    else
+        sed -i 's/\[ \] None/[x] None/' "$tmp"
+    fi
+    if [[ "$D_PRIVATE_ENDPOINTS" == "true" ]]; then
+        sed -i 's/\[ \] Enabled/[x] Enabled/' "$tmp"
+    else
+        sed -i 's/\[ \] Disabled/[x] Disabled/' "$tmp"
+    fi
+    if [[ "$D_WAF" == "true" ]]; then
+        sed -i 's/\[ \] Azure Front Door WAF/[x] Azure Front Door WAF/' "$tmp"
+    fi
+
+    # Article XVI §16.2 -- Data protection
+    case "$D_ENCRYPTION_KEYS" in
+        azure-managed)    sed -i 's/\[ \] Azure-managed keys/[x] Azure-managed keys/' "$tmp" ;;
+        customer-managed) sed -i 's/\[ \] Customer-managed keys/[x] Customer-managed keys/' "$tmp" ;;
+    esac
+    case "$D_PII_HANDLING" in
+        anonymization)    sed -i 's/\[ \] Anonymization/[x] Anonymization/' "$tmp" ;;
+        pseudonymization) sed -i 's/\[ \] Pseudonymization/[x] Pseudonymization/' "$tmp" ;;
+        encryption)       sed -i 's/\[ \] Encryption/[x] Encryption/' "$tmp" ;;
+    esac
+
+    # Article XVI §16.3 -- Compliance
+    for std in "${D_COMPLIANCE[@]}"; do
+        if [[ "$std" == "none" ]]; then continue; fi
+        local upper
+        upper=$(echo "$std" | tr '[:lower:]' '[:upper:]')
+        sed -i "s/\(|\s*${upper}\s*|[^|]*|\) \[ \] Yes/\1 [x] Yes/" "$tmp"
+    done
+
+    mv "$tmp" "$path"
+    log_success "Constitution prefilled with all base decisions"
+}
+
+# --- Demo content -------------------------------------------------------------
+
+add_demo_content() {
+    if [[ "$PROJECT_TYPE" == "green" ]]; then
+        local src="$SCRIPT_DIR/demo/from_rfp"
+        if [[ -d "$src" ]]; then
+            cp -r "$src"/* "$OUTPUT_DIR/origin/" 2>/dev/null || true
+            log_info "Greenfield demo copied to origin/"
+        fi
+    else
+        local src="$SCRIPT_DIR/demo/from_old_src"
+        if [[ -d "$src" ]]; then
+            cp -r "$src"/* "$OUTPUT_DIR/legacy/" 2>/dev/null || true
+            log_info "Brownfield demo copied to legacy/"
+        fi
+        if [[ -n "$SOURCE_DIR" ]]; then
+            cp -r "$SOURCE_DIR"/* "$OUTPUT_DIR/legacy/"
+            log_info "Legacy source copied from $SOURCE_DIR"
+        fi
+    fi
+}
+
+# --- Summary ------------------------------------------------------------------
+
+show_summary() {
+    echo ""
+    echo -e "  ${GREEN}+----------------------------------------------+${NC}"
+    echo -e "  ${GREEN}|   Bolt Framework Project Initialized!         |${NC}"
+    echo -e "  ${GREEN}+----------------------------------------------+${NC}"
+    echo ""
+    log_info "Project:       $OUTPUT_DIR"
+    log_info "Type:          $PROJECT_TYPE"
+    log_info "Project Type:  $D_PROJECT_TYPE"
+    log_info "Scopes:        ${D_SCOPES[*]}"
+    log_info "Environments:  ${D_ENVIRONMENTS[*]}"
+    log_info "CI/CD:         $D_CICD_PLATFORM"
+    log_info "Branch:        $D_BRANCH_STRATEGY"
+    log_info "Observability: $D_OBSERVABILITY"
+    echo ""
+    echo -e "  ${CYAN}NEXT STEPS:${NC}"
+    echo "  1. cd $OUTPUT_DIR"
+    echo "  2. Review .aurora/scopes.yaml (selected scopes)"
+    echo "  3. Review .aurora/memory/constitution.md (base decisions filled)"
+    echo "  4. Use @Bolt Framework agent to process scope constitutions"
+    echo "     Each active scope in scopes.yaml will inject its articles"
+    echo ""
+}
+
+# --- Main ---------------------------------------------------------------------
 
 main() {
-    print_banner
+    parse_args "$@"
 
-    log_info "Initializing AURORA-IA project..."
-    log_info "  Output Directory: $OUTPUT_DIR"
-    if [ "$PROJECT_TYPE" = "green" ]; then
-        log_info "  Project Type: $PROJECT_TYPE - Greenfield New Project"
-    else
-        log_info "  Project Type: $PROJECT_TYPE - Brownfield Legacy Migration"
-    fi
-    [ -n "$SOURCE_DIR" ] && log_info "  Source Directory: $SOURCE_DIR"
-
-    # Determine configuration method
-    if [ "$AUTO_MODE" = true ]; then
-        apply_auto_profile "$AUTO_PROFILE"
-    elif [ -n "$PROJECT_SCOPE" ] || [ -n "$BACKEND_LANGUAGE" ] || [ -n "$FRONTEND_FRAMEWORK" ]; then
-        log_info "Using command-line configuration"
-        validate_command_line_config
-    else
-        # Set default values for brownfield or simple configuration
-        PROJECT_SCOPE="app-only"
-        FRONTEND_FRAMEWORK="react"
-        BACKEND_LANGUAGE="csharp"
-        log_info "Using default configuration: app-only, React, C#/.NET"
+    if [[ -z "$OUTPUT_DIR" || -z "$PROJECT_TYPE" ]]; then
+        show_usage
+        exit 1
     fi
 
-    # Create directory structure
+    show_banner
+    check_prerequisites
+
+    collect_all_decisions
+
+    echo ""
+    echo -e "  ${WHITE}Selected scopes: ${D_SCOPES[*]}${NC}"
+    read_yes_no "Proceed with these choices?" "true"
+    if [[ "$REPLY_YN" != "true" ]]; then
+        log_error "Cancelled by user"
+        exit 0
+    fi
+
     create_project_structure
-
-    # Generate architecture-specific project structure
-    generate_project_structure
-
-    # Copy AURORA framework
-    copy_aurora_framework
-
-    # Copy legacy source if brownfield
-    copy_legacy_source
-
-    # Customize constitution.md with user configuration
+    copy_bolt_framework
+    generate_scopes_yaml
     prefill_constitution
+    add_demo_content
 
-    # Populate directories based on project type
-    populate_origin_directory
-    enhance_brownfield_structure
-
-    log_success "AURORA-IA project initialization completed!"
-    log_info "Project created in: $OUTPUT_DIR"
-    log_info ""
-    log_info "Configuration used:"
-    log_info "  - Project Scope: $PROJECT_SCOPE"
-    if [ "$PROJECT_SCOPE" != "infra-only" ]; then
-        log_info "  - Backend Language: $BACKEND_LANGUAGE ($BACKEND_VERSION)"
-        log_info "  - Architecture: $ARCHITECTURE"
-        [ "$CQRS_ENABLED" = "yes" ] && log_info "  - CQRS: Enabled"
-        [ "$DOCKER_ENABLED" = "yes" ] && log_info "  - Docker: Enabled"
-    fi
-    [ "$FRONTEND_FRAMEWORK" != "none" ] && log_info "  - Frontend Framework: $FRONTEND_FRAMEWORK"
-    if [ "$PROJECT_SCOPE" = "infra-only" ] || [ "$PROJECT_SCOPE" = "full-stack" ]; then
-        log_info "  - Infrastructure Scope: $INFRA_SCOPE"
-        log_info "  - IaC Tool: $IAC_TOOL"
-    fi
-    log_info ""
-    log_info "🚀 NEXT STEPS:"
-    log_info ""
-    log_info "📁 1. Navigate to your project:"
-    log_info "   cd $OUTPUT_DIR"
-    log_info ""
-
-    if [ "$PROJECT_TYPE" = "green" ]; then
-        log_info "🌱 GREENFIELD PROJECT SETUP:"
-        log_info ""
-        log_info "📋 2. Configure project constitution (MANDATORY FIRST STEP):"
-        log_info "   - Edit .aurora/memory/constitution.md"
-        log_info "   - Mark your project scope: 🏗️ Infra-only, 💻 App-only, or 🚀 Full-stack"
-        log_info "   - Select frontend framework, database, deployment options"
-        log_info ""
-        log_info "📖 3. Review demo requirements in origin/:"
-        log_info "   - RFP-Calculator.md shows example requirements format"
-        log_info "   - Replace with your actual project requirements"
-        log_info ""
-        log_info "🔧 4. Start development:"
-        if [ "$PROJECT_SCOPE" = "app-only" ] || [ "$PROJECT_SCOPE" = "full-stack" ]; then
-            [ -d "$OUTPUT_DIR/src/backend" ] && log_info "   - Backend ($BACKEND_LANGUAGE): src/backend/"
-            [ -d "$OUTPUT_DIR/src/frontend" ] && log_info "   - Frontend: src/frontend/"
-        fi
-        if [ "$PROJECT_SCOPE" = "infra-only" ] || [ "$PROJECT_SCOPE" = "full-stack" ]; then
-            log_info "   - Infrastructure: infra/"
-        fi
-        log_info ""
-        log_info "🎯 5. Create your first feature:"
-        log_info "   @Aurora Feature"
-    else
-        log_info "🔄 BROWNFIELD MIGRATION SETUP:"
-        log_info ""
-        log_info "📋 2. Configure project constitution (MANDATORY FIRST STEP):"
-        log_info "   - Edit .aurora/memory/constitution.md"
-        log_info "   - Mark project scope (usually 💻 App-only for migrations)"
-        log_info "   - Select target architecture: $ARCHITECTURE"
-        log_info "   - Choose modern tech stack vs legacy: $BACKEND_LANGUAGE"
-        log_info ""
-        log_info "🔍 3. Analyze legacy code in legacy/:"
-        log_info "   - CALCMAIN.cbl & CALCENGN.cbl (demo files)"
-        log_info "   - Replace with your actual legacy code"
-        log_info "   - Document current system architecture and business logic"
-        log_info ""
-        log_info "📊 4. Create migration strategy:"
-        log_info "   - Create analysis docs for architecture, dependencies, risks"
-        log_info "   - Plan migration phases (Big Bang vs Incremental)"
-        log_info "   - Map COBOL business logic to modern $BACKEND_LANGUAGE patterns"
-        log_info ""
-        log_info "🔧 5. Start modern development:"
-        if [ "$PROJECT_SCOPE" = "app-only" ] || [ "$PROJECT_SCOPE" = "full-stack" ]; then
-            [ -d "$OUTPUT_DIR/src/backend" ] && log_info "   - New backend ($BACKEND_LANGUAGE): src/backend/"
-            [ -d "$OUTPUT_DIR/src/frontend" ] && log_info "   - Modern frontend: src/frontend/"
-        fi
-        log_info ""
-        log_info "🎯 6. Begin migration analysis:"
-        log_info "   @Aurora Legacy"
-    fi
-
-    log_info ""
-    log_info "🛠️  Available AURORA tools:"
-    log_info "   .aurora/scripts/ - Development automation scripts"
-    log_info "   .github/agents/ - 31 specialized AI agents for different tasks"
-    log_info "   @AURORA - Main orchestrator agent"
-    log_info ""
-    log_info "📚 Need help? Check .aurora/docs/ for guides and documentation"
+    show_summary
 }
 
-# Run main function
 main "$@"

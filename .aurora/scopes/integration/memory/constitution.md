@@ -17,28 +17,6 @@ This Constitution establishes the governing principles, technology decisions, an
 
 ---
 
-## Article I: Project Scope & Type 🔄
-
-> **⚠️ IMPORTANT**: Select the project scope FIRST. This determines which sections apply.
-
-### Section 1.0: Project Scope
-
-Select ONE:
-
-- [ ] **🏗️ Infrastructure Only** - Landing Zone, Platform, IaC
-  - _Applies_: Articles VIII, IX, X (IaC, Environments, CI/CD for Infra)
-  - _Skip_: Application development articles (II-VII, XI-XIV)
-
-- [ ] **💻 Application Development Only** - App code on existing infrastructure
-  - _Applies_: Articles II-VII, X-XIV (Architecture, Code, Testing, etc.)
-  - _Skip_: Infrastructure articles, assumes infra exists
-
-- [ ] **🚀 Full Stack (App + Infrastructure)** - Complete project
-  - _Applies_: ALL articles
-  - _Recommended for_: Greenfield projects, complete solutions
-
----
-
 ## Article IV: Communication
 
 > **📋 Applies to**: Application Development, Full Stack
