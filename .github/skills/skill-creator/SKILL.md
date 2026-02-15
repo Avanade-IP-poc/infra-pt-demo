@@ -1,5 +1,5 @@
 ---
-name: new-skill
+name: skill-creator
 description: Guide for creating custom GitHub Copilot skills with YAML frontmatter and auto-discovery
 ---
 

@@ -256,7 +256,7 @@ Crea interfaces apropiadas para usuarios.
 
 ```bash
 # Copiar plantill de skill
-cp .github/skills/new-skill/templates/skill-template.md \
+cp .github/skills/skill-creator/templates/skill-template.md \
    .github/skills/nuevo-skill/SKILL.md
 ```
 
@@ -329,7 +329,7 @@ Pregunta en el chat de Copilot:
 "@AURORA ¿Cómo mejoro mi skill de [nombre]?"
 ```
 
-O revisa la documentación completa en [new-skill](../).
+O revisa la documentación completa en [skill-creator](../).
 
 ---
 

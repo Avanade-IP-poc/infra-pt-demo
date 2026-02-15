@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "validate:scopes:ps": "pwsh -File ./.aurora/scripts/powershell/Validate-Scopes.ps1 -Check",
+    "validate:scopes:sh": "bash ./.aurora/scripts/bash/validate-scopes.sh --check"
+  },
   "devDependencies": {
     "prettier": "^3.8.1"
   }

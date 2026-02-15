@@ -578,7 +578,7 @@ it('should process async task', async () => {
 
 - Constitution: `memory/constitution.md`
 - Feature Specs: `specs/*/feature.md`
-- Skill: new-skill
+- Skill: skill-creator
 
 ## Changelog
 
@@ -597,7 +597,7 @@ Actualizar `.github/copilot-instructions.md`:
 
 | Skill | Domain | Use When |
 |-------|--------|----------|
-| [new-skill](.github/skills/new-skill/) | Skill Creation | Creating or improving Copilot skills |
+| [skill-creator](.github/skills/skill-creator/) | Skill Creation | Creating or improving Copilot skills |
 | [aurora-testing](.github/skills/aurora-testing/) | Testing Strategies | Writing unit/integration tests, BDD specs |
 ````
 

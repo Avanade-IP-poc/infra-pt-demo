@@ -8,9 +8,9 @@ Un skill es un conjunto de instrucciones especializadas que GitHub Copilot lee A
 
 ## Skills Disponibles
 
-| Skill                     | Descripción                   | Cuándo Usar               |
-| ------------------------- | ----------------------------- | ------------------------- |
-| [new-skill](./new-skill/) | Guía para crear nuevos skills | Al crear o mejorar skills |
+| Skill                             | Descripción                   | Cuándo Usar               |
+| --------------------------------- | ----------------------------- | ------------------------- |
+| [skill-creator](./skill-creator/) | Guía para crear nuevos skills | Al crear o mejorar skills |
 
 ## Cómo Funcionan los Skills
 
@@ -68,7 +68,7 @@ Copilot automáticamente:
 mkdir -p .github/skills/nuevo-skill
 
 # 2. Copiar plantilla
-cp .github/skills/new-skill/templates/skill-template.md .github/skills/nuevo-skill/SKILL.md
+cp .github/skills/skill-creator/templates/skill-template.md .github/skills/nuevo-skill/SKILL.md
 
 # 3. Editar y personalizar
 code .github/skills/nuevo-skill/SKILL.md
@@ -76,7 +76,7 @@ code .github/skills/nuevo-skill/SKILL.md
 
 ### Opción 3: Desde Cero
 
-Lee [new-skill/SKILL.md](./new-skill/SKILL.md) para una guía completa.
+Lee [skill-creator/SKILL.md](./skill-creator/SKILL.md) para una guía completa.
 
 ## Registrar un Skill
 
@@ -131,7 +131,7 @@ graph LR
 
 ### Alta Prioridad
 
-1. ✅ **new-skill** - Creación de skills (IMPLEMENTADO)
+1. ✅ **skill-creator** - Creación de skills (IMPLEMENTADO)
 2. 🔲 **aurora-testing** - Testing strategies (TDD, BDD, mutation testing)
 3. 🔲 **aurora-api-design** - RESTful API design patterns
 4. 🔲 **aurora-ddd** - Domain-Driven Design implementation
@@ -257,8 +257,8 @@ Un skill de alta calidad debe:
 
 ### DOCUMENTACIÓN
 
-- 📖 [Guía detallada de creación](./new-skill/SKILL.md)
-- 📝 [Plantilla base](./new-skill/templates/skill-template.md)
+- 📖 [Guía detallada de creación](./skill-creator/SKILL.md)
+- 📝 [Plantilla base](./skill-creator/templates/skill-template.md)
 - 🏛️ [AURORA Methodology](../copilot-instructions.md)
 
 ### Herramientas
@@ -270,7 +270,7 @@ Un skill de alta calidad debe:
 
 ¿Preguntas? ¿Problemas?
 
-1. Revisa [new-skill/SKILL.md](./new-skill/SKILL.md)
+1. Revisa [skill-creator/SKILL.md](./skill-creator/SKILL.md)
 2. Pregunta a `@AURORA` en el chat de Copilot
 3. Abre un issue en el repositorio
 

@@ -461,7 +461,7 @@ Use when:
 ## Related Skills
 
 - **[bolt-framework](../../skills/bolt-framework/SKILL.md)** - AURORA methodology
-- **[new-skill](../../skills/new-skill/SKILL.md)** - Skill creation
+- **[skill-creator](../../skills/skill-creator/SKILL.md)** - Skill creation
 
 ## Version History
 

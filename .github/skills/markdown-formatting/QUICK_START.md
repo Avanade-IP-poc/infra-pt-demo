@@ -46,20 +46,26 @@ markdownlint --fix document.md
 
 ❌ Before:
 
-````markdown
-````
+```markdown
+
+```
+
 function hello() {}
 \```
-````
-````
+
+```
+
+```
 
 ✅ After:
 
-````markdown
+`````markdown
 ````javascript
 function hello() {}
 \```
 ````
+`````
+
 ````
 
 ### 3. Add Blank Lines Around Lists
@@ -259,7 +265,7 @@ jobs:
 - **Full Documentation**: [SKILL.md](SKILL.md)
 - **Examples**: [examples/](examples/)
 - **Templates**: [templates/](templates/)
-- **Skill Development**: [../new-skill/](../new-skill/)
+- **Skill Development**: [../skill-creator/](../skill-creator/)
 
 ## Troubleshooting
 
@@ -290,3 +296,4 @@ See [markdownlint custom rules](https://github.com/DavidAnson/markdownlint/blob/
 
 **Version**: 1.0.0
 **Last Updated**: 2026-02-13
+````

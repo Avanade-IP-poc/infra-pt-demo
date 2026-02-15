@@ -972,7 +972,7 @@ Skills se auto-descubren — solo actualizar la tabla informativa en `.github/co
 | Skill                                            | Domain             | Use When                                       |
 | ------------------------------------------------ | ------------------ | ---------------------------------------------- |
 | [bolt-framework](.github/skills/bolt-framework/) | AURORA Methodology | Working on AURORA projects, managing lifecycle |
-| [new-skill](.github/skills/new-skill/)           | Skill Creation     | Creating or improving Copilot skills           |
+| [skill-creator](.github/skills/skill-creator/)   | Skill Creation     | Creating or improving Copilot skills           |
 
 > **Nota**: Eliminar cualquier tag `<skill>` existente. Los skills se auto-descubren desde el directorio.
 
@@ -980,9 +980,9 @@ Skills se auto-descubren — solo actualizar la tabla informativa en `.github/co
 
 Actualizar tabla de agentes (30 agentes) y cambiar nombre del orchestrator a `@Bolt Framework`.
 
-### Paso 5.3: Agregar YAML frontmatter a new-skill
+### Paso 5.3: Agregar YAML frontmatter a skill-creator
 
-Verificar que `new-skill/SKILL.md` tenga YAML frontmatter requerido.
+Verificar que `skill-creator/SKILL.md` tenga YAML frontmatter requerido.
 
 > 📊 **Fin FASE 5**: Actualizar progreso al inicio del documento
 

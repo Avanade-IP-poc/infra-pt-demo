@@ -104,7 +104,7 @@ AURORA includes specialized **skills** that are auto-discovered from `.github/sk
 | ---------------------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------ |
 | [bolt-framework](.github/skills/bolt-framework/)           | AURORA Methodology            | Working on AURORA projects, managing lifecycle                                                   |
 | [skill-bolt-adr](.github/skills/skill-bolt-adr/)           | Architecture Decision Records | Documenting architectural decisions, technology selections, or design patterns using MADR format |
-| [new-skill](.github/skills/new-skill/)                     | Skill Creation                | Creating or improving Copilot skills                                                             |
+| [skill-creator](.github/skills/skill-creator/)             | Skill Creation                | Creating or improving Copilot skills                                                             |
 | [markdown-formatting](.github/skills/markdown-formatting/) | Markdown Best Practices       | Writing or editing any Markdown document (.md, .agent.md, .prompt.md)                            |
 
 ### Creating Custom Skills
@@ -115,7 +115,7 @@ Want to add a new skill? Ask Copilot:
 "Help me create a skill for [domain]"
 ```
 
-Copilot will guide you through the process using the new-skill guidelines.
+Copilot will guide you through the process using the skill-creator guidelines.
 
 ## Remember
 
