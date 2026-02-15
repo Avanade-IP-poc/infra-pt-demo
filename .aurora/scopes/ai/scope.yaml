@@ -1,0 +1,36 @@
+version: 1
+scope: ai
+description: Artefactos relacionados con agentes, prompts y automatización AI.
+items:
+  - id: ai-task-implementation-awesome
+    kind: instructions
+    enabled: false
+    source:
+      type: awesome_copilot
+      collection: project-planning
+      item_path: instructions/task-implementation.instructions.md
+    destination:
+      folder: .github/instructions
+      name: task-implementation.instructions.md
+
+  - id: ai-prompt-safety-review-awesome
+    kind: prompts
+    enabled: false
+    source:
+      type: awesome_copilot
+      collection: security-best-practices
+      item_path: prompts/ai-prompt-engineering-safety-review.prompt.md
+    destination:
+      folder: .github/prompts
+      name: ai-prompt-engineering-safety-review.prompt.md
+
+  - id: ai-opentelemetry-dotnet-context7
+    kind: prompts
+    enabled: false
+    source:
+      type: context7
+      library: /websites/opentelemetry_io
+      query: Configure OpenTelemetry in Program.cs
+    destination:
+      folder: .github/prompts
+      name: ai-observability-opentelemetry-dotnet.prompt.md

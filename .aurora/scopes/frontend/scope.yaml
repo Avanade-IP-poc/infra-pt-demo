@@ -1,0 +1,47 @@
+version: 1
+scope: frontend
+description: Artefactos frontend reutilizables para el proyecto destino.
+items:
+  - id: frontend-react-awesome
+    kind: instructions
+    enabled: false
+    source:
+      type: awesome_copilot
+      collection: frontend-web-dev
+      item_path: instructions/reactjs.instructions.md
+    destination:
+      folder: .github/instructions
+      name: reactjs.instructions.md
+
+  - id: frontend-angular-awesome
+    kind: instructions
+    enabled: false
+    source:
+      type: awesome_copilot
+      collection: frontend-web-dev
+      item_path: instructions/angular.instructions.md
+    destination:
+      folder: .github/instructions
+      name: angular.instructions.md
+
+  - id: frontend-vue-awesome
+    kind: instructions
+    enabled: false
+    source:
+      type: awesome_copilot
+      collection: frontend-web-dev
+      item_path: instructions/vuejs3.instructions.md
+    destination:
+      folder: .github/instructions
+      name: vuejs3.instructions.md
+
+  - id: frontend-playwright-generator-awesome
+    kind: prompts
+    enabled: false
+    source:
+      type: awesome_copilot
+      collection: frontend-web-dev
+      item_path: prompts/playwright-generate-test.prompt.md
+    destination:
+      folder: .github/prompts
+      name: playwright-generate-test.prompt.md

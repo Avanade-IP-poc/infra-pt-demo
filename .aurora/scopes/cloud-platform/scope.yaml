@@ -1,0 +1,47 @@
+version: 1
+scope: cloud-platform
+description: Artefactos cloud e infraestructura para despliegues y plataforma.
+items:
+  - id: cloud-appservice-bicep-context7
+    kind: templates
+    enabled: false
+    source:
+      type: context7
+      library: /microsoftdocs/azure-docs
+      query: Define Linux App Service and Deployment from GitHub using Bicep
+    destination:
+      folder: infra/bicep
+      name: appservice-linux-github.bicep
+
+  - id: cloud-azure-devops-yaml-context7
+    kind: prompts
+    enabled: false
+    source:
+      type: context7
+      library: /microsoftdocs/azure-docs
+      query: Define and Deploy .NET Core App with Azure DevOps YAML Pipeline
+    destination:
+      folder: .github/prompts
+      name: azure-devops-dotnet-pipeline.prompt.md
+
+  - id: cloud-bicep-best-practices-awesome
+    kind: instructions
+    enabled: false
+    source:
+      type: awesome_copilot
+      collection: azure-cloud-development
+      item_path: instructions/bicep-code-best-practices.instructions.md
+    destination:
+      folder: .github/instructions
+      name: bicep-code-best-practices.instructions.md
+
+  - id: cloud-kubernetes-best-practices-awesome
+    kind: instructions
+    enabled: false
+    source:
+      type: awesome_copilot
+      collection: azure-cloud-development
+      item_path: instructions/kubernetes-deployment-best-practices.instructions.md
+    destination:
+      folder: .github/instructions
+      name: kubernetes-deployment-best-practices.instructions.md

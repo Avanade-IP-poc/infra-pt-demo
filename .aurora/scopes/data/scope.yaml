@@ -1,0 +1,36 @@
+version: 1
+scope: data
+description: Artefactos de modelado y prácticas de datos.
+items:
+  - id: data-sql-optimization-awesome
+    kind: prompts
+    enabled: false
+    source:
+      type: awesome_copilot
+      collection: database-data-management
+      item_path: prompts/sql-optimization.prompt.md
+    destination:
+      folder: .github/prompts
+      name: sql-optimization.prompt.md
+
+  - id: data-postgresql-optimization-awesome
+    kind: prompts
+    enabled: false
+    source:
+      type: awesome_copilot
+      collection: database-data-management
+      item_path: prompts/postgresql-optimization.prompt.md
+    destination:
+      folder: .github/prompts
+      name: postgresql-optimization.prompt.md
+
+  - id: data-ms-sql-dba-awesome
+    kind: instructions
+    enabled: false
+    source:
+      type: awesome_copilot
+      collection: database-data-management
+      item_path: instructions/ms-sql-dba.instructions.md
+    destination:
+      folder: .github/instructions
+      name: ms-sql-dba.instructions.md

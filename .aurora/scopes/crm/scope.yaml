@@ -1,0 +1,36 @@
+version: 1
+scope: crm
+description: Artefactos CRM para usar cuando exista evidencia/definición específica.
+items:
+  - id: crm-power-apps-code-apps-instruction
+    kind: instructions
+    enabled: false
+    source:
+      type: awesome_copilot
+      collection: power-apps-code-apps
+      item_path: instructions/power-apps-code-apps.instructions.md
+    destination:
+      folder: .github/instructions
+      name: power-apps-code-apps.instructions.md
+
+  - id: crm-power-apps-scaffold-prompt
+    kind: prompts
+    enabled: false
+    source:
+      type: awesome_copilot
+      collection: power-apps-code-apps
+      item_path: prompts/power-apps-code-app-scaffold.prompt.md
+    destination:
+      folder: .github/prompts
+      name: power-apps-code-app-scaffold.prompt.md
+
+  - id: crm-power-platform-mcp-instruction
+    kind: instructions
+    enabled: false
+    source:
+      type: awesome_copilot
+      collection: power-platform-mcp-connector-development
+      item_path: instructions/power-platform-mcp-development.instructions.md
+    destination:
+      folder: .github/instructions
+      name: power-platform-mcp-development.instructions.md

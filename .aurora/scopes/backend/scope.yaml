@@ -1,0 +1,47 @@
+version: 1
+scope: backend
+description: Artefactos backend reutilizables para el proyecto destino.
+items:
+  - id: backend-minimal-api-openapi-context7
+    kind: prompts
+    enabled: false
+    source:
+      type: context7
+      library: /dotnet/aspnetcore.docs
+      query: Configure Minimal API with OpenAPI and Swagger
+    destination:
+      folder: .github/prompts
+      name: backend-minimal-api-openapi.prompt.md
+
+  - id: backend-integration-testing-context7
+    kind: prompts
+    enabled: false
+    source:
+      type: context7
+      library: /dotnet/aspnetcore.docs
+      query: Minimal API returning TypedResults with unit test
+    destination:
+      folder: .github/prompts
+      name: backend-integration-testing.prompt.md
+
+  - id: backend-dotnet-architecture-awesome
+    kind: instructions
+    enabled: false
+    source:
+      type: awesome_copilot
+      collection: csharp-dotnet-development
+      item_path: instructions/dotnet-architecture-good-practices.instructions.md
+    destination:
+      folder: .github/instructions
+      name: dotnet-architecture-good-practices.instructions.md
+
+  - id: backend-csharp-guidelines-awesome
+    kind: instructions
+    enabled: false
+    source:
+      type: awesome_copilot
+      collection: csharp-dotnet-development
+      item_path: instructions/csharp.instructions.md
+    destination:
+      folder: .github/instructions
+      name: csharp.instructions.md

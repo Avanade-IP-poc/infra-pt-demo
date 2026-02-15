@@ -1,0 +1,35 @@
+version: 1
+scope: <scope-name>
+description: <short-description>
+items:
+  - id: <unique-id>
+    kind: instructions
+    enabled: false
+    source:
+      type: local_file
+      path: scopes/<scope-name>/instructions/<file>.instructions.md
+    destination:
+      folder: .github/instructions
+      name: <target-file>.instructions.md
+
+  - id: <context7-item-id>
+    kind: prompts
+    enabled: false
+    source:
+      type: context7
+      library: /dotnet/aspnetcore.docs
+      query: Configure Minimal API with OpenAPI and Swagger
+    destination:
+      folder: .github/prompts
+      name: <context7-derived>.prompt.md
+
+  - id: <awesome-item-id>
+    kind: instructions
+    enabled: false
+    source:
+      type: awesome_copilot
+      collection: csharp-dotnet-development
+      item_path: instructions/csharp.instructions.md
+    destination:
+      folder: .github/instructions
+      name: csharp.instructions.md
