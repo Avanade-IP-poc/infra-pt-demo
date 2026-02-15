@@ -3,6 +3,7 @@
         "allowedServers": [
             "github",
             "context7",
+            "azure",
             "dbhub",
             "mongoDb"
         ],

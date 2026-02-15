@@ -51,7 +51,25 @@
                 "-y",
                 "@azure/mcp@latest",
                 "server",
-                "start"
+                "start",
+                "--mode",
+                "namespace",
+                "--namespace",
+                "foundry",
+                "--namespace",
+                "cosmos",
+                "--namespace",
+                "sql",
+                "--namespace",
+                "postgres",
+                "--namespace",
+                "mysql",
+                "--namespace",
+                "kusto",
+                "--namespace",
+                "storage",
+                "--namespace",
+                "monitor"
             ]
         },
         "context7": {

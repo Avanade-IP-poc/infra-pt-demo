@@ -23,7 +23,25 @@
                 "-y",
                 "@azure/mcp@latest",
                 "server",
-                "start"
+                "start",
+                "--mode",
+                "namespace",
+                "--namespace",
+                "foundry",
+                "--namespace",
+                "servicebus",
+                "--namespace",
+                "eventgrid",
+                "--namespace",
+                "eventhubs",
+                "--namespace",
+                "appconfig",
+                "--namespace",
+                "functionapp",
+                "--namespace",
+                "storage",
+                "--namespace",
+                "monitor"
             ]
         },
         "context7": {
