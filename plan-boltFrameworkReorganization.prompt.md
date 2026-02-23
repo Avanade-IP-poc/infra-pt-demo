@@ -35,9 +35,10 @@ Este plan transforma el framework "Aurora" en **Bolt Framework** con arquitectur
 ### Estado General
 
 - **Estado del Plan**: 🟡 En Progreso
-- **Fase Actual**: Phase 5 - 🟡 Validación y Testing (Automated tests completed)
+- **Fase Actual**: Phase 5 - 🟡 Validación y Testing (Automated + Work Mgmt Sync completed)
 - **Última actualización**: 2026-02-23
-- **Progreso global**: 27/29 tareas completadas (93%)
+- **Progreso global**: 28/30 tareas completadas (93%)
+- **Nota**: Task 28 (PR) omitida por decisión del usuario - se creará PR más adelante
 
 ### Leyenda de Estados
 
@@ -55,8 +56,12 @@ Este plan transforma el framework "Aurora" en **Bolt Framework** con arquitectur
 | Phase 2   | 7      | 7           | ✅ Completada  | 100%     |
 | Phase 3   | 6      | 6           | ✅ Completada  | 100%     |
 | Phase 4   | 2      | 2           | ✅ Completada  | 100%     |
-| Phase 5   | 4      | 2           | 🟡 En Progreso | 50%      |
-| **TOTAL** | **29** | **27**      | 🟡 Activo      | **93%**  |
+| Phase 5   | 5      | 3           | 🟡 En Progreso | 60%      |
+| **TOTAL** | **30** | **28**      | 🟡 Activo      | **93%**  |
+
+**Notas**:
+- Task 28 (PR) omitida intencionalmente - se creará después del testing manual
+- Task 27.5 (Work Mgmt Sync) agregada como funcionalidad adicional ✅
 
 ### Cómo Actualizar Este Plan
 
@@ -687,7 +692,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
 
 **Duración**: 6-8 horas (aumentado por testing del skill)
 
-24. Crear test script `.aurora/scripts/Test-InitFlows.ps1`:
+✅ **24. Crear test script `.aurora/scripts/Test-InitFlows.ps1`:**
     - Test 1: Init.ps1 con Practice "Apps & Infra":
       - Verificar `memory/constitution.md` creado (básico)
       - Verificar `memory/scopes.yaml` contiene: backend, frontend, cloud-platform
@@ -715,13 +720,23 @@ No hay usuarios con workflows dependientes, por lo tanto:
     - Test 6: Re-provisión (idempotencia):
       - Ejecutar provisión 2 veces
       - Verificar: archivos no duplicados, warnings sobre archivos existentes
-    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+    - **📝 Completado**: 2026-02-23 - Commit b65a969
 
-25. Ejecutar validación de scopes:
+✅ **25. Ejecutar validación de scopes:**
     - `npm run validate:scopes:ps` (ya existe, verificar pasa después de cambios)
-    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+    - **📝 Completado**: 2026-02-23 - 8/8 scopes OK, 0 errors
 
-26. Crear PR con checklist:
+✅ **26. (ADICIONAL) Sincronización con herramientas de gestión del trabajo:**
+    - Actualizar @Bolt Feature: Sync al crear feature spec
+    - Actualizar @Bolt Plan: Sync al crear implementation plan
+    - Actualizar @Bolt Tasks: Sync al generar task list
+    - Actualizar @Bolt Implement: Sync de progreso de tareas y Bolts
+    - Actualizar @Bolt Micro Iterator: Sync de estado de iteraciones
+    - Soporte: Azure DevOps, Jira, GitHub Projects
+    - Detección automática desde constitution (work-management scope)
+    - **📝 Completado**: 2026-02-23 - Commit c6b6f22
+
+⏭️ **27. Crear PR con checklist:** *(OMITIDO - Se creará después del testing manual)*
     - [ ] Renombrado completo (Aurora → Bolt Framework)
     - [ ] 5 skills extraídos y creados
     - [ ] Agentes actualizados (sin duplicación, referencian skills)
@@ -730,9 +745,9 @@ No hay usuarios con workflows dependientes, por lo tanto:
     - [ ] Constitution merge automatizado
     - [ ] Tests pasan
     - [ ] README y docs actualizados
-    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+    - **Razón para omitir**: El usuario prefiere completar el testing manual primero
 
-27. Testing manual (two-step workflow):
+⬜ **28. Testing manual (two-step workflow):** *(PENDIENTE)*
     - **Step 1: Initialization**
       - Ejecutar `Init.ps1` con Practice "Apps & Infra"
       - Verificar constitution básico en `memory/constitution.md`
