@@ -28,6 +28,59 @@ Este plan transforma el framework "Aurora" en **Bolt Framework** con arquitectur
 
 ---
 
+## 📊 TRACKING DE PROGRESO
+
+> **IMPORTANTE**: Este plan es un documento vivo. Actualiza el estado de cada tarea a medida que avanzas.
+
+### Estado General
+
+- **Estado del Plan**: 🟡 En Progreso
+- **Fase Actual**: Phase 1 - Renombrado Framework
+- **Última actualización**: 2026-02-23
+- **Progreso global**: 0/27 tareas completadas (0%)
+
+### Leyenda de Estados
+
+- ⬜ **Pendiente** - No iniciado
+- 🟡 **En Progreso** - Trabajo activo
+- ✅ **Completado** - Terminado y validado
+- ⏸️ **Bloqueado** - Dependencias no resueltas
+- ⚠️ **Con Issues** - Requiere atención
+
+### Progress por Fase
+
+| Fase      | Tareas | Completadas | Estado       | Progreso |
+| --------- | ------ | ----------- | ------------ | -------- |
+| Phase 1   | 10     | 0           | ⬜ Pendiente | 0%       |
+| Phase 2   | 7      | 0           | ⬜ Pendiente | 0%       |
+| Phase 3   | 6      | 0           | ⬜ Pendiente | 0%       |
+| Phase 4   | 2      | 0           | ⬜ Pendiente | 0%       |
+| Phase 5   | 4      | 0           | ⬜ Pendiente | 0%       |
+| **TOTAL** | **29** | **0**       | 🟡 Activo    | **0%**   |
+
+### Cómo Actualizar Este Plan
+
+**Cada vez que completes una tarea**:
+
+1. Busca el número de tarea en el plan (ej: "1. Actualizar `Init.ps1`...")
+2. Añade el emoji ✅ al inicio del paso
+3. Modifica el estado en la tabla de progreso por fase
+4. Actualiza el contador "Progreso global"
+5. Actualiza "Última actualización" con la fecha actual
+6. Si encuentras bloqueadores o issues, documéntalos en una sección de notas
+
+**Ejemplo de tarea completada**:
+
+```markdown
+✅ 1. Actualizar `Init.ps1` (líneas 1-50): banner ASCII, mensajes de bienvenida...
+📅 Completado: 2026-02-23
+✏️ Detalles: Renombrado exitoso, 15 referencias actualizadas
+```
+
+**Cada tarea incluye como último paso**: "**📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan"
+
+---
+
 El framework actual "Aurora" tiene una arquitectura sólida (30 agentes, 8 scopes, sistema de constituciones) pero sufre de **duplicación de conocimiento metodológico** (600-800 líneas repetidas) y **falta de abstracción de Prácticas para inicialización guiada**. Este plan transforma Aurora en **Bolt Framework**: un sistema modular, configuration-driven, con skills extraídos y provisión inteligente basada en prácticas de negocio.
 
 ## Objetivos
@@ -167,10 +220,20 @@ No hay usuarios con workflows dependientes, por lo tanto:
 **Duración**: 6-8 horas
 
 1. Actualizar `Init.ps1` (líneas 1-50): banner ASCII, mensajes de bienvenida, referencias "Aurora" → "Bolt Framework"
+   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+
 2. Actualizar `init.sh`: mismo patrón que Init.ps1 para Linux/macOS
+   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+
 3. Actualizar `.github/copilot-instructions.md`: todas las menciones "Aurora" / "AURORA-IA" → "Bolt Framework"
+   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+
 4. Actualizar `README.md`: título, descripción, ejemplos de uso
+   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+
 5. Actualizar `.github/agents/bolt-framework.agent.md`: displayName, description
+   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+
 6. Renombrar todos los archivos de agentes en `.github/agents/`:
    - `aurora-testing.agent.md` → `bolt-testing.agent.md`
    - `aurora-implement.agent.md` → `bolt-implement.agent.md`
@@ -178,8 +241,14 @@ No hay usuarios con workflows dependientes, por lo tanto:
    - `aurora-bugfix.agent.md` → `bolt-bugfix.agent.md`
    - `aurora-specify.agent.md` → `bolt-specify.agent.md`
    - (... y todos los demás 25 agentes `aurora-*.agent.md`)
+   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+
 7. Actualizar contenido de todos los agentes: referencias a "Aurora" en descriptions y handoffs → "Bolt Framework"
+   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+
 8. Actualizar `.github/skills/bolt-framework/SKILL.md`: título y frontmatter
+   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+
 9. Actualizar todos los handoffs entre agentes:
    - Buscar en todos los `.agent.md` referencias tipo `handoff: aurora-testing` → cambiar a `handoff: bolt-testing`
    - Script de validación:
@@ -187,7 +256,10 @@ No hay usuarios con workflows dependientes, por lo tanto:
      # Verificar que no quedan handoffs a nombres antiguos
      grep -r "aurora-" .github/agents/ --include="*.agent.md" | grep "handoff"
      ```
+   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+
 10. Buscar con `grep -r "Aurora" --include="*.md" --include="*.ps1" --include="*.sh" --include="*.yaml"` y reemplazar referencias restantes
+    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 ### Phase 2: Extracción de Skills de Agentes
 
@@ -207,6 +279,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
     - Incluir procedimientos de creación/switching/merge de branches
     - **Límite**: 50-150 líneas (enforced by new-skill)
     - **Estructura**: Aplicada automáticamente por new-skill skill
+    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 12. Crear `.github/skills/skill-quality-gates/SKILL.md`:
     - **Usar skill**: Invocar `#file:new-skill` para guiar la creación
@@ -218,6 +291,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
       - Cuándo ejecutar quality gates
     - **Límite**: 100-150 líneas (más complejo por multi-language, validado por new-skill)
     - **Estructura**: YAML frontmatter + secciones (aplicadas por new-skill)
+    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 13. Crear `.github/skills/skill-testing-discipline/SKILL.md`:
     - **Usar skill**: Invocar `#file:new-skill` para guiar la creación
@@ -231,6 +305,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
     - **Límite**: 100-150 líneas (validado por new-skill)
     - **Estructura**: Aplicada automáticamente por new-skill skill
     - Separar de agent instructions para reutilización
+    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 14. Crear `.github/skills/skill-constitution-driven-development/SKILL.md`:
     - **Usar skill**: Invocar `#file:new-skill` para guiar la creación
@@ -242,6 +317,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
       - Mapeo de Articles → validation steps, tablas de compliance
     - **Límite**: 80-120 líneas (validado por new-skill)
     - **Estructura**: Aplicada automáticamente por new-skill skill
+    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 14.5. Crear `.github/skills/bolt-setup-constitution/SKILL.md` **[NUEVO]**: - **Usar skill**: Invocar `#file:new-skill` para guiar la creación - **Nota**: Este skill es **EXCEPCIÓN** al límite de 150 líneas (300-400 líneas necesarias) - **Razón de excepción**: Motor de provisión completo con múltiples responsabilidades - new-skill skill alertará sobre el límite, pero se justifica por complejidad - **Responsabilidad**: Provisión inteligente post-init basada en constitution y scopes activos - **Workflow**: 1. Leer `memory/constitution.md` (contiene Practice y scopes activos) 2. Leer `memory/scopes.yaml` (scopes seleccionados) 3. Para cada scope activo: - Leer `.aurora/scopes/{scope}/scope.yaml` - Copiar items (agents, prompts, skills) según `source_type` y `auto_provision: true` - Extraer articles específicos de `.aurora/scopes/{scope}/memory/constitution.md` 4. Merge constitution: Master + Scope-specific articles 5. Actualizar `memory/constitution.md` con constitution completo 6. Copiar skills específicos desde `.aurora/available-skills/` según mapeo Practice 7. **SIEMPRE** copiar `bolt-framework` (skill core, independiente del Practice) 8. Generar reporte de provisión: archivos copiados, articles añadidos - **Inputs**: - ConstitutionPath (default: `memory/constitution.md`) - ScopesConfigPath (default: `memory/scopes.yaml`) - DryRun (default: false) - preview de cambios sin ejecutar - **Output**: Reporte markdown con cambios realizados - **Invocación**: Puede ser llamado por agentes (`@Bolt Constitution`, `@Bolt Framework`) o manualmente después de init
 
@@ -259,6 +335,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
       - Referencias a otros skills (`skill-quality-gates`, `skill-testing-discipline`)
     - Seguir pattern Microsoft: "# Mission → # Workflow → # Output"
     - **Provisión**: SIEMPRE copiado desde `.aurora/available-skills/bolt-framework/` a `.github/skills/bolt-framework/`
+    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 16. Actualizar agentes para referenciar skills:
     - Remover contenido duplicado de cada agent
@@ -275,6 +352,8 @@ No hay usuarios con workflows dependientes, por lo tanto:
 
       Use `skill-quality-gates` to run linting, unit tests, and architecture validation.
       ```
+
+    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 ### Phase 3: Implementar Modelo Practice en Init.ps1 (Setup Mínimo)
 
@@ -293,6 +372,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
       ```
     - Si "Custom" → flujo actual (selección manual de scopes)
     - Si Practice específica → pre-seleccionar scopes, mostrar confirmación
+    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 18. Generar constitution básico en Init.ps1:
     - Crear `memory/constitution.md` con estructura mínima:
@@ -317,10 +397,12 @@ No hay usuarios con workflows dependientes, por lo tanto:
 
     - **NO provisionar archivos en Init.ps1** (se delega al skill)
     - Mantener Init.ps1 < 500 líneas (actualmente 837)
+    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 19. Generar `memory/scopes.yaml` en Init.ps1:
     - Formato estándar (sin cambios respecto a versión actual)
     - Include scope metadata: name, enabled, practice_origin
+    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 20. Mostrar mensaje final en Init.ps1:
     - "✓ Project initialized with Practice: {practice}"
@@ -328,6 +410,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
     - "✓ Scopes configured: {scopes_list}"
     - "⚠ Next step: Run '@Bolt Constitution' to provision files and complete constitution"
     - " Or manually: Invoke 'bolt-setup-constitution' skill"
+    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 21. Actualizar `.aurora/scopes/README.md`:
     - Documentar Practice → Scopes mapping
@@ -339,6 +422,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
       2. Run @Bolt Constitution → Invoke bolt-setup-constitution skill → Provision files
       3. Start development
       ```
+    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 22. Implementar `source_type` y `auto_provision` en `scope.yaml`:
     - Actualizar cada `.aurora/scopes/*/scope.yaml` para permitir:
@@ -361,6 +445,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
       ```
 
     - El skill `bolt-setup-constitution` leerá esta configuración
+    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 ### Phase 4: Implementar Skill bolt-setup-constitution (Provisión Inteligente)
 
@@ -372,6 +457,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
     - Expandir con ejemplos de invocación
     - Documentar formato de reporte
     - Incluir troubleshooting common issues
+    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan (sub-tarea 21.1)
 
     **21.2. Crear helper script** `.aurora/scripts/Invoke-BoltSetupConstitution.ps1`:
     - PowerShell script que implementa la lógica descrita en el skill
@@ -390,6 +476,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
       - `Copy-ScopeItems`: Copia items (agents, prompts, skills) según auto_provision
       - `Merge-ScopeConstitutions`: Merge articles de scopes activos
       - `Generate-ProvisionReport`: Genera reporte markdown con cambios
+    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan (sub-tarea 21.2)
 
     **21.3. Implementar lógica de merge de constitution**:
     - Leer `memory/constitution.md` (básico generado por Init.ps1)
@@ -397,48 +484,51 @@ No hay usuarios con workflows dependientes, por lo tanto:
       - Leer `.aurora/scopes/{scope}/memory/constitution.md`
       - Extraer articles específicos (según tabla en `.aurora/scopes/README.md`)
       - Validar: no duplicar articles, preservar estructura
-    - Generar constitution completo:
+    - Generar constitution completo
+    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan (sub-tarea 21.3)
 
-      ```markdown
-      # Project Constitution
+    **Ejemplo de constitution completo**:
 
-      ## Metadata
+    ```markdown
+    # Project Constitution
 
-      - Practice: Apps & Infra
-      - Active Scopes: backend, frontend, cloud-platform
-      - Initialized: 2026-02-23
-      - Last Provision: 2026-02-23 14:30:00
+    ## Metadata
 
-      # Article I: Active Scopes
+    - Practice: Apps & Infra
+    - Active Scopes: backend, frontend, cloud-platform
+    - Initialized: 2026-02-23
+    - Last Provision: 2026-02-23 14:30:00
 
-      - backend
-      - frontend
-      - cloud-platform
+    # Article I: Active Scopes
 
-      # Article III: Tech Stack
+    - backend
+    - frontend
+    - cloud-platform
 
-      ## Backend
+    # Article III: Tech Stack
 
-      - APIs: REST with FastAPI/Express/ASP.NET Core
-        ...
+    ## Backend
 
-      ## Frontend
+    - APIs: REST with FastAPI/Express/ASP.NET Core
+      ...
 
-      - Framework: React/Vue/Angular
-        ...
+    ## Frontend
 
-      # Article XV: Testing Strategy
+    - Framework: React/Vue/Angular
+      ...
 
-      ## Backend Testing
+    # Article XV: Testing Strategy
 
-      - API integration tests
-        ...
+    ## Backend Testing
 
-      ## Frontend Testing
+    - API integration tests
+      ...
 
-      - Component tests with Testing Library
-        ...
-      ```
+    ## Frontend Testing
+
+    - Component tests with Testing Library
+      ...
+    ```
 
     **21.4. Implementar lógica de provisión de archivos** (DOS PASOS):
 
@@ -466,6 +556,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
       - `templates/` (bolt-template, constitution-template, quality-gate-checklist)
     - Preservar estructura de directorios completa
     - Log: "Core skill 'bolt-framework' provisioned (always included)"
+    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan (sub-tarea 21.4)
 
     **21.5. Generar reporte de provisión**:
     - Formato markdown:
@@ -513,6 +604,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
       ```
 
     - Guardar reporte en `memory/provision-report.md`
+    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan (sub-tarea 21.5)
 
 22. Crear agente `@Bolt Constitution` que invoca el skill:
     - Crear `.github/agents/bolt-constitution.agent.md`:
@@ -549,6 +641,8 @@ No hay usuarios con workflows dependientes, por lo tanto:
       - "Dry run" → Run provision with DryRun flag (preview only)
       ```
 
+    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+
 23. Actualizar scope constitutions en `.aurora/scopes/*/memory/constitution.md`:
     - Verificar que cada scope tiene articles correctos
     - Ejemplo `backend`:
@@ -574,6 +668,8 @@ No hay usuarios con workflows dependientes, por lo tanto:
       - Input validation on all endpoints
       - SQL injection prevention
       ```
+
+    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 ### Phase 5: Validación y Testing
 
@@ -607,9 +703,11 @@ No hay usuarios con workflows dependientes, por lo tanto:
     - Test 6: Re-provisión (idempotencia):
       - Ejecutar provisión 2 veces
       - Verificar: archivos no duplicados, warnings sobre archivos existentes
+    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 25. Ejecutar validación de scopes:
     - `npm run validate:scopes:ps` (ya existe, verificar pasa después de cambios)
+    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 26. Crear PR con checklist:
     - [ ] Renombrado completo (Aurora → Bolt Framework)
@@ -620,6 +718,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
     - [ ] Constitution merge automatizado
     - [ ] Tests pasan
     - [ ] README y docs actualizados
+    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 27. Testing manual (two-step workflow):
     - **Step 1: Initialization**
@@ -639,6 +738,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
       - Verificar skills cargados automáticamente
       - Invocar `@Bolt Implement`
       - Verificar usa `skill-branch-management` sin ejecutar bash inline
+    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan y actualizar el estado general del plan a "Completado"
 
 ## Verificación
 
