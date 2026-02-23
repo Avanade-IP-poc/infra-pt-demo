@@ -2,6 +2,55 @@
 
 Este directorio define qué artefactos se pueden copiar al proyecto destino por scope.
 
+## Practice-Based Initialization (Two-Step Workflow)
+
+**Bolt Framework v2.0** introduces a two-step initialization pattern:
+
+### Step 1: Init.ps1 — Practice Selection & Basic Configuration
+
+When you run `Init.ps1`, you select a **Practice** that pre-configures scopes:
+
+| Practice        | Pre-Selected Scopes                          | Use Case                                                 |
+| --------------- | -------------------------------------------- | -------------------------------------------------------- |
+| **Apps & Infra** | `backend`, `frontend`, `cloud-platform`     | Full-stack applications with cloud infrastructure        |
+| **Data & AI**    | `data`, `ai`, `integration`                 | Data platforms, analytics, AI/ML solutions               |
+| **CRM**          | `crm`                                       | Dynamics 365, Power Platform, Dataverse solutions        |
+| **Custom**       | Manual selection (advanced)                 | Fine-grained scope selection                             |
+
+**Output of Step 1**:
+- `.aurora/scopes.yaml` — Active scopes + wizard decisions
+- `.aurora/memory/constitution.md` — Basic constitution template with metadata
+
+### Step 2: `@Bolt Constitution` — File Provisioning & Constitution Merge
+
+After running `Init.ps1`, you invoke the `@Bolt Constitution` agent (or manually call the `bolt-setup-constitution` skill) to complete setup:
+
+**What it does**:
+1. **Merge constitutions**: Combines scope-specific `memory/constitution.md` files into the master constitution
+2. **Provision files**: Copies skills, agents, templates based on `scope.yaml` configurations
+3. **Generate report**: Creates `.aurora/provision-report.md` with inventory of provisioned files
+
+**Why two steps?**
+- **Separation of concerns**: Init.ps1 collects decisions; skill handles complex provisioning logic
+- **Reduced complexity**: Init.ps1 stays <500 lines (down from 837)
+- **Flexibility**: You can review/modify scopes.yaml before provisioning
+- **Agent-driven**: Provisioning uses the full power of Copilot agents
+
+### Quick Start
+
+```bash
+# Step 1: Initialize with Practice
+powershell -File Init.ps1 -OutputDirectory ./my-project -ProjectType green
+
+# Select "Apps & Infra" → Auto-selects: backend, frontend, cloud-platform
+
+# Step 2: Provision files
+cd my-project
+# In VS Code chat: @Bolt Constitution
+```
+
+---
+
 ## Tipos de elementos soportados
 
 - `templates`

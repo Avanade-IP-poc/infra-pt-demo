@@ -148,21 +148,74 @@ function Get-AllDecisions {
     #>
     $d = @{}
 
+    # ── Step 0 — Practice Selection ─────────────────────────────────────────
+    Write-Host ""
+    Write-Step "Step 0 — Practice Selection"
+
+    $practiceMap = @{
+        "Apps & Infra" = @("backend", "frontend", "cloud-platform")
+        "Data & AI"    = @("data", "ai", "integration")
+        "CRM"          = @("crm")
+        "Custom"       = @()  # Manual selection
+    }
+
+    $selectedPractice = Read-Choice `
+        -Title "Select your Practice (pre-configured scope bundles)" `
+        -Options @(
+            "Apps & Infra  — Backend APIs, Frontend UIs, Cloud Infrastructure",
+            "Data & AI     — Databases, AI/ML models, Data integrations",
+            "CRM           — Dynamics 365, Power Platform, Dataverse",
+            "Custom        — Manual scope selection (advanced)"
+        ) `
+        -Values @("Apps & Infra", "Data & AI", "CRM", "Custom") `
+        -Default 1
+
+    $d.Practice = $selectedPractice
+
     # ── Article I §1.1 — Active Scopes ──────────────────────────────────────
     Write-Host ""
     Write-Step "Article I — Active Scopes"
-    $d.Scopes = Read-MultiChoice `
-        -Title "§1.1  Active scopes (select all that apply)" `
-        -Options @(
-            "backend        — Server-side APIs, services, domain logic",
-            "frontend       — Web/mobile UI, SPA, design system",
-            "cloud-platform — Infrastructure, Landing Zones, IaC",
-            "data           — Databases, ETL/ELT, analytics",
-            "integration    — API management, messaging, connectors",
-            "ai             — AI/ML models, agents, prompt engineering",
-            "crm            — Dynamics 365, Power Platform, Dataverse"
-        ) `
-        -Values @("backend", "frontend", "cloud-platform", "data", "integration", "ai", "crm")
+
+    if ($selectedPractice -eq "Custom") {
+        # Manual selection (original flow)
+        Write-Host "  ℹ Manual scope selection mode" -ForegroundColor DarkGray
+        $d.Scopes = Read-MultiChoice `
+            -Title "§1.1  Active scopes (select all that apply)" `
+            -Options @(
+                "backend        — Server-side APIs, services, domain logic",
+                "frontend       — Web/mobile UI, SPA, design system",
+                "cloud-platform — Infrastructure, Landing Zones, IaC",
+                "data           — Databases, ETL/ELT, analytics",
+                "integration    — API management, messaging, connectors",
+                "ai             — AI/ML models, agents, prompt engineering",
+                "crm            — Dynamics 365, Power Platform, Dataverse"
+            ) `
+            -Values @("backend", "frontend", "cloud-platform", "data", "integration", "ai", "crm")
+    } else {
+        # Practice-based pre-selection
+        $preselectedScopes = $practiceMap[$selectedPractice]
+        Write-Host "  ℹ Practice '$selectedPractice' pre-selects: $($preselectedScopes -join ', ')" -ForegroundColor Green
+
+        $confirm = Read-YesNo "  Confirm these scopes?" $true
+        if ($confirm) {
+            $d.Scopes = $preselectedScopes
+        } else {
+            # User wants to customize
+            Write-Host "  ℹ Customizing scopes for '$selectedPractice' practice" -ForegroundColor DarkGray
+            $d.Scopes = Read-MultiChoice `
+                -Title "§1.1  Active scopes (select all that apply)" `
+                -Options @(
+                    "backend        — Server-side APIs, services, domain logic",
+                    "frontend       — Web/mobile UI, SPA, design system",
+                    "cloud-platform — Infrastructure, Landing Zones, IaC",
+                    "data           — Databases, ETL/ELT, analytics",
+                    "integration    — API management, messaging, connectors",
+                    "ai             — AI/ML models, agents, prompt engineering",
+                    "crm            — Dynamics 365, Power Platform, Dataverse"
+                ) `
+                -Values @("backend", "frontend", "cloud-platform", "data", "integration", "ai", "crm")
+        }
+    }
 
     if ($d.Scopes.Count -eq 0) {
         Write-Warn "No scopes selected — defaulting to 'backend'"
@@ -483,6 +536,7 @@ function New-ScopesYaml {
 # =============================================================================
 
 project:
+  practice: $($Decisions.Practice)      # Practice selection (Phase 3)
   type: $($Decisions.ProjectType)       # derived from scopes
   migration-type: $ProjectType   # green | brown
 
@@ -548,7 +602,74 @@ $autoDeployLines
 
 # ─── Prefill constitution ────────────────────────────────────────────────────
 
-function Set-ConstitutionDecisions {
+function New-BasicConstitution {
+    <#
+    .SYNOPSIS  Generate minimal constitution template (Phase 1 of two-step init).
+    .DESCRIPTION  Creates basic constitution.md with Practice, Scopes, and metadata.
+                  Full provisioning is delegated to bolt-setup-constitution skill.
+    #>
+    param([hashtable]$D)
+
+    Write-Step "Generating basic constitution..."
+
+    $memoryDir = "$OutputDirectory\.aurora\memory"
+    if (-not (Test-Path $memoryDir)) {
+        New-Item -ItemType Directory -Path $memoryDir -Force | Out-Null
+    }
+
+    $path = "$memoryDir\constitution.md"
+    $date = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
+
+    # Build scope list
+    $scopesList = ($D.Scopes | ForEach-Object { "- **$_**" }) -join "`n"
+
+    $content = @"
+# Project Constitution
+
+> **Two-Step Initialization**: This is a basic constitution generated by Init.ps1.
+> Run ``@Bolt Constitution`` to provision files and merge scope-specific constitutions.
+
+## Metadata
+
+- **Practice**: $($D.Practice)
+- **Active Scopes**: $($D.Scopes -join ', ')
+- **Project Type**: $($D.ProjectType) ($ProjectType)
+- **Initialized**: $date
+
+---
+
+# Article I §1.1 — Active Scopes
+
+The following scopes are active for this project:
+
+$scopesList
+
+## Next Steps
+
+1. **Provision Files**: Run ``@Bolt Constitution`` agent or manually invoke the ``bolt-setup-constitution`` skill
+2. **Review**: The skill will merge scope-specific constitutions from ``.aurora/scopes/<scope>/memory/constitution.md``
+3. **Customize**: Edit this constitution to reflect project-specific decisions
+
+---
+
+# Notes
+
+- This constitution was generated by **Bolt Framework Init.ps1** on $date
+- Practice **$($D.Practice)** pre-selected scopes: $($D.Scopes -join ', ')
+- Full constitution structure will be provisioned in Step 2
+
+"@
+
+    Set-Content -Path $path -Value $content -Encoding UTF8
+    Write-Success "Basic constitution created: memory/constitution.md"
+}
+
+# ─── Legacy Function (Deprecated in Practice-based workflow) ────────────────
+# This function was used for single-step initialization. Now replaced by
+# New-BasicConstitution (Phase 1) + bolt-setup-constitution skill (Phase 2).
+# Kept for reference/rollback purposes.
+
+function Set-ConstitutionDecisions_DEPRECATED {
     param([hashtable]$D)
 
     Write-Step "Prefilling constitution with your decisions..."
@@ -783,25 +904,32 @@ function Show-Summary {
     param([hashtable]$D)
 
     Write-Host ""
-    Write-Host "  ┌──────────────────────────────────────────┐" -ForegroundColor Green
-    Write-Host "  │   Bolt Framework Project Initialized!     │" -ForegroundColor Green
-    Write-Host "  └──────────────────────────────────────────┘" -ForegroundColor Green
+    Write-Host "  ┌──────────────────────────────────────────────────────────────┐" -ForegroundColor Green
+    Write-Host "  │   Bolt Framework Project Initialized! (Phase 1 of 2)         │" -ForegroundColor Green
+    Write-Host "  └──────────────────────────────────────────────────────────────┘" -ForegroundColor Green
     Write-Host ""
-    Write-Info "Project:      $OutputDirectory"
-    Write-Info "Type:         $ProjectType"
-    Write-Info "Project Type: $($D.ProjectType)"
-    Write-Info "Scopes:       $($D.Scopes -join ', ')"
-    Write-Info "Environments: $($D.Environments -join ', ')"
-    Write-Info "CI/CD:        $($D.CiCdPlatform)"
-    Write-Info "Branch:       $($D.BranchStrategy)"
-    Write-Info "Observability:$($D.Observability)"
+    Write-Host "  ✓ Practice:   $($D.Practice)" -ForegroundColor Green
+    Write-Host "  ✓ Scopes:     $($D.Scopes -join ', ')" -ForegroundColor Green
+    Write-Host "  ✓ Basic constitution created in .aurora/memory/constitution.md" -ForegroundColor Green
+    Write-Host "  ✓ Scopes configuration saved to .aurora/scopes.yaml" -ForegroundColor Green
+    Write-Host ""
+    Write-Host "  ⚠ IMPORTANT: Two-Step Initialization" -ForegroundColor Yellow
+    Write-Host "     Phase 1: Init.ps1 (completed) — Basic configuration" -ForegroundColor DarkGray
+    Write-Host "     Phase 2: @Bolt Constitution — File provisioning & constitution merge" -ForegroundColor White
     Write-Host ""
     Write-Host "  NEXT STEPS:" -ForegroundColor Cyan
-    Write-Host "  1. cd $OutputDirectory"
-    Write-Host "  2. Review .aurora/scopes.yaml (selected scopes)"
-    Write-Host "  3. Review .aurora/memory/constitution.md (base decisions filled)"
-    Write-Host "  4. Use @Bolt Framework agent to process scope constitutions"
-    Write-Host "     Each active scope in scopes.yaml will inject its articles"
+    Write-Host "  1. cd $OutputDirectory" -ForegroundColor White
+    Write-Host "  2. Run: @Bolt Constitution" -ForegroundColor Yellow
+    Write-Host "     This will:" -ForegroundColor DarkGray
+    Write-Host "       • Merge scope-specific constitutions" -ForegroundColor DarkGray
+    Write-Host "       • Provision skills and agents based on active scopes" -ForegroundColor DarkGray
+    Write-Host "       • Generate provision report" -ForegroundColor DarkGray
+    Write-Host ""
+    Write-Host "     Alternative: Manually invoke 'bolt-setup-constitution' skill" -ForegroundColor DarkGray
+    Write-Host ""
+    Write-Host "  📚 Documentation:" -ForegroundColor Cyan
+    Write-Host "     - README.md — Bolt Framework overview"
+    Write-Host "     - .aurora/scopes/README.md — Practice-based initialization guide"
     Write-Host ""
 }
 
@@ -827,7 +955,7 @@ function Main {
     New-ProjectStructure -Decisions $decisions
     Copy-BoltFramework
     New-ScopesYaml       -Decisions $decisions
-    Set-ConstitutionDecisions -D $decisions
+    New-BasicConstitution -D $decisions  # Phase 1: Basic template (NEW)
     Add-DemoContent
 
     Show-Summary -D $decisions
