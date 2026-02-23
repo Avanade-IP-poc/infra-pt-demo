@@ -954,7 +954,7 @@ function Show-Summary {
             # Change to project directory and invoke agent
             Push-Location $OutputDirectory
             try {
-                & copilot --agent="bolt-constitution" --prompt="setup constitution"
+                & copilot --agent="bolt-constitution" --prompt="setup constitution" --banner --interactive
                 Write-Host ""
                 Write-Host "  ✓ @Bolt Constitution agent completed" -ForegroundColor Green
                 Write-Host "  📝 Review provision results above" -ForegroundColor Cyan
