@@ -30,10 +30,10 @@ items:
     tags: ['integration', 'azure-devops']
     source:
       type: local_folder
-      path: available-skills/azure-devops-sync
+      path: available-skills/azdo/azdo-sync
     destination:
       folder: .github/skills
-      name: azure-devops-sync
+      name: azdo-sync
 
   - id: integration-azure-wiki-agent-skill
     kind: skills
@@ -41,10 +41,10 @@ items:
     tags: ['integration', 'wiki']
     source:
       type: local_folder
-      path: available-skills/azure-wiki-agent
+      path: available-skills/azdo/azdo-wiki
     destination:
       folder: .github/skills
-      name: azure-wiki-agent
+      name: azdo-wiki
 
   - id: integration-azure-devops-pipelines-context7
     kind: prompts

@@ -3,10 +3,10 @@
 # AURORA-IA / AI-DLC - Create ADR Script
 # =============================================================================
 # Creates a new Architectural Decision Record from template.
-# Follows MADR format as defined in skill-bolt-adr.
+# Follows MADR format as defined in bolt-adr.
 #
-# Reference: .github/skills/skill-bolt-adr/SKILL.md
-# Templates: .github/skills/skill-bolt-adr/templates/
+# Reference: .github/skills/bolt-adr/SKILL.md
+# Templates: .github/skills/bolt-adr/templates/
 #
 # Usage:
 #   ./create-adr.sh <adr-title>

@@ -32,7 +32,7 @@ handoffs:
 
 # 📝 Bolt ADR - Architecture Decision Records
 
-**Skills**: This agent uses `bolt-framework` and `skill-bolt-adr` (auto-loaded)
+**Skills**: This agent uses `bolt-framework` and `bolt-adr` (auto-loaded)
 
 ## Purpose
 
@@ -66,7 +66,7 @@ Use available tools to:
 
 ### 3. Generate ADR
 
-Use #skill-bolt-adr to create a complete MADR document with appropiate template and sections
+Use #skill:bolt-adr to create a complete MADR document with appropiate template and sections
 
 - `madr-standard.md` - General technical decisions
 - `madr-business.md` - Business-impact decisions
@@ -95,8 +95,8 @@ Use #skill-bolt-adr to create a complete MADR document with appropiate template 
 
 **Utility scripts for ADR numbering:**
 
-- **Bash**: `.github/skills/skill-bolt-adr/scripts/get-next-adr-number.sh`
-- **PowerShell**: `.github/skills/skill-bolt-adr/scripts/Get-NextAdrNumber.ps1`
+- **Bash**: `.github/skills/bolt-adr/scripts/get-next-adr-number.sh`
+- **PowerShell**: `.github/skills/bolt-adr/scripts/Get-NextAdrNumber.ps1`
 
 ## ADR Categories
 
@@ -122,11 +122,11 @@ Tag ADRs by category:
 
 ## Examples & References
 
-**Examples**: See `.github/skills/skill-bolt-adr/examples/`:
+**Examples**: See `.github/skills/bolt-adr/examples/`:
 
 - `adr-typescript-adoption.md` - Complete technology selection example
 - `diagram-*.md` - Mermaid diagram examples for different decision types
 
-**Full Methodology**: See `.github/skills/skill-bolt-adr/SKILL.md`
+**Full Methodology**: See `.github/skills/bolt-adr/SKILL.md`
 
 **MADR Format**: https://adr.github.io/madr/

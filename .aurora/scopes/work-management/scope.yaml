@@ -30,10 +30,10 @@ items:
     tags: ['azure-devops', 'sync']
     source:
       type: local_folder
-      path: available-skills/azure-devops-sync
+      path: available-skills/azdo/azdo-sync
     destination:
       folder: .github/skills
-      name: azure-devops-sync
+      name: azdo-sync
 
   - id: work-management-azure-boards-context7
     kind: prompts

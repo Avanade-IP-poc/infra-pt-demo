@@ -13,4 +13,4 @@ Sin contenido sugerido por ahora, hasta disponer de evidencia concreta en el pro
 - `.aurora/docs/templates/requirements-template.md`
 - `.github/prompts/aurora-domain-modeling.prompt.md`
 - `.aurora/scripts/powershell/Validate-Specs.ps1`
-- `.github/skills/skill-bolt-adr/SKILL.md`
+- `.github/skills/bolt-adr/SKILL.md`

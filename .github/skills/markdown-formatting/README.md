@@ -77,7 +77,7 @@ markdownlint "**/*.md"
 
 ## Support
 
-For questions or improvements, see the main [skill-creator](../skill-creator/) documentation.
+For questions or improvements, see the main [new-skill](../new-skill/) documentation.
 
 ---
 

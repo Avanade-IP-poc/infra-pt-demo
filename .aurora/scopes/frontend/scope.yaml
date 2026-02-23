@@ -116,6 +116,95 @@ items:
       folder: .github/skills
       name: frontend-design
 
+  # Vue.js Skills (organizados por tecnología)
+  - id: frontend-vue-best-practices-skill
+    kind: skills
+    enabled: false
+    tags: ['frontend', 'vue', 'composition-api']
+    source:
+      type: local_folder
+      path: available-skills/vue/vue-best-practices
+    destination:
+      folder: .github/skills
+      name: vue-best-practices
+
+  - id: frontend-vue-debug-guides-skill
+    kind: skills
+    enabled: false
+    tags: ['frontend', 'vue', 'debugging']
+    source:
+      type: local_folder
+      path: available-skills/vue/vue-debug-guides
+    destination:
+      folder: .github/skills
+      name: vue-debug-guides
+
+  - id: frontend-vue-pinia-skill
+    kind: skills
+    enabled: false
+    tags: ['frontend', 'vue', 'state-management']
+    source:
+      type: local_folder
+      path: available-skills/vue/vue-pinia-best-practices
+    destination:
+      folder: .github/skills
+      name: vue-pinia-best-practices
+
+  - id: frontend-vue-router-skill
+    kind: skills
+    enabled: false
+    tags: ['frontend', 'vue', 'routing']
+    source:
+      type: local_folder
+      path: available-skills/vue/vue-router-best-practices
+    destination:
+      folder: .github/skills
+      name: vue-router-best-practices
+
+  - id: frontend-vue-testing-skill
+    kind: skills
+    enabled: false
+    tags: ['frontend', 'vue', 'testing']
+    source:
+      type: local_folder
+      path: available-skills/vue/vue-testing-best-practices
+    destination:
+      folder: .github/skills
+      name: vue-testing-best-practices
+
+  - id: frontend-vue-composable-skill
+    kind: skills
+    enabled: false
+    tags: ['frontend', 'vue', 'composables']
+    source:
+      type: local_folder
+      path: available-skills/vue/create-adaptable-composable
+    destination:
+      folder: .github/skills
+      name: create-adaptable-composable
+
+  - id: frontend-vue-jsx-skill
+    kind: skills
+    enabled: false
+    tags: ['frontend', 'vue', 'jsx']
+    source:
+      type: local_folder
+      path: available-skills/vue/vue-jsx-best-practices
+    destination:
+      folder: .github/skills
+      name: vue-jsx-best-practices
+
+  - id: frontend-vue-options-api-skill
+    kind: skills
+    enabled: false
+    tags: ['frontend', 'vue', 'options-api']
+    source:
+      type: local_folder
+      path: available-skills/vue/vue-options-api-best-practices
+    destination:
+      folder: .github/skills
+      name: vue-options-api-best-practices
+
   - id: frontend-constitution
     kind: templates
     enabled: true

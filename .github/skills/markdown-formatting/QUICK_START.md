@@ -265,7 +265,7 @@ jobs:
 - **Full Documentation**: [SKILL.md](SKILL.md)
 - **Examples**: [examples/](examples/)
 - **Templates**: [templates/](templates/)
-- **Skill Development**: [../skill-creator/](../skill-creator/)
+- **Skill Development**: [../new-skill/](../new-skill/)
 
 ## Troubleshooting
 
