@@ -208,7 +208,7 @@ items:
   - id: frontend-constitution
     kind: templates
     enabled: true
-    auto_provision: true  # Automatically copy when scope is active
+    auto_provision: true # Automatically copy when scope is active
     tags: ['constitution', 'memory']
     source:
       type: local_file
