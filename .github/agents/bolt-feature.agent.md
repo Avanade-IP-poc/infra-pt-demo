@@ -292,12 +292,75 @@ Validate spec against constitution:
 - [ ] Quality gates defined
 - [ ] No constitution violations
 
+### Step 5: Work Management Tool Synchronization
+
+**Check if work management tool is configured** in `.aurora/memory/constitution.md`:
+
+- Look for `work-management` scope configuration
+- Tool can be: **Azure DevOps**, **Jira**, or **GitHub Projects**
+
+**If configured, create/update work item**:
+
+```markdown
+## Work Management Sync
+
+**Tool Detected**: [Azure DevOps | Jira | GitHub Projects]
+
+**Actions**:
+
+1. Create new Feature/Epic work item
+   - Title: [Feature name]
+   - Description: Link to specs/[XXX-feature-name]/requirements/requirements.md
+   - Type: Feature (Azure DevOps) | Epic (Jira) | Issue/Epic (GitHub Projects)
+   - State: New / To Do
+   - Priority: [From user story priorities]
+   - Area Path / Project: [From constitution]
+
+2. Add link to feature spec in work item description
+3. Set initial status to "New" or "Backlog"
+```
+
+**Example Commands** (tool-specific):
+
+**Azure DevOps**:
+
+```bash
+# If Azure DevOps CLI is installed
+az boards work-item create \
+  --title "[Feature name]" \
+  --type "Feature" \
+  --description "Feature spec: specs/[XXX]/requirements/requirements.md" \
+  --project "[Project]" \
+  --area "[Area Path]"
+```
+
+**GitHub Projects**:
+
+```bash
+# If GitHub CLI is installed
+gh issue create \
+  --title "[Feature]: [Feature name]" \
+  --body "Feature spec: specs/[XXX]/requirements/requirements.md" \
+  --label "feature" \
+  --project "[Project]"
+```
+
+**Jira**:
+
+```bash
+# Manual: Create Epic in Jira UI or use Jira API
+# Link: specs/[XXX]/requirements/requirements.md
+```
+
+**If NOT configured**: Skip this step (work management is optional)
+
 ## Output
 
 Create the feature spec file and confirm:
 
 - Feature directory created
 - requirements.md generated
+- Work item created/updated (if tool configured)
 - Ready for use case and BDD generation
 
 ## Prompts Reference

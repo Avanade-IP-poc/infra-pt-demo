@@ -151,6 +151,60 @@ After completing tasks, update `tasks.md`:
 - [ ] T003 Set up CI/CD pipeline <- Current
 ```
 
+### 3. Sync with Work Management Tool
+
+**After completing each task**, sync progress (if work management tool configured):
+
+**Check constitution** for `work-management` scope:
+
+```bash
+grep -i "work-management" .aurora/memory/constitution.md
+```
+
+**If configured, update task status**:
+
+1. **For individual Task work items** (if created):
+   - Update state: "To Do" → "In Progress" → "Done"
+   - Add comment with commit SHA when completed
+
+2. **For Bolt work item** (parent):
+   - Update description with progress: "Progress: [X]/[N] tasks complete ([%])"
+   - Update state when all tasks done: "In Progress" → "Ready for Review"
+
+**Example Azure DevOps**:
+
+```bash
+# Update task when started
+az boards work-item update \
+  --id [TASK_ID] \
+  --state "Active"
+
+# Update task when completed
+az boards work-item update \
+  --id [TASK_ID] \
+  --state "Closed" \
+  --discussion "Completed in commit: $(git rev-parse --short HEAD)"
+
+# Update parent Bolt progress
+az boards work-item update \
+  --id [BOLT_ID] \
+  --description "Progress: [X]/[N] tasks complete ([%]%)"
+```
+
+**Example GitHub Projects**:
+
+```bash
+# Convert task checkbox to checked
+gh issue edit [BOLT_ISSUE_NUMBER] \
+  --body "$(sed 's/- \[ \] T001:/- [x] T001:/' issue_body.md)"
+
+# Add comment with progress
+gh issue comment [BOLT_ISSUE_NUMBER] \
+  --body "Task T001 completed in commit $(git rev-parse --short HEAD)"
+```
+
+**If NOT configured**: Skip synchronization
+
 ## Terminal Commands
 
 Use terminal to:
@@ -181,6 +235,41 @@ After completing a Bolt:
 1. Review with @bolt-review
 2. Proceed to Bolt [N+1]
 ```
+
+### Bolt Completion - Work Management Sync
+
+**When Bolt is complete**, update work management tool (if configured):
+
+**Actions**:
+
+1. **Update Bolt work item**:
+   - State: "In Progress" → "Done" or "Resolved"
+   - Add completion comment with:
+     - Branch merged: `feature/[feature-name]/bolt-[N]-[description]`
+     - Commit range: [first..last]
+     - Quality gate results
+     - Files created/modified count
+
+2. **Update parent Feature/Epic**:
+   - Update description with Bolt completion status: "Bolts: [X]/[N] complete"
+   - Update progress percentage
+
+**Example Azure DevOps**:
+
+```bash
+# Mark Bolt as complete
+az boards work-item update \
+  --id [BOLT_ID] \
+  --state "Resolved" \
+  --discussion "Bolt complete. Branch: feature/[...]/bolt-[N]-[...] | Quality Gates: PASS | Files modified: [N]"
+
+# Update parent Feature progress
+az boards work-item update \
+  --id [FEATURE_ID] \
+  --description "Bolts completed: [X]/[N] ([%]%)"
+```
+
+**If NOT configured**: Skip synchronization
 
 ## Prompts Reference
 

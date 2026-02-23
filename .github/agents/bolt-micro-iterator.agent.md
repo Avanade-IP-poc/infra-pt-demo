@@ -112,13 +112,64 @@ npm run test:integration
 - [ ] No linting errors
 ```
 
-### 5. Integrate Phase
+### 5. Work Management Tool Sync (After Review)
+
+**Before integrating**, update Bolt status in work management tool (if configured):
+
+**Check constitution** for `work-management` scope:
+
+```bash
+grep -i "work-management" .aurora/memory/constitution.md
+```
+
+**If configured, update Bolt work item**:
+
+1. **Mark Bolt as "Ready for Review" or "In Review"**:
+   - State transition based on tool
+   - Add review checklist results
+   - Link to Pull Request (if created)
+
+2. **Update iteration metrics**:
+   - Tasks completed: [N]
+   - Days taken: [X]
+   - Quality gates: PASS/FAIL
+
+**Example**:
+
+```bash
+# Azure DevOps
+az boards work-item update \
+  --id [BOLT_ID] \
+  --state "Resolved" \
+  --discussion "Review complete. PR: #[NUM] | Tasks: [N]/[N] | Days: [X] | Quality: PASS"
+
+# GitHub Projects
+gh issue comment [BOLT_ISSUE] \
+  --body "✅ Review complete | Tasks: [N]/[N] | Quality gates: PASS | PR: #[NUM]"
+gh issue edit [BOLT_ISSUE] --add-label "ready-for-merge"
+```
+
+**If NOT configured**: Skip synchronization
+
+### 6. Integrate Phase
 
 ```bash
 # Merge to main
 git checkout main
 git merge feature/bolt-XX
 git push origin main
+```
+
+### 7. Post-Integration Sync
+
+**After successful merge**, finalize work item status:
+
+```bash
+# Mark Bolt as Done/Closed
+az boards work-item update --id [BOLT_ID] --state "Closed"
+
+# Or for GitHub
+gh issue close [BOLT_ISSUE] --comment "Merged via #[PR_NUM]"
 ```
 
 ## Bolt States

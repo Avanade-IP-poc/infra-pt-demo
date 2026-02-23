@@ -376,6 +376,52 @@ Create `specs/[XXX-feature-name]/planning/plan.md`:
 3. Begin Bolt 1 implementation
 ```
 
+### Work Management Tool Synchronization
+
+**After creating plan.md, sync with work management tool** (if configured):
+
+**Check constitution** for `work-management` scope:
+
+```bash
+# Check if work management is configured
+grep -i "work-management" .aurora/memory/constitution.md
+```
+
+**If configured, update the Feature/Epic work item**:
+
+1. **Update Feature/Epic** created by @Bolt Feature:
+   - Add link to `planning/plan.md`
+   - Update description with Bolt breakdown summary
+   - Add estimated duration ([X] days)
+   - Add number of Bolts planned ([N])
+   - Change state to "Planned" or "Ready"
+
+2. **Optionally create child work items** (one per Bolt):
+   - Type: User Story (Azure DevOps) | Story (Jira) | Issue (GitHub)
+   - Title: "Bolt [N]: [Goal]"
+   - Parent: Feature/Epic created earlier
+   - Iteration: Based on estimated duration
+
+**Example Azure DevOps**:
+
+```bash
+# Update parent Feature
+az boards work-item update \
+  --id [FEATURE_ID] \
+  --description "Plan: specs/[XXX]/planning/plan.md | Bolts: [N] | Duration: [X] days" \
+  --state "Planned"
+
+# Create child work items for each Bolt
+for bolt in 1..N; do
+  az boards work-item create \
+    --title "Bolt $bolt: [Goal]" \
+    --type "User Story" \
+    --parent [FEATURE_ID]
+done
+```
+
+**If NOT configured**: Skip synchronization
+
 ## Prompts Reference
 
 For detailed architecture guidance:

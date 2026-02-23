@@ -290,10 +290,70 @@ After generating tasks:
 1. Review task breakdown
 2. Use @bolt-analyze to validate consistency
 3. Use @bolt-implement to start Bolt 1
-````
+```
+
+### Work Management Tool Synchronization
+
+**After generating tasks.md, sync with work management tool** (if configured):
+
+**Check constitution** for `work-management` scope:
+
+```bash
+grep -i "work-management" .aurora/memory/constitution.md
+```
+
+**If configured, update Bolt work items** (created by @Bolt Plan):
+
+1. **For each Bolt work item**:
+   - Add link to `planning/tasks.md`
+   - Add task count: "Tasks: [N]"
+   - Optionally create child Task work items for each task:
+     - Title: "T[XXX]: [Task description]"
+     - Type: Task (all tools)
+     - Parent: Bolt work item
+     - State: New / To Do
+
+2. **Update task list in work item description**:
+   ```markdown
+   ## Tasks
+   - [ ] T001: [Description]
+   - [ ] T002: [Description]
+   - [ ] T003-QG: Quality Gate - Linting
+   ```
+
+**Example Azure DevOps**:
+```bash
+# Update Bolt work item
+az boards work-item update \
+  --id [BOLT_WORK_ITEM_ID] \
+  --description "Tasks: specs/[XXX]/planning/tasks.md | Total: [N] tasks"
+
+# Optionally create individual Task work items
+az boards work-item create \
+  --title "T001: Initialize project structure" \
+  --type "Task" \
+  --parent [BOLT_WORK_ITEM_ID] \
+  --state "To Do"
+```
+
+**Example GitHub Projects**:
+```bash
+# Add task list to Bolt issue
+gh issue edit [BOLT_ISSUE_NUMBER] \
+  --body "$(cat <<EOF
+## Tasks
+- [ ] T001: Initialize project structure
+- [ ] T002: Configure linting
+...
+EOF
+)"
+```
+
+**If NOT configured**: Skip synchronization`
 
 ## Prompts Reference
 
 For detailed planning guidance:
 
 - `#file:.github/prompts/aurora-planning.prompt.md`
+````
