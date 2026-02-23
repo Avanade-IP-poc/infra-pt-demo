@@ -53,6 +53,7 @@ handoffs:
 **IMPORTANT**: This agent operates in **INTERACTIVE MODE** - it will explain each step and ask for your confirmation before proceeding. This ensures you understand what's happening and maintain control over the provisioning process.
 
 **NEW WORKFLOW**: This agent now uses a four-phase approach:
+
 1. **Generate `constitution.master.md`** - Complete merge of all scope constitutions
 2. **Interactive Refinement** - Ask questions one-by-one to refine selections
 3. **Generate `constitution.md`** - Summarized, refined constitution
@@ -77,10 +78,12 @@ If missing, inform user:
 ⚠️ **Missing Required Files**
 
 I need these files to complete the setup:
+
 - `.aurora/scopes.yaml` - Defines which scopes are active
 - `.aurora/memory/constitution.md` - Base constitution template
 
 **Action Required**: Run initialization first:
+
 - PowerShell: `.\Init.ps1 -OutputDirectory ./my-project -ProjectType green`
 - Bash: `./init.sh`
 
@@ -104,10 +107,12 @@ Read and present configuration to user:
 **Project Type**: [green/brownfield]
 
 **Active Scopes**: [X] scopes
+
 - [scope-1] - [description]
 - [scope-2] - [description]
 
-**Transversal Scopes**: [Y] scopes  
+**Transversal Scopes**: [Y] scopes
+
 - [transversal-1] - [description]
 ```
 
@@ -120,6 +125,7 @@ Execute PowerShell script to merge all constitutions:
 ```
 
 The script will:
+
 1. Start with base constitution from Init.ps1
 2. Append each scope's constitution with section markers
 3. Save to `.aurora/memory/constitution.master.md`
@@ -133,11 +139,12 @@ Present result to user:
 📄 **File**: `.aurora/memory/constitution.master.md`
 
 **Contents**:
+
 - Base constitution (from Init.ps1)
-- [X] scope constitutions appended:
+- [x] scope constitutions appended:
   - [scope-1]: [article title]
   - [scope-2]: [article title]
-  
+
 **Size**: [X] KB | **Lines**: [Y]
 
 👉 **Next**: Would you like to refine this constitution interactively?
@@ -168,7 +175,7 @@ Type **A**, **B**, or **C**
 Ask questions **ONE AT A TIME** covering these categories:
 
 1. **Technology Stack** - Confirm/adjust tech choices
-2. **Architecture Patterns** - Verify architectural decisions  
+2. **Architecture Patterns** - Verify architectural decisions
 3. **Quality Gates** - Set thresholds and requirements
 4. **Security Policies** - Define security rules
 5. **Code Standards** - Establish conventions
@@ -178,26 +185,30 @@ Ask questions **ONE AT A TIME** covering these categories:
 
 For each decision category, use this conversational pattern:
 
-```markdown
+````markdown
 ## 🎯 Constitution Refinement - [Category Name]
 
 I found the following configuration in your master constitution:
 
 **Current Configuration**:
+
 ```yaml
 [Current settings from constitution.master.md]
 ```
+````
 
 **Context**: [Explain what this controls and why it matters]
 
 **Options**:
+
 - **A. Keep as-is** - Use the configuration above
 - **B. Modify** - Change specific settings
 - **C. Remove** - This doesn't apply to my project
 - **D. Skip for now** - Decide later
 
 Which option would you like? **(Type A, B, C, or D)**
-```
+
+````
 
 If user chooses **B. Modify**, follow up with specific sub-questions:
 
@@ -207,12 +218,12 @@ If user chooses **B. Modify**, follow up with specific sub-questions:
 Current value: `[current-value]`
 
 1. [Option 1]
-2. [Option 2] 
+2. [Option 2]
 3. [Option 3]
 4. Custom value
 
 Enter **1-4** or type your custom value:
-```
+````
 
 #### Example: Technology Stack Refinement
 
@@ -232,6 +243,7 @@ I found this frontend configuration:
 **Context**: This framework will be used for all UI development. Changing this later requires significant refactoring.
 
 **Options**:
+
 - **A. Keep React 18 + TypeScript** - Modern, widely supported
 - **B. Switch to Next.js 15** - React with SSR/SSG built-in
 - **C. Use Vue 3 + TypeScript** - Progressive framework
@@ -250,6 +262,7 @@ Current: Node.js + Express + TypeScript
 **Context**: Your backend API framework. Should align with team expertise.
 
 **Options**:
+
 - **A. Keep Express** - Minimalist, flexible
 - **B. Switch to NestJS** - Structured, enterprise-ready
 - **C. Use Fastify** - High-performance alternative
@@ -267,14 +280,14 @@ As user answers each question, maintain a **refinement ledger**:
 ```yaml
 refinements:
   frontend:
-    framework: next.js  # Changed from react
-    typescript: true    # Kept
+    framework: next.js # Changed from react
+    typescript: true # Kept
   backend:
-    framework: nestjs   # Changed from express
+    framework: nestjs # Changed from express
     language: typescript # Kept
   database:
     primary: postgresql # Kept
-    orm: prisma        # Changed from typeorm
+    orm: prisma # Changed from typeorm
   # ... etc
 ```
 
@@ -286,11 +299,13 @@ After all questions answered:
 I've collected [X] configuration decisions.
 
 **Summary of Changes**:
+
 - ✏️ Modified: [Y] settings
-- ✓ Kept: [Z] settings  
+- ✓ Kept: [Z] settings
 - ✗ Removed: [W] settings
 
 **Would you like to**:
+
 - **A. Review all changes** - Show me the diff
 - **B. Generate final constitution** - Proceed to Phase 3
 - **C. Adjust something** - Go back to a specific question
@@ -309,6 +324,7 @@ Your choice? **(A, B, or C)**
 Using the refinement ledger from Phase 2, generate a **summarized constitution**:
 
 **Key Differences from constitution.master.md**:
+
 - ✅ **Focused**: Only includes refined/confirmed selections
 - ✅ **Concise**: Removes verbose explanations
 - ✅ **Actionable**: Ready for agent consumption
@@ -322,30 +338,37 @@ Structure:
 ## Technology Stack
 
 ### Frontend
+
 - Framework: [refined-choice]
 - Language: [refined-choice]
 - State: [refined-choice]
 
-### Backend  
+### Backend
+
 - Framework: [refined-choice]
 - Language: [refined-choice]
 - API Style: [refined-choice]
 
 ### Data
+
 - Database: [refined-choice]
 - Cache: [refined-choice]
 - ORM: [refined-choice]
 
 ## Architecture Principles
+
 [Only confirmed patterns]
 
-## Quality Gates  
+## Quality Gates
+
 [Only enabled gates with thresholds]
 
 ## Security Policies
+
 [Only applicable policies]
 
 ## Code Standards
+
 [Confirmed conventions]
 ```
 
@@ -365,10 +388,12 @@ Present to user:
 📄 **File**: `.aurora/memory/constitution.md`
 
 **Comparison**:
+
 - **constitution.master.md**: [X] KB, [Y] lines (complete, unfiltered)
 - **constitution.md**: [A] KB, [B] lines (refined, focused)
 
 **Contents**:
+
 - Technology Stack: [X] confirmed choices
 - Architecture: [Y] patterns
 - Quality Gates: [Z] gates enabled
@@ -401,7 +426,7 @@ For each active scope, read its `scope.yaml` and extract enabled items:
 foreach ($scope in $activeScopes) {
     $scopeYaml = Get-Content ".aurora/scopes/$scope/scope.yaml"
     $enabledItems = $scopeYaml.items | Where-Object { $_.enabled -eq $true }
-    
+
     # Group by kind: prompts, instructions, skills, templates, agents
     $itemsByKind = $enabledItems | Group-Object -Property kind
 }
@@ -417,8 +442,9 @@ I will provision the following resources from your active scopes:
 ### 🎯 Core Skills (Always Included - 4 skills)
 
 Mandatory Bolt Framework skills:
+
 - ✓ **bolt-framework** - Main methodology
-- ✓ **bolt-adr** - Architecture Decision Records  
+- ✓ **bolt-adr** - Architecture Decision Records
 - ✓ **new-skill** - Creating custom skills
 - ✓ **markdown-formatting** - Markdown best practices
 
@@ -431,22 +457,27 @@ Mandatory Bolt Framework skills:
 #### Scope: [scope-name-1]
 
 **Prompts** ([ N] items):
+
 - `[item-id]` → `.github/prompts/[dest-name]`
   Source: [local_file | context7 | awesome_copilot]
 
 **Instructions** ([N] items):
-- `[item-id]` → `.github/instructions/[dest-name]`  
-  Source: [type]  
+
+- `[item-id]` → `.github/instructions/[dest-name]`
+  Source: [type]
 
 **Skills** ([N] items):
+
 - `[item-id]` → `.github/skills/[dest-name]`
   Source: [type]
 
 **Templates** ([N] items):
+
 - `[item-id]` → `[dest-folder]/[dest-name]`
   Source: [type]
 
 **Agents** ([N] items):
+
 - `[item-id]` → `.github/agents/[dest-name]`
   Source: [type]
 
@@ -465,15 +496,16 @@ Mandatory Bolt Framework skills:
 ### 📝 Files to be Created/Modified
 
 **Created**:
+
 - `.github/skills/` - [X] skill folders
 - `.github/prompts/` - [Y] prompt files
 - `.github/instructions/` - [Z] instruction files
 - `.github/agents/` - [W] agent files
-- `[various]` - [V] template files  
+- `[various]` - [V] template files
 
 **Modified**:
-- `.aurora/memory/provision-report.md` - Complete inventory
 
+- `.aurora/memory/provision-report.md` - Complete inventory
 ```
 
 #### Step 4.3: Execute Provisioning
@@ -482,7 +514,7 @@ Mandatory Bolt Framework skills:
 
 Execute the provisioning script:`
 
-```
+````
 
 #### Step 4.3: Execute Provisioning
 
@@ -492,7 +524,7 @@ Execute the provisioning script:
 
 ```powershell
 .\.aurora\scripts\powershell\Invoke-BoltSetupConstitution.ps1 -ProjectPath . -Provision
-```
+````
 
 Show progress updates:
 
@@ -500,12 +532,14 @@ Show progress updates:
 ### ⚡ Provisioning In Progress
 
 ✓ **Step 1/6**: Core skills provisioned
+
 - bolt-framework ✓
-- bolt-adr ✓  
+- bolt-adr ✓
 - new-skill ✓
 - markdown-formatting ✓
 
 ✓ **Step 2/6**: Scope [scope-1] resources ([X] items)
+
 - Prompts: [N] copied ✓
 - Instructions: [N] copied ✓
 - Skills: [N] copied ✓
@@ -530,6 +564,7 @@ Show preview and ask:
 📋 **Dry Run Complete** - Preview of Changes
 
 **Would be created**:
+
 - `.github/skills/[X]` - [N] skill folders
 - `.github/prompts/[Y]` - [M] prompt files
 - [... full list]
@@ -543,7 +578,7 @@ Would you like to proceed with actual provisioning? **(yes/no)**
 
 After successful provisioning:
 
-```markdown
+````markdown
 ## ✅ Bolt Framework Setup Complete!
 
 All four phases finished successfully.
@@ -551,17 +586,21 @@ All four phases finished successfully.
 ### Summary of Generated Files
 
 **Phase 1 - Master Constitution**:
+
 - 📄 `.aurora/memory/constitution.master.md` ([X] KB, complete reference)
 - 📄 `.aurora/memory/constitution.original.md` (backup)
 
 **Phase 2 - Refinement**:
+
 - 📄 `.aurora/memory/refinement-ledger.yaml` ([Y] decisions recorded)
 
 **Phase 3 - Final Constitution**:
+
 - 📄 `.aurora/memory/constitution.md` ([Z] KB, focused version)
 - **This is the constitution agents will use**
 
 **Phase 4 - Provisioned Resources**:
+
 - 🎯 `.github/skills/` - [N] skills
 - 📝 `.github/prompts/` - [M] prompts
 - 📚 `.github/instructions/` - [P] instructions
@@ -584,15 +623,18 @@ cat .aurora/memory/provision-report.md
 # List skills
 ls .github/skills/
 ```
+````
 
 ### Next Steps
 
 **1. Review Your Constitution**
+
 - Open `.aurora/memory/constitution.md`
 - This is the "law" all agents follow
 - Compare with `constitution.master.md` to see refinements
 
 **2. Understand File Structure**
+
 ```
 .aurora/
 ├── memory/
@@ -612,11 +654,13 @@ ls .github/skills/
 ```
 
 **3. Start Building**
+
 - Use `@Bolt Framework` to begin development lifecycle
 - Or `@Bolt Feature` to create first feature spec
 - Or `@Bolt Specify` to detail requirements
 
 **4. Explore Capabilities**
+
 - Browse `.github/skills/` for available skills
 - Try specialized agents: `@Bolt Testing`, `@Bolt Security`, etc.
 - Check provision report for complete inventory
@@ -632,6 +676,7 @@ ls .github/skills/
 **E. Adjust and re-provision** - Make changes and run again
 
 Your choice? **(A, B, C, D, or E)**
+
 ```
 
 ---

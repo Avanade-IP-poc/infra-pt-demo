@@ -4,7 +4,7 @@
 
 .DESCRIPTION
     Completes Bolt Framework setup after Init.ps1 with a four-phase approach:
-    
+
     Phase 1: Generate constitution.master.md (complete merge)
     Phase 2: Interactive refinement (handled by agent)
     Phase 3: Generate constitution.md (refined summary)
@@ -750,9 +750,9 @@ function Main {
             # Phase 1: Generate constitution.master.md
             Write-Host "  🔹 Phase 1: Generate Master Constitution" -ForegroundColor Magenta
             Write-Host ""
-            
+
             $master = New-MasterConstitution -ProjectPath $resolvedPath -Scopes $scopes.all -DryRun:$DryRun
-            
+
             Write-Host ""
             Write-Success "Phase 1 Complete"
             Write-Info "Master constitution: $($master.path)"
@@ -764,9 +764,9 @@ function Main {
             # Phase 3: Generate constitution.md (refined)
             Write-Host "  🔹 Phase 3: Generate Final Constitution" -ForegroundColor Magenta
             Write-Host ""
-            
+
             $final = New-FinalConstitution -ProjectPath $resolvedPath -Refinements $Refinements -DryRun:$DryRun
-            
+
             Write-Host ""
             Write-Success "Phase 3 Complete"
             Write-Info "Final constitution: $($final.path)"
@@ -781,10 +781,10 @@ function Main {
             # Phase 4: Provision resources
             Write-Host "  🔹 Phase 4: Provision Resources" -ForegroundColor Magenta
             Write-Host ""
-            
+
             $scopeFiles = Copy-ProvisionedFiles -ProjectPath $resolvedPath -Scopes $scopes.all
             $coreSkills = Copy-CoreSkills -ProjectPath $resolvedPath
-            
+
             # Generate provision report
             $reportPath = New-ProvisionReport `
                 -ProjectPath $resolvedPath `
@@ -792,7 +792,7 @@ function Main {
                 -Constitution @{count=0} `
                 -ScopeFiles $scopeFiles `
                 -CoreSkills $coreSkills
-            
+
             Write-Host ""
             Write-Success "Phase 4 Complete"
             Write-Success "Core skills: $($coreSkills.Count)"
