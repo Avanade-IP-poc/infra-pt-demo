@@ -271,13 +271,12 @@ function Get-AllDecisions {
     $d.ConfigManagement = Read-Choice `
         -Title "§10.2  Configuration management" `
         -Options @(
-            "Azure App Configuration (centralized, feature flags)",
             "Environment Variables",
             "appsettings / .env files",
-            "Combination: App Config + Key Vault (recommended)"
+            "Azure App Config + Key Vault (recommended)"
         ) `
-        -Values @("azure-app-config", "env-vars", "config-files", "combination") `
-        -Default 4
+        -Values @("env-vars", "config-files", "app-config-keyvault") `
+        -Default 3
 
     $d.SecretsDev = Read-Choice `
         -Title "§10.3  Local dev secrets" `
@@ -392,11 +391,11 @@ function Get-AllDecisions {
         -Title "§12.1  Observability strategy" `
         -Options @(
             "Azure-Native (Azure Monitor + Application Insights)",
-            "OpenTelemetry → Azure Monitor Exporter",
+            "OpenTelemetry → Azure Monitor Exporter (recommended)",
             "OpenTelemetry → Grafana Stack (self-hosted)"
         ) `
         -Values @("azure-native", "otel-azure", "otel-grafana") `
-        -Default 1
+        -Default 2
 
     # ── §12.3 — Infrastructure Monitoring (conditional) ─────────────────
     $hasInfra2 = $d.Scopes -contains "cloud-platform"
@@ -947,16 +946,17 @@ function Show-Summary {
 
     if ($null -ne $cliAvailable) {
         Write-Host "  ✓ GitHub Copilot CLI detected" -ForegroundColor Green
-        Write-Host "  🤖 Invoking @Bolt Constitution agent..." -ForegroundColor Yellow
+        Write-Host "  🤖 Invoking @Bolt Constitution agent (INTERACTIVE MODE)..." -ForegroundColor Yellow
+        Write-Host "  ⚠  You will be prompted to approve each provisioning step" -ForegroundColor Yellow
         Write-Host ""
 
         try {
             # Change to project directory and invoke agent
             Push-Location $OutputDirectory
             try {
-                & copilot --agent="bolt-constitution" --prompt="setup constitution" --allow-all-tools
+                & copilot --agent="bolt-constitution" --prompt="setup constitution"
                 Write-Host ""
-                Write-Host "  ✓ @Bolt Constitution agent invoked successfully" -ForegroundColor Green
+                Write-Host "  ✓ @Bolt Constitution agent completed" -ForegroundColor Green
                 Write-Host "  📝 Review provision results above" -ForegroundColor Cyan
             }
             finally {

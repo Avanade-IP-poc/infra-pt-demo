@@ -280,12 +280,11 @@ collect_all_decisions() {
         eval "D_AUTO_DEPLOY_${env^^}=\"$REPLY_YN\""
     done
 
-    read_choice "§10.2  Configuration management" 4 \
-        "Azure App Configuration (centralized, feature flags)" \
+    read_choice "§10.2  Configuration management" 3 \
         "Environment Variables" \
         "appsettings / .env files" \
-        "Combination: App Config + Key Vault (recommended)" \
-        --- "azure-app-config" "env-vars" "config-files" "combination"
+        "Azure App Config + Key Vault (recommended)" \
+        --- "env-vars" "config-files" "app-config-keyvault"
     D_CONFIG_MANAGEMENT="$REPLY_CHOICE"
 
     read_choice "§10.3  Local dev secrets" 1 \
@@ -379,9 +378,9 @@ collect_all_decisions() {
     echo ""
     log_step "Article XII — Observability"
 
-    read_choice "§12.1  Observability strategy" 1 \
+    read_choice "§12.1  Observability strategy" 2 \
         "Azure-Native (Azure Monitor + Application Insights)" \
-        "OpenTelemetry -> Azure Monitor Exporter" \
+        "OpenTelemetry -> Azure Monitor Exporter (recommended)" \
         "OpenTelemetry -> Grafana Stack (self-hosted)" \
         --- "azure-native" "otel-azure" "otel-grafana"
     D_OBSERVABILITY="$REPLY_CHOICE"
@@ -874,13 +873,14 @@ show_summary() {
     # Check if GitHub Copilot CLI is available
     if command -v copilot &> /dev/null; then
         echo -e "  ${GREEN}✓ GitHub Copilot CLI detected${NC}"
-        echo -e "  ${YELLOW}🤖 Invoking @Bolt Constitution agent...${NC}"
+        echo -e "  ${YELLOW}🤖 Invoking @Bolt Constitution agent (INTERACTIVE MODE)...${NC}"
+        echo -e "  ${YELLOW}⚠  You will be prompted to approve each provisioning step${NC}"
         echo ""
 
         # Change to project directory and invoke agent
-        if (cd "$OUTPUT_DIR" && copilot --agent="bolt-constitution" --prompt="setup constitution" --allow-all-tools); then
+        if (cd "$OUTPUT_DIR" && copilot --agent="bolt-constitution" --prompt="setup constitution"); then
             echo ""
-            echo -e "  ${GREEN}✓ @Bolt Constitution agent invoked successfully${NC}"
+            echo -e "  ${GREEN}✓ @Bolt Constitution agent completed${NC}"
             echo -e "  ${CYAN}📝 Review provision results above${NC}"
         else
             log_warn "Failed to invoke agent"

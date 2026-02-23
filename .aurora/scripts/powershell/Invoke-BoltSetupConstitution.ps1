@@ -97,40 +97,59 @@ function Read-ScopeYaml {
 
     $content = Get-Content $FilePath -Raw
 
-    # Extract scope name
+    # Extract scope name and description
     $scopeName = if ($content -match 'scope:\s*(.+)') { $matches[1].Trim() } else { $null }
+    $description = if ($content -match 'description:\s*(.+)') { $matches[1].Trim() } else { '' }
 
-    # Extract auto_provision items
-    $autoProvisionItems = @()
+    # Extract enabled items (enabled: true, not auto_provision)
+    $enabledItems = @()
     $lines = $content -split "`n"
     $inItem = $false
     $currentItem = @{}
 
     foreach ($line in $lines) {
+        # New item starts with  - id:
         if ($line -match '^\s*-\s*id:\s*(.+)') {
-            if ($currentItem.Count -gt 0 -and $currentItem.auto_provision -eq 'true') {
-                $autoProvisionItems += $currentItem
+            # Save previous item if it was enabled
+            if ($currentItem.Count -gt 0 -and $currentItem.enabled -eq 'true') {
+                $enabledItems += $currentItem
             }
+            # Start new item
             $currentItem = @{ id = $matches[1].Trim() }
             $inItem = $true
         }
         elseif ($inItem) {
+            # Extract item properties
             if ($line -match '^\s*kind:\s*(.+)') { $currentItem.kind = $matches[1].Trim() }
-            if ($line -match '^\s*auto_provision:\s*(true|false)') { $currentItem.auto_provision = $matches[1].Trim() }
+            if ($line -match '^\s*enabled:\s*(true|false)') { $currentItem.enabled = $matches[1].Trim() }
+            if ($line -match '^\s*tags:\s*\[(.+)\]') { 
+                $currentItem.tags = $matches[1].Trim() -split ',' | ForEach-Object { $_.Trim().Trim("'") }
+            }
+            
+            # Source section
+            if ($line -match '^\s*type:\s*(.+)') { $currentItem.source_type = $matches[1].Trim() }
             if ($line -match '^\s*path:\s*(.+)') { $currentItem.source_path = $matches[1].Trim() }
+            
+            # Destination section
             if ($line -match '^\s*folder:\s*(.+)') { $currentItem.dest_folder = $matches[1].Trim() }
             if ($line -match '^\s*name:\s*(.+)') { $currentItem.dest_name = $matches[1].Trim() }
+            
+            # Detect start of next section (end of current item)
+            if ($line -match '^\s*-\s*id:') {
+                $inItem = $false
+            }
         }
     }
 
-    # Add last item
-    if ($currentItem.Count -gt 0 -and $currentItem.auto_provision -eq 'true') {
-        $autoProvisionItems += $currentItem
+    # Add last item if it was enabled
+    if ($currentItem.Count -gt 0 -and $currentItem.enabled -eq 'true') {
+        $enabledItems += $currentItem
     }
 
     return @{
         scope = $scopeName
-        auto_provision_items = $autoProvisionItems
+        description = $description
+        enabled_items = $enabledItems
     }
 }
 
@@ -193,60 +212,62 @@ function Merge-ConstitutionArticles {
     $baseConstitution = Get-Content $constitutionPath -Raw
 
     # Track merged articles
-    $mergedArticles = @()
-    $constitutionSections = @($baseConstitution)
+    $mergedScopes = @()
+    $constitutionSections = @($baseConstitution.TrimEnd())
 
-    # Merge each scope's constitution
+    # Append each scope's constitution
     foreach ($scope in $Scopes) {
         $scopeConstitutionPath = Join-Path $ProjectPath ".aurora\scopes\$scope\memory\constitution.md"
 
         if (Test-Path $scopeConstitutionPath) {
-            Write-Info "Merging articles from scope: $scope"
+            Write-Info "Appending constitution from scope: $scope"
 
             $scopeConstitution = Get-Content $scopeConstitutionPath -Raw
 
-            # Extract article sections (simplified - assumes articles are separated by # headers)
-            $articles = $scopeConstitution -split '(?m)^# Article' | Where-Object { $_ -match '\w' }
+            # Only append if constitution has content
+            if ($scopeConstitution -and $scopeConstitution.Trim()) {
+                # Add section marker and scope constitution
+                $sectionMarker = @"
 
-            foreach ($article in $articles) {
-                if ($article -match '^# Article (.+)') {
-                    $articleId = $matches[1] -replace '\s.*', ''  # Extract article number
-                    if ($articleId) {
-                        $mergedArticles += "$articleId (from $scope)"
-                        $constitutionSections += "`n`n# Article$article"
-                    }
-                }
-                elseif ($article.Trim()) {
-                    $constitutionSections += "`n`n$article"
-                }
+<!-- ============================================================ -->
+<!-- Constitution Articles from Scope: $scope                     -->
+<!-- ============================================================ -->
+
+"@
+                $constitutionSections += $sectionMarker
+                $constitutionSections += $scopeConstitution.Trim()
+                $mergedScopes += $scope
+            }
+            else {
+                Write-Warn "Scope constitution is empty: $scope (skipping)"
             }
         }
         else {
-            Write-Warn "Scope constitution not found: $scope (skipping)"
+            Write-Info "Scope has no constitution: $scope (skipping)"
         }
     }
 
-    # Write merged constitution
-    $mergedConstitution = $constitutionSections -join ""
+    # Assemble final constitution with proper line endings
+    $mergedConstitution = $constitutionSections -join "`n`n"
 
     if (-not $DryRun) {
-        # Backup original
+        # Backup original only if not already backed up
         $backupPath = Join-Path $ProjectPath ".aurora\memory\constitution.original.md"
         if (-not (Test-Path $backupPath)) {
             Copy-Item $constitutionPath $backupPath -Force
             Write-Info "Backed up original to: constitution.original.md"
         }
 
-        Set-Content -Path $constitutionPath -Value $mergedConstitution -Encoding UTF8
-        Write-Success "Constitution merged: $($mergedArticles.Count) articles"
+        Set-Content -Path $constitutionPath -Value $mergedConstitution -Encoding UTF8 -NoNewline
+        Write-Success "Constitution updated: appended $($mergedScopes.Count) scope articles"
     }
     else {
-        Write-Info "[DRY RUN] Would merge $($mergedArticles.Count) articles"
+        Write-Info "[DRY RUN] Would append $($mergedScopes.Count) scope constitutions"
     }
 
     return @{
-        articles = $mergedArticles
-        count = $mergedArticles.Count
+        scopes = $mergedScopes
+        count = $mergedScopes.Count
     }
 }
 
@@ -260,8 +281,14 @@ function Copy-ProvisionedFiles {
 
     Write-Step "Step 3: Provisioning Files by Scope"
 
-    $provisionedSkills = @()
-    $provisionedAgents = @()
+    # Track provisioned items by kind
+    $provisionedItems = @{
+        prompts = @()
+        instructions = @()
+        skills = @()
+        templates = @()
+        agents = @()
+    }
     $skippedFiles = @()
 
     foreach ($scope in $Scopes) {
@@ -274,15 +301,25 @@ function Copy-ProvisionedFiles {
 
         $scopeConfig = Read-ScopeYaml -FilePath $scopeYamlPath
 
-        if (-not $scopeConfig.auto_provision_items -or $scopeConfig.auto_provision_items.Count -eq 0) {
-            Write-Info "No auto-provision items in scope: $scope"
+        if (-not $scopeConfig.enabled_items -or $scopeConfig.enabled_items.Count -eq 0) {
+            Write-Info "No enabled items in scope: $scope"
             continue
         }
 
-        Write-Info "Processing scope: $scope"
+        Write-Info "Processing scope: $scope ($($scopeConfig.enabled_items.Count) items enabled)"
 
-        foreach ($item in $scopeConfig.auto_provision_items) {
-            $sourcePath = Join-Path $ProjectPath ".aurora\$($item.source_path)"
+        foreach ($item in $scopeConfig.enabled_items) {
+            # Build source path based on source type
+            if ($item.source_type -eq 'local_file' -and $item.source_path) {
+                $sourcePath = Join-Path $ProjectPath ".aurora\$($item.source_path)"
+            }
+            else {
+                # For context7, awesome_copilot, etc. - source would be fetched from external
+                # For now, assume local_file is primary source type
+                Write-Warn "Non-local source type: $($item.source_type) for item $($item.id) (skipping)"
+                continue
+            }
+
             $destPath = Join-Path $ProjectPath "$($item.dest_folder)\$($item.dest_name)"
 
             if (-not (Test-Path $sourcePath)) {
@@ -294,12 +331,15 @@ function Copy-ProvisionedFiles {
             if ((Test-Path $destPath) -and -not $Force) {
                 Write-Warn "Already exists: $destPath (use -Force to overwrite)"
                 $skippedFiles += $destPath
-                # Still track as available (preserved from Init.ps1)
-                if ($item.kind -eq 'skills') {
-                    $provisionedSkills += "$($item.dest_name) (from $scope, preserved)"
-                }
-                elseif ($item.kind -eq 'agents') {
-                    $provisionedAgents += "$($item.dest_name) (from $scope, preserved)"
+                
+                # Still track as available (preserved from Init.ps1 or previous run)
+                $itemLabel = "$($item.dest_name) (from $scope, preserved)"
+                switch ($item.kind) {
+                    'prompts' { $provisionedItems.prompts += $itemLabel }
+                    'instructions' { $provisionedItems.instructions += $itemLabel }
+                    'skills' { $provisionedItems.skills += $itemLabel }
+                    'templates' { $provisionedItems.templates += $itemLabel }
+                    'agents' { $provisionedItems.agents += $itemLabel }
                 }
                 continue
             }
@@ -319,32 +359,40 @@ function Copy-ProvisionedFiles {
                     Copy-Item -Path $sourcePath -Destination $destPath -Force
                 }
 
-                Write-Success "$($item.kind) provisioned: $($item.dest_name) (from $scope)"
+                Write-Success "$($item.kind): $($item.dest_name) (from $scope)"
 
                 # Track provisioned items
-                if ($item.kind -eq 'skills') {
-                    $provisionedSkills += "$($item.dest_name) (from $scope)"
-                }
-                elseif ($item.kind -eq 'agents') {
-                    $provisionedAgents += "$($item.dest_name) (from $scope)"
+                $itemLabel = "$($item.dest_name) (from $scope)"
+                switch ($item.kind) {
+                    'prompts' { $provisionedItems.prompts += $itemLabel }
+                    'instructions' { $provisionedItems.instructions += $itemLabel }
+                    'skills' { $provisionedItems.skills += $itemLabel }
+                    'templates' { $provisionedItems.templates += $itemLabel }
+                    'agents' { $provisionedItems.agents += $itemLabel }
                 }
             }
             else {
-                Write-Info "[DRY RUN] Would provision: $($item.dest_name) from $scope"
+                Write-Info "[DRY RUN] Would provision: $($item.dest_name) ($($item.kind)) from $scope"
+                
                 # Track dry-run items
-                if ($item.kind -eq 'skills') {
-                    $provisionedSkills += "$($item.dest_name) (from $scope, dry-run)"
-                }
-                elseif ($item.kind -eq 'agents') {
-                    $provisionedAgents += "$($item.dest_name) (from $scope, dry-run)"
+                $itemLabel = "$($item.dest_name) (from $scope, dry-run)"
+                switch ($item.kind) {
+                    'prompts' { $provisionedItems.prompts += $itemLabel }
+                    'instructions' { $provisionedItems.instructions += $itemLabel }
+                    'skills' { $provisionedItems.skills += $itemLabel }
+                    'templates' { $provisionedItems.templates += $itemLabel }
+                    'agents' { $provisionedItems.agents += $itemLabel }
                 }
             }
         }
     }
 
     return @{
-        skills = $provisionedSkills
-        agents = $provisionedAgents
+        prompts = $provisionedItems.prompts
+        instructions = $provisionedItems.instructions
+        skills = $provisionedItems.skills
+        templates = $provisionedItems.templates
+        agents = $provisionedItems.agents
         skipped = $skippedFiles
     }
 }
@@ -430,59 +478,133 @@ function New-ProvisionReport {
     $reportPath = Join-Path $ProjectPath ".aurora\memory\provision-report.md"
     $timestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
 
+    # Build scope constitutions section
+    $scopeConstitutions = if ($Constitution.scopes.Count -gt 0) {
+        $Constitution.scopes | ForEach-Object { "- **$_** - Constitution appended from scope" } | Out-String
+    } else {
+        "No scope-specific constitutions found (using base constitution only)"
+    }
+
+    # Build core skills section
+    $coreSkillsList = $CoreSkills | ForEach-Object { "- **$_**" } | Out-String
+
+    # Build scope items sections
+    $promptsList = if ($ScopeFiles.prompts.Count -gt 0) {
+        $ScopeFiles.prompts | ForEach-Object { "- $_" } | Out-String
+    } else { "_No prompts provisioned_" }
+
+    $instructionsList = if ($ScopeFiles.instructions.Count -gt 0) {
+        $ScopeFiles.instructions | ForEach-Object { "- $_" } | Out-String
+    } else { "_No instructions provisioned_" }
+
+    $scopeSkillsList = if ($ScopeFiles.skills.Count -gt 0) {
+        $ScopeFiles.skills | ForEach-Object { "- $_" } | Out-String
+    } else { "_No scope-specific skills provisioned_" }
+
+    $templatesList = if ($ScopeFiles.templates.Count -gt 0) {
+        $ScopeFiles.templates | ForEach-Object { "- $_" } | Out-String
+    } else { "_No templates provisioned_" }
+
+    $agentsList = if ($ScopeFiles.agents.Count -gt 0) {
+        $ScopeFiles.agents | ForEach-Object { "- $_" } | Out-String
+    } else { "_No agents provisioned_" }
+
+    $skippedList = if ($ScopeFiles.skipped.Count -gt 0) {
+        "⚠ **Skipped** (already exist):`n`n" + ($ScopeFiles.skipped | ForEach-Object { "- $_" } | Out-String)
+    } else { "_No files skipped_" }
+
     $report = @"
 # Bolt Setup Constitution - Provision Report
 
-**Date**: $timestamp
+**Generated**: $timestamp
 **Practice**: $($Scopes.practice)
-**Scopes**: $($Scopes.active -join ', ')
+**Active Scopes**: $($Scopes.active -join ', ')
 **Transversal**: $($Scopes.transversal -join ', ')
 
-## Constitution Merge
+---
 
-✓ Merged $($Constitution.count) articles from $($Scopes.all.Count) scopes
+## Constitution
 
-### Articles by Scope
+✓ Base constitution created by Init.ps1
+✓ Appended **$($Constitution.count)** scope-specific constitutions
 
-$($Constitution.articles | ForEach-Object { "- $_" } | Out-String)
+### Scope Constitutions Appended
+
+$scopeConstitutions
+
+📄 **Location**: `.aurora/memory/constitution.md`
+📄 **Backup**: `.aurora/memory/constitution.original.md` (original from Init.ps1)
+
+---
 
 ## Files Provisioned
 
-### Core Skills (ALWAYS provisioned)
+### Core Skills (ALWAYS included)
 
-$($CoreSkills | ForEach-Object { "- **$_** (methodology + examples + templates)" } | Out-String)
+$coreSkillsList
+
+📂 **Location**: `.github/skills/`
+
+### Prompts
+
+$promptsList
+
+📂 **Location**: `.github/prompts/`
+
+### Instructions
+
+$instructionsList
+
+📂 **Location**: `.github/instructions/`
 
 ### Scope-Specific Skills
 
-$($ScopeFiles.skills | ForEach-Object { "- $_" } | Out-String)
+$scopeSkillsList
+
+📂 **Location**: `.github/skills/`
+
+### Templates
+
+$templatesList
+
+📂 **Location**: Various (per scope definition)
 
 ### Agents
 
-$($ScopeFiles.agents | ForEach-Object { "- $_" } | Out-String)
+$agentsList
 
-## Warnings
+📂 **Location**: `.github/agents/`
 
-$(if ($ScopeFiles.skipped.Count -gt 0) {
-    "⚠ Skipped (already exist):`n`n" + ($ScopeFiles.skipped | ForEach-Object { "- $_" } | Out-String)
-} else {
-    "No files skipped."
-})
+---
 
-## Summary Statistics
+## Summary
 
-- **Constitution Articles Merged**: $($Constitution.count)
-- **Core Skills Provisioned**: $($CoreSkills.Count)
-- **Scope Skills Provisioned**: $($ScopeFiles.skills.Count)
-- **Agents Provisioned**: $($ScopeFiles.agents.Count)
-- **Files Skipped**: $($ScopeFiles.skipped.Count)
-- **Errors**: 0
+$skippedList
+
+---
+
+## Statistics
+
+| Category | Count |
+|----------|-------|
+| Constitution Articles | $($Constitution.count) |
+| Core Skills | $($CoreSkills.Count) |
+| Prompts | $($ScopeFiles.prompts.Count) |
+| Instructions | $($ScopeFiles.instructions.Count) |
+| Scope Skills | $($ScopeFiles.skills.Count) |
+| Templates | $($ScopeFiles.templates.Count) |
+| Agents | $($ScopeFiles.agents.Count) |
+| **Total Items** | **$($CoreSkills.Count + $ScopeFiles.prompts.Count + $ScopeFiles.instructions.Count + $ScopeFiles.skills.Count + $ScopeFiles.templates.Count + $ScopeFiles.agents.Count)** |
+| Files Skipped | $($ScopeFiles.skipped.Count) |
+
+---
 
 ## Next Steps
 
-1. Review constitution: ``.aurora/memory/constitution.md``
-2. Verify skills: ``.github/skills/``
-3. Verify agents: ``.github/agents/``
-4. Start development: Invoke ``@Bolt Framework``
+1. **Review Constitution**: Open `.aurora/memory/constitution.md` to see your complete project constitution
+2. **Explore Skills**: Browse `.github/skills/` to see available Copilot skills
+3. **Check Prompts**: Review `.github/prompts/` for reusable prompt templates
+4. **Start Development**: Use **@Bolt Framework** to begin the AI-DLC workflow
 
 ---
 
@@ -546,9 +668,12 @@ function Main {
         Write-Host "  │   Bolt Framework Setup Complete!                             │" -ForegroundColor Green
         Write-Host "  └──────────────────────────────────────────────────────────────┘" -ForegroundColor Green
         Write-Host ""
-        Write-Success "Constitution merged: $($constitution.count) articles"
+        Write-Success "Constitution: $($constitution.count) scope articles appended"
         Write-Success "Core skills: $($coreSkills.Count)"
+        Write-Success "Prompts: $($scopeFiles.prompts.Count)"
+        Write-Success "Instructions: $($scopeFiles.instructions.Count)"
         Write-Success "Scope skills: $($scopeFiles.skills.Count)"
+        Write-Success "Templates: $($scopeFiles.templates.Count)"
         Write-Success "Agents: $($scopeFiles.agents.Count)"
         Write-Host ""
         Write-Info "Review provision report: .aurora/memory/provision-report.md"
