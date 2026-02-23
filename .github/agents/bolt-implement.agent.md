@@ -37,6 +37,12 @@ handoffs:
 
 **Methodology**: Follow bolt-framework skill (loaded automatically)
 
+## Referenced Skills
+
+- Use `bolt-branch-management` for BOLT branching pattern and feature branch verification
+- Use `bolt-quality-gates` for linting, coverage, and mutation testing thresholds
+- Use `bolt-testing-discipline` for TDD/BDD decision guidance
+
 ## Available Scripts
 
 When you need to run quality gates, execute these scripts:

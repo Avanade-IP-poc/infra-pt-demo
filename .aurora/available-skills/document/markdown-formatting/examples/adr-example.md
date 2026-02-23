@@ -249,13 +249,13 @@ Measure success with:
 
 ## Timeline
 
-| Milestone               | Date       | Status         |
-| ----------------------- | ---------- | -------------- |
-| Decision Made           | 2026-02-13 | ✅             |
-| TypeScript Setup        | 2026-02-20 | 🔄 In Progress |
-| First Module Migrated   | 2026-03-06 | ⏳ Pending     |
-| Critical Paths Complete | 2026-05-01 | ⏳ Pending     |
-| 100% Migration          | 2026-08-01 | ⏳ Pending     |
+| Milestone | Date | Status |
+|-----------|------|--------|
+| Decision Made | 2026-02-13 | ✅ |
+| TypeScript Setup | 2026-02-20 | 🔄 In Progress |
+| First Module Migrated | 2026-03-06 | ⏳ Pending |
+| Critical Paths Complete | 2026-05-01 | ⏳ Pending |
+| 100% Migration | 2026-08-01 | ⏳ Pending |
 
 ## Related Decisions
 
@@ -295,16 +295,16 @@ Need to update:
 
 ## Review History
 
-| Date       | Reviewer                    | Notes                                                |
-| ---------- | --------------------------- | ---------------------------------------------------- |
+| Date | Reviewer | Notes |
+|------|----------|-------|
 | 2026-02-10 | Alice (Senior Frontend Dev) | Concerned about build time, approved with monitoring |
-| 2026-02-11 | Bob (Tech Lead)             | Approved, suggested gradual migration                |
-| 2026-02-12 | Carol (Engineering Manager) | Approved, allocated budget for training              |
-| 2026-02-13 | Team Vote                   | 5/6 in favor, 1 abstention                           |
+| 2026-02-11 | Bob (Tech Lead) | Approved, suggested gradual migration |
+| 2026-02-12 | Carol (Engineering Manager) | Approved, allocated budget for training |
+| 2026-02-13 | Team Vote | 5/6 in favor, 1 abstention |
 
 ---
 
-**Author:** David Architect
-**Date:** 2026-02-13
-**Last Updated:** 2026-02-13
+**Author:** David Architect  
+**Date:** 2026-02-13  
+**Last Updated:** 2026-02-13  
 **Reviewers:** Alice, Bob, Carol, Team

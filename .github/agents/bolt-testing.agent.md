@@ -48,6 +48,11 @@ When you need to run tests, execute these scripts:
 - **Bash**: `.aurora/scripts/bash/generate-tests.sh`
 - **PowerShell**: `.aurora/scripts/powershell/Generate-Tests.ps1`
 
+## Referenced Skills
+
+- Use `bolt-testing-discipline` for TDD/BDD decision matrix and testing pyramid guidance
+- Use `bolt-quality-gates` for coverage thresholds (80% line, 75% branch, 70% mutation)
+
 Generate test suites that achieve coverage targets and validate test quality through mutation testing.
 
 **Bolt Framework Stage**: EXECUTE (coverage-first approach)

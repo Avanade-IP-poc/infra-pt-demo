@@ -43,6 +43,11 @@ Transform implementation plan into executable Bolt task lists following the Bolt
 
 **Responsible Agent**: Micro Iterator
 
+## Referenced Skills
+
+- Use `bolt-quality-gates` for mandatory quality gate tasks per BOLT
+- Use `bolt-testing-discipline` for test task breakdown (unit/integration/E2E)
+
 ## Prerequisites
 
 Required files in `specs/[XXX-feature-name]/`:
