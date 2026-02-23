@@ -17,6 +17,7 @@ description: Bolt Framework methodology with 6 lifecycle phases and Bolt micro-i
 **MUST read `.aurora/memory/constitution.md` BEFORE any work.**
 
 The Constitution defines:
+
 - Technology stack (languages, frameworks, databases)
 - Architecture patterns (Clean Architecture, DDD, CQRS)
 - Quality standards (coverage thresholds, mutation scores)
@@ -30,14 +31,14 @@ The Constitution defines:
 🌅 INCEPTION → 🔍 DISCOVERY → 🏗️ CONSTRUCTION → 📦 TRANSITION → 🚀 PRODUCTION → 🌙 RETIREMENT
 ```
 
-| Phase            | Goal               | Entry Criteria             | Exit Criteria             | Key Agents                                               |
-| ---------------- | ------------------ | -------------------------- | ------------------------- | -------------------------------------------------------- |
-| **INCEPTION**    | Define project DNA | Stakeholder approval       | Ratified constitution     | `@Bolt Constitution`, `@Bolt Clarify`                    |
-| **DISCOVERY**    | Create specs       | Constitution exists        | Approved feature specs    | `@Bolt Feature`, `@Bolt Plan`, `@Bolt Tasks`             |
-| **CONSTRUCTION** | Build & test       | Tasks generated            | All quality gates pass    | `@Bolt Implement`, `@Bolt Testing`, `@Bolt Review`       |
-| **TRANSITION**   | Release            | Code merged                | Deployed to production    | `@Bolt Release`, `@Bolt CI/CD`                           |
-| **PRODUCTION**   | Operate            | Production deployment      | Stable operation          | `@Bolt Ops`, `@Bolt Monitoring`, `@Bolt Improve`         |
-| **RETIREMENT**   | Decommission       | Replacement ready          | System archived           | `@Bolt Retire`, `@Bolt Postmortem`                       |
+| Phase            | Goal               | Entry Criteria        | Exit Criteria          | Key Agents                                         |
+| ---------------- | ------------------ | --------------------- | ---------------------- | -------------------------------------------------- |
+| **INCEPTION**    | Define project DNA | Stakeholder approval  | Ratified constitution  | `@Bolt Constitution`, `@Bolt Clarify`              |
+| **DISCOVERY**    | Create specs       | Constitution exists   | Approved feature specs | `@Bolt Feature`, `@Bolt Plan`, `@Bolt Tasks`       |
+| **CONSTRUCTION** | Build & test       | Tasks generated       | All quality gates pass | `@Bolt Implement`, `@Bolt Testing`, `@Bolt Review` |
+| **TRANSITION**   | Release            | Code merged           | Deployed to production | `@Bolt Release`, `@Bolt CI/CD`                     |
+| **PRODUCTION**   | Operate            | Production deployment | Stable operation       | `@Bolt Ops`, `@Bolt Monitoring`, `@Bolt Improve`   |
+| **RETIREMENT**   | Decommission       | Replacement ready     | System archived        | `@Bolt Retire`, `@Bolt Postmortem`                 |
 
 ---
 
@@ -58,6 +59,7 @@ The Constitution defines:
 ```
 
 **Generates:**
+
 - Basic constitution template
 - `.aurora/scopes.yaml` (active scopes configuration)
 - Project directory structure
@@ -69,6 +71,7 @@ The Constitution defines:
 ```
 
 **Performs:**
+
 - Merges scope-specific constitutions
 - Provisions skills/agents based on scopes
 - Generates provision report
@@ -76,6 +79,7 @@ The Constitution defines:
 3. **Ratify Constitution**
 
 Review and approve:
+
 - Tech stack choices
 - Quality thresholds
 - Architecture patterns
@@ -119,6 +123,7 @@ Review and approve:
 ```
 
 **Generates:** `specs/XXX-feature-name/`
+
 - `feature.md` - User stories, acceptance criteria
 - `requirements/requirements.md` - Detailed requirements
 
@@ -129,6 +134,7 @@ Review and approve:
 ```
 
 **Generates:** `specs/001-user-authentication/planning/plan.md`
+
 - Architecture decisions
 - Component breakdown
 - BOLT strategy (4-6 Bolts per feature)
@@ -144,12 +150,14 @@ Review and approve:
 
 ```markdown
 ## Bolt 1: Foundation (1-2 days)
+
 - [ ] T001 Initialize project structure
 - [ ] T002 Set up database schema
 - [ ] T003-QG Run linting
 - [ ] T004-QG Verify coverage >= 80%
 
 ## Bolt 2: Core Domain (2-3 days)
+
 - [ ] T005 Create User aggregate
 - [ ] T006 Implement authentication service
 - [ ] T007-QG Run mutation tests
@@ -277,16 +285,16 @@ git merge feature/user-authentication/bolt-1-domain
 
 ### Quality Gates (Per BOLT - MANDATORY)
 
-| Gate                   | Command                              | Threshold |
-| ---------------------- | ------------------------------------ | --------- |
-| Linting                | `npm run lint` / `dotnet format`     | 0 errors  |
-| Unit Tests             | `npm test` / `dotnet test`           | 100% pass |
-| Line Coverage          | `npm run test:cov`                   | >= 80%    |
-| Branch Coverage        | Check coverage report                | >= 75%    |
-| Mutation Score         | `npx stryker run` / `dotnet stryker` | >= 70%    |
-| Architecture Tests     | `npm run test:arch`                  | 100% pass |
-| Code Review            | `@Bolt Review`                       | Approved  |
-| Constitution Compliance| `@Bolt Review --check-constitution` | Pass      |
+| Gate                    | Command                              | Threshold |
+| ----------------------- | ------------------------------------ | --------- |
+| Linting                 | `npm run lint` / `dotnet format`     | 0 errors  |
+| Unit Tests              | `npm test` / `dotnet test`           | 100% pass |
+| Line Coverage           | `npm run test:cov`                   | >= 80%    |
+| Branch Coverage         | Check coverage report                | >= 75%    |
+| Mutation Score          | `npx stryker run` / `dotnet stryker` | >= 70%    |
+| Architecture Tests      | `npm run test:arch`                  | 100% pass |
+| Code Review             | `@Bolt Review`                       | Approved  |
+| Constitution Compliance | `@Bolt Review --check-constitution`  | Pass      |
 
 ### References
 
@@ -312,6 +320,7 @@ git merge feature/user-authentication/bolt-1-domain
 ```
 
 **Performs:**
+
 - Semantic versioning
 - CHANGELOG generation
 - Tag creation
@@ -324,6 +333,7 @@ git merge feature/user-authentication/bolt-1-domain
 ```
 
 **Executes:**
+
 - Pre-deployment checks
 - Blue-green / canary deployment
 - Health checks
@@ -485,6 +495,7 @@ git merge feature/user-authentication/bolt-1-domain
 ## Bolt Micro-Iterations
 
 **Each BOLT:**
+
 - Duration: 1-3 days
 - Deliverable: Working, tested code
 - Branch: `feature/[name]/bolt-[N]-[description]`
@@ -502,12 +513,12 @@ feature/user-authentication                 # Feature branch
 
 ### BOLT Examples
 
-| BOLT          | Duration | Focus                          | Quality Gate        |
-| ------------- | -------- | ------------------------------ | ------------------- |
-| Foundation    | 1-2 days | Project setup, database schema | Schema migration OK |
-| Core Domain   | 2-3 days | Aggregates, business logic     | 80% coverage        |
-| API Layer     | 2-3 days | Controllers, DTOs, validation  | Integration tests   |
-| UI/Polish     | 2-3 days | Frontend, UX, E2E tests        | E2E tests pass      |
+| BOLT        | Duration | Focus                          | Quality Gate        |
+| ----------- | -------- | ------------------------------ | ------------------- |
+| Foundation  | 1-2 days | Project setup, database schema | Schema migration OK |
+| Core Domain | 2-3 days | Aggregates, business logic     | 80% coverage        |
+| API Layer   | 2-3 days | Controllers, DTOs, validation  | Integration tests   |
+| UI/Polish   | 2-3 days | Frontend, UX, E2E tests        | E2E tests pass      |
 
 ---
 
@@ -545,14 +556,14 @@ project/
 
 ## Core Principles
 
-| Principle                | Description                                              | Enforcement                     |
-| ------------------------ | -------------------------------------------------------- | ------------------------------- |
-| **Constitution is Law**  | All decisions must comply with `.aurora/memory/constitution.md` | Agent validation                |
-| **Specs Before Code**    | Features need specifications first                       | @Bolt Feature required          |
-| **Micro-Iterations**     | Work in small Bolts (1-3 days max)                       | Branch pattern enforced         |
-| **Quality Gates**        | Every Bolt must pass thresholds                          | Automated checks (80% coverage) |
-| **Agent Specialization** | One responsibility per agent                             | YAML frontmatter contracts      |
-| **Continuous Validation**| Test during development, not after                       | TDD/BDD practices               |
+| Principle                 | Description                                                     | Enforcement                     |
+| ------------------------- | --------------------------------------------------------------- | ------------------------------- |
+| **Constitution is Law**   | All decisions must comply with `.aurora/memory/constitution.md` | Agent validation                |
+| **Specs Before Code**     | Features need specifications first                              | @Bolt Feature required          |
+| **Micro-Iterations**      | Work in small Bolts (1-3 days max)                              | Branch pattern enforced         |
+| **Quality Gates**         | Every Bolt must pass thresholds                                 | Automated checks (80% coverage) |
+| **Agent Specialization**  | One responsibility per agent                                    | YAML frontmatter contracts      |
+| **Continuous Validation** | Test during development, not after                              | TDD/BDD practices               |
 
 ---
 

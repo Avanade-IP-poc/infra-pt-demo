@@ -25,26 +25,26 @@ description: Per-BOLT quality gates with coverage, mutation, and linting thresho
 
 **Each BOLT MUST include these trackable tasks:**
 
-| Task ID Pattern | Description            | Command                               | Threshold |
-| --------------- | ---------------------- | ------------------------------------- | --------- |
-| TXX-QG          | Run linting            | `npm run lint` / `dotnet format`      | 0 errors  |
-| TXX-QG          | Run all tests          | `npm test` / `dotnet test`            | 100% pass |
-| TXX-QG          | Run coverage report    | `npm run test:cov`                    | Generate  |
-| TXX-QG          | Verify line coverage   | Check report                          | >= 80%    |
-| TXX-QG          | Verify branch coverage | Check report                          | >= 75%    |
-| TXX-QG          | Run mutation tests     | `npx stryker run` / `dotnet stryker`  | Generate  |
-| TXX-QG          | Verify mutation score  | Check report                          | >= 70%    |
+| Task ID Pattern | Description            | Command                              | Threshold |
+| --------------- | ---------------------- | ------------------------------------ | --------- |
+| TXX-QG          | Run linting            | `npm run lint` / `dotnet format`     | 0 errors  |
+| TXX-QG          | Run all tests          | `npm test` / `dotnet test`           | 100% pass |
+| TXX-QG          | Run coverage report    | `npm run test:cov`                   | Generate  |
+| TXX-QG          | Verify line coverage   | Check report                         | >= 80%    |
+| TXX-QG          | Verify branch coverage | Check report                         | >= 75%    |
+| TXX-QG          | Run mutation tests     | `npx stryker run` / `dotnet stryker` | Generate  |
+| TXX-QG          | Verify mutation score  | Check report                         | >= 70%    |
 
 ## Mutation Testing Tools by Language
 
-| Language       | Mutation Tool   | Coverage Tool  | Config File            |
-| -------------- | --------------- | -------------- | ---------------------- |
-| **Java**       | PIT (Pitest)    | JaCoCo         | `pom.xml`              |
-| **.NET/C#**    | Stryker.NET     | coverlet       | `stryker-config.json`  |
-| **JavaScript** | Stryker Mutator | Istanbul/NYC   | `stryker.conf.js`      |
-| **TypeScript** | Stryker Mutator | Istanbul/NYC   | `stryker.conf.js`      |
-| **Python**     | mutmut          | coverage.py    | `pyproject.toml`       |
-| **Go**         | go-mutesting    | go test -cover | `Makefile`             |
+| Language       | Mutation Tool   | Coverage Tool  | Config File           |
+| -------------- | --------------- | -------------- | --------------------- |
+| **Java**       | PIT (Pitest)    | JaCoCo         | `pom.xml`             |
+| **.NET/C#**    | Stryker.NET     | coverlet       | `stryker-config.json` |
+| **JavaScript** | Stryker Mutator | Istanbul/NYC   | `stryker.conf.js`     |
+| **TypeScript** | Stryker Mutator | Istanbul/NYC   | `stryker.conf.js`     |
+| **Python**     | mutmut          | coverage.py    | `pyproject.toml`      |
+| **Go**         | go-mutesting    | go test -cover | `Makefile`            |
 
 ## Setup (First BOLT Only)
 

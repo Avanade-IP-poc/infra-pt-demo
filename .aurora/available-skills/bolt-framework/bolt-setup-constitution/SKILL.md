@@ -64,19 +64,19 @@ decisions:
 # .aurora/scopes/backend/scope.yaml
 scope:
   name: backend
-  description: "Server-side APIs, services, domain logic"
-  
+  description: 'Server-side APIs, services, domain logic'
+
 constitution:
   articles:
     - id: III
-      title: "Tech Stack"
+      title: 'Tech Stack'
       source_path: memory/constitution.md
-      sections: ["## Backend"]
-      
+      sections: ['## Backend']
+
     - id: XV
-      title: "Testing Strategy"
+      title: 'Testing Strategy'
       source_path: memory/constitution.md
-      sections: ["## Backend Testing"]
+      sections: ['## Backend Testing']
 
 provision:
   skills:
@@ -86,7 +86,7 @@ provision:
       destination: .github/skills/bolt-backend-patterns/
       auto_provision: true
       condition: "scope == 'backend' && language == '.NET'"
-      
+
   agents:
     - name: bolt-testing
       source_type: local_file
@@ -105,6 +105,7 @@ cat .aurora/scopes.yaml | grep "active-scopes:" -A 10
 ```
 
 **Extract:**
+
 - Project type (full-stack, app-only, infra-only)
 - Active scopes list
 - Transversal scopes (always active)
@@ -121,6 +122,7 @@ cat .aurora/scopes.yaml | grep "active-scopes:" -A 10
 5. Append to project constitution
 
 **Conflict Resolution:**
+
 - Preserve article order (I, II, III, ..., XIX)
 - If article exists, append sections (don't overwrite)
 - Add metadata tracking which scopes contributed
@@ -189,6 +191,7 @@ echo "✓ Core skill provisioned: bolt-framework (always included)"
 ```
 
 **Other core skills:**
+
 - `new-skill` (skill creation guide)
 - `bolt-adr` (Architecture Decision Records)
 - `markdown-formatting` (documentation standards)
@@ -212,16 +215,19 @@ echo "✓ Core skill provisioned: bolt-framework (always included)"
 ### Articles by Scope
 
 **backend**:
+
 - Article III: Tech Stack (Backend)
 - Article XV: Testing Strategy (Backend Testing)
 - Article XVI: Security Policies (API Security)
 
 **frontend**:
+
 - Article III: Tech Stack (Frontend)
 - Article XV: Testing Strategy (Frontend Testing)
 - Article XVII: UI/UX Guidelines
 
 **cloud-platform**:
+
 - Article III: Tech Stack (Infrastructure)
 - Article XI: CI/CD Pipeline
 - Article XII: Observability
@@ -231,12 +237,14 @@ echo "✓ Core skill provisioned: bolt-framework (always included)"
 ### Skills (8 total)
 
 ✓ Core skills (ALWAYS provisioned):
+
 - bolt-framework (methodology + examples + templates)
 - bolt-adr (ADR creation)
 - new-skill (skill creation guide)
 - markdown-formatting (documentation standards)
 
 ✓ Scope-specific skills:
+
 - bolt-backend-patterns (from backend scope)
 - bolt-quality-gates (from backend scope)
 - bolt-testing-discipline (from backend scope)
@@ -245,6 +253,7 @@ echo "✓ Core skill provisioned: bolt-framework (always included)"
 ### Agents (5 total)
 
 ✓ Provisioned from scopes:
+
 - bolt-testing.agent.md (from backend)
 - bolt-implement.agent.md (from backend)
 - bolt-review.agent.md (from backend)
@@ -254,9 +263,11 @@ echo "✓ Core skill provisioned: bolt-framework (always included)"
 ## Warnings
 
 ⚠ Skipped (already exist):
+
 - .github/skills/bolt-framework/SKILL.md (preserving existing)
 
 ⚠ Conditions not met (not provisioned):
+
 - bolt-azure-identity (condition: language == '.NET' && platform == 'Azure' - not met)
 
 ## Summary Statistics
@@ -317,13 +328,14 @@ provision:
     - name: bolt-azure-identity
       condition: "language == '.NET' && platform == 'Azure'"
       auto_provision: true
-      
+
     - name: bolt-react-patterns
       condition: "frontend == 'react'"
       auto_provision: true
 ```
 
 **Available variables:**
+
 - `language` (from constitution Article II)
 - `platform` (from wizard decisions)
 - `scope` (current scope being processed)
@@ -352,16 +364,19 @@ ls .github/agents
 ## Integration Points
 
 **Invoked by:**
+
 - `@Bolt Constitution` agent (primary)
 - Manual script execution (advanced users)
 - CI/CD pipeline (future: automated constitution updates)
 
 **Depends on:**
+
 - `Init.ps1` / `init.sh` (must run first)
 - `.aurora/scopes/*.yaml` (scope manifests)
 - `.aurora/available-skills/` (skill source)
 
 **Produces:**
+
 - `.aurora/memory/constitution.md` (complete constitution)
 - `.aurora/memory/provision-report.md` (change log)
 - `.github/skills/` (provisioned skills)

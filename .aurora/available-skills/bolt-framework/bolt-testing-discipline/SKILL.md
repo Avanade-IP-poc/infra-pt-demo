@@ -13,17 +13,21 @@ description: Testing pyramid, TDD/BDD decision matrix, and coverage-first approa
 
 ## Testing Pyramid
 
-```
-         ┌─────────┐
-         │   E2E   │  10% - User journeys
-         ├─────────┤
-         │  Integ  │  20% - Component interaction
-         ├─────────┤
-         │  Unit   │  70% - Isolated logic
-         └─────────┘
+```mermaid
+flowchart TD
+    E2E["🌐 E2E (10%)<br/>User Journeys"]
+    INT["🔗 Integration Tests (20%)<br/>━━━━━━━━━━━━━━━━<br/>Component Interaction"]
+    UNIT["⚡ Unit Tests (70%)<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>Isolated Logic · Fast · Mocking · Pure Functions"]
+
+    E2E -.-> INT -.-> UNIT
+
+    style E2E fill:#ff6b6b,stroke:#c92a2a,stroke-width:2px,color:#fff
+    style INT fill:#4dabf7,stroke:#1971c2,stroke-width:3px,color:#fff
+    style UNIT fill:#51cf66,stroke:#2f9e44,stroke-width:4px,color:#fff
 ```
 
 **Distribution:**
+
 - 70% Unit Tests (fast, isolated)
 - 20% Integration Tests (components together)
 - 10% E2E Tests (full system)

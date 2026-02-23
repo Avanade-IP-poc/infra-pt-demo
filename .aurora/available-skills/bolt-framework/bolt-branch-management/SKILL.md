@@ -82,15 +82,19 @@ git checkout -b "${CURRENT_BRANCH}/bolt-[N]-[description]"
 ## BOLT Examples by Type
 
 ### Bolt 1: Foundation (1-2 days)
+
 - Project setup, Database schema, Base entities
 
 ### Bolt 2: Core Domain (2-3 days)
+
 - Domain entities, Business logic, Unit tests
 
 ### Bolt 3: API Layer (2-3 days)
+
 - Controllers/Endpoints, DTOs, Integration tests
 
 ### Bolt 4: UI/Integration (2-3 days)
+
 - Frontend components, API integration, E2E tests
 
 ## Error Handling
