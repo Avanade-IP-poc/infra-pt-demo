@@ -1,24 +1,24 @@
 ---
-name: Aurora Release
+name: Bolt Release
 description: 📦 Orchestrate release process following semantic versioning and AURORA methodology
 tools:
   [search, read, edit, web, problems, execute, vscode, agent, 'context7/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Pre-release Check
-    agent: Aurora Analyze
+    agent: Bolt Analyze
     prompt: Run consistency analysis before release
     send: false
   - label: 🧪 Verify Tests
-    agent: Aurora Testing
+    agent: Bolt Testing
     prompt: Verify all tests pass before release
     send: false
   - label: 📊 Check Status
-    agent: Aurora Status
+    agent: Bolt Status
     prompt: Review overall project status
     send: false
   - label: 🚀 Deploy
-    agent: Aurora Ops
+    agent: Bolt Ops
     prompt: Deploy release to environment
     send: false
 ---
@@ -36,7 +36,7 @@ When you need to create releases, execute these scripts:
 
 Orchestrate release process with proper versioning, changelog, and artifacts.
 
-**AURORA Stage**: TRANSITION
+**Bolt Framework Stage**: TRANSITION
 
 **Responsible Agent**: Release Manager
 
@@ -264,9 +264,9 @@ npm pack
 
 ## Next Steps
 
-1. Deploy to staging: @aurora-ops deploy staging
+1. Deploy to staging: @bolt-ops deploy staging
 2. Run smoke tests
-3. Deploy to production: @aurora-ops deploy production
+3. Deploy to production: @bolt-ops deploy production
 4. Announce release
 ```
 

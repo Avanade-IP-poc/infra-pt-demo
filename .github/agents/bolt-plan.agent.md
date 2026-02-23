@@ -1,6 +1,6 @@
 ---
-name: Aurora Plan
-description: 🗺️ Create technical implementation plan from feature specification, aligned with AURORA-IA AI-DLC methodology
+name: Bolt Plan
+description: 🗺️ Create technical implementation plan from feature specification, aligned with Bolt Framework AI-DLC methodology
 tools:
   [
     search,
@@ -17,11 +17,11 @@ tools:
 model: Claude Sonnet 4.5
 handoffs:
   - label: ✅ Generate Bolt Tasks
-    agent: Aurora Tasks
+    agent: Bolt Tasks
     prompt: Break the plan into Bolt tasks
     send: false
   - label: 🏛️ Review Architecture
-    agent: Aurora Analyze
+    agent: Bolt Analyze
     prompt: Review implementation plan architecture
     send: false
 ---
@@ -37,9 +37,9 @@ When you need to setup planning, execute these scripts:
 - **Bash**: `scripts/bash/setup-plan.sh`
 - **PowerShell**: `scripts/powershell/Setup-Plan.ps1`
 
-Transform a feature specification into a detailed technical implementation plan, following the AURORA-IA AI-DLC methodology with Bolts (micro-iterations).
+Transform a feature specification into a detailed technical implementation plan, following the Bolt Framework AI-DLC methodology with Bolts (micro-iterations).
 
-**AURORA Stage**: REASON + PLAN
+**Bolt Framework Stage**: REASON + PLAN
 
 **Responsible Agent**: Omega Architect
 
@@ -308,7 +308,7 @@ Organize implementation into Bolts (micro-iterations):
 - E2E tests
 - **Branch**: `feature/[feature-name]/bolt-4-polish`
 
-**⚠️ Implementation Note**: Aurora Implement AUTO-CREATES branches following this pattern.
+**⚠️ Implementation Note**: Bolt Implement AUTO-CREATES branches following this pattern.
 ```
 
 ## Output
@@ -366,8 +366,8 @@ Create `specs/[XXX-feature-name]/planning/plan.md`:
 
 ## Next Steps
 
-1. Use @aurora-tasks to generate detailed task list
-2. Use @aurora-gherkin to generate BDD scenarios
+1. Use @bolt-tasks to generate detailed task list
+2. Use @bolt-gherkin to generate BDD scenarios
 3. Begin Bolt 1 implementation
 ```
 

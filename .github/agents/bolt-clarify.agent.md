@@ -1,5 +1,5 @@
 ---
-name: Aurora Clarify
+name: Bolt Clarify
 description: ❓ Structured questioning to resolve ambiguities and underspecified areas in requirements
 tools:
   [
@@ -17,11 +17,11 @@ tools:
 model: Claude Sonnet 4.5
 handoffs:
   - label: 📝 Update Specification
-    agent: Aurora Specify
+    agent: Bolt Specify
     prompt: Incorporate clarified requirements into spec
     send: false
   - label: 🗺️ Revise Plan
-    agent: Aurora Plan
+    agent: Bolt Plan
     prompt: Adjust plan based on clarifications
     send: false
 ---
@@ -32,7 +32,7 @@ handoffs:
 
 Drive structured questioning to resolve ambiguities identified during specification or analysis phases.
 
-**AURORA Stage**: UNDERSTAND (clarification loop)
+**Bolt Framework Stage**: UNDERSTAND (clarification loop)
 
 **Responsible Agent**: Business Explorer
 
@@ -40,10 +40,10 @@ Drive structured questioning to resolve ambiguities identified during specificat
 
 | Trigger                     | Source            |
 | --------------------------- | ----------------- |
-| Vague requirement           | `@aurora-specify` |
-| Missing acceptance criteria | `@aurora-analyze` |
+| Vague requirement           | `@bolt-specify` |
+| Missing acceptance criteria | `@bolt-analyze` |
 | Conflicting requirements    | Analysis report   |
-| Technical ambiguity         | `@aurora-plan`    |
+| Technical ambiguity         | `@bolt-plan`    |
 | Stakeholder misalignment    | Review feedback   |
 
 ## Question Categories

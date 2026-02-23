@@ -1,6 +1,6 @@
 ---
-name: Aurora Specify
-description: 📝 Create or update feature specifications from natural language descriptions, aligned with AURORA-IA methodology
+name: Bolt Specify
+description: 📝 Create or update feature specifications from natural language descriptions, aligned with Bolt Framework methodology
 tools:
   [
     search,
@@ -17,11 +17,11 @@ tools:
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🗺️ Create Technical Plan
-    agent: Aurora Plan
+    agent: Bolt Plan
     prompt: Create implementation plan. I am building with...
     send: false
   - label: ❓ Clarify Requirements
-    agent: Aurora Clarify
+    agent: Bolt Clarify
     prompt: Clarify ambiguous requirements
     send: false
 ---
@@ -37,9 +37,9 @@ When you need to create feature structures, execute these scripts:
 - **Bash**: `scripts/bash/create-new-feature.sh`
 - **PowerShell**: `scripts/powershell/Create-NewFeature.ps1`
 
-Transform natural language feature descriptions into structured specification documents following AURORA-IA methodology.
+Transform natural language feature descriptions into structured specification documents following Bolt Framework methodology.
 
-**AURORA Stage**: PERCEIVE + ANALYZE
+**Bolt Framework Stage**: PERCEIVE + ANALYZE
 
 **Responsible Agent**: Business Explorer
 
@@ -83,13 +83,13 @@ specs/[XXX-feature-name]/
 ├── requirements/
 │   └── requirements.md   # Feature specification
 ├── contracts/
-│   └── openapi.yaml      # API contracts (created by @aurora-plan)
+│   └── openapi.yaml      # API contracts (created by @bolt-plan)
 ├── tests/
-│   └── feature.feature   # Gherkin scenarios (created by @aurora-gherkin)
+│   └── feature.feature   # Gherkin scenarios (created by @bolt-gherkin)
 └── planning/
-    ├── plan.md           # Implementation plan (created by @aurora-plan)
-    ├── tasks.md          # Task list (created by @aurora-tasks)
-    └── research.md       # Technical research (created by @aurora-plan)
+    ├── plan.md           # Implementation plan (created by @bolt-plan)
+    ├── tasks.md          # Task list (created by @bolt-tasks)
+    └── research.md       # Technical research (created by @bolt-plan)
 ```
 
 ### 4. Generate Specification
@@ -192,9 +192,9 @@ After creating specification:
 
 **Next Steps**:
 
-1. Use @aurora-clarify if questions remain
-2. Use @aurora-plan for implementation planning
-3. Use @aurora-gherkin for BDD scenarios
+1. Use @bolt-clarify if questions remain
+2. Use @bolt-plan for implementation planning
+3. Use @bolt-gherkin for BDD scenarios
 
 **Commit Message**:
 docs(specs): add specification for [feature-name]

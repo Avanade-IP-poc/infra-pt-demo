@@ -1,5 +1,5 @@
 ---
-name: Aurora Postmortem
+name: Bolt Postmortem
 description: 🔥 Generate blameless postmortems for incidents, outages, and project failures following AURORA methodology
 tools:
   [
@@ -17,11 +17,11 @@ tools:
 model: Claude Sonnet 4.5
 handoffs:
   - label: 📈 Improvement Actions
-    agent: Aurora Improve
+    agent: Bolt Improve
     prompt: Create improvement plan from postmortem findings
     send: false
   - label: 🚀 Update Operations
-    agent: Aurora Ops
+    agent: Bolt Ops
     prompt: Update runbooks based on postmortem learnings
     send: false
   - label: 📝 Create ADR
@@ -43,7 +43,7 @@ When you need to generate postmortems, execute these scripts:
 
 Generate blameless postmortems to learn from incidents and prevent recurrence.
 
-**AURORA Stage**: PRODUCTION (Incident Learning)
+**Bolt Framework Stage**: PRODUCTION (Incident Learning)
 
 **Responsible Agent**: Incident Analyst
 

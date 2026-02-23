@@ -1,5 +1,5 @@
 ---
-name: Aurora Testing
+name: Bolt Testing
 description: 🧪 Generate comprehensive test suites with coverage-first approach and mutation testing validation
 tools:
   [
@@ -20,19 +20,19 @@ tools:
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🏗️ Implement (TDD Green)
-    agent: Aurora Implement
+    agent: Bolt Implement
     prompt: Execute implementation to make failing tests pass (TDD green phase)
     send: false
   - label: 🥒 Generate Gherkin (BDD)
-    agent: Aurora Gherkin
+    agent: Bolt Gherkin
     prompt: Generate Gherkin scenarios from user stories before creating step definitions
     send: false
   - label: 👀 Review Quality
-    agent: Aurora Review
+    agent: Bolt Review
     prompt: Review test coverage, mutation score, and test quality
     send: false
   - label: 🔍 Run Quality Gates
-    agent: Aurora Analyze
+    agent: Bolt Analyze
     prompt: Execute quality gates and verify all tests pass
     send: false
 ---
@@ -50,7 +50,7 @@ When you need to run tests, execute these scripts:
 
 Generate test suites that achieve coverage targets and validate test quality through mutation testing.
 
-**AURORA Stage**: EXECUTE (coverage-first approach)
+**Bolt Framework Stage**: EXECUTE (coverage-first approach)
 
 **Responsible Agent**: Test Inspector
 
@@ -77,7 +77,7 @@ You do (IN ORDER):
 git branch --show-current
 
 # 2. Read constitution for testing rules
-cat .aurora/.aurora/memory/constitution.md
+cat .aurora/memory/constitution.md
 
 # 3. Read the source to test
 cat src/application/UserService.ts  # or whatever file
@@ -103,7 +103,7 @@ npm test  # or equivalent from constitution
 Required files:
 
 - `specs/[XXX-feature-name]/requirements/requirements.md` - User stories with acceptance criteria
-- `.aurora/.aurora/memory/constitution.md` - Project governing document
+- `.aurora/memory/constitution.md` - Project governing document
 - **Must be on feature branch** - verify with `git branch --show-current`
 
 ## Quality Targets
@@ -140,14 +140,14 @@ Required files:
 
 ## TDD vs BDD Decision Matrix
 
-| Scenario               | Approach           | Command                      |
-| ---------------------- | ------------------ | ---------------------------- |
-| User story with ACs    | **BDD**            | Use @aurora-gherkin          |
-| New algorithm/utility  | **TDD**            | Use @aurora-testing tdd      |
-| Existing untested code | **Coverage-First** | Use @aurora-testing coverage |
-| Bug fix                | **TDD**            | Use @aurora-testing tdd      |
-| API endpoint           | **BDD + Contract** | Use @aurora-gherkin          |
-| Domain entity          | **TDD**            | Use @aurora-testing tdd      |
+| Scenario               | Approach           | Command                    |
+| ---------------------- | ------------------ | -------------------------- |
+| User story with ACs    | **BDD**            | Use @bolt-gherkin          |
+| New algorithm/utility  | **TDD**            | Use @bolt-testing tdd      |
+| Existing untested code | **Coverage-First** | Use @bolt-testing coverage |
+| Bug fix                | **TDD**            | Use @bolt-testing tdd      |
+| API endpoint           | **BDD + Contract** | Use @bolt-gherkin          |
+| Domain entity          | **TDD**            | Use @bolt-testing tdd      |
 
 ## Test Categories
 
@@ -299,7 +299,7 @@ After generating tests:
 **Next Steps**:
 
 1. Run mutation testing for quality validation
-2. Use @aurora-review to verify test quality
+2. Use @bolt-review to verify test quality
 3. Proceed to next implementation phase
 ```
 
@@ -307,4 +307,4 @@ After generating tests:
 
 For detailed test guidance:
 
-- `#file:.github/prompts/aurora-test-generation.prompt.md`
+- `#file:.github/prompts/bolt-test-generation.prompt.md`

@@ -1,10 +1,10 @@
-# AURORA-IA-DLC - GitHub Copilot Instructions
+# Bolt Framework - GitHub Copilot Instructions
 
-> This file provides context to GitHub Copilot about the AURORA methodology used in this workspace.
+> This file provides context to GitHub Copilot about the Bolt Framework methodology used in this workspace.
 
-## What is AURORA?
+## What is Bolt Framework?
 
-AURORA-IA-DLC (AI-Driven Development Lifecycle) is an AI-powered software development methodology. It guides development through six phases:
+Bolt Framework (AI-Driven Development Lifecycle) is an AI-powered software development methodology. It guides development through six phases:
 
 1. **INCEPTION** - Project definition and constitution
 2. **DISCOVERY** - Requirements, features, and planning
@@ -28,19 +28,19 @@ Each feature has its own directory with:
 - `planning/` - Tasks and implementation plan
 - `contracts/` - API contracts
 
-### Agents (`@Aurora*`)
+### Agents (`@Bolt*`)
 
-Invoke AURORA workflows via agents:
+Invoke Bolt Framework workflows via agents:
 
 - `@Bolt Framework` - Main orchestrator
-- `@Aurora Feature` - Create feature
-- `@Aurora Implement` - Implement code
-- `@Aurora Testing` - Generate tests
-- `@Aurora Status` - Project status
+- `@Bolt Feature` - Create feature
+- `@Bolt Implement` - Implement code
+- `@Bolt Testing` - Generate tests
+- `@Bolt Status` - Project status
 
 ## Code Generation Rules
 
-When generating code in an AURORA project:
+When generating code in a Bolt Framework project:
 
 1. **Check Constitution First** - Read `memory/constitution.md` for:
    - Allowed languages/frameworks
@@ -71,7 +71,7 @@ project/
 ├── src/                     # Source code
 ├── legacy/                  # Legacy code analysis (brownfield)
 └── .github/
-    ├── agents/              # AURORA agents (30)
+    ├── agents/              # Bolt Framework agents (30)
     ├── prompts/             # Reusable prompts
     ├── skills/              # Auto-discovered skills
     └── workflows/           # GitHub Actions
@@ -79,30 +79,30 @@ project/
 
 ## Specialized Agents
 
-AURORA includes 30 specialized AI agents. Invoke them with `@AgentName`:
+Bolt Framework includes 30 specialized AI agents. Invoke them with `@AgentName`:
 
-| Topic           | Agent                   |
-| --------------- | ----------------------- |
-| Orchestration   | `@Bolt Framework`       |
-| Architecture    | `@Aurora Architect`     |
-| Domain modeling | `@Aurora DDD`           |
-| Testing         | `@Aurora Testing`       |
-| Implementation  | `@Aurora Implement`     |
-| Documentation   | `@Aurora Documentation` |
-| Operations      | `@Aurora Ops`           |
-| Releases        | `@Aurora Release`       |
+| Topic           | Agent                 |
+| --------------- | --------------------- |
+| Orchestration   | `@Bolt Framework`     |
+| Architecture    | `@Bolt Architect`     |
+| Domain modeling | `@Bolt DDD`           |
+| Testing         | `@Bolt Testing`       |
+| Implementation  | `@Bolt Implement`     |
+| Documentation   | `@Bolt Documentation` |
+| Operations      | `@Bolt Ops`           |
+| Releases        | `@Bolt Release`       |
 
 📚 **Full list**: [.github/agents/README.md](.github/agents/README.md)
 
 ## Skills - Specialized Capabilities
 
-AURORA includes specialized **skills** that are auto-discovered from `.github/skills/<name>/SKILL.md`. When working on specific tasks, Copilot automatically loads relevant skills.
+Bolt Framework includes specialized **skills** that are auto-discovered from `.github/skills/<name>/SKILL.md`. When working on specific tasks, Copilot automatically loads relevant skills.
 
 ### Available Skills
 
 | Skill                                                      | Domain                        | Use When                                                                                         |
 | ---------------------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------ |
-| [bolt-framework](.github/skills/bolt-framework/)           | AURORA Methodology            | Working on AURORA projects, managing lifecycle                                                   |
+| [bolt-framework](.github/skills/bolt-framework/)           | Bolt Framework Methodology    | Working on Bolt Framework projects, managing lifecycle                                           |
 | [bolt-adr](.github/skills/bolt-adr/)                       | Architecture Decision Records | Documenting architectural decisions, technology selections, or design patterns using MADR format |
 | [new-skill](.github/skills/new-skill/)                     | Skill Creation                | Creating or improving Copilot skills                                                             |
 | [markdown-formatting](.github/skills/markdown-formatting/) | Markdown Best Practices       | Writing or editing any Markdown document (.md, .agent.md, .prompt.md)                            |
@@ -128,4 +128,4 @@ Copilot will guide you through the process using the new-skill guidelines.
 
 ---
 
-_AURORA-IA-DLC v1.0.0_
+_Bolt Framework v2.0.0_

@@ -1,5 +1,5 @@
 ---
-name: Aurora Use Case
+name: Bolt Use Case
 description: 📖 Generate detailed use case specifications from user stories following UML/Cockburn style
 tools:
   [
@@ -17,11 +17,11 @@ tools:
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🥒 Generate Gherkin
-    agent: Aurora Gherkin
+    agent: Bolt Gherkin
     prompt: Generate BDD scenarios from use case flows
     send: false
   - label: 🏛️ Model Domain
-    agent: Aurora Analyze
+    agent: Bolt Analyze
     prompt: Extract domain entities from use cases
     send: false
 ---
@@ -39,7 +39,7 @@ When you need to generate use cases, execute these scripts:
 
 Generate detailed use case specifications from user stories, providing full actor-system interaction flows.
 
-**AURORA Stage**: DISCOVERY
+**Bolt Framework Stage**: DISCOVERY
 
 **Responsible Agent**: Domain Sage
 
@@ -211,12 +211,12 @@ After generating use cases:
 **Next Steps**:
 
 1. Review use cases with stakeholders
-2. Use @aurora-gherkin to generate BDD scenarios
-3. Use @aurora-plan for implementation planning
+2. Use @bolt-gherkin to generate BDD scenarios
+3. Use @bolt-plan for implementation planning
 ```
 
 ## Prompts Reference
 
 For detailed domain modeling:
 
-- `#file:.github/prompts/aurora-domain-modeling.prompt.md`
+- `#file:.github/prompts/bolt-domain-modeling.prompt.md`

@@ -374,7 +374,7 @@ function Get-AllDecisions {
     return $d
 }
 
-# ─── Copy AURORA framework ───────────────────────────────────────────────────
+# ─── Copy Bolt framework ────────────────────────────────────────────────────
 
 function Copy-BoltFramework {
     Write-Step "Copying Bolt Framework..."

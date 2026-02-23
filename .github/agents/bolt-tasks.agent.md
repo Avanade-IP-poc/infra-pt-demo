@@ -1,5 +1,5 @@
 ---
-name: Aurora Tasks
+name: Bolt Tasks
 description: ✅ Generate actionable Bolt task lists from implementation plan, optimized for AI-DLC micro-iterations
 tools:
   [
@@ -17,11 +17,11 @@ tools:
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Analyze Consistency
-    agent: Aurora Analyze
+    agent: Bolt Analyze
     prompt: Run consistency analysis across artifacts
     send: false
   - label: 🏗️ Start Implementation
-    agent: Aurora Implement
+    agent: Bolt Implement
     prompt: Begin implementation in phases
     send: false
 ---
@@ -37,9 +37,9 @@ When you need to check prerequisites, execute these scripts:
 - **Bash**: `scripts/bash/check-prerequisites.sh`
 - **PowerShell**: `scripts/powershell/Check-Prerequisites.ps1`
 
-Transform implementation plan into executable Bolt task lists following the AURORA-IA AI-DLC methodology.
+Transform implementation plan into executable Bolt task lists following the Bolt Framework AI-DLC methodology.
 
-**AURORA Stage**: PLAN → EXECUTE preparation
+**Bolt Framework Stage**: PLAN → EXECUTE preparation
 
 **Responsible Agent**: Micro Iterator
 
@@ -283,8 +283,8 @@ After generating tasks:
 
 **Next Steps**:
 1. Review task breakdown
-2. Use @aurora-analyze to validate consistency
-3. Use @aurora-implement to start Bolt 1
+2. Use @bolt-analyze to validate consistency
+3. Use @bolt-implement to start Bolt 1
 ````
 
 ## Prompts Reference

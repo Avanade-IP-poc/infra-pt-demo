@@ -1,13 +1,13 @@
 ---
 name: bolt-framework
-description: AURORA-IA-DLC methodology with 6 lifecycle phases and Bolt micro-iterations
+description: Bolt Framework methodology with 6 lifecycle phases and Bolt micro-iterations
 ---
 
 # Bolt Framework
 
 ## When to Use
 
-- Orchestrating AURORA projects through lifecycle phases
+- Orchestrating Bolt Framework projects through lifecycle phases
 - Implementing features with Bolt micro-iterations
 - Routing work between specialized agents
 
@@ -15,7 +15,7 @@ description: AURORA-IA-DLC methodology with 6 lifecycle phases and Bolt micro-it
 
 **MUST read `memory/constitution.md` before any work** - defines tech stack, standards, constraints.
 
-If missing → use `@Aurora Constitution` agent to create it.
+If missing → use `@Bolt Constitution` agent to create it.
 
 ## 6 Lifecycle Phases
 
@@ -23,14 +23,14 @@ If missing → use `@Aurora Constitution` agent to create it.
 🌅 INCEPTION → 🔍 DISCOVERY → 🏗️ CONSTRUCTION → 📦 TRANSITION → 🚀 PRODUCTION → 🌙 RETIREMENT
 ```
 
-| Phase            | Goal               | Key Agents                                               |
-| ---------------- | ------------------ | -------------------------------------------------------- |
-| **INCEPTION**    | Define project DNA | `@Aurora Constitution`, `@Aurora Clarify`                |
-| **DISCOVERY**    | Create specs       | `@Aurora Feature`, `@Aurora Plan`, `@Aurora Tasks`       |
-| **CONSTRUCTION** | Build & test       | `@Aurora Implement`, `@Aurora Testing`, `@Aurora Review` |
-| **TRANSITION**   | Release            | `@Aurora Release`, `@Aurora CI/CD`                       |
-| **PRODUCTION**   | Operate            | `@Aurora Ops`, `@Aurora Monitoring`, `@Aurora Improve`   |
-| **RETIREMENT**   | Decommission       | `@Aurora Retire`, `@Aurora Postmortem`                   |
+| Phase            | Goal               | Key Agents                                         |
+| ---------------- | ------------------ | -------------------------------------------------- |
+| **INCEPTION**    | Define project DNA | `@Bolt Constitution`, `@Bolt Clarify`              |
+| **DISCOVERY**    | Create specs       | `@Bolt Feature`, `@Bolt Plan`, `@Bolt Tasks`       |
+| **CONSTRUCTION** | Build & test       | `@Bolt Implement`, `@Bolt Testing`, `@Bolt Review` |
+| **TRANSITION**   | Release            | `@Bolt Release`, `@Bolt CI/CD`                     |
+| **PRODUCTION**   | Operate            | `@Bolt Ops`, `@Bolt Monitoring`, `@Bolt Improve`   |
+| **RETIREMENT**   | Decommission       | `@Bolt Retire`, `@Bolt Postmortem`                 |
 
 ## File Structure
 
@@ -67,19 +67,19 @@ project/
 
 ```bash
 # 1. INCEPTION - Create constitution
-@Aurora Constitution
+@Bolt Constitution
 
 # 2. DISCOVERY - Create feature spec
-@Aurora Feature "time tracking system"
-@Aurora Plan "specs/001-time-tracking"
-@Aurora Tasks "specs/001-time-tracking"
+@Bolt Feature "time tracking system"
+@Bolt Plan "specs/001-time-tracking"
+@Bolt Tasks "specs/001-time-tracking"
 
 # 3. CONSTRUCTION - Implement
-@Aurora Implement "specs/001-time-tracking/planning/tasks.md"
-@Aurora Review "src/backend/Modules/TimeTracking"
+@Bolt Implement "specs/001-time-tracking/planning/tasks.md"
+@Bolt Review "src/backend/Modules/TimeTracking"
 
 # 4. TRANSITION - Release
-@Aurora Release "v1.0.0"
+@Bolt Release "v1.0.0"
 ```
 
 ## Bolt Micro-Iterations
@@ -102,5 +102,5 @@ Each Bolt must pass:
 ## References
 
 - Full agent list: [.github/agents/README.md](.github/agents/README.md)
-- Constitution template: `@Aurora Constitution`
+- Constitution template: `@Bolt Constitution`
 - Related skills: `bolt-adr`, `azdo-sync`

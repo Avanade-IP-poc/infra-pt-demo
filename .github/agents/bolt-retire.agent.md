@@ -1,5 +1,5 @@
 ---
-name: Aurora Retire
+name: Bolt Retire
 description: 🌅 Plan and execute controlled retirement of systems, features, or entire projects following AURORA methodology
 tools:
   [
@@ -17,11 +17,11 @@ tools:
 model: Claude Sonnet 4.5
 handoffs:
   - label: 📦 Final Release
-    agent: Aurora Release
+    agent: Bolt Release
     prompt: Create final archive release before retirement
     send: false
   - label: 🔍 Impact Analysis
-    agent: Aurora Analyze
+    agent: Bolt Analyze
     prompt: Analyze retirement impact on dependent systems
     send: false
   - label: 📝 Document Decision
@@ -29,7 +29,7 @@ handoffs:
     prompt: Create ADR documenting retirement decision
     send: false
   - label: 📊 Project Status
-    agent: Aurora Status
+    agent: Bolt Status
     prompt: Get final project status before retirement
     send: false
 ---
@@ -47,7 +47,7 @@ When you need to plan retirement, execute these scripts:
 
 Plan and execute controlled retirement of systems, features, or projects.
 
-**AURORA Stage**: RETIREMENT
+**Bolt Framework Stage**: RETIREMENT
 
 **Responsible Agent**: Retirement Coordinator
 

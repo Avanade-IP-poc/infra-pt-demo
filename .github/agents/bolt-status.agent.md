@@ -1,5 +1,5 @@
 ---
-name: Aurora Status
+name: Bolt Status
 description: 📊 Generate comprehensive project status reports across all AURORA lifecycle phases
 tools:
   [
@@ -17,19 +17,19 @@ tools:
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Run Analysis
-    agent: Aurora Analyze
+    agent: Bolt Analyze
     prompt: Run detailed consistency analysis
     send: false
   - label: 📈 Check Improvements
-    agent: Aurora Improve
+    agent: Bolt Improve
     prompt: Identify improvement opportunities
     send: false
   - label: 📊 Check Alignment
-    agent: Aurora Alignment
+    agent: Bolt Alignment
     prompt: Verify business-technical alignment
     send: false
   - label: 🚀 Operations Status
-    agent: Aurora Ops
+    agent: Bolt Ops
     prompt: Get operational health status
     send: false
 ---
@@ -47,7 +47,7 @@ When you need to get project status, execute these scripts:
 
 Generate comprehensive project status reports across all AURORA lifecycle phases.
 
-**AURORA Stage**: CROSS-PHASE (Status reporting)
+**Bolt Framework Stage**: CROSS-PHASE (Status reporting)
 
 **Responsible Agent**: Project Status Reporter
 

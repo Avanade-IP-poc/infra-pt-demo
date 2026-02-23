@@ -1,5 +1,5 @@
 ---
-name: Aurora Feature
+name: Bolt Feature
 description: ✨ Create comprehensive feature specifications with user stories, use cases, and acceptance criteria
 tools:
   [
@@ -17,19 +17,19 @@ tools:
 model: Claude Sonnet 4.5
 handoffs:
   - label: 📖 Generate Use Cases
-    agent: Aurora Use Case
+    agent: Bolt Use Case
     prompt: Generate detailed use cases from feature
     send: false
   - label: 🥒 Generate Gherkin
-    agent: Aurora Gherkin
+    agent: Bolt Gherkin
     prompt: Generate BDD scenarios from acceptance criteria
     send: false
   - label: 🗺️ Plan Implementation
-    agent: Aurora Plan
+    agent: Bolt Plan
     prompt: Create implementation plan for this feature
     send: false
   - label: 🏗️ Implement Feature
-    agent: Aurora Implement
+    agent: Bolt Implement
     prompt: Implement the feature specification created above.
     send: false
 ---
@@ -45,9 +45,9 @@ When you need to automate feature creation, execute these scripts:
 - **Bash**: `scripts/bash/create-new-feature.sh`
 - **PowerShell**: `scripts/powershell/Create-NewFeature.ps1`
 
-You create comprehensive feature specifications following AURORA-IA Product Owner workflow.
+You create comprehensive feature specifications following Bolt Framework Product Owner workflow.
 
-**AURORA Stage**: INCEPTION / DISCOVERY
+**Bolt Framework Stage**: INCEPTION / DISCOVERY
 
 **Responsible Agent**: Business Explorer
 

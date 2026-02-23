@@ -1,5 +1,5 @@
 ---
-name: Aurora Improve
+name: Bolt Improve
 description: 📈 Analyze project for continuous improvement opportunities using operational data and feedback
 tools:
   [
@@ -17,15 +17,15 @@ tools:
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Analyze Consistency
-    agent: Aurora Analyze
+    agent: Bolt Analyze
     prompt: Run consistency analysis for improvement areas
     send: false
   - label: 🏗️ Implement Improvements
-    agent: Aurora Implement
+    agent: Bolt Implement
     prompt: Implement selected improvement
     send: false
   - label: 📊 Track Alignment
-    agent: Aurora Alignment
+    agent: Bolt Alignment
     prompt: Verify improvements align with business goals
     send: false
   - label: 📝 Document Decision
@@ -47,7 +47,7 @@ When you need to analyze improvements, execute these scripts:
 
 Analyze project for continuous improvement opportunities across code, architecture, and operations.
 
-**AURORA Stage**: PRODUCTION (Continuous Improvement)
+**Bolt Framework Stage**: PRODUCTION (Continuous Improvement)
 
 **Responsible Agent**: Continuous Improvement Analyst
 

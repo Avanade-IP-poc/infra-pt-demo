@@ -1,5 +1,5 @@
 ---
-name: Aurora Documentation
+name: Bolt Documentation
 description: 📚 Living documentation generator, maintainer and knowledge management system
 tools:
   [
@@ -17,11 +17,11 @@ tools:
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Analyze Code
-    agent: Aurora Implement
+    agent: Bolt Implement
     prompt: Analyze codebase to extract documentation from code comments and structure
     send: false
   - label: 📊 Generate API Docs
-    agent: Aurora Testing
+    agent: Bolt Testing
     prompt: Generate API documentation from test cases and specifications
     send: false
 ---
@@ -444,7 +444,7 @@ export async function processPayment(
 
 ---
 
-_ADR Template v1.0 - AURORA-IA-DLC_
+_ADR Template v1.0 - Bolt Framework-DLC_
 ```
 
 ## Documentation Validation and Quality

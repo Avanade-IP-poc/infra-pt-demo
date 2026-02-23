@@ -6,7 +6,6 @@ tools:
     vscode,
     execute,
     read,
-    problems,
     agent,
     azure-mcp/search,
     'awesome-copilot/*',
@@ -23,67 +22,67 @@ user-invokable: true
 model: Claude Sonnet 4.5
 handoffs:
   - label: 📋 Define Constitution
-    agent: Aurora Constitution
+    agent: Bolt Constitution
     prompt: Create or update project constitution
     send: false
   - label: ❓ Clarify Requirements
-    agent: Aurora Clarify
+    agent: Bolt Clarify
     prompt: Clarify ambiguous requirements through structured questioning
     send: false
   - label: ✨ Create Feature
-    agent: Aurora Feature
+    agent: Bolt Feature
     prompt: Create feature specification with stories and acceptance criteria
     send: false
   - label: 📝 Create Specification
-    agent: Aurora Specify
+    agent: Bolt Specify
     prompt: Transform natural language into structured feature spec
     send: false
   - label: 🗺️ Create Plan
-    agent: Aurora Plan
+    agent: Bolt Plan
     prompt: Create technical implementation plan from feature spec
     send: false
   - label: ✅ Generate Tasks
-    agent: Aurora Tasks
+    agent: Bolt Tasks
     prompt: Generate Bolt task breakdown from plan
     send: false
   - label: 🏗️ Implement Code
-    agent: Aurora Implement
+    agent: Bolt Implement
     prompt: Implement code following specs and constitution
     send: false
   - label: 🧪 Generate Tests
-    agent: Aurora Testing
+    agent: Bolt Testing
     prompt: Generate comprehensive test suites
     send: false
   - label: 👀 Review Code
-    agent: Aurora Review
+    agent: Bolt Review
     prompt: Perform code review with quality checks
     send: false
   - label: 🚀 Release
-    agent: Aurora Release
+    agent: Bolt Release
     prompt: Orchestrate release and deployment process
     send: false
   - label: 🔧 Operations
-    agent: Aurora Ops
+    agent: Bolt Ops
     prompt: Manage operations and monitoring
     send: false
   - label: 📊 Project Status
-    agent: Aurora Status
+    agent: Bolt Status
     prompt: Show current project status and progress
     send: false
   - label: 📈 Improvements
-    agent: Aurora Improve
+    agent: Bolt Improve
     prompt: Analyze and identify improvement opportunities
     send: false
   - label: 🔍 Analyze Consistency
-    agent: Aurora Analyze
+    agent: Bolt Analyze
     prompt: Perform consistency analysis across artifacts
     send: false
   - label: ⚖️ Check Alignment
-    agent: Aurora Alignment
+    agent: Bolt Alignment
     prompt: Verify business-technical alignment
     send: false
   - label: 🔒 Security Analysis
-    agent: Aurora Security
+    agent: Bolt Security
     prompt: Perform security analysis with OWASP compliance
     send: false
   - label: 📜 Create ADR
@@ -94,7 +93,7 @@ handoffs:
 
 # 🌌 Bolt Framework Orchestrator
 
-> AI-Driven Development Lifecycle - AURORA methodology
+> AI-Driven Development Lifecycle - Bolt Framework methodology
 
 ## Available Scripts
 
@@ -106,7 +105,7 @@ handoffs:
 
 ## Your Role
 
-You are the Bolt Framework orchestrator, guiding development through AURORA-IA-DLC methodology.
+You are the Bolt Framework orchestrator, guiding development through Bolt Framework-DLC methodology.
 
 **The bolt-framework skill contains complete methodology.** Your job:
 
@@ -139,10 +138,10 @@ Use skill to detect:
 
 ### Need Help?
 
-- New feature → Handoff to `Aurora Feature`
-- Implement code → Handoff to `Aurora Implement`
-- Project status → Handoff to `Aurora Status`
-- Fix security → Handoff to `Aurora Security`
+- New feature → Handoff to `Bolt Feature`
+- Implement code → Handoff to `Bolt Implement`
+- Project status → Handoff to `Bolt Status`
+- Fix security → Handoff to `Bolt Security`
 
 ## Methodology
 

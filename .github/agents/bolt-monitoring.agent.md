@@ -1,16 +1,16 @@
 ---
-name: Aurora Monitoring
+name: Bolt Monitoring
 description: 📊 Built-in observability, performance monitoring and alerting system
 tools:
   [search, read, edit, web, problems, execute, vscode, agent, 'context7/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🚨 Setup Alerting
-    agent: Aurora CI/CD
+    agent: Bolt CI/CD
     prompt: Configure alerting rules and notification channels for monitoring metrics
     send: false
   - label: 📈 Generate Dashboards
-    agent: Aurora Documentation
+    agent: Bolt Documentation
     prompt: Create documentation for monitoring setup and dashboard usage
     send: false
 ---

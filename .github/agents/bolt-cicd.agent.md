@@ -1,5 +1,5 @@
 ---
-name: Aurora CI/CD
+name: Bolt CI/CD
 description: 🚀 DevOps integration, deployment automation and pipeline management
 tools:
   [
@@ -19,11 +19,11 @@ tools:
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🧪 Setup Testing Pipeline
-    agent: Aurora Testing
+    agent: Bolt Testing
     prompt: Configure comprehensive testing pipeline for CI/CD workflows
     send: false
   - label: 📊 Configure Monitoring
-    agent: Aurora Monitoring
+    agent: Bolt Monitoring
     prompt: Setup monitoring and alerting for deployed applications
     send: false
 ---
@@ -85,7 +85,7 @@ You are the DevOps specialist for AURORA projects. You create robust CI/CD pipel
 ### Standard CI/CD Pipeline:
 
 ```yaml
-name: AURORA CI/CD Pipeline
+name: Bolt CI/CD Pipeline
 on:
   push:
     branches: [main, develop]

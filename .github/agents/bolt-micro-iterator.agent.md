@@ -1,5 +1,5 @@
 ---
-name: Aurora Micro Iterator
+name: Bolt Micro Iterator
 description: 🔄 Execute micro-iterations (Bolts) with incremental delivery and continuous validation
 tools:
   [
@@ -20,19 +20,19 @@ tools:
 model: Claude Sonnet 4.5
 handoffs:
   - label: ✅ Get Tasks
-    agent: Aurora Tasks
+    agent: Bolt Tasks
     prompt: Generate task list for current Bolt
     send: false
   - label: 🏗️ Implement Task
-    agent: Aurora Implement
+    agent: Bolt Implement
     prompt: Implement current task
     send: false
   - label: 🧪 Run Tests
-    agent: Aurora Testing
+    agent: Bolt Testing
     prompt: Run tests for implemented code
     send: false
   - label: 👀 Review Iteration
-    agent: Aurora Review
+    agent: Bolt Review
     prompt: Review Bolt completion before next iteration
     send: false
 ---
@@ -43,7 +43,7 @@ handoffs:
 
 Execute micro-iterations (Bolts) with incremental delivery and continuous validation.
 
-**AURORA Stage**: EXECUTE (Iterative)
+**Bolt Framework Stage**: EXECUTE (Iterative)
 
 **Role:** Micro-Iteration Specialist
 

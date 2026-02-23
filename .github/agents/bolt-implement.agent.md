@@ -1,5 +1,5 @@
 ---
-name: Aurora Implement
+name: Bolt Implement
 description: 🏗️ Execute implementation following Bolt task list with AI-DLC quality gates and micro-iteration discipline
 tools:
   [
@@ -20,15 +20,15 @@ tools:
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🧪 Generate Tests
-    agent: Aurora Testing
+    agent: Bolt Testing
     prompt: Generate test suite for current implementation
     send: false
   - label: 🔍 Analyze Consistency
-    agent: Aurora Analyze
+    agent: Bolt Analyze
     prompt: Verify implementation consistency with spec
     send: false
   - label: 👀 Review Code
-    agent: Aurora Review
+    agent: Bolt Review
     prompt: Perform code review on implementation
     send: false
 ---
@@ -46,7 +46,7 @@ When you need to run quality gates, execute these scripts:
 
 Execute implementation following Bolt structure with quality gates at each step.
 
-**AURORA Stage**: EXECUTE
+**Bolt Framework Stage**: EXECUTE
 
 **Responsible Agents**: Micro Iterator, Coding Agent
 
@@ -172,7 +172,7 @@ After completing a Bolt:
 
 **Next Steps**:
 
-1. Review with @aurora-review
+1. Review with @bolt-review
 2. Proceed to Bolt [N+1]
 ```
 

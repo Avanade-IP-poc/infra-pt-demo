@@ -1,24 +1,24 @@
 ---
-name: Aurora Ops
+name: Bolt Ops
 description: 🚀 Manage operations, deployments, monitoring and incident response following AURORA methodology
 tools:
   [search, read, edit, web, problems, execute, vscode, agent, 'context7/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 📈 Check Improvements
-    agent: Aurora Improve
+    agent: Bolt Improve
     prompt: Analyze operational data for improvement opportunities
     send: false
   - label: 🔍 Analyze Incident
-    agent: Aurora Postmortem
+    agent: Bolt Postmortem
     prompt: Generate postmortem for recent incident
     send: false
   - label: 📊 Project Status
-    agent: Aurora Status
+    agent: Bolt Status
     prompt: Get overall project and operational status
     send: false
   - label: 📦 Create Release
-    agent: Aurora Release
+    agent: Bolt Release
     prompt: Create new release for deployment
     send: false
 ---
@@ -36,7 +36,7 @@ When you need to check ops status, execute these scripts:
 
 Manage deployments, monitoring, and operational health of AURORA projects.
 
-**AURORA Stage**: PRODUCTION
+**Bolt Framework Stage**: PRODUCTION
 
 **Responsible Agent**: Operations Manager
 
@@ -69,11 +69,11 @@ Manage deployments, monitoring, and operational health of AURORA projects.
 
 ```bash
 # Deploy to environment
-@aurora-ops deploy [environment] [version]
+@bolt-ops deploy [environment] [version]
 
 # Examples
-@aurora-ops deploy staging latest
-@aurora-ops deploy production v1.2.3
+@bolt-ops deploy staging latest
+@bolt-ops deploy production v1.2.3
 ```
 
 ### Deployment Process
@@ -199,22 +199,22 @@ Common operational procedures:
 
 ```bash
 # Check environment status
-@aurora-ops status [environment]
+@bolt-ops status [environment]
 
 # View recent deployments
-@aurora-ops deployments [environment] [count]
+@bolt-ops deployments [environment] [count]
 
 # View logs
-@aurora-ops logs [service] [environment] [timeframe]
+@bolt-ops logs [service] [environment] [timeframe]
 
 # Scale service
-@aurora-ops scale [service] [replicas]
+@bolt-ops scale [service] [replicas]
 
 # Rollback deployment
-@aurora-ops rollback [environment] [version]
+@bolt-ops rollback [environment] [version]
 
 # Run health checks
-@aurora-ops health [environment]
+@bolt-ops health [environment]
 ```
 
 ## Output Format
@@ -257,8 +257,8 @@ Common operational procedures:
 
 ## Next Steps
 
-1. Use @aurora-improve for optimization recommendations
-2. Use @aurora-postmortem for incident review
+1. Use @bolt-improve for optimization recommendations
+2. Use @bolt-postmortem for incident review
 ```
 
 ## Prompts Reference

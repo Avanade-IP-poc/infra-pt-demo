@@ -1,5 +1,5 @@
 ---
-name: Aurora Architect
+name: Bolt Architect
 description: 🏛️ Solution Architecture Authority - translates domain models into technical architecture with ADRs and C4 diagrams
 tools:
   [
@@ -21,15 +21,15 @@ handoffs:
     prompt: Create ADR for architecture decision
     send: false
   - label: 🔍 Analyze Consistency
-    agent: Aurora Analyze
+    agent: Bolt Analyze
     prompt: Verify architecture consistency with specs
     send: false
   - label: 🎯 DDD Modeling
-    agent: Aurora DDD
+    agent: Bolt DDD
     prompt: Design domain model for this context
     send: false
   - label: 🏗️ Start Implementation
-    agent: Aurora Implement
+    agent: Bolt Implement
     prompt: Begin implementation following architecture
     send: false
 ---
@@ -243,7 +243,7 @@ C4Container
 ## Next Steps
 
 1. Review with team
-2. Use @aurora-implement to start construction
+2. Use @bolt-implement to start construction
 ```
 
 ## Prompts Reference

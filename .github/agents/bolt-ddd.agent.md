@@ -1,5 +1,5 @@
 ---
-name: Aurora DDD
+name: Bolt DDD
 description: 🎯 Domain-Driven Design Specialist - defines aggregates, bounded contexts, and ubiquitous language
 tools:
   [
@@ -17,19 +17,19 @@ tools:
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🏛️ Architecture Design
-    agent: Aurora Architect
+    agent: Bolt Architect
     prompt: Design architecture from domain model
     send: false
   - label: 🏗️ Implement Domain
-    agent: Aurora Implement
+    agent: Bolt Implement
     prompt: Implement domain model in code
     send: false
   - label: 📋 Update Specification
-    agent: Aurora Specify
+    agent: Bolt Specify
     prompt: Update specification with domain discoveries
     send: false
   - label: 🔍 Analyze Consistency
-    agent: Aurora Analyze
+    agent: Bolt Analyze
     prompt: Verify domain model consistency
     send: false
 ---
@@ -213,8 +213,8 @@ public record OrderPlaced(
 ## Next Steps
 
 1. Review with domain experts
-2. Use @aurora-architect for technical architecture
-3. Use @aurora-implement to start construction
+2. Use @bolt-architect for technical architecture
+3. Use @bolt-implement to start construction
 ```
 
 ## Prompts Reference

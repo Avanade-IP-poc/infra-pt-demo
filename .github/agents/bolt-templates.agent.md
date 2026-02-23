@@ -1,5 +1,5 @@
 ---
-name: Aurora Templates
+name: Bolt Templates
 description: 🎨 Smart project template generator based on constitution
 tools:
   [
@@ -20,16 +20,16 @@ tools:
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🏗️ Generate Structure
-    agent: Aurora Implement
+    agent: Bolt Implement
     prompt: Generate complete project structure based on constitution and selected template
     send: false
   - label: 📦 Install Dependencies
-    agent: Aurora Dependencies
+    agent: Bolt Dependencies
     prompt: Install all required dependencies for the generated template
     send: false
 ---
 
-# 🎨 AURORA Smart Templates
+# 🎨 Bolt Framework Smart Templates
 
 **Methodology**: Follow bolt-framework skill (loaded automatically)
 

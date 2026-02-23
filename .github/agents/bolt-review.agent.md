@@ -1,5 +1,5 @@
 ---
-name: Aurora Review
+name: Bolt Review
 description: 👀 Perform comprehensive code review validating constitution compliance, patterns, and SOLID principles
 tools:
   [
@@ -20,11 +20,11 @@ tools:
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🏗️ Fix Issues
-    agent: Aurora Implement
+    agent: Bolt Implement
     prompt: Apply review fixes to implementation
     send: false
   - label: 🧪 Improve Tests
-    agent: Aurora Testing
+    agent: Bolt Testing
     prompt: Improve test coverage based on review findings
     send: false
   - label: 📝 Create ADR
@@ -46,7 +46,7 @@ When you need to run quality gates, execute these scripts:
 
 Perform comprehensive code review validating constitution compliance, architecture patterns, and coding standards.
 
-**AURORA Stage**: REVIEW
+**Bolt Framework Stage**: REVIEW
 
 **Responsible Agent**: Code Reviewer
 
@@ -170,7 +170,7 @@ For each file:
 # 👀 Code Review Report
 
 **Feature**: [XXX-feature-name]
-**Reviewer**: Aurora Review Agent
+**Reviewer**: Bolt Review Agent
 **Date**: [timestamp]
 
 ## Summary
@@ -271,7 +271,7 @@ if (retryCount > MAX_RETRIES) { ... }
 ## Next Steps
 
 1. Address P0 issues immediately
-2. Use @aurora-implement to apply fixes
+2. Use @bolt-implement to apply fixes
 3. Re-run review after changes
 
 ```

@@ -1,6 +1,6 @@
 ---
-name: Aurora Constitution
-description: 📋 Create or update the AURORA-IA project constitution - the foundational document that governs all AI agents and development decisions
+name: Bolt Constitution
+description: 📋 Create or update the Bolt Framework project constitution - the foundational document that governs all AI agents and development decisions
 tools:
   [
     search,
@@ -17,15 +17,15 @@ tools:
 model: Claude Sonnet 4.5
 handoffs:
   - label: ✨ Build Specification
-    agent: Aurora Specify
+    agent: Bolt Specify
     prompt: Create feature specification based on the constitution. I want to build...
     send: false
   - label: 🏛️ Review Architecture
-    agent: Aurora Analyze
+    agent: Bolt Analyze
     prompt: Review constitution alignment with architecture
     send: false
   - label: ✨ Create Feature
-    agent: Aurora Feature
+    agent: Bolt Feature
     prompt: Now create a feature specification for the project.
     send: false
 ---
@@ -240,7 +240,7 @@ After constitution update:
 
 **Next Steps**:
 
-1. Use @aurora-specify to define features
+1. Use @bolt-specify to define features
 2. Review agent configurations
 3. Commit constitution changes
 

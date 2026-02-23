@@ -1,5 +1,5 @@
 ---
-name: Aurora Dependencies
+name: Bolt Dependencies
 description: 📦 Smart dependency management and auto-installation based on features
 tools:
   [
@@ -17,11 +17,11 @@ tools:
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🧪 Generate Tests
-    agent: Aurora Testing
+    agent: Bolt Testing
     prompt: Generate tests for the newly installed dependencies and features
     send: false
   - label: 📚 Update Documentation
-    agent: Aurora Documentation
+    agent: Bolt Documentation
     prompt: Update documentation with new dependencies and their usage
     send: false
 ---

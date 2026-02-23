@@ -1,5 +1,5 @@
 ---
-name: Aurora Analyze
+name: Bolt Analyze
 description: 🔍 Run consistency analysis between all AURORA artifacts ensuring specification-implementation alignment
 tools:
   [
@@ -17,19 +17,19 @@ tools:
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🏗️ Fix Implementation
-    agent: Aurora Implement
+    agent: Bolt Implement
     prompt: Fix identified inconsistencies in implementation
     send: false
   - label: 📋 Update Specification
-    agent: Aurora Specify
+    agent: Bolt Specify
     prompt: Update specification to match intended behavior
     send: false
   - label: 🥒 Regenerate Gherkin
-    agent: Aurora Gherkin
+    agent: Bolt Gherkin
     prompt: Regenerate Gherkin scenarios to match requirements
     send: false
   - label: 👀 Review Changes
-    agent: Aurora Review
+    agent: Bolt Review
     prompt: Review consistency fixes before merge
     send: false
 ---
@@ -47,7 +47,7 @@ When you need to analyze alignment, execute these scripts:
 
 Validate alignment between specifications, contracts, implementation, and tests.
 
-**AURORA Stage**: VALIDATE
+**Bolt Framework Stage**: VALIDATE
 
 **Responsible Agent**: Quality Analyst
 
@@ -249,9 +249,9 @@ features:
 
 ## Next Steps
 
-1. Use @aurora-implement to fix implementation gaps
-2. Use @aurora-testing to increase coverage
-3. Use @aurora-review to validate fixes
+1. Use @bolt-implement to fix implementation gaps
+2. Use @bolt-testing to increase coverage
+3. Use @bolt-review to validate fixes
 ```
 
 ## Prompts Reference

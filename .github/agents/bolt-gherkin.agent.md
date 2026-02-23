@@ -1,5 +1,5 @@
 ---
-name: Aurora Gherkin
+name: Bolt Gherkin
 description: 🥒 Generate Gherkin BDD scenarios from user stories and acceptance criteria with step definitions
 tools:
   [
@@ -17,19 +17,19 @@ tools:
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🧪 Generate Unit Tests (BDD)
-    agent: Aurora Testing
+    agent: Bolt Testing
     prompt: Generate unit tests derived from Gherkin step definitions using bdd mode
     send: false
   - label: 🧪 Generate Unit Tests (TDD)
-    agent: Aurora Testing
+    agent: Bolt Testing
     prompt: Generate unit tests using TDD approach with tdd mode
     send: false
   - label: 📊 Coverage Analysis
-    agent: Aurora Testing
+    agent: Bolt Testing
     prompt: Analyze coverage and generate tests for uncovered paths
     send: false
   - label: 👀 Review Scenarios
-    agent: Aurora Review
+    agent: Bolt Review
     prompt: Review Gherkin scenarios and step definitions for completeness
     send: false
 ---
@@ -47,7 +47,7 @@ When you need to generate Gherkin scenarios, execute these scripts:
 
 Generate Behavior-Driven Development (BDD) scenarios in Gherkin syntax from user stories and acceptance criteria.
 
-**AURORA Stage**: DISCOVERY / CONSTRUCTION
+**Bolt Framework Stage**: DISCOVERY / CONSTRUCTION
 
 **Responsible Agent**: Test Inspector
 
@@ -273,12 +273,12 @@ Then('I should see {string}', async function (expected: string) {
 
 | Scenario               | Approach           | Agent                      |
 | ---------------------- | ------------------ | -------------------------- |
-| User story with ACs    | **BDD**            | `@aurora-gherkin`          |
-| New algorithm/utility  | **TDD**            | `@aurora-testing tdd`      |
-| Existing untested code | **Coverage-First** | `@aurora-testing coverage` |
-| Bug fix                | **TDD**            | `@aurora-testing tdd`      |
-| API endpoint           | **BDD + Contract** | `@aurora-gherkin`          |
-| Domain entity          | **TDD**            | `@aurora-testing tdd`      |
+| User story with ACs    | **BDD**            | `@bolt-gherkin`          |
+| New algorithm/utility  | **TDD**            | `@bolt-testing tdd`      |
+| Existing untested code | **Coverage-First** | `@bolt-testing coverage` |
+| Bug fix                | **TDD**            | `@bolt-testing tdd`      |
+| API endpoint           | **BDD + Contract** | `@bolt-gherkin`          |
+| Domain entity          | **TDD**            | `@bolt-testing tdd`      |
 
 ## Output
 
@@ -308,7 +308,7 @@ After generating Gherkin scenarios:
 **Next Steps**:
 
 1. Review scenarios with stakeholders
-2. Use @aurora-testing to generate unit tests
+2. Use @bolt-testing to generate unit tests
 3. Implement step definitions
 ```
 
@@ -316,4 +316,4 @@ After generating Gherkin scenarios:
 
 For detailed test guidance:
 
-- `#file:.github/prompts/aurora-test-generation.prompt.md`
+- `#file:.github/prompts/bolt-test-generation.prompt.md`

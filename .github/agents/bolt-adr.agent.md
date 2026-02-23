@@ -17,15 +17,15 @@ tools:
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🏛️ Consult Architect
-    agent: Aurora Architect
+    agent: Bolt Architect
     prompt: Get architectural guidance for this decision
     send: false
   - label: 🔍 Analyze Impact
-    agent: Aurora Analyze
+    agent: Bolt Analyze
     prompt: Analyze consistency impact of this decision
     send: false
   - label: 🏗️ Implement Decision
-    agent: Aurora Implement
+    agent: Bolt Implement
     prompt: Implement the chosen architecture decision
     send: false
 ---
@@ -44,7 +44,7 @@ ADRs answer three key questions:
 2. **DECISION**: What did we choose? (Chosen option, alternatives)
 3. **CONSEQUENCES**: What happens because of it? (Positive, negative, neutral)
 
-**AURORA Stage**: DECISION (Cross-phase)
+**Bolt Framework Stage**: DECISION (Cross-phase)
 
 ## Workflow
 

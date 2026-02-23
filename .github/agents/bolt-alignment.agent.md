@@ -1,5 +1,5 @@
 ---
-name: Aurora Alignment
+name: Bolt Alignment
 description: 📊 Analyze business-technical alignment ensuring implementation matches business goals and requirements
 tools:
   [
@@ -17,19 +17,19 @@ tools:
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Run Consistency Analysis
-    agent: Aurora Analyze
+    agent: Bolt Analyze
     prompt: Run technical consistency analysis
     send: false
   - label: 📈 Check Improvements
-    agent: Aurora Improve
+    agent: Bolt Improve
     prompt: Identify improvement opportunities for alignment
     send: false
   - label: 📋 Update Requirements
-    agent: Aurora Specify
+    agent: Bolt Specify
     prompt: Update specifications to align with business
     send: false
   - label: 📊 Project Status
-    agent: Aurora Status
+    agent: Bolt Status
     prompt: Get overall project alignment status
     send: false
 ---
@@ -47,7 +47,7 @@ When you need to analyze alignment, execute these scripts:
 
 Ensure continuous alignment between business objectives and technical implementation.
 
-**AURORA Stage**: CROSS-PHASE (Continuous validation)
+**Bolt Framework Stage**: CROSS-PHASE (Continuous validation)
 
 **Responsible Agent**: Business-Technical Alignment Analyst
 

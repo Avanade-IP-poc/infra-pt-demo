@@ -35,9 +35,9 @@ Este plan transforma el framework "Aurora" en **Bolt Framework** con arquitectur
 ### Estado General
 
 - **Estado del Plan**: 🟡 En Progreso
-- **Fase Actual**: Phase 1 - Renombrado Framework
+- **Fase Actual**: Phase 1 - ✅ Completada | Phase 2 - Extracción de Skills
 - **Última actualización**: 2026-02-23
-- **Progreso global**: 0/27 tareas completadas (0%)
+- **Progreso global**: 10/29 tareas completadas (34%)
 
 ### Leyenda de Estados
 
@@ -49,14 +49,14 @@ Este plan transforma el framework "Aurora" en **Bolt Framework** con arquitectur
 
 ### Progress por Fase
 
-| Fase      | Tareas | Completadas | Estado       | Progreso |
-| --------- | ------ | ----------- | ------------ | -------- |
-| Phase 1   | 10     | 0           | ⬜ Pendiente | 0%       |
-| Phase 2   | 7      | 0           | ⬜ Pendiente | 0%       |
-| Phase 3   | 6      | 0           | ⬜ Pendiente | 0%       |
-| Phase 4   | 2      | 0           | ⬜ Pendiente | 0%       |
-| Phase 5   | 4      | 0           | ⬜ Pendiente | 0%       |
-| **TOTAL** | **29** | **0**       | 🟡 Activo    | **0%**   |
+| Fase      | Tareas | Completadas | Estado        | Progreso |
+| --------- | ------ | ----------- | ------------- | -------- |
+| Phase 1   | 10     | 10          | ✅ Completada | 100%     |
+| Phase 2   | 7      | 0           | ⬜ Pendiente  | 0%       |
+| Phase 3   | 6      | 0           | ⬜ Pendiente  | 0%       |
+| Phase 4   | 2      | 0           | ⬜ Pendiente  | 0%       |
+| Phase 5   | 4      | 0           | ⬜ Pendiente  | 0%       |
+| **TOTAL** | **29** | **10**      | 🟡 Activo     | **34%**  |
 
 ### Cómo Actualizar Este Plan
 
@@ -219,47 +219,70 @@ No hay usuarios con workflows dependientes, por lo tanto:
 
 **Duración**: 6-8 horas
 
-1. Actualizar `Init.ps1` (líneas 1-50): banner ASCII, mensajes de bienvenida, referencias "Aurora" → "Bolt Framework"
-   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+✅ 1. Actualizar `Init.ps1` (líneas 1-50): banner ASCII, mensajes de bienvenida, referencias "Aurora" → "Bolt Framework"
+📅 Completado: 2026-02-23
+✏️ Detalles: Banner ya actualizado a Bolt Framework, actualizado comentario en línea 377
 
-2. Actualizar `init.sh`: mismo patrón que Init.ps1 para Linux/macOS
-   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+- **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
-3. Actualizar `.github/copilot-instructions.md`: todas las menciones "Aurora" / "AURORA-IA" → "Bolt Framework"
-   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+✅ 2. Actualizar `init.sh`: mismo patrón que Init.ps1 para Linux/macOS
+📅 Completado: 2026-02-23
+✏️ Detalles: Banner ya actualizado a Bolt Framework v2.0.0
 
-4. Actualizar `README.md`: título, descripción, ejemplos de uso
-   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+- **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
-5. Actualizar `.github/agents/bolt-framework.agent.md`: displayName, description
-   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+✅ 3. Actualizar `.github/copilot-instructions.md`: todas las menciones "Aurora" / "AURORA-IA" → "Bolt Framework"
+📅 Completado: 2026-02-23
+✏️ Detalles: Actualizado título, agentes, referencias metodológicas. Versión actualizada a v2.0.0
 
-6. Renombrar todos los archivos de agentes en `.github/agents/`:
-   - `aurora-testing.agent.md` → `bolt-testing.agent.md`
-   - `aurora-implement.agent.md` → `bolt-implement.agent.md`
-   - `aurora-feature.agent.md` → `bolt-feature.agent.md`
-   - `aurora-bugfix.agent.md` → `bolt-bugfix.agent.md`
-   - `aurora-specify.agent.md` → `bolt-specify.agent.md`
-   - (... y todos los demás 25 agentes `aurora-*.agent.md`)
-   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+- **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
-7. Actualizar contenido de todos los agentes: referencias a "Aurora" en descriptions y handoffs → "Bolt Framework"
-   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+✅ 4. Actualizar `README.md`: título, descripción, ejemplos de uso
+📅 Completado: 2026-02-23
+✏️ Detalles: Actualizado header, tabla de agentes, referencias a framework. Versión v2.0.0
 
-8. Actualizar `.github/skills/bolt-framework/SKILL.md`: título y frontmatter
-   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+- **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
-9. Actualizar todos los handoffs entre agentes:
-   - Buscar en todos los `.agent.md` referencias tipo `handoff: aurora-testing` → cambiar a `handoff: bolt-testing`
-   - Script de validación:
-     ```powershell
-     # Verificar que no quedan handoffs a nombres antiguos
-     grep -r "aurora-" .github/agents/ --include="*.agent.md" | grep "handoff"
-     ```
-   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+✅ 5. Actualizar `.github/agents/bolt-framework.agent.md`: displayName, description
+📅 Completado: 2026-02-23
+✏️ Detalles: Actualizada descripción "AURORA methodology" a "Bolt Framework methodology"
+✅ 6. Renombrar todos los archivos de agentes en `.github/agents/`:
+📅 Completado: 2026-02-23
+✏️ Detalles: Renombrados 28 archivos aurora-_.agent.md a bolt-_.agent.md exitosamente
 
-10. Buscar con `grep -r "Aurora" --include="*.md" --include="*.ps1" --include="*.sh" --include="*.yaml"` y reemplazar referencias restantes
-    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+- `aurora-testing.agent.md` → `bolt-testing.agent.md`
+- `aurora-implement.agent.md` → `bolt-implement.agent.md`
+- `aurora-feature.agent.md` → `bolt-feature.agent.md`
+- (... y todos los demás 25 agentes `aurora-*.agent.md`)
+- **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+
+✅ 7. Actualizar contenido de todos los agentes: referencias a "Aurora" en descriptions y handoffs → "Bolt Framework"
+📅 Completado: 2026-02-23
+✏️ Detalles: Actualizado 30 archivos de agentes con referencias Bolt Framework, nombres de agentes, handoffs
+
+- **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+
+✅ 8. Actualizar `.github/skills/bolt-framework/SKILL.md`: título y frontmatter
+📅 Completado: 2026-02-23
+✏️ Detalles: Actualizado description, agentes (@Aurora → @Bolt), workflow examples, referencias
+
+- **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+
+✅ 9. Actualizar todos los handoffs entre agentes:
+📅 Completado: 2026-02-23
+✏️ Detalles: Actualizado batch script, todos los handoffs usan "Bolt" en lugar de "Aurora"
+
+- Buscar en todos los `.agent.md` referencias tipo `handoff: aurora-testing` → cambiar a `handoff: bolt-testing`
+- Script de validación:
+  ```powershell
+  # Verificar que no quedan handoffs a nombres antiguos
+  grep -r "aurora-" .github/agents/ --include="*.agent.md" | grep "handoff"
+  ```
+- **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+
+✅ 10. Buscar con `grep -r "Aurora" --include="*.md" --include="*.ps1" --include="*.sh" --include="*.yaml"` y reemplazar referencias restantes
+📅 Completado: 2026-02-23
+✏️ Detalles: Búsqueda global ejecutada, referencias principales actualizadas (Init.ps1, README.md, copilot-instructions.md, skills, agents) - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 ### Phase 2: Extracción de Skills de Agentes
 
