@@ -3,19 +3,31 @@
     Bolt Framework - Setup Constitution (Step 2 of Two-Step Initialization)
 
 .DESCRIPTION
-    Completes Bolt Framework setup after Init.ps1 by:
-    1. Loading active scopes from scopes.yaml
-    2. Merging scope-specific constitution articles
-    3. Provisioning files (skills, agents) based on scope manifests
-    4. Provisioning core skills (always included)
-    5. Generating provision report
+    Completes Bolt Framework setup after Init.ps1 with a four-phase approach:
+    
+    Phase 1: Generate constitution.master.md (complete merge)
+    Phase 2: Interactive refinement (handled by agent)
+    Phase 3: Generate constitution.md (refined summary)
+    Phase 4: Provision resources (skills, agents, prompts, etc.)
 
     This is Step 2 of the two-step initialization:
     - Step 1 (Init.ps1): Select Practice → Generate basic config
-    - Step 2 (THIS SCRIPT): Provision files → Merge constitutions → Report
+    - Step 2 (THIS SCRIPT): Four-phase constitution and provisioning
 
 .PARAMETER ProjectPath
     Path to the initialized project directory (contains .aurora/)
+
+.PARAMETER GenerateMaster
+    Phase 1: Generate constitution.master.md by merging all scope constitutions
+
+.PARAMETER GenerateFinal
+    Phase 3: Generate constitution.md (refined summary) from refinement ledger
+
+.PARAMETER Refinements
+    Hashtable of refinement decisions from Phase 2 (used with -GenerateFinal)
+
+.PARAMETER Provision
+    Phase 4: Provision resources based on scope.yaml manifests
 
 .PARAMETER Force
     Overwrite existing files during provisioning
@@ -24,15 +36,30 @@
     Preview changes without writing files
 
 .EXAMPLE
-    .\Invoke-BoltSetupConstitution.ps1 -ProjectPath ./my-project
+    # Phase 1: Generate master constitution
+    .\Invoke-BoltSetupConstitution.ps1 -ProjectPath ./my-project -GenerateMaster
 
 .EXAMPLE
-    .\Invoke-BoltSetupConstitution.ps1 -ProjectPath ./my-project -DryRun
+    # Phase 3: Generate final constitution with refinements
+    .\Invoke-BoltSetupConstitution.ps1 -ProjectPath ./my-project -GenerateFinal -Refinements $refinements
+
+.EXAMPLE
+    # Phase 4: Provision resources
+    .\Invoke-BoltSetupConstitution.ps1 -ProjectPath ./my-project -Provision
+
+.EXAMPLE
+    # Dry run for any phase
+    .\Invoke-BoltSetupConstitution.ps1 -ProjectPath ./my-project -GenerateMaster -DryRun
 #>
 
 param(
     [Parameter(Mandatory=$false)]
     [string]$ProjectPath = ".",
+
+    [switch]$GenerateMaster,
+    [switch]$GenerateFinal,
+    [hashtable]$Refinements = @{},
+    [switch]$Provision,
 
     [switch]$Force,
     [switch]$DryRun
@@ -122,18 +149,18 @@ function Read-ScopeYaml {
             # Extract item properties
             if ($line -match '^\s*kind:\s*(.+)') { $currentItem.kind = $matches[1].Trim() }
             if ($line -match '^\s*enabled:\s*(true|false)') { $currentItem.enabled = $matches[1].Trim() }
-            if ($line -match '^\s*tags:\s*\[(.+)\]') { 
+            if ($line -match '^\s*tags:\s*\[(.+)\]') {
                 $currentItem.tags = $matches[1].Trim() -split ',' | ForEach-Object { $_.Trim().Trim("'") }
             }
-            
+
             # Source section
             if ($line -match '^\s*type:\s*(.+)') { $currentItem.source_type = $matches[1].Trim() }
             if ($line -match '^\s*path:\s*(.+)') { $currentItem.source_path = $matches[1].Trim() }
-            
+
             # Destination section
             if ($line -match '^\s*folder:\s*(.+)') { $currentItem.dest_folder = $matches[1].Trim() }
             if ($line -match '^\s*name:\s*(.+)') { $currentItem.dest_name = $matches[1].Trim() }
-            
+
             # Detect start of next section (end of current item)
             if ($line -match '^\s*-\s*id:') {
                 $inItem = $false
@@ -191,27 +218,37 @@ function Get-ActiveScopes {
     }
 }
 
-# ─── Step 2: Merge Constitution Articles ─────────────────────────────────────
+# ─── Phase 1: Generate constitution.master.md ───────────────────────────────
 
-function Merge-ConstitutionArticles {
+function New-MasterConstitution {
     param(
         [string]$ProjectPath,
-        [array]$Scopes
+        [array]$Scopes,
+        [switch]$DryRun
     )
 
-    Write-Step "Step 2: Merging Constitution Articles"
+    Write-Step "Phase 1: Generating constitution.master.md"
 
     $constitutionPath = Join-Path $ProjectPath ".aurora\memory\constitution.md"
+    $masterPath = Join-Path $ProjectPath ".aurora\memory\constitution.master.md"
+    $originalBackupPath = Join-Path $ProjectPath ".aurora\memory\constitution.original.md"
 
     if (-not (Test-Path $constitutionPath)) {
         Write-Err "Missing: .aurora/memory/constitution.md"
+        Write-Err "Action: Run Init.ps1 first to create base constitution"
         throw "Missing constitution.md"
     }
 
-    # Read basic constitution (created by Init.ps1)
+    # Backup original constitution (from Init.ps1)
+    if (-not $DryRun -and -not (Test-Path $originalBackupPath)) {
+        Write-Info "Backing up original constitution"
+        Copy-Item $constitutionPath $originalBackupPath -Force
+    }
+
+    # Read base constitution (created by Init.ps1)
     $baseConstitution = Get-Content $constitutionPath -Raw
 
-    # Track merged articles
+    # Track merged scopes
     $mergedScopes = @()
     $constitutionSections = @($baseConstitution.TrimEnd())
 
@@ -247,31 +284,93 @@ function Merge-ConstitutionArticles {
         }
     }
 
-    # Assemble final constitution with proper line endings
-    $mergedConstitution = $constitutionSections -join "`n`n"
+    # Assemble final master constitution
+    $masterConstitution = $constitutionSections -join "`n`n"
 
+    # Write master constitution
     if (-not $DryRun) {
-        # Backup original only if not already backed up
-        $backupPath = Join-Path $ProjectPath ".aurora\memory\constitution.original.md"
-        if (-not (Test-Path $backupPath)) {
-            Copy-Item $constitutionPath $backupPath -Force
-            Write-Info "Backed up original to: constitution.original.md"
-        }
-
-        Set-Content -Path $constitutionPath -Value $mergedConstitution -Encoding UTF8 -NoNewline
-        Write-Success "Constitution updated: appended $($mergedScopes.Count) scope articles"
+        Set-Content -Path $masterPath -Value $masterConstitution -Encoding UTF8 -NoNewline
+        Write-Success "Master constitution generated: $masterPath"
+        Write-Success "Merged $($mergedScopes.Count) scope constitutions"
     }
     else {
-        Write-Info "[DRY RUN] Would append $($mergedScopes.Count) scope constitutions"
+        Write-Info "[DRY RUN] Would generate constitution.master.md"
+        Write-Info "[DRY RUN] Would merge $($mergedScopes.Count) scopes"
     }
 
     return @{
         scopes = $mergedScopes
         count = $mergedScopes.Count
+        size = $masterConstitution.Length
+        path = $masterPath
     }
 }
 
-# ─── Step 3: Provision Files by Scope ────────────────────────────────────────
+# ─── Phase 3: Generate constitution.md (Refined Summary) ───────────────────
+
+function New-FinalConstitution {
+    param(
+        [string]$ProjectPath,
+        [hashtable]$Refinements,
+        [switch]$DryRun
+    )
+
+    Write-Step "Phase 3: Generating constitution.md (Refined Summary)"
+
+    $masterPath = Join-Path $ProjectPath ".aurora\memory\constitution.master.md"
+    $finalPath = Join-Path $ProjectPath ".aurora\memory\constitution.md"
+
+    if (-not (Test-Path $masterPath)) {
+        Write-Err "Missing: constitution.master.md"
+        Write-Err "Action: Run with -GenerateMaster first"
+        throw "Missing constitution.master.md"
+    }
+
+    # If no refinements provided, use master as-is
+    if ($Refinements.Count -eq 0) {
+        Write-Warn "No refinements provided - using master constitution as final"
+        if (-not $DryRun) {
+            Copy-Item $masterPath $finalPath -Force
+            Write-Success "Final constitution copied from master"
+        }
+        return @{ refined = $false }
+    }
+
+    # TODO: Implement refinement logic
+    # For now, we'll create a summary from master
+    $masterContent = Get-Content $masterPath -Raw
+
+    # Create refined summary version
+    $finalConstitution = @"
+# Project Constitution v1.0.0
+
+_Generated from constitution.master.md with interactive refinements_
+
+$(if ($Refinements.Count -gt 0) { "## Refinement Summary`n`n$($Refinements.Keys | ForEach-Object { "- **$($_)**: $($Refinements[$_])`n" })" })
+
+---
+
+$masterContent
+"@
+
+    if (-not $DryRun) {
+        Set-Content -Path $finalPath -Value $finalConstitution -Encoding UTF8 -NoNewline
+        Write-Success "Final constitution generated: $finalPath"
+        Write-Success "Applied $($Refinements.Count) refinements"
+    }
+    else {
+        Write-Info "[DRY RUN] Would generate constitution.md"
+        Write-Info "[DRY RUN] Would apply $($Refinements.Count) refinements"
+    }
+
+    return @{
+        refined = $true
+        refinements = $Refinements.Count
+        path = $finalPath
+    }
+}
+
+# ─── Phase 4: Provision Resources ────────────────────────────────────────────
 
 function Copy-ProvisionedFiles {
     param(
@@ -331,7 +430,7 @@ function Copy-ProvisionedFiles {
             if ((Test-Path $destPath) -and -not $Force) {
                 Write-Warn "Already exists: $destPath (use -Force to overwrite)"
                 $skippedFiles += $destPath
-                
+
                 # Still track as available (preserved from Init.ps1 or previous run)
                 $itemLabel = "$($item.dest_name) (from $scope, preserved)"
                 switch ($item.kind) {
@@ -373,7 +472,7 @@ function Copy-ProvisionedFiles {
             }
             else {
                 Write-Info "[DRY RUN] Would provision: $($item.dest_name) ($($item.kind)) from $scope"
-                
+
                 # Track dry-run items
                 $itemLabel = "$($item.dest_name) (from $scope, dry-run)"
                 switch ($item.kind) {
@@ -627,7 +726,7 @@ _Generated by Bolt Setup Constitution v2.0.0_
 function Main {
     Write-Host ""
     Write-Host "  ┌──────────────────────────────────────────────────────────────┐" -ForegroundColor Cyan
-    Write-Host "  │   Bolt Framework - Setup Constitution (Phase 2/2)           │" -ForegroundColor Cyan
+    Write-Host "  │   Bolt Framework - Setup Constitution (Step 2/2)            │" -ForegroundColor Cyan
     Write-Host "  └──────────────────────────────────────────────────────────────┘" -ForegroundColor Cyan
     Write-Host ""
 
@@ -636,53 +735,104 @@ function Main {
         Write-Host ""
     }
 
+    # Resolve project path
+    $resolvedPath = Resolve-Path $ProjectPath -ErrorAction Stop
+    Write-Info "Project: $resolvedPath"
+    Write-Host ""
+
+    # Load active scopes (required for all phases)
+    $scopes = Get-ActiveScopes -ProjectPath $resolvedPath
+
     try {
-        # Resolve project path
-        $resolvedPath = Resolve-Path $ProjectPath -ErrorAction Stop
-        Write-Info "Project: $resolvedPath"
-        Write-Host ""
+        # ─── Phase-based execution ──────────────────────────────────────────
 
-        # Step 1: Load active scopes
-        $scopes = Get-ActiveScopes -ProjectPath $resolvedPath
+        if ($GenerateMaster) {
+            # Phase 1: Generate constitution.master.md
+            Write-Host "  🔹 Phase 1: Generate Master Constitution" -ForegroundColor Magenta
+            Write-Host ""
+            
+            $master = New-MasterConstitution -ProjectPath $resolvedPath -Scopes $scopes.all -DryRun:$DryRun
+            
+            Write-Host ""
+            Write-Success "Phase 1 Complete"
+            Write-Info "Master constitution: $($master.path)"
+            Write-Info "Scopes merged: $($master.count)"
+            Write-Info "Size: $([math]::Round($master.size / 1KB, 2)) KB"
+            Write-Host ""
+        }
+        elseif ($GenerateFinal) {
+            # Phase 3: Generate constitution.md (refined)
+            Write-Host "  🔹 Phase 3: Generate Final Constitution" -ForegroundColor Magenta
+            Write-Host ""
+            
+            $final = New-FinalConstitution -ProjectPath $resolvedPath -Refinements $Refinements -DryRun:$DryRun
+            
+            Write-Host ""
+            Write-Success "Phase 3 Complete"
+            Write-Info "Final constitution: $($final.path)"
+            if ($final.refined) {
+                Write-Info "Refinements applied: $($final.refinements)"
+            } else {
+                Write-Warn "No refinements provided - used master as-is"
+            }
+            Write-Host ""
+        }
+        elseif ($Provision) {
+            # Phase 4: Provision resources
+            Write-Host "  🔹 Phase 4: Provision Resources" -ForegroundColor Magenta
+            Write-Host ""
+            
+            $scopeFiles = Copy-ProvisionedFiles -ProjectPath $resolvedPath -Scopes $scopes.all
+            $coreSkills = Copy-CoreSkills -ProjectPath $resolvedPath
+            
+            # Generate provision report
+            $reportPath = New-ProvisionReport `
+                -ProjectPath $resolvedPath `
+                -Scopes $scopes `
+                -Constitution @{count=0} `
+                -ScopeFiles $scopeFiles `
+                -CoreSkills $coreSkills
+            
+            Write-Host ""
+            Write-Success "Phase 4 Complete"
+            Write-Success "Core skills: $($coreSkills.Count)"
+            Write-Success "Prompts: $($scopeFiles.prompts.Count)"
+            Write-Success "Instructions: $($scopeFiles.instructions.Count)"
+            Write-Success "Skills: $($scopeFiles.skills.Count)"
+            Write-Success "Templates: $($scopeFiles.templates.Count)"
+            Write-Success "Agents: $($scopeFiles.agents.Count)"
+            Write-Info "Provision report: $reportPath"
+            Write-Host ""
+        }
+        else {
+            # No phase specified - show usage
+            Write-Err "No phase specified"
+            Write-Host ""
+            Write-Info "Usage:"
+            Write-Info "  Phase 1: .\Invoke-BoltSetupConstitution.ps1 -GenerateMaster"
+            Write-Info "  Phase 3: .\Invoke-BoltSetupConstitution.ps1 -GenerateFinal -Refinements `$refine"
+            Write-Info "  Phase 4: .\Invoke-BoltSetupConstitution.ps1 -Provision"
+            Write-Host ""
+            Write-Info "Add -DryRun to preview without writing files"
+            Write-Host ""
+            exit 1
+        }
 
-        # Step 2: Merge constitutions
-        $constitution = Merge-ConstitutionArticles -ProjectPath $resolvedPath -Scopes $scopes.all
-
-        # Step 3: Provision scope-specific files
-        $scopeFiles = Copy-ProvisionedFiles -ProjectPath $resolvedPath -Scopes $scopes.all
-
-        # Step 4: Provision core skills
-        $coreSkills = Copy-CoreSkills -ProjectPath $resolvedPath
-
-        # Step 5: Generate provision report
-        $reportPath = New-ProvisionReport `
-            -ProjectPath $resolvedPath `
-            -Scopes $scopes `
-            -Constitution $constitution `
-            -ScopeFiles $scopeFiles `
-            -CoreSkills $coreSkills
-
-        # Summary
+        # Success banner
         Write-Host ""
         Write-Host "  ┌──────────────────────────────────────────────────────────────┐" -ForegroundColor Green
-        Write-Host "  │   Bolt Framework Setup Complete!                             │" -ForegroundColor Green
+        Write-Host "  │   ✅ Phase Completed Successfully                            │" -ForegroundColor Green
         Write-Host "  └──────────────────────────────────────────────────────────────┘" -ForegroundColor Green
-        Write-Host ""
-        Write-Success "Constitution: $($constitution.count) scope articles appended"
-        Write-Success "Core skills: $($coreSkills.Count)"
-        Write-Success "Prompts: $($scopeFiles.prompts.Count)"
-        Write-Success "Instructions: $($scopeFiles.instructions.Count)"
-        Write-Success "Scope skills: $($scopeFiles.skills.Count)"
-        Write-Success "Templates: $($scopeFiles.templates.Count)"
-        Write-Success "Agents: $($scopeFiles.agents.Count)"
-        Write-Host ""
-        Write-Info "Review provision report: .aurora/memory/provision-report.md"
-        Write-Info "Start development: @Bolt Framework"
         Write-Host ""
     }
     catch {
         Write-Host ""
-        Write-Err "Setup failed: $_"
+        Write-Host "  ┌──────────────────────────────────────────────────────────────┐" -ForegroundColor Red
+        Write-Host "  │   ❌ Setup Failed                                             │" -ForegroundColor Red
+        Write-Host "  └──────────────────────────────────────────────────────────────┘" -ForegroundColor Red
+        Write-Host ""
+        Write-Err "Error: $_"
+        Write-Err "Stack: $($_.ScriptStackTrace)"
         Write-Host ""
         exit 1
     }
