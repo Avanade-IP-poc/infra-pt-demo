@@ -1,7 +1,7 @@
 ---
 name: Bolt Security
 description: 🔒 Security Guardian & Policy Enforcer - comprehensive stack-agnostic security analysis with OWASP compliance and constitution-driven policies
-tools: [search, read, problems, web, vscode, agent, 'github/*', 'context7/*', 'microsoftdocs/mcp/*']
+tools: [search, read, memory, web, vscode, agent, 'github/*', 'context7/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: Security Constitution

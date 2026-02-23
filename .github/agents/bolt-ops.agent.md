@@ -2,7 +2,7 @@
 name: Bolt Ops
 description: 🚀 Manage operations, deployments, monitoring and incident response following AURORA methodology
 tools:
-  [search, read, edit, web, problems, execute, vscode, agent, 'context7/*', 'microsoftdocs/mcp/*']
+  [search, read, edit, web, memory, execute, vscode, agent, 'context7/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 📈 Check Improvements

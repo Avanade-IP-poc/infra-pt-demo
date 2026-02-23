@@ -1,8 +1,7 @@
 ---
 name: Bolt Release
 description: 📦 Orchestrate release process following semantic versioning and AURORA methodology
-tools:
-  [search, read, edit, web, problems, execute, vscode, agent, 'context7/*', 'microsoftdocs/mcp/*']
+tools: [search, read, edit, web, execute, vscode, agent, 'context7/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🔍 Pre-release Check

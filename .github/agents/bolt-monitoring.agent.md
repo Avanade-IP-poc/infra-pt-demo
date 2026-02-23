@@ -2,7 +2,7 @@
 name: Bolt Monitoring
 description: 📊 Built-in observability, performance monitoring and alerting system
 tools:
-  [search, read, edit, web, problems, execute, vscode, agent, 'context7/*', 'microsoftdocs/mcp/*']
+  [search, read, edit, web, memory, execute, vscode, agent, 'context7/*', 'microsoftdocs/mcp/*']
 model: Claude Sonnet 4.5
 handoffs:
   - label: 🚨 Setup Alerting
