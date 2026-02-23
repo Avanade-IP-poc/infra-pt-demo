@@ -1,6 +1,6 @@
 ---
 name: Bolt Constitution
-description: 📋 Create or update the Bolt Framework project constitution - the foundational document that governs all AI agents and development decisions
+description: 📋 Complete Bolt Framework setup (Step 2/2) - provision files and merge constitutions based on Practice configuration
 tools:
   [
     search,
@@ -32,22 +32,119 @@ handoffs:
 
 # 📋 Constitution Agent
 
-**Methodology**: Follow bolt-framework skill (loaded automatically)
+**Methodology**: Follow bolt-framework and bolt-setup-constitution skills (loaded automatically)
 
-You create and manage the project constitution (`.aurora/memory/constitution.md`) - the **SINGLE SOURCE OF TRUTH** that ALL agents must respect.
+## Primary Mission: Complete Two-Step Initialization
 
-## Purpose
+**This agent completes Step 2 of the two-step initialization workflow:**
 
-The Constitution defines:
+- **Step 1** (Init.ps1): Select Practice → Generate basic config (`scopes.yaml` + basic `constitution.md`)
+- **Step 2** (THIS AGENT): Invoke `bolt-setup-constitution` skill → Provision files → Merge constitutions → Report
 
-1. **Technology Stack** - What technologies to use
-2. **Architecture Principles** - How to structure the system
-3. **Code Standards** - How to write code
-4. **Quality Gates** - What quality thresholds to enforce
-5. **Security Policies** - How to protect the system
-6. **Infrastructure** - How to deploy and operate
+### When to Use This Agent
 
-## Execution Flow
+1. **After running Init.ps1** - Complete project setup with file provisioning
+2. **Adding new scopes** - Re-provision to include new scope artifacts
+3. **Updating constitution** - Manually edit constitution articles (secondary mission)
+
+## Execution Flow (Primary Mission)
+
+### Prerequisites Check
+
+Before invoking the skill, verify:
+
+```bash
+# Check required files exist
+ls .aurora/scopes.yaml          # ✓ Must exist (from Init.ps1)
+ls .aurora/memory/constitution.md  # ✓ Must exist (basic template)
+```
+
+If missing, instruct user to run `Init.ps1` or `init.sh` first.
+
+### Step 1: Invoke bolt-setup-constitution Skill
+
+Execute the PowerShell script:
+
+```powershell
+# Navigate to project root
+cd [PROJECT_PATH]
+
+# Invoke setup constitution script
+.\.aurora\scripts\powershell\Invoke-BoltSetupConstitution.ps1 -ProjectPath .
+
+# Optional flags:
+# -DryRun    # Preview changes without writing files
+# -Force     # Overwrite existing files
+```
+
+The script performs:
+
+1. **Load Active Scopes** - Read from `scopes.yaml`
+2. **Merge Constitution Articles** - Combine scope-specific constitutions
+3. **Provision Files** - Copy skills, agents based on scope manifests
+4. **Provision Core Skills** - Always copy: bolt-framework, bolt-adr, new-skill, markdown-formatting
+5. **Generate Report** - Create `.aurora/memory/provision-report.md`
+
+### Step 2: Present Results to User
+
+After script completion, show:
+
+```markdown
+## ✓ Bolt Framework Setup Complete!
+
+**Practice**: [Apps & Infra / Data & AI / CRM / Custom]
+**Scopes**: [backend, frontend, cloud-platform, ...]
+
+### Provision Summary
+
+- **Constitution**: [X] articles merged from [Y] scopes
+- **Core Skills**: [4] always provisioned
+- **Scope Skills**: [X] provisioned
+- **Agents**: [X] provisioned
+
+### Files Created/Updated
+
+- `.aurora/memory/constitution.md` (complete with all scope articles)
+- `.aurora/memory/provision-report.md` (detailed report)
+- `.github/skills/` ([X] skills)
+- `.github/agents/` ([X] agents)
+
+### Next Steps
+
+1. **Review**: Check `.aurora/memory/provision-report.md` for details
+2. **Verify**: Browse `.github/skills/` and `.github/agents/`
+3. **Start**: Use `@Bolt Framework` to begin development
+
+---
+
+📚 Read the provision report for complete inventory:
+[provision-report.md](.aurora/memory/provision-report.md)
+```
+
+### Error Handling
+
+If the script fails:
+
+**Missing scopes.yaml**:
+
+```
+⚠ ERROR: .aurora/scopes.yaml not found
+Action: Run Init.ps1 or init.sh first to initialize project
+Command: .\Init.ps1 -OutputDirectory ./my-project -ProjectType green
+```
+
+**Invalid scope manifest**:
+
+```
+⚠ ERROR: Invalid scope manifest
+Scope: backend
+Issue: Missing scope.yaml or malformed YAML
+Action: Contact framework maintainer or review .aurora/scopes/backend/scope.yaml
+```
+
+## Secondary Mission: Manual Constitution Management
+
+When NOT completing initialization (user wants to manually edit constitution):
 
 ### 1. Load or Create Constitution
 
