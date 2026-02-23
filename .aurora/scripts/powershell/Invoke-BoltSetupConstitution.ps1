@@ -183,7 +183,6 @@ function Merge-ConstitutionArticles {
     Write-Step "Step 2: Merging Constitution Articles"
 
     $constitutionPath = Join-Path $ProjectPath ".aurora\memory\constitution.md"
-    $auroraRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
 
     if (-not (Test-Path $constitutionPath)) {
         Write-Err "Missing: .aurora/memory/constitution.md"
@@ -199,7 +198,7 @@ function Merge-ConstitutionArticles {
 
     # Merge each scope's constitution
     foreach ($scope in $Scopes) {
-        $scopeConstitutionPath = Join-Path $auroraRoot ".aurora\scopes\$scope\memory\constitution.md"
+        $scopeConstitutionPath = Join-Path $ProjectPath ".aurora\scopes\$scope\memory\constitution.md"
 
         if (Test-Path $scopeConstitutionPath) {
             Write-Info "Merging articles from scope: $scope"
@@ -261,13 +260,12 @@ function Copy-ProvisionedFiles {
 
     Write-Step "Step 3: Provisioning Files by Scope"
 
-    $auroraRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
     $provisionedSkills = @()
     $provisionedAgents = @()
     $skippedFiles = @()
 
     foreach ($scope in $Scopes) {
-        $scopeYamlPath = Join-Path $auroraRoot ".aurora\scopes\$scope\scope.yaml"
+        $scopeYamlPath = Join-Path $ProjectPath ".aurora\scopes\$scope\scope.yaml"
 
         if (-not (Test-Path $scopeYamlPath)) {
             Write-Warn "Scope manifest not found: $scope (skipping provisioning)"
@@ -284,7 +282,7 @@ function Copy-ProvisionedFiles {
         Write-Info "Processing scope: $scope"
 
         foreach ($item in $scopeConfig.auto_provision_items) {
-            $sourcePath = Join-Path $auroraRoot ".aurora\$($item.source_path)"
+            $sourcePath = Join-Path $ProjectPath ".aurora\$($item.source_path)"
             $destPath = Join-Path $ProjectPath "$($item.dest_folder)\$($item.dest_name)"
 
             if (-not (Test-Path $sourcePath)) {
@@ -296,6 +294,13 @@ function Copy-ProvisionedFiles {
             if ((Test-Path $destPath) -and -not $Force) {
                 Write-Warn "Already exists: $destPath (use -Force to overwrite)"
                 $skippedFiles += $destPath
+                # Still track as available (preserved from Init.ps1)
+                if ($item.kind -eq 'skills') {
+                    $provisionedSkills += "$($item.dest_name) (from $scope, preserved)"
+                }
+                elseif ($item.kind -eq 'agents') {
+                    $provisionedAgents += "$($item.dest_name) (from $scope, preserved)"
+                }
                 continue
             }
 
@@ -315,17 +320,24 @@ function Copy-ProvisionedFiles {
                 }
 
                 Write-Success "$($item.kind) provisioned: $($item.dest_name) (from $scope)"
+
+                # Track provisioned items
+                if ($item.kind -eq 'skills') {
+                    $provisionedSkills += "$($item.dest_name) (from $scope)"
+                }
+                elseif ($item.kind -eq 'agents') {
+                    $provisionedAgents += "$($item.dest_name) (from $scope)"
+                }
             }
             else {
                 Write-Info "[DRY RUN] Would provision: $($item.dest_name) from $scope"
-            }
-
-            # Track provisioned items
-            if ($item.kind -eq 'skills') {
-                $provisionedSkills += "$($item.dest_name) (from $scope)"
-            }
-            elseif ($item.kind -eq 'agents') {
-                $provisionedAgents += "$($item.dest_name) (from $scope)"
+                # Track dry-run items
+                if ($item.kind -eq 'skills') {
+                    $provisionedSkills += "$($item.dest_name) (from $scope, dry-run)"
+                }
+                elseif ($item.kind -eq 'agents') {
+                    $provisionedAgents += "$($item.dest_name) (from $scope, dry-run)"
+                }
             }
         }
     }
@@ -344,12 +356,30 @@ function Copy-CoreSkills {
 
     Write-Step "Step 4: Provisioning Core Skills (ALWAYS included)"
 
-    $auroraRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
-    $coreSkills = @('bolt-framework', 'bolt-adr', 'new-skill', 'markdown-formatting')
     $provisionedCore = @()
 
-    foreach ($skillName in $coreSkills) {
-        $sourcePath = Join-Path $auroraRoot ".aurora\available-skills\bolt-framework\$skillName"
+    # Core skills split into two categories:
+    # 1. Already in .github/skills (from Init.ps1 copy)
+    $githubSkills = @('new-skill', 'markdown-formatting')
+    # 2. From .aurora/available-skills/bolt-framework/
+    $auroraSkills = @('bolt-framework', 'bolt-adr')
+
+    # Check skills that came from .github (already provisioned by Init.ps1)
+    foreach ($skillName in $githubSkills) {
+        $destPath = Join-Path $ProjectPath ".github\skills\$skillName"
+
+        if (Test-Path $destPath) {
+            Write-Info "Core skill already exists: $skillName (from .github)"
+            $provisionedCore += "$skillName (from .github)"
+        }
+        else {
+            Write-Warn "Expected skill not found: $skillName (should be copied by Init.ps1)"
+        }
+    }
+
+    # Provision skills from .aurora/available-skills
+    foreach ($skillName in $auroraSkills) {
+        $sourcePath = Join-Path $ProjectPath ".aurora\available-skills\bolt-framework\$skillName"
         $destPath = Join-Path $ProjectPath ".github\skills\$skillName"
 
         if (-not (Test-Path $sourcePath)) {
@@ -359,6 +389,7 @@ function Copy-CoreSkills {
 
         if ((Test-Path $destPath) -and -not $Force) {
             Write-Info "Core skill already exists: $skillName (preserving)"
+            $provisionedCore += "$skillName (preserved)"
             continue
         }
 
@@ -372,12 +403,12 @@ function Copy-CoreSkills {
             # Copy skill recursively
             Copy-Item -Path $sourcePath -Destination $destPath -Recurse -Force
             Write-Success "Core skill provisioned: $skillName"
+            $provisionedCore += $skillName
         }
         else {
             Write-Info "[DRY RUN] Would provision core skill: $skillName"
+            $provisionedCore += "$skillName (dry-run)"
         }
-
-        $provisionedCore += $skillName
     }
 
     return $provisionedCore
