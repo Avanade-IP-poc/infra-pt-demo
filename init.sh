@@ -878,7 +878,7 @@ show_summary() {
         echo ""
 
         # Change to project directory and invoke agent
-        if (cd "$OUTPUT_DIR" && copilot --agent="Bolt Constitution" --prompt="setup constitution" --allow-all-tools); then
+        if (cd "$OUTPUT_DIR" && copilot --agent="bolt-constitution" --prompt="setup constitution" --allow-all-tools); then
             echo ""
             echo -e "  ${GREEN}✓ @Bolt Constitution agent invoked successfully${NC}"
             echo -e "  ${CYAN}📝 Review provision results above${NC}"
