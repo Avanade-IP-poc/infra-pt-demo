@@ -854,25 +854,56 @@ add_demo_content() {
 
 show_summary() {
     echo ""
-    echo -e "  ${GREEN}+----------------------------------------------+${NC}"
-    echo -e "  ${GREEN}|   Bolt Framework Project Initialized!         |${NC}"
-    echo -e "  ${GREEN}+----------------------------------------------+${NC}"
+    echo -e "  ${GREEN}┌──────────────────────────────────────────────────────────────┐${NC}"
+    echo -e "  ${GREEN}│   Bolt Framework Project Initialized! (Phase 1 of 2)         │${NC}"
+    echo -e "  ${GREEN}└──────────────────────────────────────────────────────────────┘${NC}"
     echo ""
-    log_info "Project:       $OUTPUT_DIR"
-    log_info "Type:          $PROJECT_TYPE"
-    log_info "Project Type:  $D_PROJECT_TYPE"
-    log_info "Scopes:        ${D_SCOPES[*]}"
-    log_info "Environments:  ${D_ENVIRONMENTS[*]}"
-    log_info "CI/CD:         $D_CICD_PLATFORM"
-    log_info "Branch:        $D_BRANCH_STRATEGY"
-    log_info "Observability: $D_OBSERVABILITY"
+    log_info "✓ Practice:   $D_PROJECT_TYPE"
+    log_info "✓ Scopes:     ${D_SCOPES[*]}"
+    log_info "✓ Basic constitution created in .aurora/memory/constitution.md"
+    log_info "✓ Scopes configuration saved to .aurora/scopes.yaml"
+    log_info "✓ Bolt Framework agents and skills copied to .github/"
     echo ""
-    echo -e "  ${CYAN}NEXT STEPS:${NC}"
-    echo "  1. cd $OUTPUT_DIR"
-    echo "  2. Review .aurora/scopes.yaml (selected scopes)"
-    echo "  3. Review .aurora/memory/constitution.md (base decisions filled)"
-    echo "  4. Use @Bolt Framework agent to process scope constitutions"
-    echo "     Each active scope in scopes.yaml will inject its articles"
+    echo -e "  ${YELLOW}⚠ IMPORTANT: Two-Step Initialization${NC}"
+    echo -e "     ${WHITE}Phase 1: init.sh (completed) — Basic configuration${NC}"
+    echo -e "     ${WHITE}Phase 2: @Bolt Constitution — File provisioning & constitution merge${NC}"
+    echo ""
+    echo -e "  ${CYAN}AUTOMATED SETUP (Phase 2 of 2):${NC}"
+    echo ""
+
+    # Check if GitHub Copilot CLI is available
+    if command -v copilot &> /dev/null; then
+        echo -e "  ${GREEN}✓ GitHub Copilot CLI detected${NC}"
+        echo -e "  ${YELLOW}🤖 Invoking @Bolt Constitution agent...${NC}"
+        echo ""
+
+        # Change to project directory and invoke agent
+        if (cd "$OUTPUT_DIR" && copilot --agent="Bolt Constitution" --prompt="setup constitution" --allow-all-tools); then
+            echo ""
+            echo -e "  ${GREEN}✓ @Bolt Constitution agent invoked successfully${NC}"
+            echo -e "  ${CYAN}📝 Review provision results above${NC}"
+        else
+            log_warn "Failed to invoke agent"
+            echo -e "  ${YELLOW}📝 MANUAL FALLBACK:${NC}"
+            echo -e "     ${WHITE}1. cd $OUTPUT_DIR${NC}"
+            echo -e "     ${WHITE}2. Run: copilot${NC}"
+            echo -e "     ${WHITE}3. Prompt: Use Bolt Constitution agent to setup constitution${NC}"
+        fi
+    else
+        echo -e "  ${YELLOW}⚠ GitHub Copilot CLI not detected${NC}"
+        echo -e "  ${CYAN}📝 MANUAL STEP REQUIRED:${NC}"
+        echo -e "     ${WHITE}1. cd $OUTPUT_DIR${NC}"
+        echo -e "     ${WHITE}2. Install GitHub Copilot CLI: gh extension install github/gh-copilot${NC}"
+        echo -e "     ${WHITE}3. Run: copilot${NC}"
+        echo -e "     ${WHITE}4. Prompt: Use Bolt Constitution agent to setup constitution${NC}"
+        echo ""
+        echo -e "  ${WHITE}💡 After CLI installation, the agent will auto-invoke on next init${NC}"
+    fi
+
+    echo ""
+    echo -e "  ${CYAN}📚 Documentation:${NC}"
+    echo "     - README.md — Bolt Framework overview"
+    echo "     - .aurora/scopes/README.md — Practice-based initialization guide"
     echo ""
 }
 

@@ -105,15 +105,31 @@ function Read-MultiChoice {
     Write-Prompt "  Select (comma-separated, e.g. 1,2,4) > "
     $raw = Read-Host
     $selected = @()
+
+    # Check if "All" option (first option with value "all") is selected
+    $hasAllOption = ($Values.Count -gt 0 -and $Values[0] -eq "all")
+    $selectAll = $false
+
     foreach ($tok in ($raw -split ',')) {
         $tok = $tok.Trim()
         if ($tok -match '^\d+$') {
             $idx = [int]$tok - 1
             if ($idx -ge 0 -and $idx -lt $Values.Count) {
-                $selected += $Values[$idx]
+                # If user selected option 1 and it's the "all" option, mark to select all
+                if ($hasAllOption -and $idx -eq 0) {
+                    $selectAll = $true
+                } else {
+                    $selected += $Values[$idx]
+                }
             }
         }
     }
+
+    # If "All" was selected, return all values except the "all" marker itself
+    if ($selectAll) {
+        return $Values | Where-Object { $_ -ne "all" }
+    }
+
     return $selected
 }
 
@@ -295,11 +311,13 @@ function Get-AllDecisions {
         $d.AppPipelineStages = Read-MultiChoice `
             -Title "§11.2  Application pipeline stages" `
             -Options @(
+                "All / Select All",
                 "Build", "Lint/Format", "Unit Tests", "Integration Tests",
                 "Architecture Tests", "Mutation Tests", "Security Scan",
                 "Container Build", "Container Scan"
             ) `
             -Values @(
+                "all",
                 "build", "lint-format", "unit-tests", "integration-tests",
                 "architecture-tests", "mutation-tests", "security-scan",
                 "container-build", "container-scan"
@@ -331,10 +349,12 @@ function Get-AllDecisions {
         $d.InfraPipelineStages = Read-MultiChoice `
             -Title "§11.2  Infrastructure pipeline stages" `
             -Options @(
+                "All / Select All",
                 "IaC Lint", "IaC Validation", "Security Scan",
                 "Cost Estimation", "Compliance Check"
             ) `
             -Values @(
+                "all",
                 "iac-lint", "iac-validation", "security-scan",
                 "cost-estimation", "compliance-check"
             )
@@ -384,13 +404,14 @@ function Get-AllDecisions {
         $d.InfraMonitoring = Read-MultiChoice `
             -Title "§12.3  Infrastructure monitoring components" `
             -Options @(
+                "All / Select All",
                 "Resource Health (Azure Resource Health)",
                 "Activity Logs (Azure Monitor)",
                 "Diagnostics (Log Analytics)",
                 "Alerts (Azure Monitor Alerts)",
                 "Dashboards (Azure Workbooks / Grafana)"
             ) `
-            -Values @("resource-health", "activity-logs", "diagnostics", "alerts", "dashboards")
+            -Values @("all", "resource-health", "activity-logs", "diagnostics", "alerts", "dashboards")
         if ($d.InfraMonitoring.Count -eq 0) {
             $d.InfraMonitoring = @("resource-health", "activity-logs", "diagnostics", "alerts", "dashboards")
         }
@@ -912,20 +933,55 @@ function Show-Summary {
     Write-Host "  ✓ Scopes:     $($D.Scopes -join ', ')" -ForegroundColor Green
     Write-Host "  ✓ Basic constitution created in .aurora/memory/constitution.md" -ForegroundColor Green
     Write-Host "  ✓ Scopes configuration saved to .aurora/scopes.yaml" -ForegroundColor Green
+    Write-Host "  ✓ Bolt Framework agents and skills copied to .github/" -ForegroundColor Green
     Write-Host ""
     Write-Host "  ⚠ IMPORTANT: Two-Step Initialization" -ForegroundColor Yellow
     Write-Host "     Phase 1: Init.ps1 (completed) — Basic configuration" -ForegroundColor DarkGray
     Write-Host "     Phase 2: @Bolt Constitution — File provisioning & constitution merge" -ForegroundColor White
     Write-Host ""
-    Write-Host "  NEXT STEPS:" -ForegroundColor Cyan
-    Write-Host "  1. cd $OutputDirectory" -ForegroundColor White
-    Write-Host "  2. Run: @Bolt Constitution" -ForegroundColor Yellow
-    Write-Host "     This will:" -ForegroundColor DarkGray
-    Write-Host "       • Merge scope-specific constitutions" -ForegroundColor DarkGray
-    Write-Host "       • Provision skills and agents based on active scopes" -ForegroundColor DarkGray
-    Write-Host "       • Generate provision report" -ForegroundColor DarkGray
+    Write-Host "  AUTOMATED SETUP (Phase 2 of 2):" -ForegroundColor Cyan
     Write-Host ""
-    Write-Host "     Alternative: Manually invoke 'bolt-setup-constitution' skill" -ForegroundColor DarkGray
+
+    # Check if GitHub Copilot CLI is available
+    $cliAvailable = Get-Command copilot -ErrorAction SilentlyContinue
+
+    if ($null -ne $cliAvailable) {
+        Write-Host "  ✓ GitHub Copilot CLI detected" -ForegroundColor Green
+        Write-Host "  🤖 Invoking @Bolt Constitution agent..." -ForegroundColor Yellow
+        Write-Host ""
+
+        try {
+            # Change to project directory and invoke agent
+            Push-Location $OutputDirectory
+            try {
+                & copilot --agent="Bolt Constitution" --prompt="setup constitution" --allow-all-tools
+                Write-Host ""
+                Write-Host "  ✓ @Bolt Constitution agent invoked successfully" -ForegroundColor Green
+                Write-Host "  📝 Review provision results above" -ForegroundColor Cyan
+            }
+            finally {
+                Pop-Location
+            }
+        }
+        catch {
+            Write-Warn "Failed to invoke agent: $_"
+            Write-Host "  📝 MANUAL FALLBACK:" -ForegroundColor Yellow
+            Write-Host "     1. cd $OutputDirectory" -ForegroundColor White
+            Write-Host "     2. Run: copilot" -ForegroundColor White
+            Write-Host "     3. Prompt: Use Bolt Constitution agent to setup constitution" -ForegroundColor White
+        }
+    }
+    else {
+        Write-Host "  ⚠ GitHub Copilot CLI not detected" -ForegroundColor Yellow
+        Write-Host "  📝 MANUAL STEP REQUIRED:" -ForegroundColor Cyan
+        Write-Host "     1. cd $OutputDirectory" -ForegroundColor White
+        Write-Host "     2. Install GitHub Copilot CLI: gh extension install github/gh-copilot" -ForegroundColor White
+        Write-Host "     3. Run: copilot" -ForegroundColor White
+        Write-Host "     4. Prompt: Use Bolt Constitution agent to setup constitution" -ForegroundColor White
+        Write-Host ""
+        Write-Host "  💡 After CLI installation, the agent will auto-invoke on next init" -ForegroundColor DarkGray
+    }
+
     Write-Host ""
     Write-Host "  📚 Documentation:" -ForegroundColor Cyan
     Write-Host "     - README.md — Bolt Framework overview"

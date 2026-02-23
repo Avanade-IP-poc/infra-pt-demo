@@ -60,6 +60,7 @@ Este plan transforma el framework "Aurora" en **Bolt Framework** con arquitectur
 | **TOTAL** | **30** | **28**      | 🟡 Activo      | **93%**  |
 
 **Notas**:
+
 - Task 28 (PR) omitida intencionalmente - se creará después del testing manual
 - Task 27.5 (Work Mgmt Sync) agregada como funcionalidad adicional ✅
 
@@ -692,11 +693,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
 
 **Duración**: 6-8 horas (aumentado por testing del skill)
 
-✅ **24. Crear test script `.aurora/scripts/Test-InitFlows.ps1`:**
-    - Test 1: Init.ps1 con Practice "Apps & Infra":
-      - Verificar `memory/constitution.md` creado (básico)
-      - Verificar `memory/scopes.yaml` contiene: backend, frontend, cloud-platform
-      - Verificar `.github/` NO tiene archivos (provisión aún no ejecutada)
+✅ **24. Crear test script `.aurora/scripts/Test-InitFlows.ps1`:** - Test 1: Init.ps1 con Practice "Apps & Infra": - Verificar `memory/constitution.md` creado (básico) - Verificar `memory/scopes.yaml` contiene: backend, frontend, cloud-platform - Verificar `.github/` NO tiene archivos (provisión aún no ejecutada)
 
     - Test 2: Invocar `bolt-setup-constitution` skill:
       - Ejecutar: `& .aurora\scripts\Invoke-BoltSetupConstitution.ps1`
@@ -722,36 +719,13 @@ No hay usuarios con workflows dependientes, por lo tanto:
       - Verificar: archivos no duplicados, warnings sobre archivos existentes
     - **📝 Completado**: 2026-02-23 - Commit b65a969
 
-✅ **25. Ejecutar validación de scopes:**
-    - `npm run validate:scopes:ps` (ya existe, verificar pasa después de cambios)
-    - **📝 Completado**: 2026-02-23 - 8/8 scopes OK, 0 errors
+✅ **25. Ejecutar validación de scopes:** - `npm run validate:scopes:ps` (ya existe, verificar pasa después de cambios) - **📝 Completado**: 2026-02-23 - 8/8 scopes OK, 0 errors
 
-✅ **26. (ADICIONAL) Sincronización con herramientas de gestión del trabajo:**
-    - Actualizar @Bolt Feature: Sync al crear feature spec
-    - Actualizar @Bolt Plan: Sync al crear implementation plan
-    - Actualizar @Bolt Tasks: Sync al generar task list
-    - Actualizar @Bolt Implement: Sync de progreso de tareas y Bolts
-    - Actualizar @Bolt Micro Iterator: Sync de estado de iteraciones
-    - Soporte: Azure DevOps, Jira, GitHub Projects
-    - Detección automática desde constitution (work-management scope)
-    - **📝 Completado**: 2026-02-23 - Commit c6b6f22
+✅ **26. (ADICIONAL) Sincronización con herramientas de gestión del trabajo:** - Actualizar @Bolt Feature: Sync al crear feature spec - Actualizar @Bolt Plan: Sync al crear implementation plan - Actualizar @Bolt Tasks: Sync al generar task list - Actualizar @Bolt Implement: Sync de progreso de tareas y Bolts - Actualizar @Bolt Micro Iterator: Sync de estado de iteraciones - Soporte: Azure DevOps, Jira, GitHub Projects - Detección automática desde constitution (work-management scope) - **📝 Completado**: 2026-02-23 - Commit c6b6f22
 
-⏭️ **27. Crear PR con checklist:** *(OMITIDO - Se creará después del testing manual)*
-    - [ ] Renombrado completo (Aurora → Bolt Framework)
-    - [ ] 5 skills extraídos y creados
-    - [ ] Agentes actualizados (sin duplicación, referencian skills)
-    - [ ] Init.ps1 con Practice selection
-    - [ ] Auto-provisión de skills funciona
-    - [ ] Constitution merge automatizado
-    - [ ] Tests pasan
-    - [ ] README y docs actualizados
-    - **Razón para omitir**: El usuario prefiere completar el testing manual primero
+⏭️ **27. Crear PR con checklist:** _(OMITIDO - Se creará después del testing manual)_ - [ ] Renombrado completo (Aurora → Bolt Framework) - [ ] 5 skills extraídos y creados - [ ] Agentes actualizados (sin duplicación, referencian skills) - [ ] Init.ps1 con Practice selection - [ ] Auto-provisión de skills funciona - [ ] Constitution merge automatizado - [ ] Tests pasan - [ ] README y docs actualizados - **Razón para omitir**: El usuario prefiere completar el testing manual primero
 
-⬜ **28. Testing manual (two-step workflow):** *(PENDIENTE)*
-    - **Step 1: Initialization**
-      - Ejecutar `Init.ps1` con Practice "Apps & Infra"
-      - Verificar constitution básico en `memory/constitution.md`
-      - Verificar mensaje: "Run '@Bolt Constitution' to provision files"
+⬜ **28. Testing manual (two-step workflow):** _(PENDIENTE)_ - **Step 1: Initialization** - Ejecutar `Init.ps1` con Practice "Apps & Infra" - Verificar constitution básico en `memory/constitution.md` - Verificar mensaje: "Run '@Bolt Constitution' to provision files"
 
     - **Step 2: Provisión**
       - Invocar `@Bolt Constitution` en Copilot Chat
