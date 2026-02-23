@@ -33,7 +33,7 @@
 param(
     [Parameter(Mandatory=$false)]
     [string]$ProjectPath = ".",
-    
+
     [switch]$Force,
     [switch]$DryRun
 )
@@ -50,7 +50,7 @@ function Write-Step { param($msg) Write-Host "`n[$msg]" -ForegroundColor Cyan }
 
 function Read-Yaml {
     param([string]$FilePath)
-    
+
     if (-not (Test-Path $FilePath)) {
         Write-Err "File not found: $FilePath"
         return $null
@@ -60,7 +60,7 @@ function Read-Yaml {
     # For complex YAML, consider PowerShell-Yaml module
     $content = Get-Content $FilePath -Raw
     $yaml = @{}
-    
+
     # Extract project section
     if ($content -match 'project:\s+practice:\s*(.+?)\s+type:\s*(.+?)\s+migration-type:\s*(.+?)[\r\n]') {
         $yaml.project = @{
@@ -69,7 +69,7 @@ function Read-Yaml {
             'migration-type' = $matches[3].Trim()
         }
     }
-    
+
     # Extract active scopes
     $scopes = @()
     if ($content -match 'active-scopes:([\s\S]+?)(?:transversal-scopes:|decisions:)') {
@@ -77,35 +77,35 @@ function Read-Yaml {
         $scopes = $scopesBlock -split "`n" | Where-Object { $_ -match '^\s*-\s*(.+)' } | ForEach-Object { $matches[1].Trim() }
     }
     $yaml.'active-scopes' = $scopes
-    
+
     # Extract transversal scopes
     $transversal = @()
     if ($content -match 'transversal-scopes:([\s\S]+?)(?:decisions:|$)') {
         $transversal = $matches[1] -split "`n" | Where-Object { $_ -match '^\s*-\s*(.+)' } | ForEach-Object { $matches[1].Trim() }
     }
     $yaml.'transversal-scopes' = $transversal
-    
+
     return $yaml
 }
 
 function Read-ScopeYaml {
     param([string]$FilePath)
-    
+
     if (-not (Test-Path $FilePath)) {
         return $null
     }
 
     $content = Get-Content $FilePath -Raw
-    
+
     # Extract scope name
     $scopeName = if ($content -match 'scope:\s*(.+)') { $matches[1].Trim() } else { $null }
-    
+
     # Extract auto_provision items
     $autoProvisionItems = @()
     $lines = $content -split "`n"
     $inItem = $false
     $currentItem = @{}
-    
+
     foreach ($line in $lines) {
         if ($line -match '^\s*-\s*id:\s*(.+)') {
             if ($currentItem.Count -gt 0 -and $currentItem.auto_provision -eq 'true') {
@@ -122,12 +122,12 @@ function Read-ScopeYaml {
             if ($line -match '^\s*name:\s*(.+)') { $currentItem.dest_name = $matches[1].Trim() }
         }
     }
-    
+
     # Add last item
     if ($currentItem.Count -gt 0 -and $currentItem.auto_provision -eq 'true') {
         $autoProvisionItems += $currentItem
     }
-    
+
     return @{
         scope = $scopeName
         auto_provision_items = $autoProvisionItems
@@ -138,32 +138,32 @@ function Read-ScopeYaml {
 
 function Get-ActiveScopes {
     param([string]$ProjectPath)
-    
+
     Write-Step "Step 1: Loading Active Scopes"
-    
+
     $scopesYamlPath = Join-Path $ProjectPath ".aurora\scopes.yaml"
-    
+
     if (-not (Test-Path $scopesYamlPath)) {
         Write-Err "Missing required file: .aurora/scopes.yaml"
         Write-Err "Action: Run Init.ps1 or init.sh first to initialize project"
         throw "Missing scopes.yaml"
     }
-    
+
     $scopesConfig = Read-Yaml -FilePath $scopesYamlPath
-    
+
     if (-not $scopesConfig -or -not $scopesConfig.'active-scopes') {
         Write-Err "Invalid scopes.yaml: missing active-scopes"
         throw "Invalid scopes.yaml"
     }
-    
+
     $activeScopes = $scopesConfig.'active-scopes'
     $transversal = if ($scopesConfig.'transversal-scopes') { $scopesConfig.'transversal-scopes' } else { @('work-management') }
     $practice = if ($scopesConfig.project.practice) { $scopesConfig.project.practice } else { 'Custom' }
-    
+
     Write-Success "Practice: $practice"
     Write-Success "Active scopes: $($activeScopes -join ', ')"
     Write-Success "Transversal: $($transversal -join ', ')"
-    
+
     return @{
         active = $activeScopes
         transversal = $transversal
@@ -179,36 +179,36 @@ function Merge-ConstitutionArticles {
         [string]$ProjectPath,
         [array]$Scopes
     )
-    
+
     Write-Step "Step 2: Merging Constitution Articles"
-    
+
     $constitutionPath = Join-Path $ProjectPath ".aurora\memory\constitution.md"
     $auroraRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
-    
+
     if (-not (Test-Path $constitutionPath)) {
         Write-Err "Missing: .aurora/memory/constitution.md"
         throw "Missing constitution.md"
     }
-    
+
     # Read basic constitution (created by Init.ps1)
     $baseConstitution = Get-Content $constitutionPath -Raw
-    
+
     # Track merged articles
     $mergedArticles = @()
     $constitutionSections = @($baseConstitution)
-    
+
     # Merge each scope's constitution
     foreach ($scope in $Scopes) {
         $scopeConstitutionPath = Join-Path $auroraRoot ".aurora\scopes\$scope\memory\constitution.md"
-        
+
         if (Test-Path $scopeConstitutionPath) {
             Write-Info "Merging articles from scope: $scope"
-            
+
             $scopeConstitution = Get-Content $scopeConstitutionPath -Raw
-            
+
             # Extract article sections (simplified - assumes articles are separated by # headers)
             $articles = $scopeConstitution -split '(?m)^# Article' | Where-Object { $_ -match '\w' }
-            
+
             foreach ($article in $articles) {
                 if ($article -match '^# Article (.+)') {
                     $articleId = $matches[1] -replace '\s.*', ''  # Extract article number
@@ -226,10 +226,10 @@ function Merge-ConstitutionArticles {
             Write-Warn "Scope constitution not found: $scope (skipping)"
         }
     }
-    
+
     # Write merged constitution
     $mergedConstitution = $constitutionSections -join ""
-    
+
     if (-not $DryRun) {
         # Backup original
         $backupPath = Join-Path $ProjectPath ".aurora\memory\constitution.original.md"
@@ -237,14 +237,14 @@ function Merge-ConstitutionArticles {
             Copy-Item $constitutionPath $backupPath -Force
             Write-Info "Backed up original to: constitution.original.md"
         }
-        
+
         Set-Content -Path $constitutionPath -Value $mergedConstitution -Encoding UTF8
         Write-Success "Constitution merged: $($mergedArticles.Count) articles"
     }
     else {
         Write-Info "[DRY RUN] Would merge $($mergedArticles.Count) articles"
     }
-    
+
     return @{
         articles = $mergedArticles
         count = $mergedArticles.Count
@@ -258,54 +258,54 @@ function Copy-ProvisionedFiles {
         [string]$ProjectPath,
         [array]$Scopes
     )
-    
+
     Write-Step "Step 3: Provisioning Files by Scope"
-    
+
     $auroraRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
     $provisionedSkills = @()
     $provisionedAgents = @()
     $skippedFiles = @()
-    
+
     foreach ($scope in $Scopes) {
         $scopeYamlPath = Join-Path $auroraRoot ".aurora\scopes\$scope\scope.yaml"
-        
+
         if (-not (Test-Path $scopeYamlPath)) {
             Write-Warn "Scope manifest not found: $scope (skipping provisioning)"
             continue
         }
-        
+
         $scopeConfig = Read-ScopeYaml -FilePath $scopeYamlPath
-        
+
         if (-not $scopeConfig.auto_provision_items -or $scopeConfig.auto_provision_items.Count -eq 0) {
             Write-Info "No auto-provision items in scope: $scope"
             continue
         }
-        
+
         Write-Info "Processing scope: $scope"
-        
+
         foreach ($item in $scopeConfig.auto_provision_items) {
             $sourcePath = Join-Path $auroraRoot ".aurora\$($item.source_path)"
             $destPath = Join-Path $ProjectPath "$($item.dest_folder)\$($item.dest_name)"
-            
+
             if (-not (Test-Path $sourcePath)) {
                 Write-Warn "Source not found: $($item.source_path) (skipping $($item.id))"
                 continue
             }
-            
+
             # Check if destination exists
             if ((Test-Path $destPath) -and -not $Force) {
                 Write-Warn "Already exists: $destPath (use -Force to overwrite)"
                 $skippedFiles += $destPath
                 continue
             }
-            
+
             if (-not $DryRun) {
                 # Create destination directory
                 $destDir = Split-Path $destPath -Parent
                 if (-not (Test-Path $destDir)) {
                     New-Item -ItemType Directory -Path $destDir -Force | Out-Null
                 }
-                
+
                 # Copy file or directory
                 if (Test-Path $sourcePath -PathType Container) {
                     Copy-Item -Path $sourcePath -Destination $destPath -Recurse -Force
@@ -313,13 +313,13 @@ function Copy-ProvisionedFiles {
                 else {
                     Copy-Item -Path $sourcePath -Destination $destPath -Force
                 }
-                
+
                 Write-Success "$($item.kind) provisioned: $($item.dest_name) (from $scope)"
             }
             else {
                 Write-Info "[DRY RUN] Would provision: $($item.dest_name) from $scope"
             }
-            
+
             # Track provisioned items
             if ($item.kind -eq 'skills') {
                 $provisionedSkills += "$($item.dest_name) (from $scope)"
@@ -329,7 +329,7 @@ function Copy-ProvisionedFiles {
             }
         }
     }
-    
+
     return @{
         skills = $provisionedSkills
         agents = $provisionedAgents
@@ -341,34 +341,34 @@ function Copy-ProvisionedFiles {
 
 function Copy-CoreSkills {
     param([string]$ProjectPath)
-    
+
     Write-Step "Step 4: Provisioning Core Skills (ALWAYS included)"
-    
+
     $auroraRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
     $coreSkills = @('bolt-framework', 'bolt-adr', 'new-skill', 'markdown-formatting')
     $provisionedCore = @()
-    
+
     foreach ($skillName in $coreSkills) {
         $sourcePath = Join-Path $auroraRoot ".aurora\available-skills\bolt-framework\$skillName"
         $destPath = Join-Path $ProjectPath ".github\skills\$skillName"
-        
+
         if (-not (Test-Path $sourcePath)) {
             Write-Warn "Core skill not found: $skillName (skipping)"
             continue
         }
-        
+
         if ((Test-Path $destPath) -and -not $Force) {
             Write-Info "Core skill already exists: $skillName (preserving)"
             continue
         }
-        
+
         if (-not $DryRun) {
             # Create .github/skills directory if needed
             $skillsDir = Join-Path $ProjectPath ".github\skills"
             if (-not (Test-Path $skillsDir)) {
                 New-Item -ItemType Directory -Path $skillsDir -Force | Out-Null
             }
-            
+
             # Copy skill recursively
             Copy-Item -Path $sourcePath -Destination $destPath -Recurse -Force
             Write-Success "Core skill provisioned: $skillName"
@@ -376,10 +376,10 @@ function Copy-CoreSkills {
         else {
             Write-Info "[DRY RUN] Would provision core skill: $skillName"
         }
-        
+
         $provisionedCore += $skillName
     }
-    
+
     return $provisionedCore
 }
 
@@ -393,12 +393,12 @@ function New-ProvisionReport {
         [hashtable]$ScopeFiles,
         [array]$CoreSkills
     )
-    
+
     Write-Step "Step 5: Generating Provision Report"
-    
+
     $reportPath = Join-Path $ProjectPath ".aurora\memory\provision-report.md"
     $timestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
-    
+
     $report = @"
 # Bolt Setup Constitution - Provision Report
 
@@ -465,7 +465,7 @@ _Generated by Bolt Setup Constitution v2.0.0_
     else {
         Write-Info "[DRY RUN] Would create provision report"
     }
-    
+
     return $reportPath
 }
 
@@ -477,30 +477,30 @@ function Main {
     Write-Host "  │   Bolt Framework - Setup Constitution (Phase 2/2)           │" -ForegroundColor Cyan
     Write-Host "  └──────────────────────────────────────────────────────────────┘" -ForegroundColor Cyan
     Write-Host ""
-    
+
     if ($DryRun) {
         Write-Warn "DRY RUN MODE - No files will be modified"
         Write-Host ""
     }
-    
+
     try {
         # Resolve project path
         $resolvedPath = Resolve-Path $ProjectPath -ErrorAction Stop
         Write-Info "Project: $resolvedPath"
         Write-Host ""
-        
+
         # Step 1: Load active scopes
         $scopes = Get-ActiveScopes -ProjectPath $resolvedPath
-        
+
         # Step 2: Merge constitutions
         $constitution = Merge-ConstitutionArticles -ProjectPath $resolvedPath -Scopes $scopes.all
-        
+
         # Step 3: Provision scope-specific files
         $scopeFiles = Copy-ProvisionedFiles -ProjectPath $resolvedPath -Scopes $scopes.all
-        
+
         # Step 4: Provision core skills
         $coreSkills = Copy-CoreSkills -ProjectPath $resolvedPath
-        
+
         # Step 5: Generate provision report
         $reportPath = New-ProvisionReport `
             -ProjectPath $resolvedPath `
@@ -508,7 +508,7 @@ function Main {
             -Constitution $constitution `
             -ScopeFiles $scopeFiles `
             -CoreSkills $coreSkills
-        
+
         # Summary
         Write-Host ""
         Write-Host "  ┌──────────────────────────────────────────────────────────────┐" -ForegroundColor Green

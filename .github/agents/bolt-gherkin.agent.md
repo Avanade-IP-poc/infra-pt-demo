@@ -7,6 +7,7 @@ tools:
     read,
     edit,
     web,
+    memory,
     vscode,
     agent,
     'github/*',
@@ -271,8 +272,8 @@ Then('I should see {string}', async function (expected: string) {
 
 ## TDD vs BDD Decision Matrix
 
-| Scenario               | Approach           | Agent                      |
-| ---------------------- | ------------------ | -------------------------- |
+| Scenario               | Approach           | Agent                    |
+| ---------------------- | ------------------ | ------------------------ |
 | User story with ACs    | **BDD**            | `@bolt-gherkin`          |
 | New algorithm/utility  | **TDD**            | `@bolt-testing tdd`      |
 | Existing untested code | **Coverage-First** | `@bolt-testing coverage` |

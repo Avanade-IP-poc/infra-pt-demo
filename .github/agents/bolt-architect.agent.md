@@ -5,8 +5,8 @@ tools:
   [
     search,
     read,
+    memory,
     web,
-    problems,
     vscode,
     agent,
     'github/*',

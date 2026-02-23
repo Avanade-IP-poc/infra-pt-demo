@@ -7,6 +7,7 @@ tools:
     read,
     edit,
     web,
+    memory,
     vscode,
     agent,
     'github/*',
@@ -38,13 +39,13 @@ Drive structured questioning to resolve ambiguities identified during specificat
 
 ## When to Use
 
-| Trigger                     | Source            |
-| --------------------------- | ----------------- |
+| Trigger                     | Source          |
+| --------------------------- | --------------- |
 | Vague requirement           | `@bolt-specify` |
 | Missing acceptance criteria | `@bolt-analyze` |
-| Conflicting requirements    | Analysis report   |
+| Conflicting requirements    | Analysis report |
 | Technical ambiguity         | `@bolt-plan`    |
-| Stakeholder misalignment    | Review feedback   |
+| Stakeholder misalignment    | Review feedback |
 
 ## Question Categories
 

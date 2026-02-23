@@ -7,6 +7,7 @@ tools:
     execute,
     read,
     agent,
+    memory,
     azure-mcp/search,
     'awesome-copilot/*',
     'context7/*',
