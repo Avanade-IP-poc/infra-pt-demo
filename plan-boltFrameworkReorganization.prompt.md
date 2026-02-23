@@ -35,9 +35,9 @@ Este plan transforma el framework "Aurora" en **Bolt Framework** con arquitectur
 ### Estado General
 
 - **Estado del Plan**: 🟡 En Progreso
-- **Fase Actual**: Phase 2 - ✅ Skills Extraction Completed | Φase 3 - Pendiente
+- **Fase Actual**: Phase 3 - ✅ Init.ps1 Practice Model Completed | Phase 4 - Pendiente
 - **Última actualización**: 2026-02-23
-- **Progreso global**: 17/29 tareas completadas (59%)
+- **Progreso global**: 23/29 tareas completadas (79%)
 
 ### Leyenda de Estados
 
@@ -53,10 +53,10 @@ Este plan transforma el framework "Aurora" en **Bolt Framework** con arquitectur
 | --------- | ------ | ----------- | ------------- | -------- |
 | Phase 1   | 10     | 10          | ✅ Completada | 100%     |
 | Phase 2   | 7      | 7           | ✅ Completada | 100%     |
-| Phase 3   | 6      | 0           | ⬜ Pendiente  | 0%       |
+| Phase 3   | 6      | 6           | ✅ Completada | 100%     |
 | Phase 4   | 2      | 0           | ⬜ Pendiente  | 0%       |
 | Phase 5   | 4      | 0           | ⬜ Pendiente  | 0%       |
-| **TOTAL** | **29** | **17**      | 🟡 Activo     | **59%**  |
+| **TOTAL** | **29** | **23**      | 🟡 Activo     | **79%**  |
 
 ### Cómo Actualizar Este Plan
 
@@ -382,7 +382,9 @@ No hay usuarios con workflows dependientes, por lo tanto:
 
 **Duración**: 1 día (simplificado)
 
-17. Modificar `Init.ps1` función `Start-Wizard` - Setup Mínimo:
+✅ 17. Modificar `Init.ps1` función `Start-Wizard` - Setup Mínimo:
+📅 Completado: 2026-02-23
+✏️ Detalles: Implementado Step 0 con Practice selection (Apps & Infra, Data & AI, CRM, Custom). Practice pre-selects scopes with confirmation. Practice stored in scopes.yaml.
     - **Nuevo Step 0** (antes de Article I): Pregunta "Select your Practice"
       - Options: "Apps & Infra", "Data & AI", "CRM", "Custom (manual selection)"
     - Mapeo Practice → Scopes:
@@ -397,7 +399,9 @@ No hay usuarios con workflows dependientes, por lo tanto:
     - Si Practice específica → pre-seleccionar scopes, mostrar confirmación
     - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
-18. Generar constitution básico en Init.ps1:
+✅ 18. Generar constitution básico en Init.ps1:
+📅 Completado: 2026-02-23
+✏️ Detalles: Creada función New-BasicConstitution que genera template mínimo con metadata, Practice y scopes. Antigua Set-ConstitutionDecisions renombrada a _DEPRECATED. Init.ps1 líneas: 837 → 964 (temporal, provisioning eliminará complejidad).
     - Crear `memory/constitution.md` con estructura mínima:
 
       ```markdown
@@ -422,12 +426,16 @@ No hay usuarios con workflows dependientes, por lo tanto:
     - Mantener Init.ps1 < 500 líneas (actualmente 837)
     - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
-19. Generar `memory/scopes.yaml` en Init.ps1:
+✅ 19. Generar `memory/scopes.yaml` en Init.ps1:
+📅 Completado: 2026-02-23
+✏️ Detalles: Añadido campo project.practice a scopes.yaml. Formato estándar mantenido con metadata adicional.
     - Formato estándar (sin cambios respecto a versión actual)
     - Include scope metadata: name, enabled, practice_origin
     - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
-20. Mostrar mensaje final en Init.ps1:
+✅ 20. Mostrar mensaje final en Init.ps1:
+📅 Completado: 2026-02-23
+✏️ Detalles: Actualizada función Show-Summary con mensaje de dos pasos, Practice display, instrucciones @Bolt Constitution y documentación links.
     - "✓ Project initialized with Practice: {practice}"
     - "✓ Basic constitution created in memory/constitution.md"
     - "✓ Scopes configured: {scopes_list}"
@@ -435,7 +443,9 @@ No hay usuarios con workflows dependientes, por lo tanto:
     - " Or manually: Invoke 'bolt-setup-constitution' skill"
     - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
-21. Actualizar `.aurora/scopes/README.md`:
+✅ 21. Actualizar `.aurora/scopes/README.md`:
+📅 Completado: 2026-02-23
+✏️ Detalles: Añadida sección "Practice-Based Initialization (Two-Step Workflow)" con tabla de Practice → Scopes mapping, explicación de dos pasos, quick start examples.
     - Documentar Practice → Scopes mapping
     - Explicar two-step initialization: Init (config) + Skill (provision)
     - Añadir sección "## Practice-Based Initialization"
@@ -447,7 +457,9 @@ No hay usuarios con workflows dependientes, por lo tanto:
       ```
     - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
-22. Implementar `source_type` y `auto_provision` en `scope.yaml`:
+✅ 22. Implementar `source_type` y `auto_provision` en `scope.yaml`:
+📅 Completado: 2026-02-23
+✏️ Detalles: Añadido campo auto_provision: true a constitution items en 8 scope.yaml files (backend, frontend, cloud-platform, data, integration, ai, crm, work-management). Ready for bolt-setup-constitution skill implementation.
     - Actualizar cada `.aurora/scopes/*/scope.yaml` para permitir:
 
       ```yaml
