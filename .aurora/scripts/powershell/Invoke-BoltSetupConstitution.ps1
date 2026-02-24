@@ -408,20 +408,52 @@ function Copy-ProvisionedFiles {
         Write-Info "Processing scope: $scope ($($scopeConfig.enabled_items.Count) items enabled)"
 
         foreach ($item in $scopeConfig.enabled_items) {
-            # Build source path based on source type
-            if ($item.source_type -eq 'local_file' -and $item.source_path) {
-                $sourcePath = Join-Path $ProjectPath ".aurora\$($item.source_path)"
+            $destPath = Join-Path $ProjectPath "$($item.dest_folder)\$($item.dest_name)"
+            $sourcePath = $null
+            $sourceType = $item.source_type
+            $requiresDownload = $false
+
+            # Handle different source types
+            switch ($sourceType) {
+                'local_file' {
+                    if ($item.source_path) {
+                        $sourcePath = Join-Path $ProjectPath ".aurora\$($item.source_path)"
+                    }
+                }
+                'context7' {
+                    # Mark for download - agent will handle via MCP
+                    $requiresDownload = $true
+                    Write-Info "Item $($item.id) requires Context7 download (agent-handled)"
+                }
+                'awesome_copilot' {
+                    # Mark for download - agent will handle via MCP
+                    $requiresDownload = $true
+                    Write-Info "Item $($item.id) requires Awesome Copilot download (agent-handled)"
+                }
+                default {
+                    Write-Warn "Unknown source type: $sourceType for item $($item.id) (skipping)"
+                    continue
+                }
             }
-            else {
-                # For context7, awesome_copilot, etc. - source would be fetched from external
-                # For now, assume local_file is primary source type
-                Write-Warn "Non-local source type: $($item.source_type) for item $($item.id) (skipping)"
+
+            # Skip external sources in script - let agent handle them
+            if ($requiresDownload) {
+                Write-Info "External source: $($item.id) → Agent will download to $destPath"
+                
+                # Track as requiring agent action
+                $itemLabel = "$($item.dest_name) (from $scope, requires download: $sourceType)"
+                switch ($item.kind) {
+                    'prompts' { $provisionedItems.prompts += $itemLabel }
+                    'instructions' { $provisionedItems.instructions += $itemLabel }
+                    'skills' { $provisionedItems.skills += $itemLabel }
+                    'templates' { $provisionedItems.templates += $itemLabel }
+                    'agents' { $provisionedItems.agents += $itemLabel }
+                }
                 continue
             }
 
-            $destPath = Join-Path $ProjectPath "$($item.dest_folder)\$($item.dest_name)"
-
-            if (-not (Test-Path $sourcePath)) {
+            # Validate local source exists
+            if ($sourcePath -and -not (Test-Path $sourcePath)) {
                 Write-Warn "Source not found: $($item.source_path) (skipping $($item.id))"
                 continue
             }

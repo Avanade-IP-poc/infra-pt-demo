@@ -304,6 +304,23 @@ function Get-AllDecisions {
         -Values @("github-actions", "azure-devops") `
         -Default 1
 
+    # ── §11.1b — Infrastructure as Code (if cloud-platform active) ─────
+    $hasInfraForIaC = $d.Scopes -contains "cloud-platform"
+    if ($hasInfraForIaC) {
+        $d.IaCTool = Read-Choice `
+            -Title "§11.1b Infrastructure as Code (IaC) tool" `
+            -Options @(
+                "Bicep          — Azure-native, type-safe (recommended)",
+                "ARM Templates  — Azure-native JSON (legacy)",
+                "Terraform      — Multi-cloud HCL",
+                "Pulumi         — Multi-cloud with programming languages"
+            ) `
+            -Values @("bicep", "arm", "terraform", "pulumi") `
+            -Default 1
+    } else {
+        $d.IaCTool = "none"
+    }
+
     # ── §11.2 — Pipeline Stages (Application) ──────────────────────────
     $hasApp = ($d.Scopes | Where-Object { $_ -in @("backend","frontend","ai") }).Count -gt 0
     if ($hasApp) {
@@ -584,6 +601,7 @@ $autoDeployLines
   # Article XI — CI/CD Pipeline
   cicd:
     platform: $($Decisions.CiCdPlatform)
+    iac-tool: $($Decisions.IaCTool)
     deploy-strategy: $($Decisions.DeployStrategy)
     branch-strategy: $($Decisions.BranchStrategy)
     pipeline-stages:
@@ -930,6 +948,9 @@ function Show-Summary {
     Write-Host ""
     Write-Host "  ✓ Practice:   $($D.Practice)" -ForegroundColor Green
     Write-Host "  ✓ Scopes:     $($D.Scopes -join ', ')" -ForegroundColor Green
+    if ($D.IaCTool -ne "none") {
+        Write-Host "  ✓ IaC Tool:   $($D.IaCTool)" -ForegroundColor Green
+    }
     Write-Host "  ✓ Basic constitution created in .aurora/memory/constitution.md" -ForegroundColor Green
     Write-Host "  ✓ Scopes configuration saved to .aurora/scopes.yaml" -ForegroundColor Green
     Write-Host "  ✓ Bolt Framework agents and skills copied to .github/" -ForegroundColor Green

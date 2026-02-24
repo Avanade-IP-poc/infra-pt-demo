@@ -31,6 +31,7 @@ D_CONFIG_MANAGEMENT=""
 D_SECRETS_DEV=""
 D_FEATURE_FLAGS=""
 D_CICD_PLATFORM=""
+D_IAC_TOOL=""
 D_DEPLOY_STRATEGY=""
 D_BRANCH_STRATEGY=""
 D_OBSERVABILITY=""
@@ -306,6 +307,23 @@ collect_all_decisions() {
         "GitHub Actions" "Azure DevOps Pipelines" \
         --- "github-actions" "azure-devops"
     D_CICD_PLATFORM="$REPLY_CHOICE"
+
+    # §11.1b Infrastructure as Code (if cloud-platform active)
+    local has_infra_for_iac=false
+    for s in "${D_SCOPES[@]}"; do
+        [[ "$s" == "cloud-platform" ]] && has_infra_for_iac=true
+    done
+    if [[ "$has_infra_for_iac" == "true" ]]; then
+        read_choice "§11.1b Infrastructure as Code (IaC) tool" 1 \
+            "Bicep          — Azure-native, type-safe (recommended)" \
+            "ARM Templates  — Azure-native JSON (legacy)" \
+            "Terraform      — Multi-cloud HCL" \
+            "Pulumi         — Multi-cloud with programming languages" \
+            --- "bicep" "arm" "terraform" "pulumi"
+        D_IAC_TOOL="$REPLY_CHOICE"
+    else
+        D_IAC_TOOL="none"
+    fi
 
     # §11.2 Pipeline Stages — Application
     local has_app=false
@@ -586,6 +604,7 @@ ${auto_deploy_lines}  config-management: ${D_CONFIG_MANAGEMENT}
   # Article XI -- CI/CD Pipeline
   cicd:
     platform: ${D_CICD_PLATFORM}
+    iac-tool: ${D_IAC_TOOL}
     deploy-strategy: ${D_DEPLOY_STRATEGY}
     branch-strategy: ${D_BRANCH_STRATEGY}
     pipeline-stages:
@@ -859,6 +878,9 @@ show_summary() {
     echo ""
     log_info "✓ Practice:   $D_PROJECT_TYPE"
     log_info "✓ Scopes:     ${D_SCOPES[*]}"
+    if [[ "$D_IAC_TOOL" != "none" ]]; then
+        log_info "✓ IaC Tool:   $D_IAC_TOOL"
+    fi
     log_info "✓ Basic constitution created in .aurora/memory/constitution.md"
     log_info "✓ Scopes configuration saved to .aurora/scopes.yaml"
     log_info "✓ Bolt Framework agents and skills copied to .github/"

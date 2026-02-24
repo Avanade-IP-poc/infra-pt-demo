@@ -17,6 +17,14 @@ tools:
   ]
 model: Claude Sonnet 4.5
 handoffs:
+  - label: 🚀 Provision Resources (Phase 4)
+    agent: Bolt Provisioner
+    prompt: |
+      Provision all resources for active scopes. Download from Context7, Awesome Copilot, and auto-select relevant skills from available-skills.
+
+      Active scopes: [provide list]
+      Tech stack: [provide from constitution]
+    send: false
   - label: ✨ Build Specification
     agent: Bolt Specify
     prompt: Create feature specification based on the constitution. I want to build...
@@ -34,6 +42,8 @@ handoffs:
 # 📋 Constitution Agent
 
 **Methodology**: Follow bolt-framework and bolt-setup-constitution skills (loaded automatically)
+
+**Provisioning Reference**: For Phase 4 (resource provisioning), reference [#file:.github/prompts/bolt-constitution-provisioning.prompt.md] for detailed step-by-step instructions on downloading from Context7 and Awesome Copilot.
 
 ## Primary Mission: Complete Two-Step Initialization
 
