@@ -65,9 +65,9 @@ handoffs:
 **NEW WORKFLOW**: This agent now uses a four-phase approach:
 
 1. **Generate `constitution.master.md`** - Complete merge of all scope constitutions
-2. **Interactive Refinement** - Ask questions one-by-one to refine selections
+2. **Interactive Refinement** - ALWAYS asks questions one-by-one to refine selections (automatic, no skip option)
 3. **Generate `constitution.md`** - Summarized, refined constitution
-4. **Provision Resources** - Copy/download files based on scope.yaml
+4. **Provision Resources** - Copy/download files based on scope.yaml (optional)
 
 ### Phase 1: Generate constitution.master.md
 
@@ -157,20 +157,10 @@ Present result to user:
 
 **Size**: [X] KB | **Lines**: [Y]
 
-👉 **Next**: Would you like to refine this constitution interactively?
-
-**A. Yes, guide me through refinement** - I'll ask questions one-by-one
-**B. No, use as-is and continue** - Skip to provisioning
-**C. Let me review first** - Show me the master constitution
-
-Type **A**, **B**, or **C**
+👉 **Next**: Let's refine this constitution together. I'll guide you through the key decisions one by one.
 ```
 
----
-
-### Phase 2: Interactive Refinement
-
-**IMPORTANT**: This phase uses conversational prompts to guide the user through constitution refinement, following Anthropic's best practices for interactive agents.
+**Immediately proceed to Phase 2** (no user confirmation required).
 
 ---
 
@@ -178,7 +168,7 @@ Type **A**, **B**, or **C**
 
 **IMPORTANT**: This phase uses conversational prompts to guide the user through constitution refinement, following Anthropic's best practices for interactive agents.
 
-**Only execute if user chose "A. Yes, guide me through refinement" in Phase 1.**
+**This phase ALWAYS executes after generating the master constitution.**
 
 #### Refinement Strategy
 

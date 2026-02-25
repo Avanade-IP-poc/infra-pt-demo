@@ -5,12 +5,11 @@
 # =============================================================================
 
 param(
-    [Parameter(Mandatory = $true)]
-    [string]$OutputDirectory,
+    [Parameter(Mandatory = $false)]
+    [string]$OutputDirectory = "",
 
-    [Parameter(Mandatory = $true)]
-    [ValidateSet("green", "brown")]
-    [string]$ProjectType,
+    [Parameter(Mandatory = $false)]
+    [string]$ProjectType = "",
 
     [Parameter(Mandatory = $false)]
     [string]$SourceDirectory = "",
@@ -53,8 +52,19 @@ Usage:
 
 Parameters:
   -OutputDirectory  Where to create the new project
-  -ProjectType      'green' (new) or 'brown' (migration from legacy)
-  -SourceDirectory  Required for 'brown' — directory with legacy code
+                    • Accepts: Absolute path (C:\\Projects\\MyApp) or relative path (.\\MyApp)
+                    • Creates the directory if it doesn't exist
+
+  -ProjectType      Type of project to initialize
+                    • green  = Greenfield (new project from scratch)
+                    • brown  = Brownfield (migration from existing legacy code)
+
+  -SourceDirectory  Directory containing legacy source code
+                    • Required when: -ProjectType is 'brown'
+                    • Optional when: -ProjectType is 'green'
+                    • Accepts: Absolute path (C:\\Legacy\\Code) or relative path (.\\legacy)
+                    • Must exist and contain source files
+
   -Help             Show this message
 
 The wizard walks you through the mandatory constitution decisions
@@ -1013,7 +1023,47 @@ function Show-Summary {
 # ─── Main ────────────────────────────────────────────────────────────────────
 
 function Main {
-    if ($Help) { Show-Usage; return }
+    # Show help if requested or if required parameters are missing
+    if ($Help) { 
+        Show-Banner
+        Show-Usage
+        return 
+    }
+
+    if ([string]::IsNullOrWhiteSpace($OutputDirectory) -or [string]::IsNullOrWhiteSpace($ProjectType)) {
+        Show-Banner
+        Write-Err "Missing required parameters"
+        Write-Host ""
+        Show-Usage
+        exit 1
+    }
+
+    # Validate ProjectType
+    if ($ProjectType -notin @("green", "brown")) {
+        Show-Banner
+        Write-Err "Invalid ProjectType: '$ProjectType'. Must be 'green' or 'brown'"
+        Write-Host ""
+        Show-Usage
+        exit 1
+    }
+
+    # Validate SourceDirectory for brownfield
+    if ($ProjectType -eq "brown") {
+        if ([string]::IsNullOrWhiteSpace($SourceDirectory)) {
+            Show-Banner
+            Write-Err "SourceDirectory is required when ProjectType is 'brown'"
+            Write-Host ""
+            Show-Usage
+            exit 1
+        }
+        if (-not (Test-Path $SourceDirectory)) {
+            Show-Banner
+            Write-Err "SourceDirectory does not exist: $SourceDirectory"
+            Write-Host ""
+            Show-Usage
+            exit 1
+        }
+    }
 
     Show-Banner
     Test-Prerequisites

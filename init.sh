@@ -87,8 +87,19 @@ Usage:
 
 Parameters:
   --output, -o   Where to create the new project
-  --type, -t     'green' (new) or 'brown' (migration from legacy)
-  --source, -s   Required for 'brown' -- directory with legacy code
+                 • Accepts: Absolute path (/home/user/MyApp) or relative path (./MyApp)
+                 • Creates the directory if it doesn't exist
+
+  --type, -t     Type of project to initialize
+                 • green  = Greenfield (new project from scratch)
+                 • brown  = Brownfield (migration from existing legacy code)
+
+  --source, -s   Directory containing legacy source code
+                 • Required when: --type is 'brown'
+                 • Optional when: --type is 'green'
+                 • Accepts: Absolute path (/home/user/legacy) or relative path (./legacy)
+                 • Must exist and contain source files
+
   --help, -h     Show this message
 
 The wizard walks you through the mandatory constitution decisions
@@ -103,8 +114,8 @@ parse_args() {
             --output|-o)  OUTPUT_DIR="$2";   shift 2 ;;
             --type|-t)    PROJECT_TYPE="$2"; shift 2 ;;
             --source|-s)  SOURCE_DIR="$2";   shift 2 ;;
-            --help|-h)    show_usage; exit 0 ;;
-            *) log_error "Unknown option: $1"; show_usage; exit 1 ;;
+            --help|-h)    show_banner; show_usage; exit 0 ;;
+            *) log_error "Unknown option: $1"; echo ""; show_usage; exit 1 ;;
         esac
     done
 }
@@ -934,9 +945,40 @@ show_summary() {
 main() {
     parse_args "$@"
 
+    # Validate required parameters
     if [[ -z "$OUTPUT_DIR" || -z "$PROJECT_TYPE" ]]; then
+        show_banner
+        log_error "Missing required parameters"
+        echo ""
         show_usage
         exit 1
+    fi
+
+    # Validate ProjectType
+    if [[ "$PROJECT_TYPE" != "green" && "$PROJECT_TYPE" != "brown" ]]; then
+        show_banner
+        log_error "Invalid ProjectType: '$PROJECT_TYPE'. Must be 'green' or 'brown'"
+        echo ""
+        show_usage
+        exit 1
+    fi
+
+    # Validate SourceDirectory for brownfield
+    if [[ "$PROJECT_TYPE" == "brown" ]]; then
+        if [[ -z "$SOURCE_DIR" ]]; then
+            show_banner
+            log_error "SourceDirectory is required when ProjectType is 'brown'"
+            echo ""
+            show_usage
+            exit 1
+        fi
+        if [[ ! -d "$SOURCE_DIR" ]]; then
+            show_banner
+            log_error "SourceDirectory does not exist: $SOURCE_DIR"
+            echo ""
+            show_usage
+            exit 1
+        fi
     fi
 
     show_banner
