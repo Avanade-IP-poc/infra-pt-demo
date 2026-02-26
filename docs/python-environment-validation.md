@@ -20,8 +20,11 @@
 │  │                                                          │
 │  .boltf/                                                   │
 │  ├── scripts/                                               │
-│  │   └── powershell/                                        │
-│  │       └── Bootstrap-Python.ps1  ← Ejecutar desde aquí  │
+│  │   ├── powershell/                                        │
+│  │   │   ├── Bootstrap-Python.ps1  ← Ejecutar desde aquí  │
+│  │   │   └── Test-PythonEnvironment.ps1                   │
+│  │   └── bash/                                              │
+│  │       └── Test-PythonEnvironment.sh                    │
 │  │                                                          │
 │  .github/                                                   │
 │  ├── skills/                                                │
@@ -32,7 +35,6 @@
 │  │           └── ...                                        │
 │  │                                                          │
 │  Invoke-PythonScript.ps1      ← Wrapper en raíz            │
-│  Test-PythonEnvironment.ps1   ← Test en raíz               │
 │  docs/                                                      │
 │  └── python-integration.md                                  │
 │  examples/                                                  │
@@ -50,11 +52,11 @@
 # .github (con skills Python)
 Copy-Item "$root\.github" "$OutputDirectory\.github" -Recurse -Force
 
-# .boltf (con Bootstrap-Python.ps1)
+# .boltf (con Bootstrap-Python.ps1 y scripts de test)
 Copy-Item "$root\.boltf" "$OutputDirectory\.boltf" -Recurse -Force
 
-# Scripts Python raíz
-@("Invoke-PythonScript.ps1", "Test-PythonEnvironment.ps1", "test-python-environment.sh")
+# Scripts Python raíz (solo wrapper)
+@("Invoke-PythonScript.ps1")
 
 # Documentación
 Copy-Item "$root\docs" "$OutputDirectory\docs" -Recurse
@@ -138,8 +140,8 @@ cd C:\projects\my-ecommerce
 ## ✅ Checklist de Validación
 
 - [x] Init.ps1 copia `.github/` completo (skills con scripts Python)
-- [x] Init.ps1 copia `.boltf/` completo (Bootstrap-Python.ps1)
-- [x] Init.ps1 copia scripts raíz (Invoke-PythonScript.ps1, Test-PythonEnvironment.ps1)
+- [x] Init.ps1 copia `.boltf/` completo (Bootstrap-Python.ps1 y scripts de test)
+- [x] Init.ps1 copia scripts raíz (Invoke-PythonScript.ps1)
 - [x] Init.ps1 copia `docs/` (python-integration.md)
 - [x] Init.ps1 copia `examples/` (python-scripts-usage.ps1)
 - [x] Bootstrap-Python.ps1 usa `$PWD` (directorio actual del usuario)
@@ -174,7 +176,7 @@ cd C:\projects\my-ecommerce
    # Desde proyecto nuevo
    cd ..\test-python-integration
    .\.boltf\scripts\powershell\Bootstrap-Python.ps1
-   .\Test-PythonEnvironment.ps1
+   .\.boltf\scripts\powershell\Test-PythonEnvironment.ps1
    ```
 
 2. **Verificar archivos copiados:**
@@ -183,6 +185,7 @@ cd C:\projects\my-ecommerce
    Test-Path .\.bolt-venv                        # Debe existir DESPUÉS de bootstrap
    Test-Path .\Invoke-PythonScript.ps1          # Debe existir
    Test-Path .\.boltf\scripts\powershell\Bootstrap-Python.ps1  # Debe existir
+   Test-Path .\.boltf\scripts\powershell\Test-PythonEnvironment.ps1  # Debe existir
    Test-Path .\.github\skills\skill-creator\requirements.txt    # Debe existir
    Test-Path .\docs\python-integration.md       # Debe existir
    ```

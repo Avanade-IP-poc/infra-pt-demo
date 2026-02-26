@@ -573,8 +573,8 @@ function Copy-BoltFramework {
         if (Test-Path "$root\$_") { Copy-Item "$root\$_" "$OutputDirectory\$_" -Force }
     }
 
-    # Python integration scripts (root level)
-    @("Invoke-PythonScript.ps1", "Test-PythonEnvironment.ps1", "test-python-environment.sh") | ForEach-Object {
+    # Python integration scripts (root level wrapper only)
+    @("Invoke-PythonScript.ps1") | ForEach-Object {
         if (Test-Path "$root\$_") {
             Copy-Item "$root\$_" "$OutputDirectory\$_" -Force
             Write-Info "Copied Python script: $_"

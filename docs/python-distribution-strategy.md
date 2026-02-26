@@ -67,6 +67,15 @@ aurora-ai/
 │       ├── run_eval.py                     # Evaluación (requiere IA)
 │       ├── improve_description.py          # Optimización (requiere IA)
 │       └── run_loop.py                     # Loop completo (requiere IA)
+├── 📁 .boltf/
+│   └── 📁 scripts/
+│       ├── 📁 powershell/
+│       │   ├── Bootstrap-Python.ps1            # ✨ Inicializador
+│       │   ├── Test-PythonEnvironment.ps1      # ✨ Verificación
+│       │   └── Test-PythonIntegration.ps1      # ✨ E2E test
+│       └── 📁 bash/
+│           ├── bootstrap-python.sh             # ✨ Inicializador
+│           └── Test-PythonEnvironment.sh       # ✨ Verificación
 │
 ├── 📁 docs/
 │   └── python-integration.md               # ✨ Guía completa para usuarios
@@ -75,8 +84,6 @@ aurora-ai/
 │   └── python-scripts-usage.ps1            # ✨ Ejemplos de uso comunes
 │
 ├── 📄 Invoke-PythonScript.ps1              # ✨ Wrapper conveniente
-├── 📄 Test-PythonEnvironment.ps1           # ✨ Script de verificación
-├── 📄 test-python-environment.sh           # ✨ Script de verificación (Bash)
 ├── 📄 package.json                         # ✨ Scripts npm integrados
 ├── 📄 .gitignore                           # ✨ Actualizado con .bolt-venv/
 └── 📄 README.md                            # ✨ Sección Python añadida
@@ -214,7 +221,7 @@ jobs:
         run: .\.boltf\scripts\powershell\Bootstrap-Python.ps1
 
       - name: Verify Environment
-        run: .\Test-PythonEnvironment.ps1
+        run: .\.boltf\scripts\powershell\Test-PythonEnvironment.ps1
 
       - name: Validate All Skills
         run: npm run skill:validate-all
@@ -237,7 +244,7 @@ steps:
   - powershell: .\.boltf\scripts\powershell\Bootstrap-Python.ps1
     displayName: 'Bootstrap Python'
 
-  - powershell: .\Test-PythonEnvironment.ps1
+  - powershell: .\.boltf\scripts\powershell\Test-PythonEnvironment.ps1
     displayName: 'Verify Environment'
 
   - powershell: npm run skill:validate-all
@@ -313,10 +320,10 @@ if (-not (Get-Command python -ErrorAction SilentlyContinue)) {
 
 ```powershell
 # Windows
-.\Test-PythonEnvironment.ps1
+.\.boltf\scripts\powershell\Test-PythonEnvironment.ps1
 
 # Linux/macOS
-bash test-python-environment.sh
+bash .boltf/scripts/bash/Test-PythonEnvironment.sh
 ```
 
 ### Test Automatizado (CI)
@@ -394,15 +401,15 @@ Remove-Item -Recurse -Force .bolt-venv
 - [x] Ejemplos de uso
 - [x] .gitignore actualizado
 - [x] **Init.ps1 copia todos los archivos al proyecto destino**
-- [x] **Validación end-to-end (Test-PythonIntegration.ps1)**
+- [x] **Validación end-to-end (.boltf/scripts/powershell/Test-PythonIntegration.ps1)**
 - [x] **Documentación de validación (python-environment-validation.md)**
-- [x] **Entorno se crea en proyecto destino, NO en aurora-ai**
+- [x] **Entorno se crea en proyecto destino, NO en bolt-framework**
 
 ### Testing 🧪
 
-- ✅ **Test-PythonEnvironment.ps1** - Verifica entorno en proyecto actual
-- ✅ **Test-PythonIntegration.ps1** - E2E test completo del flujo
-- ✅ **test-python-environment.sh** - Test para Linux/macOS
+- ✅ **.boltf/scripts/powershell/Test-PythonEnvironment.ps1** - Verifica entorno en proyecto actual
+- ✅ **.boltf/scripts/powershell/Test-PythonIntegration.ps1** - E2E test completo del flujo
+- ✅ **.boltf/scripts/bash/Test-PythonEnvironment.sh** - Test para Linux/macOS
 - ✅ **python-environment-validation.md** - Documentación de validación
 
 ### Pendiente 🔜

@@ -26,7 +26,8 @@ function Write-TestOK   { param([string]$M) Write-Host "  ✅ $M" -ForegroundCol
 function Write-TestFail { param([string]$M) Write-Host "  ❌ $M" -ForegroundColor Red; throw $M }
 
 # ─── Configuration ───────────────────────────────────────────────────────────
-$BoltRoot = $PSScriptRoot
+# Navigate to project root (3 levels up from .boltf/scripts/powershell/)
+$BoltRoot = Split-Path -Parent (Split-Path -Parent (Split-Path -Parent $PSScriptRoot))
 $TestRoot = Join-Path ([System.IO.Path]::GetTempPath()) $TestProjectName
 
 Write-Host @"
@@ -37,7 +38,7 @@ Write-Host @"
 
 "@ -ForegroundColor Magenta
 
-Write-Host "Bolt Root:  $BoltRoot" -ForegroundColor White
+Write-Host "Bolt Root:    $BoltRoot" -ForegroundColor White
 Write-Host "Test Project: $TestRoot" -ForegroundColor White
 Write-Host ""
 
@@ -65,7 +66,7 @@ Write-TestStep "Step 2: Verify Python files copied to target project"
 $requiredFiles = @(
     ".boltf\scripts\powershell\Bootstrap-Python.ps1",
     "Invoke-PythonScript.ps1",
-    "Test-PythonEnvironment.ps1",
+    ".boltf\scripts\powershell\Test-PythonEnvironment.ps1",
     ".github\skills\skill-creator\requirements.txt",
     ".github\skills\skill-creator\scripts\quick_validate.py",
     "docs\python-integration.md",
@@ -233,9 +234,9 @@ Write-TestStep "Step 10: Test Test-PythonEnvironment.ps1"
 Push-Location $TestRoot
 try {
     if ($Verbose) {
-        & ".\Test-PythonEnvironment.ps1" -Verbose -ErrorAction Stop
+        & ".\.boltf\scripts\powershell\Test-PythonEnvironment.ps1" -DetailedOutput -ErrorAction Stop
     } else {
-        & ".\Test-PythonEnvironment.ps1" -ErrorAction Stop | Out-Null
+        & ".\.boltf\scripts\powershell\Test-PythonEnvironment.ps1" -ErrorAction Stop | Out-Null
     }
 
     Write-TestOK "Test-PythonEnvironment.ps1 passed"
@@ -269,7 +270,7 @@ Write-Host @"
 ║  • Init.ps1 copies all required files                     ║
 ║  • Bootstrap creates venv in TARGET project               ║
 ║  • Scripts execute from TARGET project                    ║
-║  • No pollution of aurora-ai repository                   ║
+║  • No pollution of bolt-framework repository              ║
 ╚════════════════════════════════════════════════════════════╝
 
 "@ -ForegroundColor Green

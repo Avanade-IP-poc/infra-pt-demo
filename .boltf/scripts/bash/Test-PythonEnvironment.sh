@@ -15,7 +15,10 @@ CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 # ─── Configuration ───────────────────────────────────────────────────────────
-VENV_PATH=".bolt-venv"
+# Navigate to project root (3 levels up from .boltf/scripts/bash/)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
+VENV_PATH="$PROJECT_ROOT/.bolt-venv"
 PYTHON_EXE="$VENV_PATH/bin/python"
 
 # ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -54,12 +57,12 @@ fi
 echo ""
 echo -e "${CYAN}[2/5] Checking virtual environment...${NC}"
 if [[ -d "$VENV_PATH" ]]; then
-    test_result "Virtual environment exists at $VENV_PATH/" "true"
+    test_result "Virtual environment exists at .bolt-venv/" "true"
 else
     test_result "Virtual environment exists" "false"
     echo ""
     echo -e "${YELLOW}⚠️  Virtual environment not found. Run:${NC}"
-    echo -e "   source .boltf/scripts/bash/bootstrap-python.sh"
+    echo -e "   source .boltf/scripts/bash/Bootstrap-Python.sh"
     echo ""
     exit 1
 fi
@@ -74,7 +77,7 @@ else
     echo ""
     echo -e "${YELLOW}⚠️  Python executable not found. Recreate venv:${NC}"
     echo -e "   rm -rf .bolt-venv"
-    echo -e "   source .boltf/scripts/bash/bootstrap-python.sh"
+    echo -e "   source .boltf/scripts/bash/Bootstrap-Python.sh"
     echo ""
     exit 1
 fi
@@ -111,7 +114,7 @@ echo -e "${CYAN}║  Test Summary                                              �
 echo -e "${CYAN}╚════════════════════════════════════════════════════════════╝${NC}"
 echo ""
 
-echo -e "📍 Virtual Environment: $VENV_PATH"
+echo -e "📍 Virtual Environment: .bolt-venv/"
 echo -e "📍 Python Executable:   $PYTHON_EXE"
 version=$("$PYTHON_EXE" --version 2>&1)
 echo -e "📍 Python Version:      $version"

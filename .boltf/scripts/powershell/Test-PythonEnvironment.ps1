@@ -6,7 +6,7 @@
 
 param(
     [Parameter(Mandatory = $false)]
-    [switch]$Verbose
+    [switch]$DetailedOutput
 )
 
 $ErrorActionPreference = "Stop"
@@ -17,14 +17,17 @@ function Write-TestResult {
     $icon = if ($Passed) { "✅" } else { "❌" }
     $color = if ($Passed) { "Green" } else { "Red" }
     Write-Host "$icon $Test" -ForegroundColor $color
-    if ($Details -and $Verbose) {
+    if ($Details -and $DetailedOutput) {
         Write-Host "   $Details" -ForegroundColor DarkGray
     }
 }
 
 # ─── Configuration ───────────────────────────────────────────────────────────
-$VenvPath = Join-Path $PSScriptRoot ".bolt-venv"
+# Navigate to project root (3 levels up from .boltf/scripts/powershell/)
+$ProjectRoot = Split-Path -Parent (Split-Path -Parent (Split-Path -Parent $PSScriptRoot))
+$VenvPath = Join-Path $ProjectRoot ".bolt-venv"
 $PythonExe = Join-Path $VenvPath "Scripts\python.exe"
+$WrapperPath = Join-Path $ProjectRoot "Invoke-PythonScript.ps1"
 
 Write-Host "`n╔════════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
 Write-Host "║  Bolt Framework - Python Environment Verification         ║" -ForegroundColor Cyan
@@ -120,8 +123,7 @@ try {
 
 # ─── Test 6: Test Wrapper Script ─────────────────────────────────────────────
 Write-Host "`n[6/6] Testing Invoke-PythonScript.ps1..." -ForegroundColor Cyan
-$wrapperPath = Join-Path $PSScriptRoot "Invoke-PythonScript.ps1"
-$wrapperExists = Test-Path $wrapperPath
+$wrapperExists = Test-Path $WrapperPath
 Write-TestResult "Wrapper script exists" $wrapperExists
 
 if ($wrapperExists) {
@@ -135,7 +137,7 @@ sys.exit(0)
         $tempScript = [System.IO.Path]::GetTempFileName() + ".py"
         Set-Content -Path $tempScript -Value $testPyScript
 
-        $output = & $wrapperPath $tempScript 2>&1
+        $output = & $WrapperPath $tempScript 2>&1
         Remove-Item $tempScript -Force
 
         $passed = $output -match "Wrapper test: OK"
@@ -150,7 +152,7 @@ Write-Host "`n╔═════════════════════
 Write-Host "║  Test Summary                                              ║" -ForegroundColor Cyan
 Write-Host "╚════════════════════════════════════════════════════════════╝`n" -ForegroundColor Cyan
 
-Write-Host "📍 Virtual Environment: $VenvPath" -ForegroundColor White
+Write-Host "📍 Virtual Environment: .bolt-venv\" -ForegroundColor White
 Write-Host "📍 Python Executable:   $PythonExe" -ForegroundColor White
 
 if (Test-Path $PythonExe) {

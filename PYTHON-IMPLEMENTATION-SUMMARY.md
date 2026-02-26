@@ -39,11 +39,11 @@
 ```
 ✅ .boltf/scripts/powershell/Bootstrap-Python.ps1
 ✅ .boltf/scripts/bash/bootstrap-python.sh
+✅ .boltf/scripts/powershell/Test-PythonEnvironment.ps1
+✅ .boltf/scripts/bash/Test-PythonEnvironment.sh
+✅ .boltf/scripts/powershell/Test-PythonIntegration.ps1 (E2E test)
 ✅ .github/skills/skill-creator/requirements.txt
-✅ Invoke-PythonScript.ps1
-✅ Test-PythonEnvironment.ps1
-✅ test-python-environment.sh
-✅ Test-PythonIntegration.ps1 (E2E test)
+✅ Invoke-PythonScript.ps1 (root wrapper)
 ✅ docs/python-integration.md (user guide)
 ✅ docs/python-distribution-strategy.md (architecture)
 ✅ docs/python-environment-validation.md (validation)
@@ -69,12 +69,14 @@
 **Location**: Init.ps1 lines 492-518
 
 ```powershell
-# Python integration scripts (root level)
-@("Invoke-PythonScript.ps1", "Test-PythonEnvironment.ps1", "test-python-environment.sh") | ForEach-Object {
+# Python integration scripts (root level wrapper only)
+@("Invoke-PythonScript.ps1") | ForEach-Object {
     if (Test-Path "$root\$_") {
         Copy-Item "$root\$_" "$OutputDirectory\$_" -Force
     }
 }
+
+# Note: Test scripts are in .boltf/scripts/ and copied via .boltf recursion
 
 # Python documentation and examples
 Copy-Item "$root\docs" "$OutputDirectory\docs" -Recurse -Force
@@ -148,7 +150,7 @@ cd C:\projects\test-python
 .\.boltf\scripts\powershell\Bootstrap-Python.ps1
 
 # 4. Verify environment
-.\Test-PythonEnvironment.ps1
+.\.boltf\scripts\powershell\Test-PythonEnvironment.ps1
 
 # 5. Test script execution
 .\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\quick_validate.py .github\skills\skill-creator\
@@ -158,10 +160,10 @@ cd C:\projects\test-python
 
 ```powershell
 # From aurora-ai root
-.\Test-PythonIntegration.ps1 -Verbose
+.\.boltf\scripts\powershell\Test-PythonIntegration.ps1 -Verbose
 
 # Keeps test project for inspection
-.\Test-PythonIntegration.ps1 -KeepTestProject
+.\.boltf\scripts\powershell\Test-PythonIntegration.ps1 -KeepTestProject
 ```
 
 ---
@@ -243,7 +245,7 @@ jobs:
         with:
           python-version: '3.11'
       - run: .\.boltf\scripts\powershell\Bootstrap-Python.ps1
-      - run: .\Test-PythonEnvironment.ps1
+      - run: .\.boltf\scripts\powershell\Test-PythonEnvironment.ps1
       - run: npm run skill:validate-all
 ```
 

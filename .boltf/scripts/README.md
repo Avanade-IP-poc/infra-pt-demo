@@ -60,6 +60,8 @@ Run scripts directly from terminal:
 ```
 scripts/
 ├── bash/                        # Bash scripts (Linux/macOS/WSL)
+│   ├── bootstrap-python.sh      # 🐍 Python environment setup
+│   ├── Test-PythonEnvironment.sh # 🐍 Python environment validation
 │   ├── init.sh                  # 🆕 Project initialization (Brownfield/Greenfield)
 │   ├── project-status.sh        # 🆕 Project status analyzer (continuity)
 │   ├── alignment-analysis.sh    # 🆕 Alignment & gap analysis
@@ -77,6 +79,9 @@ scripts/
 │   ├── create-adr.sh
 │   └── update-agent-context.sh
 └── powershell/                  # PowerShell scripts (Windows)
+    ├── Bootstrap-Python.ps1     # 🐍 Python environment setup
+    ├── Test-PythonEnvironment.ps1 # 🐍 Python environment validation
+    ├── Test-PythonIntegration.ps1 # 🐍 End-to-end Python integration test
     ├── Init.ps1                 # 🆕 Project initialization (Brownfield/Greenfield)
     ├── Get-ProjectStatus.ps1    # 🆕 Project status analyzer (continuity)
     ├── Get-AlignmentAnalysis.ps1 # 🆕 Alignment & gap analysis
