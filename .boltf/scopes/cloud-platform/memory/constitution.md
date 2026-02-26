@@ -78,6 +78,109 @@ If Yes, select building blocks:
 
 ---
 
+## Article VIII-B: Infrastructure Scope & Landing Zone Strategy
+
+> **📋 Applies to**: Infrastructure Only, Full Stack
+> **⏭️ Skip if**: Application Development Only (assumes infra exists)
+> **Priority**: Must be decided BEFORE IaC tool selection
+
+### Section 8B.1: Infrastructure Scope
+
+Select infrastructure provisioning scope:
+
+- [ ] **Landing Zone** - Enterprise-scale foundation with Management Groups, Hub-Spoke networking, governance, and platform-level services
+- [ ] **Workload Infrastructure** - App-specific resources only (databases, storage, compute) on existing platform
+- [ ] **Both** - Landing Zone + Workload (greenfield deployment)
+
+### Section 8B.2: Landing Zone Components (if Landing Zone selected)
+
+**Core Components**:
+
+- [ ] Management Groups hierarchy
+- [ ] Subscription organization
+- [ ] Hub-Spoke network topology
+- [ ] Azure Policy governance
+- [ ] RBAC baseline
+- [ ] Log Analytics workspace (centralized)
+- [ ] Azure Security Center / Defender
+- [ ] Azure Firewall / Network Virtual Appliances
+
+**Implementation Pattern**:
+
+- [ ] **Azure Landing Zones (ALZ)** - Microsoft reference architecture with Bicep/Terraform modules
+- [ ] **Cloud Adoption Framework (CAF) Enterprise Scale** - Full governance framework
+- [ ] **Custom Landing Zone** - Organization-specific design
+
+**Networking Model**:
+
+- [ ] Hub-Spoke (centralized connectivity)
+- [ ] Virtual WAN (global transit architecture)
+- [ ] Mesh (peer-to-peer connectivity)
+
+### Section 8B.3: Workload Infrastructure Components (if Workload or Both selected)
+
+**Compute Resources**:
+
+- [ ] App Services / Container Apps
+- [ ] AKS clusters
+- [ ] Virtual Machines
+- [ ] Serverless (Functions, Logic Apps)
+
+**Data Resources**:
+
+- [ ] Azure SQL / Cosmos DB / PostgreSQL
+- [ ] Redis Cache
+- [ ] Storage Accounts
+
+**Integration Resources**:
+
+- [ ] Service Bus / Event Hubs
+- [ ] API Management
+- [ ] Application Gateway
+
+### Section 8B.4: Deployment Strategy
+
+**Provisioning Order** (if Both selected):
+
+1. Landing Zone foundation (management, networking, governance)
+2. Workload-specific subscriptions
+3. Application resources
+
+**Separation of Concerns**:
+
+- [ ] **Separate repositories** - Landing Zone repo + Workload repo
+- [ ] **Monorepo** - Single repo with /landing-zone and /workload folders
+- [ ] **Modular approach** - Shared modules with environment-specific configurations
+
+### Section 8B.5: Trade-offs and Rationale
+
+**Landing Zone Benefits**:
+
+- ✅ Enterprise governance at scale
+- ✅ Consistent security baseline
+- ✅ Centralized networking (ExpressRoute, VPN)
+- ✅ Multi-subscription architecture support
+
+**Landing Zone Costs**:
+
+- ⚠️ Increased complexity (Management Groups, policies)
+- ⚠️ Longer initial setup time
+- ⚠️ Requires platform engineering expertise
+
+**Workload-Only Benefits**:
+
+- ✅ Faster time-to-market (assumes platform exists)
+- ✅ Focused scope (app-specific resources only)
+- ✅ Simpler IaC (no cross-subscription dependencies)
+
+**Workload-Only Assumptions**:
+
+- ⚠️ Assumes existing landing zone or shared platform
+- ⚠️ Limited control over networking/governance
+- ⚠️ May require coordination with platform team
+
+---
+
 ## Article IX: Infrastructure as Code
 
 > **📋 Applies to**: Infrastructure Only, Full Stack
