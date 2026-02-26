@@ -20,7 +20,7 @@ Bolt Framework (AURORA-IA-DLC) is an AI-powered software development methodology
 - **6 Lifecycle Phases**: INCEPTION → DISCOVERY → CONSTRUCTION → TRANSITION → PRODUCTION → RETIREMENT
 - **Micro-Iterations (Bolts)**: Small, deliverable increments (2-3 days max)
 - **Quality Gates**: Every Bolt must pass linting, tests, and review
-- **Agent Specialization**: 30+ specialized AI agents for different tasks
+- **Agent Specialization**: 31+ specialized AI agents for different tasks
 
 ## Key Concepts
 
@@ -62,7 +62,7 @@ Bolt Framework skills work with:
 - **Constitution**: `memory/constitution.md` - Project constraints and standards
 - **Feature Specs**: `specs/XXX-feature-name/` - Detailed feature specifications
 - **Quality Gates**: Automated validation of code quality
-- **Agents**: 30+ AURORA agents in `.github/agents/`
+- **Agents**: 31+ AURORA agents in `.github/agents/`
 
 ## Documentation
 

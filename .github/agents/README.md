@@ -12,7 +12,7 @@ Agents are conversational AI assistants specialized for specific tasks. Each age
 - **Model**: AI model used (Claude Sonnet 4.5)
 - **Handoffs**: Ability to delegate to other agents
 
-## Available Agents (30 Total)
+## Available Agents (31 Total)
 
 ### 🌌 Orchestrator
 
@@ -56,11 +56,12 @@ Agents are conversational AI assistants specialized for specific tasks. Each age
 
 ### 🔍 Analysis & Quality
 
-| Agent            | File                        | Purpose                                |
-| ---------------- | --------------------------- | -------------------------------------- |
-| Aurora Analyze   | `aurora-analyze.agent.md`   | Consistency analysis between artifacts |
-| Aurora Alignment | `aurora-alignment.agent.md` | Business-technical alignment           |
-| Bolt ADR         | `bolt-adr.agent.md`         | Architecture Decision Records          |
+| Agent            | File                        | Purpose                                                              |
+| ---------------- | --------------------------- | -------------------------------------------------------------------- |
+| Aurora Analyze   | `aurora-analyze.agent.md`   | Consistency analysis between artifacts                               |
+| Aurora Alignment | `aurora-alignment.agent.md` | Business-technical alignment                                         |
+| Bolt ADR         | `bolt-adr.agent.md`         | Architecture Decision Records                                        |
+| Bolt Researcher  | `bolt-researcher.agent.md`  | Research and investigate using MCP servers and project documentation |
 
 ### 🔒 Security & Compliance
 
@@ -138,7 +139,7 @@ Agents can execute automation scripts when needed. Each agent documents its avai
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
 │   ┌────────────────────────────────────────────────────────────┐    │
-│   │                    🤖 AGENTS (30)                               │    │
+│   │                    🤖 AGENTS (31)                               │    │
 │   │         Conversational interface with users                     │    │
 │   │                                                                 │    │
 │   │   Tools: codebase, search, edit, runInTerminal, etc.            │    │

@@ -85,7 +85,11 @@ handoffs:
     agent: Bolt Security
     prompt: Perform security analysis with OWASP compliance
     send: false
-  - label: 📜 Create ADR
+  - label: � Research Topic
+    agent: Bolt Researcher
+    prompt: Research technologies, patterns, or best practices using MCP servers
+    send: false
+  - label: �📜 Create ADR
     agent: Bolt ADR
     prompt: Create Architecture Decision Record
     send: false
@@ -142,6 +146,7 @@ Use skill to detect:
 - Implement code → Handoff to `Bolt Implement`
 - Project status → Handoff to `Bolt Status`
 - Fix security → Handoff to `Bolt Security`
+- Research technology → Handoff to `Bolt Researcher`
 
 ## Methodology
 

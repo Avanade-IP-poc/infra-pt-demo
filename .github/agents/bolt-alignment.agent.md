@@ -6,7 +6,7 @@ tools:
     search,
     read,
     web,
-    problems,
+    memory,
     vscode,
     agent,
     'github/*',

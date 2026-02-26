@@ -178,7 +178,7 @@ Use the Bolt Framework agent with the handoffs for guided project creation:
 ```
 my-project/
 ├── .github/                    # GitHub Actions, Issue Templates, PR Templates
-│   ├── agents/                 # 30 specialized AI agents
+│   ├── agents/                 # 31 specialized AI agents
 │   ├── workflows/              # CI/CD pipelines
 │   └── prompts/                # Reusable AI prompts
 ├── .aurora/                    # Bolt framework

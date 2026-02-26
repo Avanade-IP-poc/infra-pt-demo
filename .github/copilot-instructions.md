@@ -79,7 +79,7 @@ project/
 
 ## Specialized Agents
 
-Bolt Framework includes 30 specialized AI agents. Invoke them with `@AgentName`:
+Bolt Framework includes 31 specialized AI agents. Invoke them with `@AgentName`:
 
 | Topic           | Agent                 |
 | --------------- | --------------------- |
@@ -91,6 +91,7 @@ Bolt Framework includes 30 specialized AI agents. Invoke them with `@AgentName`:
 | Documentation   | `@Bolt Documentation` |
 | Operations      | `@Bolt Ops`           |
 | Releases        | `@Bolt Release`       |
+| Research        | `@Bolt Researcher`    |
 
 📚 **Full list**: [.github/agents/README.md](.github/agents/README.md)
 
