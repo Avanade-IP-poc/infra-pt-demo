@@ -103,7 +103,7 @@ Use the Bolt Framework agent with the handoffs for guided project creation:
 
 2. **Interactive Configuration**
 
-   ```
+   ```text
    Agent asks step-by-step:
    ├── Destination directory (../my-project)
    ├── Project type (green/brown)
@@ -123,7 +123,7 @@ Use the Bolt Framework agent with the handoffs for guided project creation:
 
 ### Example Agent Interaction
 
-```
+```text
 🤖 Agent: "Destination directory?"
 👤 You: "../my-ecommerce-app"
 
@@ -175,7 +175,7 @@ Use the Bolt Framework agent with the handoffs for guided project creation:
 
 ## 📁 Generated Structure
 
-```
+```text
 my-project/
 ├── .github/                    # GitHub Actions, Issue Templates, PR Templates
 │   ├── agents/                 # 31 specialized AI agents
@@ -222,14 +222,83 @@ You must select:
 
 After initialization, use specialized AI agents:
 
-| Agent             | Purpose             | Usage                   |
-| ----------------- | ------------------- | ----------------------- |
-| `@Bolt Framework` | Main orchestrator   | Project coordination    |
-| `@Bolt Feature`   | Feature creation    | New feature development |
-| `@Bolt Legacy`    | Legacy analysis     | Brownfield migration    |
-| `@Bolt Architect` | Architecture design | System architecture     |
-| `@Bolt Testing`   | Test generation     | Test automation         |
-| `@Bolt Ops`       | Operations          | Deployment & monitoring |
+| Agent                | Purpose               | Usage                               |
+| -------------------- | --------------------- | ----------------------------------- |
+| `@Bolt Framework`    | Main orchestrator     | Project coordination                |
+| `@Bolt Constitution` | Constitution setup    | Two-step initialization (Step 2)    |
+| `@Bolt Provisioner`  | Resource provisioning | Download skills from online sources |
+| `@Bolt Feature`      | Feature creation      | New feature development             |
+| `@Bolt Implement`    | Code implementation   | Micro-iteration (Bolts) execution   |
+| `@Bolt Testing`      | Test generation       | TDD/BDD test automation             |
+| `@Bolt Architect`    | Architecture design   | System architecture & ADRs          |
+| `@Bolt Ops`          | Operations            | Deployment & monitoring             |
+
+### 🚀 Bolt Provisioner - Multi-Source Skill Downloading
+
+The `@Bolt Provisioner` agent automatically provisions resources from multiple sources:
+
+#### Supported Sources
+
+1. **Local Files** (`.boltf/available-skills/`)
+   - Auto-selects relevant skills based on your tech stack
+   - Example: `.NET backend` → copies all `dotnet-backend/*` skills
+
+2. **Context7** (via MCP)
+   - Downloads documentation from Microsoft Learn and other sources
+   - Example: Azure Bicep templates, API documentation
+
+3. **Awesome Copilot** (via MCP)
+   - Downloads instructions from [Awesome Copilot](https://github.com/github/awesome-copilot) repository
+   - Example: Best practices, code patterns
+
+4. **GitHub/Awesome Skills** (via MCP)
+   - Clones skill directories from public repositories
+   - Example: Terraform modules, specialized testing skills
+
+#### Usage
+
+After running Init.ps1 (Step 1), invoke `@Bolt Constitution` which will offer to provision resources:
+
+```
+User: @Bolt Constitution setup constitution
+
+Agent Response:
+✓ Constitution generated
+✓ Scopes: backend, frontend, cloud-platform
+Ready to provision resources from:
+- Local: 8 skills auto-selected
+- Context7: 3 templates available
+- Awesome Copilot: 2 instructions available
+
+[🚀 Provision Resources] ← Click here
+
+→ Handoff to @Bolt Provisioner
+→ Downloads all resources
+→ Generates provision report
+```
+
+#### Example Provision Report
+
+```markdown
+## Provision Report - 2026-02-26
+
+### ✓ Local Files (8 skills)
+
+- backend-testing-dotnet (from .boltf/available-skills/dotnet-backend/)
+- tdd-red-green-refactor (from .boltf/available-skills/testing-must/)
+
+### ✓ Context7 Downloads (3 templates)
+
+- Azure App Service Bicep template (Microsoft Learn)
+- Source: https://learn.microsoft.com/azure/app-service/...
+
+### ✓ Awesome Copilot Downloads (2 instructions)
+
+- bicep-code-best-practices (azure-cloud-development collection)
+- Source: github.com/github/awesome-copilot/...
+
+**Total**: 13 resources provisioned to .github/
+```
 
 ## 📈 Semantic Versioning
 
