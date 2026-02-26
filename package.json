@@ -1,7 +1,12 @@
 {
   "scripts": {
     "validate:scopes:ps": "pwsh -File ./.aurora/scripts/powershell/Validate-Scopes.ps1 -Check",
-    "validate:scopes:sh": "bash ./.aurora/scripts/bash/validate-scopes.sh --check"
+    "validate:scopes:sh": "bash ./.aurora/scripts/bash/validate-scopes.sh --check",
+    "python:bootstrap": "pwsh -File ./.aurora/scripts/powershell/Bootstrap-Python.ps1",
+    "python:bootstrap:force": "pwsh -File ./.aurora/scripts/powershell/Bootstrap-Python.ps1 -Force",
+    "skill:validate": "pwsh -File ./Invoke-PythonScript.ps1 .github/skills/skill-creator/scripts/quick_validate.py",
+    "skill:package": "pwsh -File ./Invoke-PythonScript.ps1 .github/skills/skill-creator/scripts/package_skill.py",
+    "skill:validate-all": "pwsh -c \"Get-ChildItem .github/skills -Directory | ForEach-Object { Write-Host 'Validating:' $_.Name -ForegroundColor Cyan; ./Invoke-PythonScript.ps1 .github/skills/skill-creator/scripts/quick_validate.py $_.FullName }\""
   },
   "devDependencies": {
     "prettier": "^3.8.1"

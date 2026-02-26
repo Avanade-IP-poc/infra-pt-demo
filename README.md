@@ -280,7 +280,49 @@ Bolt Framework follows semantic versioning:
 chmod +x init2.sh
 ```
 
-## 📞 Support
+## � Python Integration (Optional)
+
+Bolt Framework includes **optional** Python-based scripts for advanced features:
+
+- ✅ **AI-powered skill optimization** - Automatically improve skill descriptions using Claude
+- ✅ **Skill evaluation** - Test and benchmark skill triggering accuracy
+- ✅ **Advanced scaffolding** - Code generation for frontend components and IaC
+
+### Quick Setup
+
+**Windows (PowerShell):**
+
+```powershell
+# One-time setup
+.\.aurora\scripts\powershell\Bootstrap-Python.ps1
+
+# Run Python scripts
+.\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\quick_validate.py my-skill\
+```
+
+**Linux/macOS (Bash):**
+
+```bash
+# One-time setup
+source .aurora/scripts/bash/bootstrap-python.sh
+
+# Activate environment
+source .bolt-venv/bin/activate
+
+# Run Python scripts
+python .github/skills/skill-creator/scripts/quick_validate.py my-skill/
+```
+
+### Requirements
+
+- **Python 3.9+** (download from https://python.org/downloads/)
+- Packages installed automatically: `anthropic`, `pyyaml`
+
+📚 **Full guide**: [docs/python-integration.md](docs/python-integration.md)
+
+> **Note**: Python is NOT required for basic Bolt Framework functionality (init, constitution, specs). It's only needed for advanced AI-powered features.
+
+## �📞 Support
 
 - 📖 **Documentation**: `.aurora/docs/`
 - 🤖 **AI Help**: `@Bolt Framework` agent in your project

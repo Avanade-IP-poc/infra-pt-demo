@@ -497,7 +497,25 @@ function Copy-BoltFramework {
         if (Test-Path "$root\$_") { Copy-Item "$root\$_" "$OutputDirectory\$_" -Force }
     }
 
-    Write-Success "Bolt Framework copied"
+    # Python integration scripts (root level)
+    @("Invoke-PythonScript.ps1", "Test-PythonEnvironment.ps1", "test-python-environment.sh") | ForEach-Object {
+        if (Test-Path "$root\$_") {
+            Copy-Item "$root\$_" "$OutputDirectory\$_" -Force
+            Write-Info "Copied Python script: $_"
+        }
+    }
+
+    # Python documentation and examples
+    if (Test-Path "$root\docs") {
+        Copy-Item "$root\docs" "$OutputDirectory\docs" -Recurse -Force
+        Write-Info "Copied documentation including Python integration guide"
+    }
+    if (Test-Path "$root\examples") {
+        Copy-Item "$root\examples" "$OutputDirectory\examples" -Recurse -Force
+        Write-Info "Copied examples including Python usage examples"
+    }
+
+    Write-Success "Bolt Framework copied (including Python integration)"
 }
 
 # ─── Create directory structure ──────────────────────────────────────────────
