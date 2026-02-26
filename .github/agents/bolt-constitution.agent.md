@@ -52,6 +52,28 @@ handoffs:
 - **Step 1** (Init.ps1): Select Practice → Generate basic config (`scopes.yaml` + basic `constitution.md`)
 - **Step 2** (THIS AGENT): Invoke `skill-bolt-setup-constitution` skill → Provision files → Merge constitutions → Report
 
+### Core Skills Auto-Discovery
+
+**IMPORTANT**: This agent provisions **ALL Bolt Framework core skills** automatically via auto-discovery:
+
+- **Auto-discovers** all directories in `.aurora/available-skills/bolt-framework/`
+- **No hardcoded list** - extensible by design
+- **Current skills** (7 total):
+  - `bolt-framework` - Methodology core (6 phases: INCEPTION → RETIREMENT)
+  - `skill-bolt-adr` - Architecture Decision Records (MADR format)
+  - `skill-bolt-branch-management` - Git branch workflows
+  - `skill-bolt-constitution-driven-development` - Constitution compliance validation
+  - `skill-bolt-quality-gates` - Multi-language quality validation
+  - `skill-bolt-setup-constitution` - Provisioning engine (self-reference)
+  - `skill-bolt-testing-discipline` - TDD/BDD workflows
+
+**Provisioning Details:**
+
+- Source: `.aurora/available-skills/bolt-framework/{skill-name}/`
+- Destination: `.github/skills/{skill-name}/`
+- Copies complete structure: `SKILL.md`, `examples/`, `templates/`, etc.
+- Happens ALWAYS, regardless of Practice or scopes selected
+
 ### When to Use This Agent
 
 1. **After running Init.ps1** - Complete project setup with file provisioning

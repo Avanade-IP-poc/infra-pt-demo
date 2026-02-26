@@ -2,6 +2,74 @@ version: 1
 scope: frontend
 description: Artefactos frontend reutilizables para el proyecto destino.
 items:
+  # ============================================
+  # FRONTEND UI/UX SKILLS
+  # ============================================
+
+  - id: frontend-design-skill
+    kind: skills
+    enabled: true
+    auto_provision: true
+    tags: ['design', 'ui', 'tailwind']
+    source:
+      type: local_folder
+      path: available-skills/ui-common/frontend-design
+    destination:
+      folder: .github/skills
+      name: frontend-design
+    description: >
+      Distinctive frontend design for Angular/React/Vue with Tailwind CSS.
+      Bold aesthetics and modern design patterns.
+
+  - id: frontend-tailwind-design-system
+    kind: skills
+    enabled: true
+    auto_provision: true
+    tags: ['tailwind', 'design-system', 'css']
+    source:
+      type: local_folder
+      path: available-skills/ui-common/tailwind-design-system
+    destination:
+      folder: .github/skills
+      name: tailwind-design-system
+    description: >
+      Tailwind v4 design systems with CSS-first config, design tokens, and OKLCH colors.
+      Modern approach to scalable design systems.
+
+  - id: frontend-web-design-reviewer
+    kind: skills
+    enabled: true
+    auto_provision: true
+    tags: ['design', 'review', 'validation']
+    source:
+      type: local_folder
+      path: available-skills/ui-common/web-design-reviewer
+    destination:
+      folder: .github/skills
+      name: web-design-reviewer
+    description: >
+      Visual inspection and design validation with browser automation.
+      Fix design issues at source level.
+
+  - id: frontend-senior-frontend
+    kind: skills
+    enabled: true
+    auto_provision: true
+    tags: ['react', 'typescript', 'architecture']
+    source:
+      type: local_folder
+      path: available-skills/frontend/senior-frontend
+    destination:
+      folder: .github/skills
+      name: senior-frontend
+    description: >
+      Complete frontend toolkit (React/Next/TypeScript) with component generator and bundle analyzer.
+      Framework-agnostic architecture patterns.
+
+  # ============================================
+  # MCP & EXTERNAL RESOURCES
+  # ============================================
+
   - id: frontend-mcp-settings-local
     kind: templates
     enabled: false

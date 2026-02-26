@@ -255,6 +255,82 @@ function Get-AllDecisions {
     elseif ($hasCloudPlatform)                { $d.ProjectType = "infra-only" }
     else                                      { $d.ProjectType = "app-only" }
 
+    # ── Step 1.5 — .NET Aspire Orchestration (Optional) ────────────────────
+    Write-Host ""
+    Write-Step "Step 1.5 — Service Orchestration (.NET Aspire)"
+
+    # Detect multi-service architecture
+    $serviceCount = 0
+    if ($d.Scopes -contains "backend")        { $serviceCount++ }
+    if ($d.Scopes -contains "frontend")       { $serviceCount++ }
+    if ($d.Scopes -contains "cloud-platform" -or $d.Scopes -contains "data" -or $d.Scopes -contains "integration") {
+        $serviceCount++ # External resources suggest multi-service
+    }
+
+    $d.UseAspire = $false
+
+    # Only recommend Aspire for multi-service architectures with Apps & Infra practice
+    if ($selectedPractice -eq "Apps & Infra" -and $serviceCount -ge 2) {
+        Write-Host ""
+        Write-Host "  ℹ Multi-service architecture detected ($serviceCount+ services)" -ForegroundColor Cyan
+        Write-Host "  .NET Aspire streamlines orchestration for distributed applications." -ForegroundColor DarkGray
+        Write-Host ""
+        Write-Host "  ✅ Benefits:" -ForegroundColor Green
+        Write-Host "     • Automatic service discovery (no hardcoded URLs)" -ForegroundColor DarkGray
+        Write-Host "     • Built-in observability dashboard (OpenTelemetry)" -ForegroundColor DarkGray
+        Write-Host "     • Simplified local development (one command launches all)" -ForegroundColor DarkGray
+        Write-Host "     • Unified deployment to Azure with 'azd'" -ForegroundColor DarkGray
+        Write-Host ""
+        Write-Host "  ⚠️  Requirements:" -ForegroundColor Yellow
+        Write-Host "     • .NET 8+ SDK" -ForegroundColor DarkGray
+        Write-Host "     • Docker Desktop (for local development)" -ForegroundColor DarkGray
+        Write-Host "     • AppHost project (orchestrator created during provisioning)" -ForegroundColor DarkGray
+        Write-Host ""
+
+        $d.UseAspire = Read-YesNo "  Use .NET Aspire for service orchestration?" $true
+
+        if ($d.UseAspire) {
+            Write-Success "Aspire enabled — AppHost and ServiceDefaults will be provisioned"
+        } else {
+            Write-Info "Aspire disabled — using traditional service deployment"
+        }
+    } else {
+        # Don't ask for simple architectures
+        Write-Host "  ℹ Single-service architecture detected — Aspire not recommended" -ForegroundColor DarkGray
+        Write-Host "  .NET Aspire is designed for 2+ services with external resources" -ForegroundColor DarkGray
+        $d.UseAspire = $false
+    }
+
+    # ── Step 1.6 — Work Management Tool Integration (Optional) ─────────────
+    Write-Host ""
+    Write-Step "Step 1.6 — Work Management Tool Integration"
+
+    Write-Host ""
+    Write-Host "  ℹ Bolt Framework can integrate with work management tools" -ForegroundColor Cyan
+    Write-Host "  This enables automatic sync of:" -ForegroundColor DarkGray
+    Write-Host "     • Feature specs → Work items/Issues" -ForegroundColor DarkGray
+    Write-Host "     • Implementation plans → Tasks" -ForegroundColor DarkGray
+    Write-Host "     • Bolt iterations → Status updates" -ForegroundColor DarkGray
+    Write-Host ""
+
+    $d.WorkManagementTool = Read-Choice `
+        -Title "Select work management tool (or None for manual tracking)" `
+        -Options @(
+            "None (manual tracking)",
+            "Azure Boards (Azure DevOps work items)",
+            "GitHub Projects (GitHub Issues integration)",
+            "Jira (Atlassian work management)"
+        ) `
+        -Values @("none", "azure-boards", "github-projects", "jira") `
+        -Default 1
+
+    if ($d.WorkManagementTool -ne "none") {
+        Write-Success "Work management tool: $($d.WorkManagementTool)"
+        Write-Host "  ℹ Configure connection details in constitution after provisioning" -ForegroundColor DarkGray
+    } else {
+        Write-Info "Manual tracking — no automatic sync configured"
+    }
+
     # ── Article X — Environments & Configuration ────────────────────────────
     Write-Host ""
     Write-Step "Article X — Environments & Configuration"
@@ -604,6 +680,8 @@ project:
   practice: $($Decisions.Practice)      # Practice selection (Phase 3)
   type: $($Decisions.ProjectType)       # derived from scopes
   migration-type: $ProjectType   # green | brown
+  use-aspire: $($Decisions.UseAspire.ToString().ToLower())   # .NET Aspire orchestration (Step 1.5)
+  work-management-tool: $($Decisions.WorkManagementTool)    # Work item tracking integration (Step 1.6)
 
 active-scopes:
 $scopesYaml
@@ -689,6 +767,48 @@ function New-BasicConstitution {
     # Build scope list
     $scopesList = ($D.Scopes | ForEach-Object { "- **$_**" }) -join "`n"
 
+    # Build Aspire article if enabled
+    $aspireArticle = ""
+    if ($D.UseAspire) {
+        $aspireArticle = @"
+
+---
+
+# Article XX — Service Orchestration & Discovery
+
+## Decision
+
+**Pattern**: .NET Aspire (AppHost-based orchestration)
+
+## Rationale
+
+Multi-service architecture ($($D.Scopes -join ', ')) benefits from:
+- **Automatic service discovery**: Eliminates hardcoded URLs between services
+- **Built-in observability**: OpenTelemetry dashboard for traces, metrics, logs
+- **Simplified local development**: Single ``dotnet run`` launches all services
+- **Unified deployment**: ``azd up`` deploys entire solution to Azure
+
+## Implementation
+
+- **AppHost Project**: Created during provisioning at ``src/AppHost/``
+- **Service Defaults**: Shared OpenTelemetry, health checks, resilience configuration
+- **Dashboard**: Aspire Dashboard enabled for local development at ``http://localhost:15888``
+- **Deployment**: Azure deployment via ``azd`` CLI with Bicep generation
+
+## Trade-offs
+
+- ✅ **Pros**: Eliminates service discovery boilerplate, standardized observability
+- ⚠️  **Cons**: Requires Docker Desktop for local containers, additional AppHost project
+
+## References
+
+- [.NET Aspire Documentation](https://learn.microsoft.com/dotnet/aspire/)
+- [AppHost Patterns](https://learn.microsoft.com/dotnet/aspire/fundamentals/app-host-overview)
+- [Service Discovery](https://learn.microsoft.com/dotnet/aspire/service-discovery/overview)
+
+"@
+    }
+
     $content = @"
 # Project Constitution
 
@@ -700,6 +820,7 @@ function New-BasicConstitution {
 - **Practice**: $($D.Practice)
 - **Active Scopes**: $($D.Scopes -join ', ')
 - **Project Type**: $($D.ProjectType) ($ProjectType)
+- **Use Aspire**: $($D.UseAspire)
 - **Initialized**: $date
 
 ---
@@ -709,6 +830,7 @@ function New-BasicConstitution {
 The following scopes are active for this project:
 
 $scopesList
+$aspireArticle
 
 ## Next Steps
 

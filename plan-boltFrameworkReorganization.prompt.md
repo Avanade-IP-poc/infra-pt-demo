@@ -35,9 +35,9 @@ Este plan transforma el framework "Aurora" en **Bolt Framework** con arquitectur
 ### Estado General
 
 - **Estado del Plan**: 🟡 En Progreso
-- **Fase Actual**: Phase 5 - 🟡 Validación y Testing (Automated + Work Mgmt Sync completed)
-- **Última actualización**: 2026-02-23
-- **Progreso global**: 28/30 tareas completadas (93%)
+- **Fase Actual**: Phase 5.7 - ✅ 2review Cleanup (Completed)
+- **Última actualización**: 2026-02-26
+- **Progreso global**: 41/44 tareas completadas (93%)
 - **Nota**: Task 28 (PR) omitida por decisión del usuario - se creará PR más adelante
 
 ### Leyenda de Estados
@@ -57,12 +57,18 @@ Este plan transforma el framework "Aurora" en **Bolt Framework** con arquitectur
 | Phase 3   | 6      | 6           | ✅ Completada  | 100%     |
 | Phase 4   | 2      | 2           | ✅ Completada  | 100%     |
 | Phase 5   | 5      | 3           | 🟡 En Progreso | 60%      |
-| **TOTAL** | **30** | **28**      | 🟡 Activo      | **93%**  |
+| Phase 5.5 | 6      | 5           | 🟡 En Progreso | 83%      |
+| Phase 5.6 | 5      | 5           | ✅ Completada  | 100%     |
+| Phase 5.7 | 3      | 3           | ✅ Completada  | 100%     |
+| **TOTAL** | **44** | **41**      | 🟡 Activo      | **93%**  |
 
 **Notas**:
 
 - Task 28 (PR) omitida intencionalmente - se creará después del testing manual
 - Task 27.5 (Work Mgmt Sync) agregada como funcionalidad adicional ✅
+- Phase 5.5 (Aspire Integration) implementada como característica opcional ✅
+- Phase 5.6 (Universal Skills + Work Mgmt Tool) implementada con Opción B ✅
+- Phase 5.7 (2review Cleanup) completada - 18 skills procesados (8 borrados, 9 movidos) ✅
 
 ### Cómo Actualizar Este Plan
 
@@ -564,16 +570,20 @@ No hay usuarios con workflows dependientes, por lo tanto:
           - Descargar contenido (para fase posterior)
       - Log: archivos copiados, skipped (ya existen), errores
 
-    **Paso 2 - Provisión de skills core (SIEMPRE)**:
-    - **IMPORTANTE**: Copiar `bolt-framework` independientemente de scopes activos
-    - Copiar desde `.aurora/available-skills/bolt-framework/` a `.github/skills/bolt-framework/`
-    - Incluye toda la estructura:
-      - `SKILL.md` (skill metodológico expandido)
-      - `HANDOFF-MATRIX.md` (matriz de handoffs entre agentes)
-      - `examples/` (brownfield, greenfield, hotfix workflows)
-      - `templates/` (bolt-template, constitution-template, quality-gate-checklist)
-    - Preservar estructura de directorios completa
-    - Log: "Core skill 'bolt-framework' provisioned (always included)"
+    **Paso 2 - Provisión de skills core (SIEMPRE - AUTO-DISCOVERY)**:
+    - **IMPORTANTE**: El script auto-descubre y copia **TODOS los directorios** en `.aurora/available-skills/bolt-framework/`
+    - **Auto-Discovery**: Usa `Get-ChildItem -Directory` para encontrar todos los skills sin hardcodear nombres
+    - **Skills descubiertos automáticamente** (7 en total):
+      - `bolt-framework/` - Skill metodológico core (6 fases)
+      - `skill-bolt-adr/` - Architecture Decision Records (MADR)
+      - `skill-bolt-branch-management/` - Git branch workflows
+      - `skill-bolt-constitution-driven-development/` - Constitution compliance
+      - `skill-bolt-quality-gates/` - Quality validation
+      - `skill-bolt-setup-constitution/` - Provisioning engine (self-reference)
+      - `skill-bolt-testing-discipline/` - TDD/BDD workflows
+    - **Extensibilidad**: Agregar nuevos skills en `bolt-framework/` → se copian automáticamente
+    - Destino: `.github/skills/{nombre-skill}/` (preserva estructura completa)
+    - Log: "Core skill 'bolt-framework' provisioned (always included)" + count de skills
     - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan (sub-tarea 21.4)
 
     **21.5. Generar reporte de provisión**:
@@ -741,9 +751,107 @@ No hay usuarios con workflows dependientes, por lo tanto:
       - Verificar usa `skill-branch-management` sin ejecutar bash inline
     - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan y actualizar el estado general del plan a "Completado"
 
-## Verificación
+---
 
-### Comandos de Validación
+### Phase 5.7: 2review Cleanup (Skills Migration)
+
+**Duración**: 1-2 horas
+**Status**: ✅ Completado (2026-02-26)
+
+**Objetivo**: Limpiar carpeta 2review/ organizando skills pendientes en carpetas apropiadas.
+
+#### Resultados
+
+✅ **35. Análisis de 2review/** (COMPLETADO):
+
+- Analizados 18 skills en carpeta 2review/
+- Identificados 8 duplicados para borrar
+- Identificados 9 skills para mover a carpetas organizadas
+- Creado CLEANUP-DECISIONS.md con análisis completo
+- Identificada necesidad de refactoring de templates Aspire (cohesión)
+
+✅ **36. Ejecución de Cleanup** (COMPLETADO):
+
+- **Borrados (8 duplicados)**:
+  - architec-diagramer (typo, existe architect-diagramer en azure/)
+  - skill-creator (existe en .github/skills/)
+  - azure-identity-dotnet, azure-role-selector, azure-usage (existen en azure/)
+  - tdd-workflow, test-driven-development (duplicados de tdd-comprehensive)
+  - playwright-e2e (vacío, sin SKILL.md)
+
+- **Movidos (9 skills)**:
+  - A github/: git-branch-manager, issue-formatter
+  - A document/: mermaid-creator, planning-with-files
+  - A ui-common/: frontend-design, tailwind-design-system, web-design-reviewer
+  - A functional-tests/: integration-e2e-testing
+  - A cloud-platform/: senior-devops
+  - A frontend/ (NUEVA carpeta): senior-frontend
+
+✅ **37. Actualización de Scope.yaml** (COMPLETADO):
+
+- **common/scope.yaml**: +4 skills (git-branch-manager, issue-formatter, mermaid-creator, planning-with-files)
+- **frontend/scope.yaml**: +4 skills (frontend-design, tailwind-design-system, web-design-reviewer, senior-frontend)
+- **backend/scope.yaml**: +1 skill (integration-e2e-testing - Testcontainers + Respawn)
+- **cloud-platform/scope.yaml**: +1 skill (senior-devops - DevOps completo)
+
+✅ **38. Validación** (COMPLETADO):
+
+- `npm run validate:scopes:ps`: 9/9 scopes OK, 0 errors
+- Correcciones aplicadas: tags reducidos a max 3, añadido 'csharp' donde corresponde
+- 2review/ verificado vacío (0 directorios)
+
+#### Decisiones Clave
+
+**1. TDD Consolidation (3 → 1)**:
+
+- Mantener solo `common/tdd-comprehensive` (521 líneas)
+- Borrar `tdd-workflow` (567 líneas) y `test-driven-development` (478 líneas)
+- Razón: Contenido prácticamente idéntico ("Iron Law", Red-Green-Refactor)
+
+**2. Frontend Folder Creation**:
+
+- Creada `available-skills/frontend/` para skills frontend agnósticos
+- Diferente de react/, vue/, angular/ (framework-specific)
+- Para senior-frontend (arquitectura genérica frontend)
+
+**3. Playwright-e2e Handling**:
+
+- Ambas ubicaciones (2review y functional-tests) vacías (solo templates/ vacías)
+- Borrar 2review copy
+- TODO Phase 5.8: Crear skill playwright-e2e completo
+
+**4. Aspire Templates Refactoring (Decisión 7.0)**:
+
+- **Problema**: Templates en `.aurora/templates/aspire/` (baja cohesión con skill)
+- **Decisión**: Mover dentro de skill: `skill-bolt-aspire-orchestration/templates/`
+- **Beneficio**: Alta cohesión, pattern consistency, provisión unificada (1 Copy recursivo vs 2)
+
+#### Archivos Afectados
+
+**Movidos**: 9 carpetas (53 archivos totales)
+**Borrados**: 8 carpetas (42 archivos totales)
+**Modificados**: 5 archivos:
+
+- common/scope.yaml (+4 items)
+- frontend/scope.yaml (+4 items)
+- backend/scope.yaml (+1 item)
+- cloud-platform/scope.yaml (+1 item)
+- 2review/README.md (actualizado con status final)
+- 2review/CLEANUP-DECISIONS.md (añadida decisión Aspire)
+
+**Creados**: 1 carpeta:
+
+- available-skills/frontend/
+
+#### Próximos Pasos
+
+1. ⬜ **Phase 5.8**: Crear skill playwright-e2e completo (actualmente placeholder vacío)
+2. ⬜ **Task 28**: Manual testing de two-step workflow completo
+3. ⬜ **Aspire refactoring**: Mover templates dentro del skill (Decisión 7.0)
+
+---
+
+### Phase 5.5: Aspire Integration (Optional)
 
 ```powershell
 # 1. Validar NO quedan referencias a "Aurora" en agentes
@@ -1050,16 +1158,28 @@ For each scope in active scopes:
 4. Read `.aurora/scopes/{scope}/memory/constitution.md`
 5. Extract scope-specific articles (refer to mapping table in .aurora/scopes/README.md)
 
-### Step 3.5: Provision Core Skills (ALWAYS)
+### Step 3.5: Provision Core Skills (ALWAYS - AUTO-DISCOVERY)
 
-**IMPORTANT**: After processing scope-specific items, always provision core skills:
+**IMPORTANT**: After processing scope-specific items, always provision core skills using **auto-discovery**:
 
-1. Copy `bolt-framework` skill (entire directory):
-   - Source: `.aurora/available-skills/bolt-framework/`
-   - Destination: `.github/skills/bolt-framework/`
-   - Includes: SKILL.md, HANDOFF-MATRIX.md, examples/, templates/
-2. Log: "Core skill 'bolt-framework' provisioned (always included)"
-3. This happens REGARDLESS of Practice or scopes selected
+1. **Auto-discover ALL skills** in `.aurora/available-skills/bolt-framework/`:
+   - PowerShell: `Get-ChildItem -Path $boltFrameworkPath -Directory`
+   - Finds ALL subdirectories automatically (no hardcoded list)
+   - Current skills (7 total): `bolt-framework`, `skill-bolt-adr`, `skill-bolt-branch-management`, `skill-bolt-constitution-driven-development`, `skill-bolt-quality-gates`, `skill-bolt-setup-constitution`, `skill-bolt-testing-discipline`
+
+2. **Copy each discovered skill** recursively:
+   - Source: `.aurora/available-skills/bolt-framework/{skill-name}/`
+   - Destination: `.github/skills/{skill-name}/`
+   - Preserves complete directory structure (SKILL.md, examples/, templates/, etc.)
+
+3. **Extensibility**: Adding new skills
+   - Create new directory in `.aurora/available-skills/bolt-framework/new-skill/`
+   - Script automatically discovers and provisions it
+   - No code changes needed
+
+4. Log: "Core skill '{skill-name}' provisioned (always included)" for each
+
+5. This happens REGARDLESS of Practice or scopes selected
 
 ### Step 4: Merge Constitution
 
@@ -1493,6 +1613,740 @@ model: claude-sonnet-4.5
 - Validar con testing manual en Phase 5
 - Documentar en copilot-instructions.md la convención
 
+---
+
+### Phase 5.5: Aspire Integration (Optional)
+
+**Duración**: 2-3 horas
+**Status**: 🟡 En Progreso (5/6 tareas completadas)
+
+**Objetivo**: Integrar .NET Aspire como opción de orquestación opcional para proyectos multi-servicio en "Apps & Infra" Practice.
+
+**Diseño Implementado**:
+
+#### 1. Detección Inteligente en Init.ps1 (Step 1.5)
+
+**Ubicación**: Después de Practice Selection, antes de Article X
+
+**Lógica de Detección**:
+
+```powershell
+# Activación condicional: SOLO "Apps & Infra" + 2+ servicios
+if ($d.Practice -eq "Apps & Infra") {
+    $serviceCount = 0
+    if ($d.SelectedScopes -contains "backend") { $serviceCount++ }
+    if ($d.SelectedScopes -contains "frontend") { $serviceCount++ }
+    if ($d.SelectedScopes -match "cloud-platform|data|integration") { $serviceCount++ }
+
+    if ($serviceCount -ge 2) {
+        # Prompt con educación de usuario
+        Write-Host "🎯 Detected multi-service architecture (" -NoNewline
+        Write-Host "$serviceCount services" -ForegroundColor Cyan -NoNewline
+        Write-Host ")"
+        Write-Host "   Consider .NET Aspire for:"
+        Write-Host "   • Automatic service discovery"
+        Write-Host "   • Built-in dashboard (http://localhost:15888)"
+        Write-Host "   • Simplified deployment orchestration"
+        Write-Host "   Requirements: Docker + .NET 8+"
+
+        $aspireChoice = Read-Choice "Use .NET Aspire?" @("Yes", "No") "No"
+        $d.UseAspire = ($aspireChoice -eq "Yes")
+    }
+}
+```
+
+**Criterios de Activación**:
+
+- Practice = "Apps & Infra"
+- Servicios detectados ≥ 2 (backend/frontend + cloud/data/integration)
+- Usuario confirma manualmente
+
+**Educación de Usuario**:
+
+- Beneficios: Service discovery, dashboard, orquestación simplificada
+- Requisitos: Docker, .NET 8+, AppHost project
+- Default: "No" (opt-in)
+
+#### 2. Almacenamiento de Decisión
+
+**A. scopes.yaml** (metadata machine-readable):
+
+```yaml
+project:
+  practice: Apps & Infra
+  use-aspire: true # ← NUEVA PROPIEDAD
+scopes:
+  - name: backend
+    enabled: true
+```
+
+**B. Constitution Article XX** (documentación human-readable):
+
+```markdown
+## Article XX: Orchestration with .NET Aspire
+
+### Rationale
+
+This project uses .NET Aspire for service orchestration due to:
+
+- Multi-service architecture (X services detected)
+- Need for orchestrated local development experience
+- Simplified Azure deployment with azd
+
+### Implementation
+
+- AppHost project: Centralized orchestration
+- Service discovery: Automatic inter-service communication
+- Dashboard: http://localhost:15888 for monitoring
+- ServiceDefaults: Shared telemetry, health checks, resilience policies
+
+### Trade-offs
+
+**Benefits**:
+
+- Reduced boilerplate (service discovery, telemetry)
+- Consistent development/production parity
+- Built-in observability dashboard
+
+**Costs**:
+
+- Additional dependency (.NET Aspire NuGet packages)
+- Learning curve for team (AppHost patterns)
+- Docker required for local development
+
+### References
+
+- .NET Aspire Docs: https://learn.microsoft.com/dotnet/aspire
+- Skill: skill-bolt-aspire-orchestration
+- Templates: .aurora/templates/aspire/
+```
+
+#### 3. Provisión Condicional (Invoke-BoltSetupConstitution.ps1)
+
+**Modificaciones Implementadas**:
+
+**A. Read-Yaml Function** (Parse use-aspire flag):
+
+```powershell
+function Read-Yaml {
+    param([string]$Path)
+
+    # ... existing parsing ...
+
+    # Parse use-aspire (NEW)
+    if ($content -match "use-aspire:\s*(true|false)") {
+        $yaml.UseAspire = ($matches[1] -eq "true")
+    } else {
+        $yaml.UseAspire = $false  # Fallback for old files
+    }
+
+    return $yaml
+}
+```
+
+**B. Copy-AspireResources Function** (NEW, lines 612-700):
+
+```powershell
+function Copy-AspireResources {
+    param(
+        [string]$ProjectPath,
+        [bool]$UseAspire
+    )
+
+    if (-not $UseAspire) {
+        Write-Verbose "Aspire not enabled, skipping"
+        return @()
+    }
+
+    $items = @()
+
+    # 1. Provision skill-bolt-aspire-orchestration
+    $skillSrc = ".aurora/available-skills/aspire/skill-bolt-aspire-orchestration"
+    $skillDst = ".github/skills/skill-bolt-aspire-orchestration"
+    if (Test-Path $skillSrc) {
+        Copy-Item $skillSrc $skillDst -Recurse -Force
+        $items += [PSCustomObject]@{
+            Type = "Skill"
+            Name = "skill-bolt-aspire-orchestration"
+            Source = $skillSrc
+            Destination = $skillDst
+        }
+    }
+
+    # 2. Provision templates
+    $templateSrc = ".aurora/templates/aspire"
+    $templateDst = ".github/templates/aspire"
+    if (Test-Path $templateSrc) {
+        Copy-Item $templateSrc $templateDst -Recurse -Force
+        foreach ($file in Get-ChildItem $templateSrc -File) {
+            $items += [PSCustomObject]@{
+                Type = "Template"
+                Name = $file.Name
+                Source = "$templateSrc/$($file.Name)"
+                Destination = "$templateDst/$($file.Name)"
+            }
+        }
+    }
+
+    return $items
+}
+```
+
+**C. Phase 4 Integration** (Main workflow):
+
+```powershell
+# Phase 4: Provision files based on scopes.yaml
+$scopes = Read-Yaml -Path "memory/scopes.yaml"
+$useAspire = $scopes.UseAspire
+
+# ... existing provisioning ...
+
+# Provision Aspire resources (conditional)
+$aspireResources = Copy-AspireResources -ProjectPath $ProjectPath -UseAspire $useAspire
+
+if ($aspireResources.Count -gt 0) {
+    Write-Host "   (Aspire: $($aspireResources.Count) files)" -ForegroundColor Cyan
+}
+
+# Generate report (includes Aspire section)
+$report = New-ProvisionReport -AspireResources $aspireResources
+```
+
+**D. Report Generation** (Enhanced):
+
+```powershell
+function New-ProvisionReport {
+    param(
+        [array]$AspireResources = @()
+    )
+
+    $report = @"
+# Provision Report
+...
+
+## Aspire Resources
+$aspireSection
+
+## Statistics
+| Category         | Count |
+|------------------|-------|
+| Constitution Articles | $articleCount |
+| Skills               | $skillCount |
+| Aspire Resources     | $($AspireResources.Count) |
+...
+"@
+
+    if ($AspireResources.Count -gt 0) {
+        $aspireSection = @"
+✅ Aspire orchestration enabled
+
+**Skill**:
+- skill-bolt-aspire-orchestration → .github/skills/
+
+**Templates**:
+- AppHost.csproj → .github/templates/aspire/
+- ServiceDefaults.csproj → .github/templates/aspire/
+- Extensions.cs → .github/templates/aspire/
+- Program.cs.template → .github/templates/aspire/
+
+**Documentation**:
+- See Constitution Article XX for rationale and patterns
+"@
+    } else {
+        $aspireSection = "⏭️ Aspire not enabled (use-aspire: false in scopes.yaml)"
+    }
+
+    return $report
+}
+```
+
+#### 4. Skill: skill-bolt-aspire-orchestration
+
+**Ubicación**: `.aurora/available-skills/aspire/skill-bolt-aspire-orchestration/SKILL.md`
+**Líneas**: 200+
+
+**Estructura**:
+
+```yaml
+---
+name: Skill Bolt Aspire Orchestration
+description: Guide development of distributed .NET applications with .NET Aspire
+scopes:
+  - cloud-platform
+  - backend
+  - frontend
+version: 1.0.0
+---
+```
+
+**Secciones**:
+
+1. **Purpose**: When/why to use Aspire orchestration
+2. **When to Use This Skill**:
+   - Multi-service .NET apps (2+ services)
+   - Local development orchestration
+   - Azure deployment with azd
+3. **When NOT to Use**:
+   - Single-service apps
+   - Non-.NET projects
+   - Simple console apps
+4. **Key Concepts**:
+   - AppHost: Orchestration project (DistributedApplication)
+   - Service Discovery: WithReference() pattern
+   - ServiceDefaults: Shared telemetry, health checks, resilience
+   - Dashboard: http://localhost:15888
+5. **Workflows**:
+   - Creating AppHost project
+   - Adding services with WithReference()
+   - Setting up service discovery
+   - Deploying to Azure (azd init → azd up)
+6. **Common Patterns**:
+   - Azure resources (Redis, PostgreSQL, SQL Server)
+   - Environment configuration
+   - Waiting for dependencies (WaitFor())
+7. **Constitution Integration**: References Article XX
+8. **External References**: Microsoft Learn docs
+
+**Código de Ejemplo**:
+
+```csharp
+// AppHost/Program.cs
+var builder = DistributedApplication.CreateBuilder(args);
+
+// External resources
+var redis = builder.AddRedis("redis");
+var postgres = builder.AddPostgres("postgres")
+                      .AddDatabase("catalogdb");
+
+// Backend API with dependencies
+var catalogApi = builder.AddProject<Projects.CatalogApi>("catalogapi")
+                        .WithReference(redis)
+                        .WithReference(postgres);
+
+// Frontend with backend reference
+builder.AddProject<Projects.WebFrontend>("webfrontend")
+       .WithReference(catalogApi);  // Service discovery
+
+builder.Build().Run();
+```
+
+#### 5. Templates Aspire (4 archivos)
+
+**Ubicación**: `.aurora/templates/aspire/`
+
+**A. AppHost.csproj**:
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <UserSecretsId><!-- GUID placeholder --></UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="13.0.*" />
+    <!-- Add project references here:
+    <ProjectReference Include="..\Backend.Api\Backend.Api.csproj" />
+    <ProjectReference Include="..\Frontend.Web\Frontend.Web.csproj" />
+    -->
+  </ItemGroup>
+</Project>
+```
+
+**B. ServiceDefaults.csproj**:
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsAspireSharedProject>true</IsAspireSharedProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="10.0.*" />
+    <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="10.0.*" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.10.*" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.10.*" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.10.*" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.10.*" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.10.*" />
+  </ItemGroup>
+</Project>
+```
+
+**C. Extensions.cs** (100+ líneas):
+
+```csharp
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using OpenTelemetry;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
+
+namespace Microsoft.Extensions.Hosting;
+
+public static class Extensions
+{
+    public static IHostApplicationBuilder AddServiceDefaults(this IHostApplicationBuilder builder)
+    {
+        builder.ConfigureOpenTelemetry();
+        builder.AddDefaultHealthChecks();
+        builder.Services.AddServiceDiscovery();
+
+        builder.Services.ConfigureHttpClientDefaults(http =>
+        {
+            http.AddStandardResilienceHandler();
+            http.AddServiceDiscovery();
+        });
+
+        return builder;
+    }
+
+    public static IHostApplicationBuilder ConfigureOpenTelemetry(this IHostApplicationBuilder builder)
+    {
+        builder.Logging.AddOpenTelemetry(logging =>
+        {
+            logging.IncludeFormattedMessage = true;
+            logging.IncludeScopes = true;
+        });
+
+        builder.Services.AddOpenTelemetry()
+            .WithMetrics(metrics =>
+            {
+                metrics.AddAspNetCoreInstrumentation()
+                       .AddHttpClientInstrumentation()
+                       .AddRuntimeInstrumentation();
+            })
+            .WithTracing(tracing =>
+            {
+                tracing.AddAspNetCoreInstrumentation()
+                       .AddHttpClientInstrumentation();
+            });
+
+        builder.AddOpenTelemetryExporters();
+        return builder;
+    }
+
+    private static IHostApplicationBuilder AddOpenTelemetryExporters(this IHostApplicationBuilder builder)
+    {
+        var useOtlpExporter = !string.IsNullOrWhiteSpace(
+            builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
+
+        if (useOtlpExporter)
+        {
+            builder.Services.AddOpenTelemetry().UseOtlpExporter();
+        }
+        return builder;
+    }
+
+    public static IHostApplicationBuilder AddDefaultHealthChecks(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddHealthChecks()
+               .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
+        return builder;
+    }
+
+    public static WebApplication MapDefaultEndpoints(this WebApplication app)
+    {
+        app.MapHealthChecks("/health");
+        app.MapHealthChecks("/alive", new HealthCheckOptions
+        {
+            Predicate = r => r.Tags.Contains("live")
+        });
+        return app;
+    }
+}
+```
+
+**D. Program.cs.template**:
+
+```csharp
+var builder = DistributedApplication.CreateBuilder(args);
+
+// ==============================================
+// EXTERNAL RESOURCES (e.g., Redis, PostgreSQL)
+// ==============================================
+// Example:
+// var redis = builder.AddRedis("redis");
+// var postgres = builder.AddPostgres("postgres")
+//                       .AddDatabase("mydb");
+
+// ==============================================
+// SERVICE DEFINITIONS
+// ==============================================
+// Example:
+// var backend = builder.AddProject<Projects.BackendApi>("backend-api")
+//                      .WithReference(redis);
+//
+// builder.AddProject<Projects.Frontend>("frontend")
+//        .WithReference(backend);
+
+builder.Build().Run();
+```
+
+#### 6. Integración con Constitution
+
+**Init.ps1** genera conditionally Article XX cuando `$d.UseAspire = $true`:
+
+```powershell
+function New-BasicConstitution {
+    param($D)
+
+    $articles = @()
+    $articles += "## Article I: Active Scopes"
+    # ... existing articles ...
+
+    # Conditional Aspire article
+    if ($D.UseAspire) {
+        $aspireArticle = @"
+## Article XX: Orchestration with .NET Aspire
+
+### Rationale
+This project uses .NET Aspire for service orchestration due to:
+- Multi-service architecture detected
+- Need for orchestrated local development experience
+- Simplified Azure deployment with azd
+
+### Implementation
+...
+"@
+        $articles += $aspireArticle
+    }
+
+    return $articles -join "`n`n"
+}
+```
+
+#### 7. Testing Checklist
+
+✅ **29. Test Aspire Detection Logic (Init.ps1)**:
+
+```powershell
+# Test 1: "Apps & Infra" + 2 services → Should prompt
+PS> .\Init.ps1
+# Select: Apps & Infra
+# Scopes: backend, frontend, cloud-platform
+# Expected: "🎯 Detected multi-service architecture (3 services)"
+# Expected: Prompt "Use .NET Aspire? [Yes/No]"
+
+# Test 2: "Data & AI" → Should NOT prompt
+PS> .\Init.ps1
+# Select: Data & AI
+# Expected: NO Aspire prompt (wrong practice)
+
+# Test 3: "Apps & Infra" + 1 service → Should NOT prompt
+PS> .\Init.ps1
+# Select: Apps & Infra
+# Scopes: backend only
+# Expected: NO Aspire prompt (serviceCount = 1 < 2)
+
+# Test 4: Verify scopes.yaml
+cat memory/scopes.yaml
+# Expected: "use-aspire: true" (if selected Yes)
+```
+
+✅ **30. Test Conditional Provisioning (Invoke-BoltSetupConstitution.ps1)**:
+
+```powershell
+# Test 1: Aspire enabled (use-aspire: true)
+PS> & .aurora\scripts\Invoke-BoltSetupConstitution.ps1 -Verbose
+# Expected: "Provisioning Aspire resources..."
+# Expected: skill-bolt-aspire-orchestration copied to .github/skills/
+# Expected: 4 templates copied to .github/templates/aspire/
+
+# Verify files
+ls .github/skills/skill-bolt-aspire-orchestration
+ls .github/templates/aspire/
+# Expected: AppHost.csproj, ServiceDefaults.csproj, Extensions.cs, Program.cs.template
+
+# Test 2: Aspire disabled (use-aspire: false)
+# Modify scopes.yaml: use-aspire: false
+PS> & .aurora\scripts\Invoke-BoltSetupConstitution.ps1 -Verbose
+# Expected: "Aspire not enabled, skipping"
+# Expected: NO Aspire files copied
+```
+
+✅ **31. Test Provision Report**:
+
+```powershell
+cat memory/provision-report.md
+# Expected sections:
+# - ## Aspire Resources
+# - "✅ Aspire orchestration enabled"
+# - Skill: skill-bolt-aspire-orchestration
+# - Templates: AppHost.csproj, ServiceDefaults.csproj, Extensions.cs, Program.cs.template
+# - Documentation: Article XX reference
+# - ## Statistics
+# - "Aspire Resources | 5" (1 skill + 4 templates)
+```
+
+✅ **32. Test Skill Validation (skill-bolt-aspire-orchestration)**:
+
+```powershell
+# Verify YAML frontmatter
+cat .github/skills/skill-bolt-aspire-orchestration/SKILL.md | Select-String -Pattern "^name:|^description:|^scopes:"
+# Expected:
+# name: Skill Bolt Aspire Orchestration
+# description: Guide development of distributed .NET applications with .NET Aspire
+# scopes:
+
+# Verify skill content
+cat .github/skills/skill-bolt-aspire-orchestration/SKILL.md | Select-String -Pattern "## Purpose|## Key Concepts|## Workflows"
+# Expected: All 3 sections present
+```
+
+✅ **33. Test Constitution Article XX**:
+
+```powershell
+cat memory/constitution.md | Select-String -Pattern "Article XX"
+# Expected: "## Article XX: Orchestration with .NET Aspire" (if use-aspire: true)
+# Expected: No match (if use-aspire: false)
+
+cat memory/constitution.md | Select-String -Pattern "Rationale|Implementation|Trade-offs" -Context 2
+# Expected: Full Article XX with 3 subsections
+```
+
+⬜ **34. End-to-End Integration Test**:
+
+```powershell
+# Clean slate
+rm -Recurse -Force memory/, .github/skills/, .github/templates/
+
+# STEP 1: Init with Aspire
+PS> .\Init.ps1
+# Select: Apps & Infra
+# Scopes: backend, frontend, cloud-platform
+# Aspire prompt: Yes
+
+# Verify: memory/scopes.yaml has "use-aspire: true"
+# Verify: memory/constitution.md has Article XX
+
+# STEP 2: Provision
+PS> & .aurora\scripts\Invoke-BoltSetupConstitution.ps1
+
+# Verify:
+# - Aspire skill copied
+# - Aspire templates copied (4 files)
+# - Provision report includes Aspire section
+# - Constitution still has Article XX (not overwritten)
+
+# STEP 3: Use skill in development
+# (Manual: Invoke @Bolt Framework, verify skill-bolt-aspire-orchestration loaded)
+```
+
+#### 8. Archivos Modificados/Creados
+
+**Modificados** (2 archivos, 7 cambios):
+
+1. **Init.ps1**:
+   - Lines 251-300: Step 1.5 - Aspire detection logic (45 lines NEW)
+   - Line 606: scopes.yaml template - Added `use-aspire` field (1 line)
+   - Lines 740-780: New-BasicConstitution - Conditional Article XX (40 lines NEW)
+
+2. **Invoke-BoltSetupConstitution.ps1**:
+   - Lines 90-108: Read-Yaml - Parse `use-aspire` field (18 lines MODIFIED)
+   - Lines 612-700: Copy-AspireResources function (90 lines NEW)
+   - Line 711: New-ProvisionReport signature - Added `$AspireResources` parameter (1 line)
+   - Lines 735-750: Report generation - Build `$aspireSection` (15 lines NEW)
+   - Lines 935-950: Phase 4 - Call Copy-AspireResources, include in report (15 lines MODIFIED)
+
+**Creados** (5 archivos, 400+ líneas):
+
+3. **.aurora/available-skills/aspire/skill-bolt-aspire-orchestration/SKILL.md** (200+ lines)
+4. **.aurora/templates/aspire/AppHost.csproj** (20 lines)
+5. **.aurora/templates/aspire/ServiceDefaults.csproj** (15 lines)
+6. **.aurora/templates/aspire/Extensions.cs** (100+ lines)
+7. **.aurora/templates/aspire/Program.cs.template** (20 lines)
+
+**Total**:
+
+- **Modified**: 2 scripts, 195 lines changed/added
+- **Created**: 1 skill + 4 templates, 355+ lines
+- **Grand Total**: 7 files, 550+ lines
+
+#### 9. Decisiones de Diseño
+
+**A. ¿Por qué Step 1.5 (no Step 2)?**
+
+- Aspire decision affects project structure (AppHost project)
+- Must decide BEFORE Article X (project architecture)
+- Placed after Practice selection (context available)
+
+**B. ¿Por qué conditional vs universal?**
+
+- Aspire adds complexity (Docker, AppHost, learning curve)
+- Only valuable for multi-service architectures
+- Single-service apps don't benefit from orchestration
+- Opt-in approach reduces friction for simple projects
+
+**C. ¿Por qué dual storage (scopes.yaml + Constitution)?**
+
+- `scopes.yaml`: Machine-readable flag for provisioning script
+- `Constitution Article XX`: Human-readable documentation with rationale
+- Separation of concerns: metadata vs knowledge
+
+**D. ¿Por qué separate skill (not in bolt-framework)?**
+
+- Aspire is optional, bolt-framework is core
+- Avoiding bloating core skill with optional content
+- Easier to version/update independently
+- Clear separation: methodology (bolt-framework) vs technology (aspire)
+
+**E. ¿Por qué 4 template files (not 1 monolithic)?**
+
+- AppHost.csproj: Reusable orchestration project
+- ServiceDefaults.csproj: Reusable shared library
+- Extensions.cs: Complete implementation (not stub)
+- Program.cs.template: Starter with comments
+- Flexibility: Users can copy individually
+
+#### 10. Beneficios de la Integración
+
+**Para Desarrolladores**:
+
+- ✅ Automatic service discovery (no hardcoded URLs)
+- ✅ Built-in dashboard (http://localhost:15888)
+- ✅ Consistent observability (OpenTelemetry out-of-the-box)
+- ✅ Simplified deployment (azd init → azd up)
+
+**Para Bolt Framework**:
+
+- ✅ Modern .NET best practice (Aspire is Microsoft's recommended approach)
+- ✅ Reduces boilerplate in generated code
+- ✅ Aligns with "Apps & Infra" Practice (distributed systems)
+- ✅ Optional feature (doesn't increase complexity for simple projects)
+
+**Para AI-DLC**:
+
+- ✅ Skill provides clear patterns for AppHost orchestration
+- ✅ Templates accelerate Bolt iterations (no researching Aspire from scratch)
+- ✅ Constitution Article XX documents architectural decision
+
+#### 11. Próximos Pasos (Post-Phase 5.5)
+
+1. ⬜ **Task 34**: End-to-End Integration Test (clean slate → Init → Provision → Verify)
+2. ⬜ **Task 28**: Manual testing of two-step workflow (from Phase 5)
+3. ⬜ Extend skill with Azure Container Apps deployment (beyond azd)
+4. ⬜ Add Aspire validation to `npm run validate:scopes:ps`
+5. ⬜ Document Aspire integration in README.md
+6. ⬜ Create example project with Aspire (demo/aspire-sample/)
+
+#### 12. Referencias
+
+- [.NET Aspire Documentation](https://learn.microsoft.com/dotnet/aspire)
+- [Aspire AppHost Overview](https://learn.microsoft.com/dotnet/aspire/fundamentals/app-host-overview)
+- [Service Discovery in .NET Aspire](https://learn.microsoft.com/dotnet/aspire/service-discovery/overview)
+- [Deploy .NET Aspire apps to Azure](https://learn.microsoft.com/dotnet/aspire/deployment/azure/overview)
+- Skill: `.aurora/available-skills/aspire/skill-bolt-aspire-orchestration/SKILL.md`
+- Templates: `.aurora/templates/aspire/`
+
+---
+
 ## Próximos Pasos Sugeridos (Post-Implementación)
 
 1. **Iterar skills** basándose en feedback de uso real
@@ -1680,6 +2534,254 @@ User: @Bolt Framework "create a REST API feature"
 
     → Development begins with full Bolt Framework capabilities
 ```
+
+## Key Benefits of Two-Step Architecture
+
+| Aspect                  | Monolithic (Old)     | Two-Step (New)                   |
+| ----------------------- | -------------------- | -------------------------------- |
+| **Init.ps1 Complexity** | 837 lines            | ~300-400 lines (52% reduction)   |
+| **Initialization Time** | 2-5 minutes          | 30-60 seconds                    |
+| **Provisioning Time**   | Coupled              | 1-2 minutes (separate)           |
+| **Re-provisioning**     | Re-run full init     | Re-run skill only                |
+| **Dry-run Support**     | No                   | Yes (preview changes)            |
+| **Extensibility**       | Modify Init.ps1      | Extend skill                     |
+| **Testing**             | Monolithic test      | Init + Skill + Integration tests |
+| **User Control**        | All-or-nothing       | Step-by-step with review         |
+| **Error Recovery**      | Re-init from scratch | Re-run provisioning only         |
+
+---
+
+## Phase 5.6: Universal Skills & Work Management Integration (COMPLETED)
+
+**Duración**: 2-3 horas
+**Status**: ✅ Completado (2026-02-26)
+**Decisión**: Implementada **Opción B** - Scope `common` centralizado
+
+### Objetivo
+
+Crear scope universal `common` con skills aplicables a TODOS los proyectos, independientemente del Practice. Además, añadir detección de herramienta de gestión de trabajo durante initialization.
+
+### Implementación
+
+#### 1. Scope `common` (Universal Skills)
+
+**Archivo**: `.aurora/scopes/common/scope.yaml`
+
+**Skills incluidos** (auto-provision: true):
+
+1. **markdown-formatting** (document/):
+   - CommonMark formatting rules
+   - AURORA conventions for .md files
+   - Universally useful - todo proyecto tiene documentación
+
+2. **tdd-comprehensive** (tdd/):
+   - Test-Driven Development methodology
+   - Red-Green-Refactor cycle
+   - Aplicable a cualquier lenguaje y stack
+
+3. **gherkin-reqnroll** (functional-tests/):
+   - BDD con Gherkin syntax
+   - Reqnroll para .NET acceptance testing
+   - Patterns Gherkin universales (aunque Reqnroll es .NET-specific)
+
+**Constitution Articles** (`common/memory/constitution.md`):
+
+- **Article XXI**: Documentation Standards (Markdown formatting)
+- **Article XXII**: Test-Driven Development (TDD + BDD discipline)
+
+**Provisioning Logic**:
+
+- `Invoke-BoltSetupConstitution.ps1` modificado (línea 220):
+  - SIEMPRE añade 'common' a active-scopes si no está presente
+  - No requiere configuración manual en scopes.yaml
+  - Se provisiona automáticamente con TODOS los proyectos
+
+#### 2. Work Management Tool Integration (Step 1.6)
+
+**Ubicación**: Init.ps1, línea ~318 (después de Step 1.5 Aspire)
+
+**Pregunta añadida**:
+
+```powershell
+Select work management tool (or None for manual tracking)
+1. None (manual tracking)
+2. Azure Boards (Azure DevOps work items)
+3. GitHub Projects (GitHub Issues integration)
+4. Jira (Atlassian work management)
+```
+
+**Almacenamiento**:
+
+- **scopes.yaml**: Campo `project.work-management-tool` (machine-readable)
+
+  ```yaml
+  project:
+    practice: Apps & Infra
+    use-aspire: true
+    work-management-tool: azure-boards # ← NUEVO
+  ```
+
+- **Constitution** (future): Article sobre integración de trabajo (no implementado en esta fase)
+
+**Values**:
+
+- `none`: Sin integración automática
+- `azure-boards`: Azure DevOps Boards
+- `github-projects`: GitHub Projects v2
+- `jira`: Jira Cloud/Server
+
+**Agent Integration** (existente desde Phase 5):
+
+- `@Bolt Feature`: Sync feature spec → Work item
+- `@Bolt Plan`: Sync implementation plan → Tasks
+- `@Bolt Tasks`: Sync Bolt task list → Work items
+- `@Bolt Implement`: Sync progress updates
+- Detección automática desde scopes.yaml (no requiere cambios adicionales)
+
+#### 3. Archivos Modificados
+
+**Creados** (2 archivos):
+
+1. `.aurora/scopes/common/scope.yaml` (60 líneas)
+   - 3 skills universales con auto_provision: true
+2. `.aurora/scopes/common/memory/constitution.md` (80 líneas)
+   - Articles XXI (Documentation) + XXII (TDD/BDD)
+
+**Modificados** (2 archivos):
+
+1. **Init.ps1** (2 cambios):
+   - Líneas 318-348: Step 1.6 - Work Management Tool selection (30 líneas NEW)
+   - Línea 654: scopes.yaml template - Añadido campo `work-management-tool` (1 línea)
+
+2. **Invoke-BoltSetupConstitution.ps1** (1 cambio):
+   - Líneas 220-223: Auto-include 'common' scope (4 líneas NEW)
+
+**Total**: 4 archivos, 175 líneas añadidas
+
+#### 4. Testing Checklist
+
+✅ **Test 1: Scope common provisioning**:
+
+```powershell
+# Init sin common explícito
+PS> .\Init.ps1
+# Select: Apps & Infra
+# Expected: common NO aparece en wizard
+
+# Provision
+PS> & .aurora\scripts\Invoke-BoltSetupConstitution.ps1
+# Expected: "Adding 'common' scope (universal skills always included)"
+# Expected: 3 skills copiados (markdown-formatting, tdd-comprehensive, gherkin-reqnroll)
+```
+
+✅ **Test 2: Work Management Tool selection**:
+
+```powershell
+PS> .\Init.ps1
+# Expected: Step 1.6 prompt con 4 opciones
+# Select: Azure Boards
+
+# Verify scopes.yaml
+cat .aurora/scopes.yaml | Select-String "work-management-tool"
+# Expected: "work-management-tool: azure-boards"
+```
+
+✅ **Test 3: Constitution merge with common articles**:
+
+```powershell
+cat memory/constitution.md | Select-String "Article XXI|Article XXII"
+# Expected: Both articles present
+# Expected: Documentation Standards + TDD sections
+```
+
+#### 5. Decisiones de Diseño
+
+**A. ¿Por qué Opción B (scope common) vs Opción A (duplicar en scopes)?**
+
+- ✅ **Centralización**: 1 solo lugar para mantener skills universales
+- ✅ **Reusabilidad**: Evita copiar 3 items × 8 scopes = 24 duplicaciones
+- ✅ **Extensibilidad**: Añadir nuevo skill universal = 1 change en common/scope.yaml
+- ✅ **Governance**: Clear separation: common (universal) vs scope-specific
+
+**B. ¿Por qué auto-include en provisioning (no en Init.ps1)?**
+
+- ✅ **Transparencia**: Usuario no ve "common" en wizard (reduce complejidad)
+- ✅ **Automatización**: Script provisioning sabe que common es universal
+- ✅ **Backward compatibility**: Proyectos antiguos sin common → auto-añadido
+
+**C. ¿Por qué Work Management Tool en Step 1.6 (no Article XI)?**
+
+- ✅ **Decisión temprana**: Afecta configuración de agentes (sync capabilities)
+- ✅ **Project-wide**: No es específico de scope, aplica a TODO el proyecto
+- ✅ **Simple storage**: scopes.yaml suficiente (no requiere article completo aún)
+
+**D. ¿Por qué gherkin-reqnroll en common (es .NET-specific)?**
+
+- ⚠️ **Trade-off aceptado**: Gherkin patterns son universales
+- ✅ **BDD methodology**: Given-When-Then aplica a cualquier stack
+- ℹ️ **Reqnroll-specific**: Step definitions son .NET, pero skill documenta patterns genéricos
+- 🔮 **Futuro**: Podría separarse en gherkin-universal (common) + reqnroll-.net (backend scope)
+
+#### 6. Beneficios Implementados
+
+**Para Desarrolladores**:
+
+- ✅ Skills universales disponibles en TODOS los proyectos (markdown, TDD, BDD)
+- ✅ No requiere configuración manual de common scope
+- ✅ Work management tool configurable desde inicio (no post-provisioning)
+
+**Para Bolt Framework**:
+
+- ✅ Centralización de skills universales (fácil mantener)
+- ✅ Separation of concerns: common (universal) vs scope-specific
+- ✅ Extensibilidad: añadir skills a common → automáticamente en todos los proyectos
+
+**Para AI-DLC**:
+
+- ✅ Constitution articles XXI/XXII documentan estándares universales
+- ✅ Work management tool detection → agentes pueden sincronizar trabajo automáticamente
+- ✅ Patterns consistency: Gherkin BDD disponible por defecto
+
+#### 7. Próximos Pasos Potenciales
+
+1. ⬜ **Article XVIII**: Work Management Integration (documenta sync patterns por herramienta)
+2. ⬜ **Skill separation**: gherkin-universal (común) + reqnroll-.net (backend)
+3. ⬜ **Common scope expansion**:
+   - skill-git-workflow (branching, commits, PR templates)
+   - skill-code-review (review checklist, standards)
+   - skill-documentation-templates (README, ADR, API docs)
+4. ⬜ **Validation**: `npm run validate:scopes:ps` incluir common scope
+5. ⬜ **Testing**: End-to-end test con common scope provisioning
+
+#### 8. Métricas
+
+| Métrica              | Antes (Opción A propuesta) | Después (Opción B implementada)         |
+| -------------------- | -------------------------- | --------------------------------------- |
+| **Items scope.yaml** | 24 (3 skills × 8 scopes)   | 3 (1 scope common)                      |
+| **Mantenimiento**    | 8 archivos actualizar      | 1 archivo actualizar                    |
+| **Duplicación**      | 100%                       | 0%                                      |
+| **Transparencia**    | Skills visibles en wizard  | Auto-provisioned (invisible al usuario) |
+| **Extensibilidad**   | Difícil (8 archivos)       | Fácil (1 archivo)                       |
+
+---
+
+### Summary Phase 5.6
+
+**Status**: ✅ **COMPLETADO** (2026-02-26)
+
+**Deliverables**:
+
+1. ✅ Scope `common` con 3 skills universales
+2. ✅ Constitution articles XXI + XXII (Documentation + TDD/BDD)
+3. ✅ Auto-provisioning de common scope en todos los proyectos
+4. ✅ Work Management Tool selection en Init.ps1 Step 1.6
+5. ✅ Almacenamiento en scopes.yaml (work-management-tool field)
+
+**Testing**: ✅ Validated (manual verification)
+
+**Next**: Phase 5 Task 28 (Manual testing del two-step workflow completo)
+
+---
 
 ## Key Benefits of Two-Step Architecture
 

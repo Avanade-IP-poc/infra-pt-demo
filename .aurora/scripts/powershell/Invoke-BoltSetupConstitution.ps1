@@ -89,11 +89,21 @@ function Read-Yaml {
     $yaml = @{}
 
     # Extract project section
-    if ($content -match 'project:\s+practice:\s*(.+?)\s+type:\s*(.+?)\s+migration-type:\s*(.+?)[\r\n]') {
+    if ($content -match 'project:\s+practice:\s*(.+?)\s+type:\s*(.+?)\s+migration-type:\s*(.+?)\s+use-aspire:\s*(true|false)[\r\n]') {
         $yaml.project = @{
             practice = $matches[1].Trim()
             type = $matches[2].Trim()
             'migration-type' = $matches[3].Trim()
+            'use-aspire' = ($matches[4].Trim() -eq 'true')
+        }
+    }
+    elseif ($content -match 'project:\s+practice:\s*(.+?)\s+type:\s*(.+?)\s+migration-type:\s*(.+?)[\r\n]') {
+        # Fallback for older scopes.yaml without use-aspire field
+        $yaml.project = @{
+            practice = $matches[1].Trim()
+            type = $matches[2].Trim()
+            'migration-type' = $matches[3].Trim()
+            'use-aspire' = $false
         }
     }
 
@@ -205,6 +215,12 @@ function Get-ActiveScopes {
     $activeScopes = $scopesConfig.'active-scopes'
     $transversal = if ($scopesConfig.'transversal-scopes') { $scopesConfig.'transversal-scopes' } else { @('work-management') }
     $practice = if ($scopesConfig.project.practice) { $scopesConfig.project.practice } else { 'Custom' }
+
+    # ALWAYS include 'common' scope (universal skills)
+    if ($activeScopes -notcontains 'common') {
+        Write-Info "Adding 'common' scope (universal skills always included)"
+        $activeScopes = @('common') + $activeScopes
+    }
 
     Write-Success "Practice: $practice"
     Write-Success "Active scopes: $($activeScopes -join ', ')"
@@ -600,6 +616,100 @@ function Copy-CoreSkills {
     return $provisionedCore
 }
 
+# ─── Step 4.5: Provision Aspire Resources (Conditional) ──────────────────────
+
+function Copy-AspireResources {
+    param(
+        [string]$ProjectPath,
+        [bool]$UseAspire
+    )
+
+    if (-not $UseAspire) {
+        Write-Info "Aspire not enabled — skipping Aspire resources"
+        return @()
+    }
+
+    Write-Step "Step 4.5: Provisioning Aspire Resources (Conditional)"
+
+    $provisionedAspire = @()
+
+    # 1. Provision Aspire skill
+    $skillName = "skill-bolt-aspire-orchestration"
+    $skillSourcePath = Join-Path $ProjectPath ".aurora\available-skills\aspire\$skillName"
+    $skillDestPath = Join-Path $ProjectPath ".github\skills\$skillName"
+
+    if (Test-Path $skillSourcePath) {
+        if ((Test-Path $skillDestPath) -and -not $Force) {
+            Write-Info "Aspire skill already exists: $skillName (preserving)"
+            $provisionedAspire += "$skillName (preserved)"
+        }
+        else {
+            if (-not $DryRun) {
+                Copy-Item -Path $skillSourcePath -Destination $skillDestPath -Recurse -Force
+                Write-Success "Aspire skill provisioned: $skillName"
+                $provisionedAspire += $skillName
+            }
+            else {
+                Write-Info "[DRY RUN] Would provision Aspire skill: $skillName"
+                $provisionedAspire += "$skillName (dry-run)"
+            }
+        }
+    }
+    else {
+        Write-Warn "Aspire skill not found: $skillSourcePath (skipping)"
+    }
+
+    # 2. Provision Aspire templates
+    $templates = @('AppHost.csproj', 'ServiceDefaults.csproj', 'Program.cs.template')
+    $templatesSourcePath = Join-Path $ProjectPath ".aurora\templates\aspire"
+    $templatesDestPath = Join-Path $ProjectPath ".github\templates\aspire"
+
+    if (Test-Path $templatesSourcePath) {
+        foreach ($template in $templates) {
+            $templateSource = Join-Path $templatesSourcePath $template
+            $templateDest = Join-Path $templatesDestPath $template
+
+            if (-not (Test-Path $templateSource)) {
+                Write-Warn "Aspire template not found: $template (skipping)"
+                continue
+            }
+
+            if ((Test-Path $templateDest) -and -not $Force) {
+                Write-Info "Aspire template already exists: $template (preserving)"
+                $provisionedAspire += "Template: $template (preserved)"
+            }
+            else {
+                if (-not $DryRun) {
+                    # Create destination directory
+                    if (-not (Test-Path $templatesDestPath)) {
+                        New-Item -ItemType Directory -Path $templatesDestPath -Force | Out-Null
+                    }
+
+                    Copy-Item -Path $templateSource -Destination $templateDest -Force
+                    Write-Success "Aspire template provisioned: $template"
+                    $provisionedAspire += "Template: $template"
+                }
+                else {
+                    Write-Info "[DRY RUN] Would provision Aspire template: $template"
+                    $provisionedAspire += "Template: $template (dry-run)"
+                }
+            }
+        }
+    }
+    else {
+        Write-Warn "Aspire templates path not found: $templatesSourcePath (skipping templates)"
+    }
+
+    if ($provisionedAspire.Count -gt 0) {
+        Write-Success "Aspire resources provisioned: $($provisionedAspire.Count) items"
+    }
+    else {
+        Write-Warn "No Aspire resources were provisioned (check source paths)"
+    }
+
+    return $provisionedAspire
+}
+
 # ─── Step 5: Generate Provision Report ───────────────────────────────────────
 
 function New-ProvisionReport {
@@ -608,7 +718,8 @@ function New-ProvisionReport {
         [hashtable]$Scopes,
         [hashtable]$Constitution,
         [hashtable]$ScopeFiles,
-        [array]$CoreSkills
+        [array]$CoreSkills,
+        [array]$AspireResources = @()
     )
 
     Write-Step "Step 5: Generating Provision Report"
@@ -625,6 +736,24 @@ function New-ProvisionReport {
 
     # Build core skills section
     $coreSkillsList = $CoreSkills | ForEach-Object { "- **$_**" } | Out-String
+
+    # Build Aspire resources section
+    $aspireSection = ""
+    if ($AspireResources.Count -gt 0) {
+        $aspireList = $AspireResources | ForEach-Object { "- **$_**" } | Out-String
+        $aspireSection = @"
+
+### .NET Aspire Resources (Conditional)
+
+$aspireList
+
+✅ **Aspire Enabled**: Service orchestration with AppHost pattern
+📂 **Skill Location**: `.github/skills/skill-bolt-aspire-orchestration/`
+📂 **Templates Location**: `.github/templates/aspire/`
+📖 **Documentation**: See Article XX in constitution.md
+
+"@
+    }
 
     # Build scope items sections
     $promptsList = if ($ScopeFiles.prompts.Count -gt 0) {
@@ -682,6 +811,7 @@ $scopeConstitutions
 $coreSkillsList
 
 📂 **Location**: `.github/skills/`
+$aspireSection
 
 ### Prompts
 
@@ -727,12 +857,13 @@ $skippedList
 |----------|-------|
 | Constitution Articles | $($Constitution.count) |
 | Core Skills | $($CoreSkills.Count) |
+| Aspire Resources | $($AspireResources.Count) |
 | Prompts | $($ScopeFiles.prompts.Count) |
 | Instructions | $($ScopeFiles.instructions.Count) |
 | Scope Skills | $($ScopeFiles.skills.Count) |
 | Templates | $($ScopeFiles.templates.Count) |
 | Agents | $($ScopeFiles.agents.Count) |
-| **Total Items** | **$($CoreSkills.Count + $ScopeFiles.prompts.Count + $ScopeFiles.instructions.Count + $ScopeFiles.skills.Count + $ScopeFiles.templates.Count + $ScopeFiles.agents.Count)** |
+| **Total Items** | **$($CoreSkills.Count + $AspireResources.Count + $ScopeFiles.prompts.Count + $ScopeFiles.instructions.Count + $ScopeFiles.skills.Count + $ScopeFiles.templates.Count + $ScopeFiles.agents.Count)** |
 | Files Skipped | $($ScopeFiles.skipped.Count) |
 
 ---
@@ -821,8 +952,14 @@ function Main {
             Write-Host "  🔹 Phase 4: Provision Resources" -ForegroundColor Magenta
             Write-Host ""
 
+            # Read scopes.yaml to get Aspire flag
+            $scopesYamlPath = Join-Path $resolvedPath ".aurora\memory\scopes.yaml"
+            $scopesConfig = Read-Yaml -FilePath $scopesYamlPath
+            $useAspire = if ($scopesConfig.project.'use-aspire') { $scopesConfig.project.'use-aspire' } else { $false }
+
             $scopeFiles = Copy-ProvisionedFiles -ProjectPath $resolvedPath -Scopes $scopes.all
             $coreSkills = Copy-CoreSkills -ProjectPath $resolvedPath
+            $aspireResources = Copy-AspireResources -ProjectPath $resolvedPath -UseAspire $useAspire
 
             # Generate provision report
             $reportPath = New-ProvisionReport `
@@ -830,11 +967,15 @@ function Main {
                 -Scopes $scopes `
                 -Constitution @{count=0} `
                 -ScopeFiles $scopeFiles `
-                -CoreSkills $coreSkills
+                -CoreSkills $coreSkills `
+                -AspireResources $aspireResources
 
             Write-Host ""
             Write-Success "Phase 4 Complete"
             Write-Success "Core skills: $($coreSkills.Count)"
+            if ($useAspire) {
+                Write-Success "Aspire resources: $($aspireResources.Count)"
+            }
             Write-Success "Prompts: $($scopeFiles.prompts.Count)"
             Write-Success "Instructions: $($scopeFiles.instructions.Count)"
             Write-Success "Skills: $($scopeFiles.skills.Count)"

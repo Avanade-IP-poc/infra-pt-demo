@@ -129,16 +129,50 @@ cat .aurora/scopes.yaml | grep "active-scopes:" -A 10
 
 **Output:** Updated `.aurora/memory/constitution.md`
 
-### Step 3: Provision Files by Scope
+### Step 3: Provision Scope-Specific Files
 
 **For each active scope:**
 
 1. Read provision manifest: `.aurora/scopes/{scope}/scope.yaml → provision`
 2. Filter items with `auto_provision: true`
 3. Evaluate conditions (if specified)
-4. Provision each item:
+4. Provision each item
 
-**Skills Provisioning:**
+### Step 4: Provision Bolt Framework Core Skills (ALWAYS - AUTO-DISCOVERY)
+
+**CRITICAL**: After scope provisioning, **auto-discover and provision ALL core skills**:
+
+```powershell
+# Auto-discover ALL skills in bolt-framework directory
+$boltFrameworkPath = ".aurora/available-skills/bolt-framework"
+$coreSkills = Get-ChildItem -Path $boltFrameworkPath -Directory |
+              Select-Object -ExpandProperty Name
+
+# Will find (currently 7 skills):
+# - bolt-framework
+# - skill-bolt-adr
+# - skill-bolt-branch-management
+# - skill-bolt-constitution-driven-development
+# - skill-bolt-quality-gates
+# - skill-bolt-setup-constitution
+# - skill-bolt-testing-discipline
+
+# Copy each discovered skill
+foreach ($skillName in $coreSkills) {
+    $sourcePath = "$boltFrameworkPath\$skillName"
+    $destPath = ".github\skills\$skillName"
+    Copy-Item -Path $sourcePath -Destination $destPath -Recurse -Force
+}
+```
+
+**Why Auto-Discovery?**
+
+- ✅ No hardcoded skill list to maintain
+- ✅ Add new skill → automatically provisioned
+- ✅ Remove skill → automatically excluded
+- ✅ Extensible without code changes
+
+**Skills Provisioning (Scope-Specific):**
 
 ```bash
 # Example: backend scope provisions bolt-testing

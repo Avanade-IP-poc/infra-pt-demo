@@ -2,6 +2,29 @@ version: 1
 scope: backend
 description: Artefactos backend reutilizables para el proyecto destino.
 items:
+  # ============================================
+  # BACKEND TESTING SKILLS
+  # ============================================
+
+  - id: backend-integration-e2e-testing
+    kind: skills
+    enabled: true
+    auto_provision: true
+    tags: ['testing', 'integration', 'csharp']
+    source:
+      type: local_folder
+      path: available-skills/functional-tests/integration-e2e-testing
+    destination:
+      folder: .github/skills
+      name: integration-e2e-testing
+    description: >
+      .NET integration testing with Testcontainers and Respawn for SQL Server.
+      CRITICAL: NO SQLite for integration tests - use real database.
+
+  # ============================================
+  # MCP & EXTERNAL RESOURCES
+  # ============================================
+
   - id: backend-mcp-settings-local
     kind: templates
     enabled: false
