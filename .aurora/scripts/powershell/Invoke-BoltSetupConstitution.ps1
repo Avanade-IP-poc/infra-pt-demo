@@ -439,7 +439,7 @@ function Copy-ProvisionedFiles {
             # Skip external sources in script - let agent handle them
             if ($requiresDownload) {
                 Write-Info "External source: $($item.id) → Agent will download to $destPath"
-                
+
                 # Track as requiring agent action
                 $itemLabel = "$($item.dest_name) (from $scope, requires download: $sourceType)"
                 switch ($item.kind) {
@@ -540,8 +540,15 @@ function Copy-CoreSkills {
     # Core skills split into two categories:
     # 1. Already in .github/skills (from Init.ps1 copy)
     $githubSkills = @('new-skill', 'markdown-formatting')
-    # 2. From .aurora/available-skills/bolt-framework/
-    $auroraSkills = @('bolt-framework', 'bolt-adr')
+    # 2. From .aurora/available-skills/bolt-framework/ (ALL skills auto-discovered)
+    $boltFrameworkPath = Join-Path $ProjectPath ".aurora\available-skills\bolt-framework"
+    $auroraSkills = @()
+    if (Test-Path $boltFrameworkPath) {
+        $auroraSkills = Get-ChildItem -Path $boltFrameworkPath -Directory | Select-Object -ExpandProperty Name
+        Write-Verbose "Auto-discovered $(($auroraSkills).Count) Bolt Framework skills: $($auroraSkills -join ', ')"
+    } else {
+        Write-Warn "Bolt Framework skills path not found: $boltFrameworkPath"
+    }
 
     # Check skills that came from .github (already provisioned by Init.ps1)
     foreach ($skillName in $githubSkills) {

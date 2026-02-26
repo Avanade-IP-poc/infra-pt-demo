@@ -1,5 +1,5 @@
 ---
-name: bolt-quality-gates
+name: skill-bolt-quality-gates
 description: Per-BOLT quality gates with coverage, mutation, and linting thresholds
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: bolt-adr
+name: skill-bolt-adr
 description: Create Architecture Decision Records using MADR format for documenting architectural decisions
 ---
 

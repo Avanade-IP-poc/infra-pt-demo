@@ -115,7 +115,7 @@ Report what's already in place:
 | `backend`         | `dotnet-backend/`, `testing-must/`, `functional-tests/` | If .NET in stack → copy all dotnet-backend skills |
 | `frontend`        | `angular/`, `vue/`, `ui-common/`                        | If Angular → angular/, If Vue → vue/              |
 | `cloud-platform`  | `azure/`, `bolt-framework/`                             | Copy all azure/ skills if Azure cloud             |
-| `ai`              | `bolt-framework/`                                       | Copy bolt-testing-discipline                      |
+| `ai`              | `bolt-framework/`                                       | Copy skill-bolt-testing-discipline                |
 | `data`            | `testing-must/`                                         | Copy tdd-\* skills                                |
 | `work-management` | `azdo/`, `github/`                                      | If Azure DevOps → azdo/, else github/             |
 

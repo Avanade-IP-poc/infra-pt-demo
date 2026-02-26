@@ -1,5 +1,5 @@
 ---
-name: bolt-testing-discipline
+name: skill-bolt-testing-discipline
 description: Testing pyramid, TDD/BDD decision matrix, and coverage-first approach
 ---
 

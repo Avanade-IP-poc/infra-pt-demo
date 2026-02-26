@@ -39,9 +39,9 @@ handoffs:
 
 ## Referenced Skills
 
-- Use `bolt-branch-management` for BOLT branching pattern and feature branch verification
-- Use `bolt-quality-gates` for linting, coverage, and mutation testing thresholds
-- Use `bolt-testing-discipline` for TDD/BDD decision guidance
+- Use `skill-bolt-branch-management` for BOLT branching pattern and feature branch verification
+- Use `skill-bolt-quality-gates` for linting, coverage, and mutation testing thresholds
+- Use `skill-bolt-testing-discipline` for TDD/BDD decision guidance
 
 ## Available Scripts
 

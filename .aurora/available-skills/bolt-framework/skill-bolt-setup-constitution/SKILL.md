@@ -1,5 +1,5 @@
 ---
-name: bolt-setup-constitution
+name: skill-bolt-setup-constitution
 description: Complete provisioning engine - merges scope constitutions and provisions files based on Practice configuration
 ---
 
@@ -193,7 +193,7 @@ echo "✓ Core skill provisioned: bolt-framework (always included)"
 **Other core skills:**
 
 - `new-skill` (skill creation guide)
-- `bolt-adr` (Architecture Decision Records)
+- `skill-bolt-adr` (Architecture Decision Records)
 - `markdown-formatting` (documentation standards)
 
 ### Step 5: Generate Provision Report

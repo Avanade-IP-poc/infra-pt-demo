@@ -41,7 +41,7 @@ handoffs:
 
 # 📋 Constitution Agent
 
-**Methodology**: Follow bolt-framework and bolt-setup-constitution skills (loaded automatically)
+**Methodology**: Follow bolt-framework and skill-bolt-setup-constitution skills (loaded automatically)
 
 **Provisioning Reference**: For Phase 4 (resource provisioning), reference [#file:.github/prompts/bolt-constitution-provisioning.prompt.md] for detailed step-by-step instructions on downloading from Context7 and Awesome Copilot.
 
@@ -50,7 +50,7 @@ handoffs:
 **This agent completes Step 2 of the two-step initialization workflow:**
 
 - **Step 1** (Init.ps1): Select Practice → Generate basic config (`scopes.yaml` + basic `constitution.md`)
-- **Step 2** (THIS AGENT): Invoke `bolt-setup-constitution` skill → Provision files → Merge constitutions → Report
+- **Step 2** (THIS AGENT): Invoke `skill-bolt-setup-constitution` skill → Provision files → Merge constitutions → Report
 
 ### When to Use This Agent
 

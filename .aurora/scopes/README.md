@@ -24,7 +24,7 @@ When you run `Init.ps1`, you select a **Practice** that pre-configures scopes:
 
 ### Step 2: `@Bolt Constitution` — File Provisioning & Constitution Merge
 
-After running `Init.ps1`, you invoke the `@Bolt Constitution` agent (or manually call the `bolt-setup-constitution` skill) to complete setup:
+After running `Init.ps1`, you invoke the `@Bolt Constitution` agent (or manually call the `skill-bolt-setup-constitution` skill) to complete setup:
 
 **What it does**:
 

@@ -50,8 +50,8 @@ When you need to run tests, execute these scripts:
 
 ## Referenced Skills
 
-- Use `bolt-testing-discipline` for TDD/BDD decision matrix and testing pyramid guidance
-- Use `bolt-quality-gates` for coverage thresholds (80% line, 75% branch, 70% mutation)
+- Use `skill-bolt-testing-discipline` for TDD/BDD decision matrix and testing pyramid guidance
+- Use `skill-bolt-quality-gates` for coverage thresholds (80% line, 75% branch, 70% mutation)
 
 Generate test suites that achieve coverage targets and validate test quality through mutation testing.
 

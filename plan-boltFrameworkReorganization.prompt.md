@@ -14,7 +14,7 @@ Este plan transforma el framework "Aurora" en **Bolt Framework** con arquitectur
 **Solución propuesta**:
 
 - **Phase 1**: Renombrado completo (Aurora → Bolt Framework)
-- **Phase 2**: Extracción de 6 skills modulares (incluido `bolt-setup-constitution`)
+- **Phase 2**: Extracción de 6 skills modulares (incluido `skill-bolt-setup-constitution`)
 - **Phase 3**: Init.ps1 simplificado (≈300-400 líneas, solo configuración)
 - **Phase 4**: Skill de provisión inteligente (two-step initialization)
 - **Phase 5**: Validación exhaustiva (Init + Skill + Integración)
@@ -122,7 +122,7 @@ El framework actual "Aurora" tiene una arquitectura sólida (30 agentes, 8 scope
 
 ## Arquitectura Actualizada: Two-Step Initialization
 
-**Cambio clave**: Separación de responsabilidades entre Init.ps1 (configuración) y `bolt-setup-constitution` skill (provisión).
+**Cambio clave**: Separación de responsabilidades entre Init.ps1 (configuración) y `skill-bolt-setup-constitution` skill (provisión).
 
 ### Flujo Anterior (Monolítico)
 
@@ -190,10 +190,10 @@ Extraer de agentes hacia `.github/skills/` ó `.aurora/available-skills/`:
 - `skill-quality-gates` (comandos de validación duplicados en 4 agentes)
 - `skill-testing-discipline` (workflows TDD/BDD)
 - `skill-constitution-driven-development` (tablas de compliance)
-- `bolt-setup-constitution` **[NUEVO]** (skill responsable de provisión inteligente de archivos y merge de constitution)
+- `skill-bolt-setup-constitution` **[NUEVO]** (skill responsable de provisión inteligente de archivos y merge de constitution)
 - Expandir `bolt-framework` skill con workflows detallados (actualmente solo 123 líneas superficiales)
 
-**Justificación**: Microsoft Best Practices enfatiza "reference tools/skills explicitly by name" y mantener "agents slim, skills reusable". El skill `bolt-setup-constitution` centraliza la lógica de provisión, manteniendo Init.ps1 simple.
+**Justificación**: Microsoft Best Practices enfatiza "reference tools/skills explicitly by name" y mantener "agents slim, skills reusable". El skill `skill-bolt-setup-constitution` centraliza la lógica de provisión, manteniendo Init.ps1 simple.
 
 ### 3. Init.ps1 → Wizard Mínimo + Skill de Provisión
 
@@ -202,12 +202,12 @@ Transformar flujo de inicialización:
 - **Antes**: Seleccionar scopes individualmente (Article I) + lógica compleja de provisión en PowerShell
 - **Después**:
   - Init.ps1: Setup mínimo (Practice selection, constitution básico, scopes.yaml)
-  - `bolt-setup-constitution` skill: Provisión inteligente de archivos, merge de constitution, copia de skills según scopes activos
+  - `skill-bolt-setup-constitution` skill: Provisión inteligente de archivos, merge de constitution, copia de skills según scopes activos
 
 **Justificación**:
 
 - Init.ps1 se mantiene simple y rápido (solo configuración)
-- Skill `bolt-setup-constitution` puede ser invocado post-init por agentes para reconfigurar proyecto
+- Skill `skill-bolt-setup-constitution` puede ser invocado post-init por agentes para reconfigurar proyecto
 - Mejor separación de responsabilidades: Init = configurar, Skill = aprovisionar
 - Permite re-ejecutar provisión sin re-inicializar proyecto completo
 
@@ -418,7 +418,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
 
       # Notes
 
-      Run `@Bolt Constitution` or invoke `bolt-setup-constitution` skill to provision files and complete constitution.
+      Run `@Bolt Constitution` or invoke `skill-bolt-setup-constitution` skill to provision files and complete constitution.
       ```
 
     - **NO provisionar archivos en Init.ps1** (se delega al skill)
@@ -462,14 +462,14 @@ No hay usuarios con workflows dependientes, por lo tanto:
           destination: .github/agents/bolt-testing.agent.md
       ```
 
-    - El skill `bolt-setup-constitution` leerá esta configuración
+    - El skill `skill-bolt-setup-constitution` leerá esta configuración
     - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 ### Phase 4: Implementar Skill bolt-setup-constitution (Provisión Inteligente)
 
 **Duración**: 1.5 días
 
-21. Crear implementación completa de `bolt-setup-constitution` skill:
+21. Crear implementación completa de `skill-bolt-setup-constitution` skill:
 
     **21.1. Crear SKILL.md** (ya parcialmente definido en step 14.5):
     - Expandir con ejemplos de invocación
@@ -647,7 +647,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
       When user asks to provision or setup constitution:
       1. Verify `memory/constitution.md` exists (basic constitution from Init.ps1)
       2. Verify `memory/scopes.yaml` exists
-      3. Invoke `bolt-setup-constitution` skill (call helper script)
+      3. Invoke `skill-bolt-setup-constitution` skill (call helper script)
       4. Show provision report to user
       5. Ask if user wants to review constitution or start development
 
@@ -695,7 +695,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
 
 ✅ **24. Crear test script `.aurora/scripts/Test-InitFlows.ps1`:** - Test 1: Init.ps1 con Practice "Apps & Infra": - Verificar `memory/constitution.md` creado (básico) - Verificar `memory/scopes.yaml` contiene: backend, frontend, cloud-platform - Verificar `.github/` NO tiene archivos (provisión aún no ejecutada)
 
-    - Test 2: Invocar `bolt-setup-constitution` skill:
+    - Test 2: Invocar `skill-bolt-setup-constitution` skill:
       - Ejecutar: `& .aurora\scripts\Invoke-BoltSetupConstitution.ps1`
       - Verificar constitution completo con articles de 3 scopes
       - Verificar skills copiados: skill-branch-management, skill-quality-gates, etc.
@@ -729,7 +729,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
 
     - **Step 2: Provisión**
       - Invocar `@Bolt Constitution` en Copilot Chat
-      - Verificar ejecución de `bolt-setup-constitution` skill
+      - Verificar ejecución de `skill-bolt-setup-constitution` skill
       - Verificar provision report mostrado
       - Verificar constitution completo con articles de backend, frontend, cloud-platform
       - Verificar skills copiados a `.github/skills/`
@@ -963,11 +963,11 @@ User: "@Bolt Implement create login endpoint"
 ### Success Criteria
 
 - ✅ 0 referencias a "Aurora" en archivos de código/docs (excepto en contexto histórico)
-- ✅ 6 skills creados y documentados (incluido `bolt-setup-constitution`)
+- ✅ 6 skills creados y documentados (incluido `skill-bolt-setup-constitution`)
 - ✅ Init.ps1 simplificado (<500 líneas, solo configuración)
 - ✅ Init.ps1 wizard inicia con Practice selection
 - ✅ Scopes auto-seleccionados según Practice
-- ✅ `bolt-setup-constitution` skill funcional y testeado
+- ✅ `skill-bolt-setup-constitution` skill funcional y testeado
 - ✅ Constitution básico generado por Init.ps1
 - ✅ Constitution completo generado por skill después de provisión
 - ✅ Skills auto-provisionados según scopes activos
@@ -977,11 +977,11 @@ User: "@Bolt Implement create login endpoint"
 - ✅ Tests automatizados pasan (Init + Skill + Integración)
 - ✅ Two-step workflow documentado y funcional
 
-## Detalle del Skill `bolt-setup-constitution`
+## Detalle del Skill `skill-bolt-setup-constitution`
 
 ### Responsabilidad
 
-El skill `bolt-setup-constitution` es el **motor de provisión inteligente** del Bolt Framework. Su responsabilidad es transformar la configuración básica generada por Init.ps1 (Practice, scopes activos) en un proyecto completamente provisionado con constitution completo, skills, agents, y prompts listos para desarrollo.
+El skill `skill-bolt-setup-constitution` es el **motor de provisión inteligente** del Bolt Framework. Su responsabilidad es transformar la configuración básica generada por Init.ps1 (Practice, scopes activos) en un proyecto completamente provisionado con constitution completo, skills, agents, y prompts listos para desarrollo.
 
 ### Arquitectura del Skill
 
@@ -1410,7 +1410,7 @@ model: claude-sonnet-4.5
 
 ### Constitution Merge Timing
 
-- **Decidido**: Post-init via `bolt-setup-constitution` skill (no durante Init.ps1)
+- **Decidido**: Post-init via `skill-bolt-setup-constitution` skill (no durante Init.ps1)
 - **Alternativa rechazada**: Durante Init.ps1 (acopla lógica compleja en script de inicialización)
 - **Razón**:
   - Constitution básico creado en init es suficiente para arrancar

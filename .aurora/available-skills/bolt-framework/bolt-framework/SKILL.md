@@ -103,8 +103,8 @@ Review and approve:
 
 ### References
 
-- `bolt-constitution` skill (Constitution governance)
-- `bolt-setup-constitution` skill (Provisioning engine)
+- `skill-bolt-constitution-driven-development` skill (Constitution governance)
+- `skill-bolt-setup-constitution` skill (Provisioning engine)
 - `@Bolt Constitution` agent
 - `Init.ps1` / `init.sh` scripts
 
@@ -196,7 +196,7 @@ Review and approve:
 
 **CRITICAL: Branch Management**
 
-Use `bolt-branch-management` skill:
+Use `skill-bolt-branch-management` skill:
 
 1. **Verify feature branch**
 
@@ -298,9 +298,9 @@ git merge feature/user-authentication/bolt-1-domain
 
 ### References
 
-- `bolt-branch-management` skill (BOLT branching pattern)
-- `bolt-quality-gates` skill (Thresholds and tools)
-- `bolt-testing-discipline` skill (TDD/BDD guidance)
+- `skill-bolt-branch-management` skill (BOLT branching pattern)
+- `skill-bolt-quality-gates` skill (Thresholds and tools)
+- `skill-bolt-testing-discipline` skill (TDD/BDD guidance)
 - `@Bolt Implement` agent
 - `@Bolt Testing` agent
 - `@Bolt Review` agent
@@ -619,12 +619,12 @@ npm run lint && npm test -- --coverage && npx stryker run
 
 ### Skills
 
-- `bolt-branch-management` (BOLT branching pattern)
-- `bolt-quality-gates` (Thresholds and mutation testing)
-- `bolt-testing-discipline` (TDD/BDD decision matrix)
-- `bolt-constitution-driven-development` (Constitution governance)
-- `bolt-setup-constitution` (Provisioning engine)
-- `bolt-adr` (Architecture Decision Records)
+- `skill-bolt-branch-management` (BOLT branching pattern)
+- `skill-bolt-quality-gates` (Thresholds and mutation testing)
+- `skill-bolt-testing-discipline` (TDD/BDD decision matrix)
+- `skill-bolt-constitution-driven-development` (Constitution governance)
+- `skill-bolt-setup-constitution` (Provisioning engine)
+- `skill-bolt-adr` (Architecture Decision Records)
 
 ### Agents
 

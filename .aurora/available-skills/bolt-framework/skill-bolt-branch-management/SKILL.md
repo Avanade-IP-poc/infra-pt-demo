@@ -1,5 +1,5 @@
 ---
-name: bolt-branch-management
+name: skill-bolt-branch-management
 description: BOLT micro-iteration branching pattern with feature/bolt hierarchy
 ---
 

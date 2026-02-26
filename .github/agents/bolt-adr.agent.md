@@ -32,7 +32,7 @@ handoffs:
 
 # 📝 Bolt ADR - Architecture Decision Records
 
-**Skills**: This agent uses `bolt-framework` and `bolt-adr` (auto-loaded)
+**Skills**: This agent uses `bolt-framework` and `skill-bolt-adr` (auto-loaded)
 
 ## Purpose
 

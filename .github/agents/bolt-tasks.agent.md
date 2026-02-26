@@ -45,8 +45,8 @@ Transform implementation plan into executable Bolt task lists following the Bolt
 
 ## Referenced Skills
 
-- Use `bolt-quality-gates` for mandatory quality gate tasks per BOLT
-- Use `bolt-testing-discipline` for test task breakdown (unit/integration/E2E)
+- Use `skill-bolt-quality-gates` for mandatory quality gate tasks per BOLT
+- Use `skill-bolt-testing-discipline` for test task breakdown (unit/integration/E2E)
 
 ## Prerequisites
 

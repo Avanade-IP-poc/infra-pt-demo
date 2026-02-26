@@ -694,7 +694,7 @@ $scopesList
 
 ## Next Steps
 
-1. **Provision Files**: Run ``@Bolt Constitution`` agent or manually invoke the ``bolt-setup-constitution`` skill
+1. **Provision Files**: Run ``@Bolt Constitution`` agent or manually invoke the ``skill-bolt-setup-constitution`` skill
 2. **Review**: The skill will merge scope-specific constitutions from ``.aurora/scopes/<scope>/memory/constitution.md``
 3. **Customize**: Edit this constitution to reflect project-specific decisions
 
@@ -1024,10 +1024,10 @@ function Show-Summary {
 
 function Main {
     # Show help if requested or if required parameters are missing
-    if ($Help) { 
+    if ($Help) {
         Show-Banner
         Show-Usage
-        return 
+        return
     }
 
     if ([string]::IsNullOrWhiteSpace($OutputDirectory) -or [string]::IsNullOrWhiteSpace($ProjectType)) {

@@ -39,7 +39,7 @@ When you need to setup planning, execute these scripts:
 
 ## Referenced Skills
 
-- Use `bolt-branch-management` for BOLT branching strategy guidance
+- Use `skill-bolt-branch-management` for BOLT branching strategy guidance
 - Use `bolt-framework` for phase-based planning and validation checklists
 
 Transform a feature specification into a detailed technical implementation plan, following the Bolt Framework AI-DLC methodology with Bolts (micro-iterations).

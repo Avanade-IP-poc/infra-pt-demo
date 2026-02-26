@@ -1,5 +1,5 @@
 ---
-name: bolt-constitution-driven-development
+name: skill-bolt-constitution-driven-development
 description: Constitution as project DNA, directive hierarchy, and AI agent governance
 ---
 
