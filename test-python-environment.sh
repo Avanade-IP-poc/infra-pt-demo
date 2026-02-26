@@ -59,7 +59,7 @@ else
     test_result "Virtual environment exists" "false"
     echo ""
     echo -e "${YELLOW}⚠️  Virtual environment not found. Run:${NC}"
-    echo -e "   source .aurora/scripts/bash/bootstrap-python.sh"
+    echo -e "   source .boltf/scripts/bash/bootstrap-python.sh"
     echo ""
     exit 1
 fi
@@ -74,7 +74,7 @@ else
     echo ""
     echo -e "${YELLOW}⚠️  Python executable not found. Recreate venv:${NC}"
     echo -e "   rm -rf .bolt-venv"
-    echo -e "   source .aurora/scripts/bash/bootstrap-python.sh"
+    echo -e "   source .boltf/scripts/bash/bootstrap-python.sh"
     echo ""
     exit 1
 fi

@@ -73,7 +73,7 @@ The DDD Master applies Domain-Driven Design principles to shape the software arc
 
 ## Constitution Reference
 
-**CRITICAL**: Before modeling domain, read `.aurora/memory/constitution.md` to understand:
+**CRITICAL**: Before modeling domain, read `.boltf/memory/constitution.md` to understand:
 
 - **Architecture Style** - DDD level (tactical/strategic as mandated)
 - **Language/Framework** - Entity/Value Object implementation patterns
@@ -84,7 +84,7 @@ Examples in this agent are illustrative. ALWAYS use Constitution's patterns.
 
 ## Expected Inputs
 
-- **`.aurora/memory/constitution.md`** - Project governing document (REQUIRED)
+- **`.boltf/memory/constitution.md`** - Project governing document (REQUIRED)
 - Domain glossary from Domain Sage
 - Business rules and invariants
 - Use cases and user stories

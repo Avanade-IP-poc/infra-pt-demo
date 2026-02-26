@@ -58,26 +58,26 @@ You are the DevOps specialist for AURORA projects. You create robust CI/CD pipel
 
 ```bash
 # Generate GitHub Actions workflow
-./.aurora/scripts/bash/setup-cicd.sh --provider github-actions --target azure
+./.boltf/scripts/bash/setup-cicd.sh --provider github-actions --target azure
 
 # Create Azure DevOps pipeline
-./.aurora/scripts/bash/setup-cicd.sh --provider azure-devops --target aks
+./.boltf/scripts/bash/setup-cicd.sh --provider azure-devops --target aks
 
 # Setup multi-environment deployment
-./.aurora/scripts/bash/setup-environments.sh --envs dev,staging,prod
+./.boltf/scripts/bash/setup-environments.sh --envs dev,staging,prod
 ```
 
 ### Configuration Management:
 
 ```bash
 # Generate environment configuration files
-./.aurora/scripts/bash/generate-env-configs.sh --environments staging,production
+./.boltf/scripts/bash/generate-env-configs.sh --environments staging,production
 
 # Setup secrets management
-./.aurora/scripts/bash/setup-secrets.sh --provider azure-keyvault
+./.boltf/scripts/bash/setup-secrets.sh --provider azure-keyvault
 
 # Configure deployment scripts
-./.aurora/scripts/bash/configure-deployment.sh --strategy blue-green
+./.boltf/scripts/bash/configure-deployment.sh --strategy blue-green
 ```
 
 ## GitHub Actions Workflow Templates
@@ -146,7 +146,7 @@ jobs:
       - name: Run AURORA Quality Gates
         run: |
           chmod +x scripts/bash/quality-gates.sh
-          ./.aurora/scripts/bash/quality-gates.sh --ci-mode
+          ./.boltf/scripts/bash/quality-gates.sh --ci-mode
 
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -158,7 +158,7 @@ jobs:
       - name: Deploy to Production
         run: |
           chmod +x scripts/bash/deploy.sh
-          ./.aurora/scripts/bash/deploy.sh --env production --validate-constitution
+          ./.boltf/scripts/bash/deploy.sh --env production --validate-constitution
 ```
 
 ### Multi-Environment Pipeline:
@@ -197,7 +197,7 @@ jobs:
     steps:
       - name: Deploy to ${{ needs.determine-environment.outputs.environment }}
         run: |
-          ./.aurora/scripts/bash/deploy.sh --env ${{ needs.determine-environment.outputs.environment }}
+          ./.boltf/scripts/bash/deploy.sh --env ${{ needs.determine-environment.outputs.environment }}
 ```
 
 ## Azure DevOps Pipeline Templates
@@ -238,7 +238,7 @@ stages:
 
           - script: |
               chmod +x scripts/bash/quality-gates.sh
-              ./.aurora/scripts/bash/quality-gates.sh --ci-mode
+              ./.boltf/scripts/bash/quality-gates.sh --ci-mode
             displayName: 'Run AURORA Quality Gates'
 
   - stage: Deploy
@@ -254,7 +254,7 @@ stages:
               steps:
                 - script: |
                     chmod +x scripts/bash/deploy.sh
-                    ./.aurora/scripts/bash/deploy.sh --env production
+                    ./.boltf/scripts/bash/deploy.sh --env production
                   displayName: 'Deploy to Production'
 ```
 
@@ -275,7 +275,7 @@ echo "Current: $CURRENT_SLOT, Target: $TARGET_SLOT"
 az webapp deployment source config-zip --resource-group $RG --name $APP --slot $TARGET_SLOT --src release.zip
 
 # Run smoke tests on target slot
-./.aurora/scripts/bash/smoke-tests.sh --url https://$APP-$TARGET_SLOT.azurewebsites.net
+./.boltf/scripts/bash/smoke-tests.sh --url https://$APP-$TARGET_SLOT.azurewebsites.net
 
 # Swap slots if tests pass
 if [ $? -eq 0 ]; then
@@ -324,10 +324,10 @@ spec:
 
 ```bash
 # Generate Azure infrastructure
-./.aurora/scripts/bash/generate-infrastructure.sh --provider bicep --target azure
+./.boltf/scripts/bash/generate-infrastructure.sh --provider bicep --target azure
 
 # Deploy infrastructure
-./.aurora/scripts/bash/deploy-infrastructure.sh --env production --template infrastructure/main.bicep
+./.boltf/scripts/bash/deploy-infrastructure.sh --env production --template infrastructure/main.bicep
 ```
 
 ### Terraform Configuration:
@@ -338,8 +338,8 @@ resource "azurerm_app_service_plan" "aurora" {
   for_each = var.environments
 
   name                = "aurora-plan-${each.key}"
-  location            = azurerm_resource_group.aurora.location
-  resource_group_name = azurerm_resource_group.aurora.name
+  location            = azurerm_resource_group.boltf.location
+  resource_group_name = azurerm_resource_group.boltf.name
 
   sku {
     tier = each.value.tier
@@ -369,10 +369,10 @@ resource "azurerm_app_service_plan" "aurora" {
 
 ```bash
 # Setup Azure Key Vault integration
-./.aurora/scripts/bash/setup-keyvault.sh --vault aurora-secrets-$ENV
+./.boltf/scripts/bash/setup-keyvault.sh --vault aurora-secrets-$ENV
 
 # Configure GitHub secrets
-./.aurora/scripts/bash/configure-github-secrets.sh --from-keyvault aurora-secrets-prod
+./.boltf/scripts/bash/configure-github-secrets.sh --from-keyvault aurora-secrets-prod
 ```
 
 ## Monitoring Integration
@@ -383,7 +383,7 @@ resource "azurerm_app_service_plan" "aurora" {
 - name: Setup Application Insights
   run: |
     # Configure telemetry
-    ./.aurora/scripts/bash/setup-app-insights.sh --app-name aurora-$ENV
+    ./.boltf/scripts/bash/setup-app-insights.sh --app-name aurora-$ENV
 ```
 
 ### Health Checks:
@@ -420,7 +420,7 @@ app.MapHealthChecks("/health");
 
 ```bash
 # Feature flag-based deployment
-./.aurora/scripts/bash/deploy-with-flags.sh --feature new-checkout --percentage 25
+./.boltf/scripts/bash/deploy-with-flags.sh --feature new-checkout --percentage 25
 ```
 
 ## Rollback Strategies
@@ -429,21 +429,21 @@ app.MapHealthChecks("/health");
 
 ```yaml
 - name: Health Check Post-Deploy
-  run: ./.aurora/scripts/bash/health-check.sh --url ${{ env.APP_URL }}
+  run: ./.boltf/scripts/bash/health-check.sh --url ${{ env.APP_URL }}
 
 - name: Rollback on Failure
   if: failure()
   run: |
     echo "Health check failed, initiating rollback"
-    ./.aurora/scripts/bash/rollback.sh --to-previous-version
+    ./.boltf/scripts/bash/rollback.sh --to-previous-version
 ```
 
 ### Manual Rollback Commands:
 
 ```bash
 # Quick rollback commands
-./.aurora/scripts/bash/rollback.sh --env production --to-version v1.2.3
-./.aurora/scripts/bash/rollback.sh --env staging --steps 2  # Go back 2 deployments
+./.boltf/scripts/bash/rollback.sh --env production --to-version v1.2.3
+./.boltf/scripts/bash/rollback.sh --env staging --steps 2  # Go back 2 deployments
 ```
 
 ## Integration with AURORA Agents

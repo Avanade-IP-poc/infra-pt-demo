@@ -37,8 +37,8 @@
 ### New Files
 
 ```
-✅ .aurora/scripts/powershell/Bootstrap-Python.ps1
-✅ .aurora/scripts/bash/bootstrap-python.sh
+✅ .boltf/scripts/powershell/Bootstrap-Python.ps1
+✅ .boltf/scripts/bash/bootstrap-python.sh
 ✅ .github/skills/skill-creator/requirements.txt
 ✅ Invoke-PythonScript.ps1
 ✅ Test-PythonEnvironment.ps1
@@ -118,7 +118,7 @@ Works because Bootstrap-Python.ps1 executes from project root, making paths rela
 ## ✅ Validation Checklist
 
 - [x] Init.ps1 copies `.github/` complete (skills with Python scripts)
-- [x] Init.ps1 copies `.aurora/` complete (Bootstrap-Python.ps1)
+- [x] Init.ps1 copies `.boltf/` complete (Bootstrap-Python.ps1)
 - [x] Init.ps1 copies root scripts (Invoke-PythonScript.ps1, etc.)
 - [x] Init.ps1 copies `docs/` (python-integration.md)
 - [x] Init.ps1 copies `examples/` (python-scripts-usage.ps1)
@@ -145,7 +145,7 @@ cd F:\repos\aurora-ai
 cd C:\projects\test-python
 
 # 3. Bootstrap Python (creates .bolt-venv HERE)
-.\.aurora\scripts\powershell\Bootstrap-Python.ps1
+.\.boltf\scripts\powershell\Bootstrap-Python.ps1
 
 # 4. Verify environment
 .\Test-PythonEnvironment.ps1
@@ -189,7 +189,7 @@ cd C:\projects\test-python
 cd ..\my-ecommerce
 
 # Step 3: Bootstrap Python (ONE-TIME)
-.\.aurora\scripts\powershell\Bootstrap-Python.ps1
+.\.boltf\scripts\powershell\Bootstrap-Python.ps1
 
 # Step 4: Use Python scripts
 .\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\quick_validate.py my-skill\
@@ -242,7 +242,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: .\.aurora\scripts\powershell\Bootstrap-Python.ps1
+      - run: .\.boltf\scripts\powershell\Bootstrap-Python.ps1
       - run: .\Test-PythonEnvironment.ps1
       - run: npm run skill:validate-all
 ```

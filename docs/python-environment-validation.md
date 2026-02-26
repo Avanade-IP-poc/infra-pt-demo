@@ -18,7 +18,7 @@
 │                                                             │
 │  .bolt-venv/                  ← Creado aquí (gitignored)   │
 │  │                                                          │
-│  .aurora/                                                   │
+│  .boltf/                                                   │
 │  ├── scripts/                                               │
 │  │   └── powershell/                                        │
 │  │       └── Bootstrap-Python.ps1  ← Ejecutar desde aquí  │
@@ -50,8 +50,8 @@
 # .github (con skills Python)
 Copy-Item "$root\.github" "$OutputDirectory\.github" -Recurse -Force
 
-# .aurora (con Bootstrap-Python.ps1)
-Copy-Item "$root\.aurora" "$OutputDirectory\.aurora" -Recurse -Force
+# .boltf (con Bootstrap-Python.ps1)
+Copy-Item "$root\.boltf" "$OutputDirectory\.boltf" -Recurse -Force
 
 # Scripts Python raíz
 @("Invoke-PythonScript.ps1", "Test-PythonEnvironment.ps1", "test-python-environment.sh")
@@ -124,7 +124,7 @@ cd F:\repos\aurora-ai
 cd C:\projects\my-ecommerce
 
 # Paso 3: Usuario bootstrapea Python
-.\.aurora\scripts\powershell\Bootstrap-Python.ps1
+.\.boltf\scripts\powershell\Bootstrap-Python.ps1
 
 # Resultado esperado:
 # - .bolt-venv se crea en C:\projects\my-ecommerce\.bolt-venv\
@@ -138,7 +138,7 @@ cd C:\projects\my-ecommerce
 ## ✅ Checklist de Validación
 
 - [x] Init.ps1 copia `.github/` completo (skills con scripts Python)
-- [x] Init.ps1 copia `.aurora/` completo (Bootstrap-Python.ps1)
+- [x] Init.ps1 copia `.boltf/` completo (Bootstrap-Python.ps1)
 - [x] Init.ps1 copia scripts raíz (Invoke-PythonScript.ps1, Test-PythonEnvironment.ps1)
 - [x] Init.ps1 copia `docs/` (python-integration.md)
 - [x] Init.ps1 copia `examples/` (python-scripts-usage.ps1)
@@ -173,7 +173,7 @@ cd C:\projects\my-ecommerce
 
    # Desde proyecto nuevo
    cd ..\test-python-integration
-   .\.aurora\scripts\powershell\Bootstrap-Python.ps1
+   .\.boltf\scripts\powershell\Bootstrap-Python.ps1
    .\Test-PythonEnvironment.ps1
    ```
 
@@ -182,7 +182,7 @@ cd C:\projects\my-ecommerce
    ```powershell
    Test-Path .\.bolt-venv                        # Debe existir DESPUÉS de bootstrap
    Test-Path .\Invoke-PythonScript.ps1          # Debe existir
-   Test-Path .\.aurora\scripts\powershell\Bootstrap-Python.ps1  # Debe existir
+   Test-Path .\.boltf\scripts\powershell\Bootstrap-Python.ps1  # Debe existir
    Test-Path .\.github\skills\skill-creator\requirements.txt    # Debe existir
    Test-Path .\docs\python-integration.md       # Debe existir
    ```

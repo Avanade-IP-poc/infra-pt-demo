@@ -29,7 +29,7 @@ Esta estrategia permite distribuir Bolt Framework con scripts Python **sin reque
 │  ├── Scripts/python.exe       ← Python isolado             │
 │  └── Lib/site-packages/       ← Packages instalados aquí  │
 │                                                             │
-│  .aurora/scripts/powershell/                                │
+│  .boltf/scripts/powershell/                                │
 │  └── Bootstrap-Python.ps1     ← Copiado aquí, ejecuta aquí│
 │                                                             │
 │  .github/skills/                                            │
@@ -53,7 +53,7 @@ aurora-ai/
 │   ├── Scripts/python.exe                   # Python isolado (Windows)
 │   └── bin/python                          # Python isolado (Linux/macOS)
 │
-├── 📁 .aurora/scripts/
+├── 📁 .boltf/scripts/
 │   ├── powershell/
 │   │   └── Bootstrap-Python.ps1            # ✨ Setup automático (Windows)
 │   └── bash/
@@ -99,10 +99,10 @@ cd aurora-ai
 
 ```powershell
 # Windows
-.\.aurora\scripts\powershell\Bootstrap-Python.ps1
+.\.boltf\scripts\powershell\Bootstrap-Python.ps1
 
 # Linux/macOS
-source .aurora/scripts/bash/bootstrap-python.sh
+source .boltf/scripts/bash/bootstrap-python.sh
 ```
 
 **Qué hace:**
@@ -211,7 +211,7 @@ jobs:
           cache: 'pip'
 
       - name: Bootstrap Python Environment
-        run: .\.aurora\scripts\powershell\Bootstrap-Python.ps1
+        run: .\.boltf\scripts\powershell\Bootstrap-Python.ps1
 
       - name: Verify Environment
         run: .\Test-PythonEnvironment.ps1
@@ -234,7 +234,7 @@ steps:
     inputs:
       versionSpec: '3.11'
 
-  - powershell: .\.aurora\scripts\powershell\Bootstrap-Python.ps1
+  - powershell: .\.boltf\scripts\powershell\Bootstrap-Python.ps1
     displayName: 'Bootstrap Python'
 
   - powershell: .\Test-PythonEnvironment.ps1
@@ -352,10 +352,10 @@ bash test-python-environment.sh
 ```powershell
 # Recrear entorno con nuevas versiones
 Remove-Item -Recurse -Force .bolt-venv
-.\.aurora\scripts\powershell\Bootstrap-Python.ps1
+.\.boltf\scripts\powershell\Bootstrap-Python.ps1
 
 # O forzar actualización
-.\.aurora\scripts\powershell\Bootstrap-Python.ps1 -Force
+.\.boltf\scripts\powershell\Bootstrap-Python.ps1 -Force
 ```
 
 ---

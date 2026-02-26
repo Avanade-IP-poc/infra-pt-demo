@@ -72,7 +72,7 @@ The Omega Architect serves as the final authority on architecture decisions. It:
 
 ## Constitution Reference
 
-**CRITICAL**: Before any architecture decision, read `.aurora/memory/constitution.md` to understand:
+**CRITICAL**: Before any architecture decision, read `.boltf/memory/constitution.md` to understand:
 
 - **Tech Stack** - Approved technologies (languages, frameworks, databases)
 - **Architecture Principles** - SOLID, DDD, Clean Architecture as defined
@@ -83,7 +83,7 @@ Architecture must align with Constitution. Do NOT use examples from this agent i
 
 ## Expected Inputs
 
-- **`.aurora/memory/constitution.md`** - Project governing document (REQUIRED)
+- **`.boltf/memory/constitution.md`** - Project governing document (REQUIRED)
 - Domain model from DDD Master
 - Technical constraints from Technical Detective
 - Business requirements from Business Explorer

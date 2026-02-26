@@ -561,13 +561,13 @@ function Copy-BoltFramework {
     if (Test-Path "$root\.github") {
         Copy-Item "$root\.github" "$OutputDirectory\.github" -Recurse -Force
     }
-    # .aurora
-    if (Test-Path "$root\.aurora") {
-        Copy-Item "$root\.aurora" "$OutputDirectory\.aurora" -Recurse -Force
+    # .boltf
+    if (Test-Path "$root\.boltf") {
+        Copy-Item "$root\.boltf" "$OutputDirectory\.boltf" -Recurse -Force
     }
     # Root docs
     @("README.md","CHANGELOG.md","CONTRIBUTING.md","LICENSE","PENDIENTES.md") | ForEach-Object {
-        if (Test-Path "$root\.aurora\$_") { Copy-Item "$root\.aurora\$_" "$OutputDirectory\$_" -Force }
+        if (Test-Path "$root\.boltf\$_") { Copy-Item "$root\.boltf\$_" "$OutputDirectory\$_" -Force }
     }
     @("INITIALIZER.md","USAGE.md") | ForEach-Object {
         if (Test-Path "$root\$_") { Copy-Item "$root\$_" "$OutputDirectory\$_" -Force }
@@ -637,7 +637,7 @@ function New-ScopesYaml {
 
     Write-Step "Generating scopes.yaml..."
 
-    $scopesDir = "$OutputDirectory\.aurora"
+    $scopesDir = "$OutputDirectory\.boltf"
     if (-not (Test-Path $scopesDir)) {
         New-Item -ItemType Directory -Path $scopesDir -Force | Out-Null
     }
@@ -672,7 +672,7 @@ function New-ScopesYaml {
 # =============================================================================
 # This file declares which scopes are active and records all wizard decisions.
 # Each scope injects its own constitution sections from
-#   .aurora/scopes/<scope>/memory/constitution.md
+#   .boltf/scopes/<scope>/memory/constitution.md
 # The work-management scope is always active (transversal).
 # =============================================================================
 
@@ -741,7 +741,7 @@ $autoDeployLines
 "@
 
     Set-Content -Path "$scopesDir\scopes.yaml" -Value $yaml -Encoding UTF8
-    Write-Success "scopes.yaml generated at .aurora/scopes.yaml"
+    Write-Success "scopes.yaml generated at .boltf/scopes.yaml"
 }
 
 # ─── Prefill constitution ────────────────────────────────────────────────────
@@ -756,7 +756,7 @@ function New-BasicConstitution {
 
     Write-Step "Generating basic constitution..."
 
-    $memoryDir = "$OutputDirectory\.aurora\memory"
+    $memoryDir = "$OutputDirectory\.boltf\memory"
     if (-not (Test-Path $memoryDir)) {
         New-Item -ItemType Directory -Path $memoryDir -Force | Out-Null
     }
@@ -835,7 +835,7 @@ $aspireArticle
 ## Next Steps
 
 1. **Provision Files**: Run ``@Bolt Constitution`` agent or manually invoke the ``skill-bolt-setup-constitution`` skill
-2. **Review**: The skill will merge scope-specific constitutions from ``.aurora/scopes/<scope>/memory/constitution.md``
+2. **Review**: The skill will merge scope-specific constitutions from ``.boltf/scopes/<scope>/memory/constitution.md``
 3. **Customize**: Edit this constitution to reflect project-specific decisions
 
 ---
@@ -862,7 +862,7 @@ function Set-ConstitutionDecisions_DEPRECATED {
 
     Write-Step "Prefilling constitution with your decisions..."
 
-    $path = "$OutputDirectory\.aurora\memory\constitution.md"
+    $path = "$OutputDirectory\.boltf\memory\constitution.md"
     if (-not (Test-Path $path)) {
         Write-Warn "constitution.md not found — skipping prefill"
         return
@@ -1101,8 +1101,8 @@ function Show-Summary {
     if ($D.IaCTool -ne "none") {
         Write-Host "  ✓ IaC Tool:   $($D.IaCTool)" -ForegroundColor Green
     }
-    Write-Host "  ✓ Basic constitution created in .aurora/memory/constitution.md" -ForegroundColor Green
-    Write-Host "  ✓ Scopes configuration saved to .aurora/scopes.yaml" -ForegroundColor Green
+    Write-Host "  ✓ Basic constitution created in .boltf/memory/constitution.md" -ForegroundColor Green
+    Write-Host "  ✓ Scopes configuration saved to .boltf/scopes.yaml" -ForegroundColor Green
     Write-Host "  ✓ Bolt Framework agents and skills copied to .github/" -ForegroundColor Green
     Write-Host ""
     Write-Host "  ⚠ IMPORTANT: Two-Step Initialization" -ForegroundColor Yellow
@@ -1156,7 +1156,7 @@ function Show-Summary {
     Write-Host ""
     Write-Host "  📚 Documentation:" -ForegroundColor Cyan
     Write-Host "     - README.md — Bolt Framework overview"
-    Write-Host "     - .aurora/scopes/README.md — Practice-based initialization guide"
+    Write-Host "     - .boltf/scopes/README.md — Practice-based initialization guide"
     Write-Host ""
 }
 

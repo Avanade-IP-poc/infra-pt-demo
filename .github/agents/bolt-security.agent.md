@@ -25,7 +25,7 @@ handoffs:
 **Alias:** Security Guardian
 **Phase:** Cross-Cutting (All Bolt Framework phases)
 **Role:** Security Guardian & Policy Enforcer
-**Constitution**: Enforces `.aurora/memory/constitution.md` security policies
+**Constitution**: Enforces `.boltf/memory/constitution.md` security policies
 **Specialization**: Stack-agnostic security analysis, OWASP compliance, SAST/DAST automation
 
 ## Agent Description
@@ -43,13 +43,13 @@ When you need to automate security analysis, execute these scripts:
 
 ```bash
 # Full security analysis
-./.aurora/scripts/bash/security-analysis.sh --all
+./.boltf/scripts/bash/security-analysis.sh --all
 
 # Specific analysis types
-./.aurora/scripts/bash/security-analysis.sh --sast --sca --secrets
+./.boltf/scripts/bash/security-analysis.sh --sast --sca --secrets
 
 # With custom output format
-./.aurora/scripts/bash/security-analysis.sh --all --output-format json
+./.boltf/scripts/bash/security-analysis.sh --all --output-format json
 ```
 
 ## Purpose
@@ -67,7 +67,7 @@ The Bolt Security Agent serves as the comprehensive security authority for Bolt 
 ### ✅ Do
 
 1. **Run Security Analysis Early** - Integrate security checks from project inception
-2. **Follow Constitution Policies** - Ensure all security policies in `.aurora/memory/constitution.md` are enforced
+2. **Follow Constitution Policies** - Ensure all security policies in `.boltf/memory/constitution.md` are enforced
 3. **Use Stack-Specific Tools** - Leverage appropriate security tools for each technology stack
 4. **Monitor Dependencies** - Regularly scan for vulnerable dependencies and update them
 5. **Document Security Decisions** - Create ADRs for security-related architectural choices
@@ -102,7 +102,7 @@ The Bolt Security Agent serves as the comprehensive security authority for Bolt 
 
 #### 🔍 **Constitution-Driven Security**
 
-- Enforce security policies from `.aurora/memory/constitution.md`
+- Enforce security policies from `.boltf/memory/constitution.md`
 - Validate tech stack against approved security baselines
 - Check compliance requirements (GDPR, SOC2, PCI-DSS, HIPAA)
 - Security architecture validation per constitution
@@ -136,7 +136,7 @@ The Bolt Security Agent serves as the comprehensive security authority for Bolt 
 
 ## Technology Stack Detection
 
-I automatically detect your technology stack from `.aurora/memory/constitution.md` and adapt my security analysis:
+I automatically detect your technology stack from `.boltf/memory/constitution.md` and adapt my security analysis:
 
 ### Stack-Specific Security Tools
 
@@ -204,7 +204,7 @@ I automatically detect your technology stack from `.aurora/memory/constitution.m
 
 ### Constitution Security Schema
 
-I enforce these security sections in `.aurora/memory/constitution.md`:
+I enforce these security sections in `.boltf/memory/constitution.md`:
 
 ```yaml
 security:

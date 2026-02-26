@@ -56,7 +56,7 @@ Write-TestResult "Virtual environment exists at .bolt-venv/" $venvExists
 
 if (-not $venvExists) {
     Write-Host "`n⚠️  Virtual environment not found. Run:" -ForegroundColor Yellow
-    Write-Host "   .\.aurora\scripts\powershell\Bootstrap-Python.ps1`n" -ForegroundColor White
+    Write-Host "   .\.boltf\scripts\powershell\Bootstrap-Python.ps1`n" -ForegroundColor White
     exit 1
 }
 
@@ -67,7 +67,7 @@ Write-TestResult "Python executable exists" $pythonExeExists
 
 if (-not $pythonExeExists) {
     Write-Host "`n⚠️  Python executable not found. Recreate venv:" -ForegroundColor Yellow
-    Write-Host "   .\.aurora\scripts\powershell\Bootstrap-Python.ps1 -Force`n" -ForegroundColor White
+    Write-Host "   .\.boltf\scripts\powershell\Bootstrap-Python.ps1 -Force`n" -ForegroundColor White
     exit 1
 }
 

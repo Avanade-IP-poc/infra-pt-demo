@@ -90,19 +90,19 @@ You are the template generation specialist for AURORA projects. You create intel
 
 ```bash
 # Generate complete project structure
-./.aurora/scripts/bash/generate-project-structure.sh --from-constitution
+./.boltf/scripts/bash/generate-project-structure.sh --from-constitution
 
 # Generate specific component type
-./.aurora/scripts/bash/create-component.sh --type react-page --name UserProfile
-./.aurora/scripts/bash/create-component.sh --type api-controller --name UserController
-./.aurora/scripts/bash/create-component.sh --type vue-component --name DataTable
+./.boltf/scripts/bash/create-component.sh --type react-page --name UserProfile
+./.boltf/scripts/bash/create-component.sh --type api-controller --name UserController
+./.boltf/scripts/bash/create-component.sh --type vue-component --name DataTable
 ```
 
 ### Template Validation:
 
 ```bash
 # Validate generated structure against constitution
-./.aurora/scripts/bash/validate-template.sh --constitution .aurora/.aurora/memory/constitution.md
+./.boltf/scripts/bash/validate-template.sh --constitution .boltf/.boltf/memory/constitution.md
 ```
 
 ## Auto-Generation Logic

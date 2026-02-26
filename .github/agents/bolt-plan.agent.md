@@ -74,7 +74,7 @@ git branch --show-current
 # Expected: feature/user-authentication
 
 # 2. Read constitution
-cat .aurora/memory/constitution.md
+cat .boltf/memory/constitution.md
 
 # 3. Read feature spec
 cat specs/user-authentication/requirements/requirements.md
@@ -86,7 +86,7 @@ cat specs/user-authentication/requirements/requirements.md
 ## Prerequisites
 
 1. Feature specification exists at `specs/[XXX-feature-name]/requirements/requirements.md`
-2. Constitution exists at `/.aurora/memory/constitution.md`
+2. Constitution exists at `/.boltf/memory/constitution.md`
 3. **Must be on feature branch** - verify with `git branch --show-current`
 
 ## Execution Flow
@@ -105,7 +105,7 @@ fi
 
 Read and analyze:
 
-- `/.aurora/memory/constitution.md` - Tech stack, principles, gates
+- `/.boltf/memory/constitution.md` - Tech stack, principles, gates
 - `specs/[XXX-feature-name]/requirements/requirements.md` - Feature requirements
 
 Extract:
@@ -384,7 +384,7 @@ Create `specs/[XXX-feature-name]/planning/plan.md`:
 
 ```bash
 # Check if work management is configured
-grep -i "work-management" .aurora/memory/constitution.md
+grep -i "work-management" .boltf/memory/constitution.md
 ```
 
 **If configured, update the Feature/Epic work item**:

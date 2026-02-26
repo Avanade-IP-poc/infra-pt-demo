@@ -26,7 +26,7 @@ function Write-TestOK   { param([string]$M) Write-Host "  ✅ $M" -ForegroundCol
 function Write-TestFail { param([string]$M) Write-Host "  ❌ $M" -ForegroundColor Red; throw $M }
 
 # ─── Configuration ───────────────────────────────────────────────────────────
-$AuroraRoot = $PSScriptRoot
+$BoltRoot = $PSScriptRoot
 $TestRoot = Join-Path ([System.IO.Path]::GetTempPath()) $TestProjectName
 
 Write-Host @"
@@ -37,7 +37,7 @@ Write-Host @"
 
 "@ -ForegroundColor Magenta
 
-Write-Host "Aurora Root:  $AuroraRoot" -ForegroundColor White
+Write-Host "Bolt Root:  $BoltRoot" -ForegroundColor White
 Write-Host "Test Project: $TestRoot" -ForegroundColor White
 Write-Host ""
 
@@ -50,7 +50,7 @@ if (Test-Path $TestRoot) {
 }
 
 try {
-    & "$AuroraRoot\Init.ps1" `
+    & "$BoltRoot\Init.ps1" `
         -OutputDirectory $TestRoot `
         -ProjectType "green" `
         -ErrorAction Stop | Out-Null
@@ -63,7 +63,7 @@ try {
 Write-TestStep "Step 2: Verify Python files copied to target project"
 
 $requiredFiles = @(
-    ".aurora\scripts\powershell\Bootstrap-Python.ps1",
+    ".boltf\scripts\powershell\Bootstrap-Python.ps1",
     "Invoke-PythonScript.ps1",
     "Test-PythonEnvironment.ps1",
     ".github\skills\skill-creator\requirements.txt",
@@ -108,7 +108,7 @@ Write-TestStep "Step 4: Bootstrap Python environment in target project"
 
 Push-Location $TestRoot
 try {
-    $bootstrapScript = ".\.aurora\scripts\powershell\Bootstrap-Python.ps1"
+    $bootstrapScript = ".\.boltf\scripts\powershell\Bootstrap-Python.ps1"
 
     if ($Verbose) {
         & $bootstrapScript -ErrorAction Stop
@@ -141,14 +141,14 @@ if (Test-Path $pythonExe) {
     Write-TestFail "Python executable not found"
 }
 
-# ─── Step 6: Verify NO Virtual Environment in Aurora Repo ───────────────────
-Write-TestStep "Step 6: Verify NO virtual environment in aurora-ai repo"
+# ─── Step 6: Verify NO Virtual Environment in Bolt Repo ────────────────────
+Write-TestStep "Step 6: Verify NO virtual environment in bolt-framework repo"
 
-$auroraVenv = Join-Path $AuroraRoot ".bolt-venv"
-if (-not (Test-Path $auroraVenv)) {
-    Write-TestOK "Confirmed: No .bolt-venv in aurora-ai (correct behavior)"
+$boltVenv = Join-Path $BoltRoot ".bolt-venv"
+if (-not (Test-Path $boltVenv)) {
+    Write-TestOK "Confirmed: No .bolt-venv in bolt-framework repo (correct behavior)"
 } else {
-    Write-Host "  ⚠️  Found .bolt-venv in aurora-ai (should be cleaned up)" -ForegroundColor Yellow
+    Write-Host "  ⚠️  Found .bolt-venv in bolt-framework repo (should be cleaned up)" -ForegroundColor Yellow
 }
 
 # ─── Step 7: Test Invoke-PythonScript.ps1 ───────────────────────────────────

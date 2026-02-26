@@ -181,7 +181,7 @@ my-project/
 │   ├── agents/                 # 31 specialized AI agents
 │   ├── workflows/              # CI/CD pipelines
 │   └── prompts/                # Reusable AI prompts
-├── .aurora/                    # Bolt framework
+├── .boltf/                    # Bolt framework
 │   ├── docs/                   # Framework documentation
 │   ├── memory/                 # Project constitution & context
 │   └── scripts/                # Development automation
@@ -197,7 +197,7 @@ my-project/
 
 ## 🧬 Constitution-Based Development
 
-The **`.aurora/memory/constitution.md`** file acts as your project's **DNA**. All AI agents and development decisions reference this single source of truth.
+The **`.boltf/memory/constitution.md`** file acts as your project's **DNA**. All AI agents and development decisions reference this single source of truth.
 
 ### Auto-Configured Options
 
@@ -294,7 +294,7 @@ Bolt Framework includes **optional** Python-based scripts for advanced features:
 
 ```powershell
 # One-time setup
-.\.aurora\scripts\powershell\Bootstrap-Python.ps1
+.\.boltf\scripts\powershell\Bootstrap-Python.ps1
 
 # Run Python scripts
 .\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\quick_validate.py my-skill\
@@ -304,7 +304,7 @@ Bolt Framework includes **optional** Python-based scripts for advanced features:
 
 ```bash
 # One-time setup
-source .aurora/scripts/bash/bootstrap-python.sh
+source .boltf/scripts/bash/bootstrap-python.sh
 
 # Activate environment
 source .bolt-venv/bin/activate
@@ -324,9 +324,9 @@ python .github/skills/skill-creator/scripts/quick_validate.py my-skill/
 
 ## �📞 Support
 
-- 📖 **Documentation**: `.aurora/docs/`
+- 📖 **Documentation**: `.boltf/docs/`
 - 🤖 **AI Help**: `@Bolt Framework` agent in your project
-- 🔧 **Scripts**: `.aurora/scripts/` for development automation
+- 🔧 **Scripts**: `.boltf/scripts/` for development automation
 - 📝 **Issues**: Create GitHub issues for bugs or feature requests
 
 ---

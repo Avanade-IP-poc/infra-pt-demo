@@ -133,7 +133,7 @@ Use sources in this order:
 
 **Required Reading**:
 
-- `/.aurora/memory/constitution.md` - Tech stack, principles, constraints
+- `/.boltf/memory/constitution.md` - Tech stack, principles, constraints
 - `/docs/adr/*.md` - All ADRs (Architecture Decision Records)
 - `/docs/architecture/*.md` - All architecture documents
 - `/specs/**/requirements/*.md` - Feature specifications
@@ -277,7 +277,7 @@ Use sources in this order:
 
 ```bash
 # Constitution (mandatory)
-cat .aurora/memory/constitution.md
+cat .boltf/memory/constitution.md
 
 # ADRs (if exist)
 ls docs/adr/*.md

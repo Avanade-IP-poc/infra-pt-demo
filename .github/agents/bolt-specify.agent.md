@@ -46,7 +46,7 @@ Transform natural language feature descriptions into structured specification do
 
 ## Prerequisites
 
-1. Constitution exists at `/.aurora/memory/constitution.md`
+1. Constitution exists at `/.boltf/memory/constitution.md`
 2. Read constitution to understand tech stack and constraints
 
 ## Execution Flow

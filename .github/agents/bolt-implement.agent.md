@@ -98,7 +98,7 @@ git checkout -b "${CURRENT_BRANCH}/bolt-[N]-[description]"
 If NOT on a feature branch:
 
 1. **STOP** - Do not implement on main/develop
-2. **Create feature branch**: `./.aurora/scripts/bash/create-new-feature.sh "[feature-name]"`
+2. **Create feature branch**: `./.boltf/scripts/bash/create-new-feature.sh "[feature-name]"`
 3. **Then create BOLT branch** following pattern above
 
 ## Prerequisites
@@ -111,7 +111,7 @@ Required files in `specs/[XXX-feature-name]/`:
 
 Required in project root:
 
-- `.aurora/memory/constitution.md` - Technology and standards governance
+- `.boltf/memory/constitution.md` - Technology and standards governance
 
 ## Execution Flow
 
@@ -123,7 +123,7 @@ CURRENT_BRANCH=$(git branch --show-current)
 if [[ ! "$CURRENT_BRANCH" =~ ^feature/ ]]; then
     echo "ERROR: Not on a feature branch!"
     echo "Current: $CURRENT_BRANCH"
-    echo "Run: ./.aurora/scripts/bash/create-new-feature.sh [feature-name]"
+    echo "Run: ./.boltf/scripts/bash/create-new-feature.sh [feature-name]"
     exit 1
 fi
 ```
@@ -132,7 +132,7 @@ fi
 
 ```bash
 # Read governing constitution
-cat .aurora/memory/constitution.md
+cat .boltf/memory/constitution.md
 
 # Read current Bolt tasks
 cat specs/[XXX-feature-name]/planning/tasks.md
@@ -158,7 +158,7 @@ After completing tasks, update `tasks.md`:
 **Check constitution** for `work-management` scope:
 
 ```bash
-grep -i "work-management" .aurora/memory/constitution.md
+grep -i "work-management" .boltf/memory/constitution.md
 ```
 
 **If configured, update task status**:

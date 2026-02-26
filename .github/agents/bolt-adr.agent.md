@@ -90,8 +90,8 @@ Use #skill:bolt-adr to create a complete MADR document with appropiate template 
 
 **Available scripts for ADR creation:**
 
-- **Bash**: `.aurora/scripts/bash/create-adr.sh`
-- **PowerShell**: `.aurora/scripts/powershell/Create-ADR.ps1`
+- **Bash**: `.boltf/scripts/bash/create-adr.sh`
+- **PowerShell**: `.boltf/scripts/powershell/Create-ADR.ps1`
 
 **Utility scripts for ADR numbering:**
 

@@ -6,7 +6,7 @@
 
 # ─── Prerequisites ───────────────────────────────────────────────────────────
 # Run once to setup Python environment:
-#   .\.aurora\scripts\powershell\Bootstrap-Python.ps1
+#   .\.boltf\scripts\powershell\Bootstrap-Python.ps1
 
 # ─── Skill Validation (No AI, No API Key) ───────────────────────────────────
 
@@ -93,7 +93,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: .\.aurora\scripts\powershell\Bootstrap-Python.ps1
+      - run: .\.boltf\scripts\powershell\Bootstrap-Python.ps1
       - run: |
           Get-ChildItem .github\skills -Directory | ForEach-Object {
             .\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\quick_validate.py $_.FullName
@@ -104,7 +104,7 @@ jobs:
 
 # Recreate Python environment
 Remove-Item -Recurse -Force .bolt-venv -ErrorAction SilentlyContinue
-.\.aurora\scripts\powershell\Bootstrap-Python.ps1 -Force
+.\.boltf\scripts\powershell\Bootstrap-Python.ps1 -Force
 
 # Check installed packages
 .\.bolt-venv\Scripts\python.exe -m pip list

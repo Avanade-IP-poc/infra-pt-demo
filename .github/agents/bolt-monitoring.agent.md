@@ -43,26 +43,26 @@ You are the monitoring specialist for AURORA projects. You implement comprehensi
 
 ```bash
 # Install complete monitoring stack
-./.aurora/scripts/bash/setup-monitoring.sh --stack prometheus-grafana --env production
+./.boltf/scripts/bash/setup-monitoring.sh --stack prometheus-grafana --env production
 
 # Setup with SLO-based alerting
-./.aurora/scripts/bash/setup-monitoring.sh --slo-file specs/slos.yml
+./.boltf/scripts/bash/setup-monitoring.sh --slo-file specs/slos.yml
 
 # Configure cloud monitoring
-./.aurora/scripts/bash/setup-cloud-monitoring.sh --provider azure --resource-group aurora-rg
+./.boltf/scripts/bash/setup-cloud-monitoring.sh --provider azure --resource-group aurora-rg
 ```
 
 ### Dashboard Generation:
 
 ```bash
 # Generate dashboards based on tech stack
-./.aurora/scripts/bash/generate-dashboards.sh --from-constitution
+./.boltf/scripts/bash/generate-dashboards.sh --from-constitution
 
 # Create custom dashboard for feature
-./.aurora/scripts/bash/create-dashboard.sh --feature F001-authentication --metrics auth_requests,auth_failures
+./.boltf/scripts/bash/create-dashboard.sh --feature F001-authentication --metrics auth_requests,auth_failures
 
 # Import community dashboards
-./.aurora/scripts/bash/import-dashboards.sh --source grafana-community
+./.boltf/scripts/bash/import-dashboards.sh --source grafana-community
 ```
 
 ## Auto-Instrumentation by Tech Stack
@@ -417,10 +417,10 @@ features:
 
 ```bash
 # Generate SLI tracking code
-./.aurora/scripts/bash/generate-sli-metrics.sh --slo-file specs/slos.yml
+./.boltf/scripts/bash/generate-sli-metrics.sh --slo-file specs/slos.yml
 
 # Create SLO compliance dashboard
-./.aurora/scripts/bash/create-slo-dashboard.sh --slos specs/slos.yml
+./.boltf/scripts/bash/create-slo-dashboard.sh --slos specs/slos.yml
 ```
 
 ## Log Analysis and Correlation
@@ -464,8 +464,8 @@ logger.error('Payment failed', {
 
 ```bash
 # Setup APM for different tech stacks
-./.aurora/scripts/bash/setup-apm.sh --stack dotnet --provider elastic-apm
-./.aurora/scripts/bash/setup-apm.sh --stack react --provider sentry
+./.boltf/scripts/bash/setup-apm.sh --stack dotnet --provider elastic-apm
+./.boltf/scripts/bash/setup-apm.sh --stack react --provider sentry
 ```
 
 ### Real User Monitoring (RUM):
@@ -495,10 +495,10 @@ getTTFB(sendToAnalytics);
 
 ```bash
 # Generate synthetic tests
-./.aurora/scripts/bash/generate-synthetic-tests.sh --endpoints api/health,api/status
+./.boltf/scripts/bash/generate-synthetic-tests.sh --endpoints api/health,api/status
 
 # Setup uptime monitoring
-./.aurora/scripts/bash/setup-uptime-monitoring.sh --urls https://app.aurora.com,https://api.aurora.com
+./.boltf/scripts/bash/setup-uptime-monitoring.sh --urls https://app.boltf.com,https://api.boltf.com
 ```
 
 ## Integration with AURORA Ecosystem

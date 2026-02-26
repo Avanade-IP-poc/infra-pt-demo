@@ -62,20 +62,20 @@ Bolt Framework uses an **isolated virtual environment** (`.bolt-venv`) to avoid 
 
 ```powershell
 # From project root
-.\.aurora\scripts\powershell\Bootstrap-Python.ps1
+.\.boltf\scripts\powershell\Bootstrap-Python.ps1
 
 # Force recreate if needed
-.\.aurora\scripts\powershell\Bootstrap-Python.ps1 -Force
+.\.boltf\scripts\powershell\Bootstrap-Python.ps1 -Force
 ```
 
 **Linux/macOS (Bash):**
 
 ```bash
 # From project root
-source .aurora/scripts/bash/bootstrap-python.sh
+source .boltf/scripts/bash/bootstrap-python.sh
 
 # Force recreate
-source .aurora/scripts/bash/bootstrap-python.sh --force
+source .boltf/scripts/bash/bootstrap-python.sh --force
 ```
 
 This command will:
@@ -200,7 +200,7 @@ $env:ANTHROPIC_API_KEY = "sk-ant-..."
 
 ```powershell
 # Reinstall dependencies
-.\.aurora\scripts\powershell\Bootstrap-Python.ps1 -Force
+.\.boltf\scripts\powershell\Bootstrap-Python.ps1 -Force
 ```
 
 ### Virtual Environment Corrupted
@@ -208,7 +208,7 @@ $env:ANTHROPIC_API_KEY = "sk-ant-..."
 ```powershell
 # Delete and recreate
 Remove-Item -Recurse -Force .bolt-venv
-.\.aurora\scripts\powershell\Bootstrap-Python.ps1
+.\.boltf\scripts\powershell\Bootstrap-Python.ps1
 ```
 
 ### Permission Errors (Windows)
@@ -222,7 +222,7 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 
 ```bash
 # Make script executable
-chmod +x .aurora/scripts/bash/bootstrap-python.sh
+chmod +x .boltf/scripts/bash/bootstrap-python.sh
 ```
 
 ## CI/CD Integration
@@ -248,7 +248,7 @@ jobs:
 
       - name: Bootstrap Python Environment
         run: |
-          source .aurora/scripts/bash/bootstrap-python.sh --skip-install
+          source .boltf/scripts/bash/bootstrap-python.sh --skip-install
           pip install -r .github/skills/skill-creator/requirements.txt
 
       - name: Validate Skills
@@ -275,7 +275,7 @@ steps:
       addToPath: true
 
   - script: |
-      source .aurora/scripts/bash/bootstrap-python.sh
+      source .boltf/scripts/bash/bootstrap-python.sh
     displayName: 'Bootstrap Python Environment'
 
   - script: |
@@ -293,7 +293,7 @@ project-root/
 │   ├── Scripts/                   # Executables (Windows)
 │   └── Lib/site-packages/         # Installed packages
 │
-├── .aurora/scripts/
+├── .boltf/scripts/
 │   ├── powershell/
 │   │   └── Bootstrap-Python.ps1   # Setup script (Windows)
 │   └── bash/

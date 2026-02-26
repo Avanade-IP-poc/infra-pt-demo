@@ -468,10 +468,10 @@ copy_bolt_framework() {
     log_step "Copying Bolt Framework..."
 
     [[ -d "$SCRIPT_DIR/.github" ]] && cp -r "$SCRIPT_DIR/.github" "$OUTPUT_DIR/.github"
-    [[ -d "$SCRIPT_DIR/.aurora" ]] && cp -r "$SCRIPT_DIR/.aurora" "$OUTPUT_DIR/.aurora"
+    [[ -d "$SCRIPT_DIR/.boltf" ]] && cp -r "$SCRIPT_DIR/.boltf" "$OUTPUT_DIR/.boltf"
 
     for f in README.md CHANGELOG.md CONTRIBUTING.md LICENSE PENDIENTES.md; do
-        [[ -f "$SCRIPT_DIR/.aurora/$f" ]] && cp "$SCRIPT_DIR/.aurora/$f" "$OUTPUT_DIR/$f"
+        [[ -f "$SCRIPT_DIR/.boltf/$f" ]] && cp "$SCRIPT_DIR/.boltf/$f" "$OUTPUT_DIR/$f"
     done
     for f in INITIALIZER.md USAGE.md; do
         [[ -f "$SCRIPT_DIR/$f" ]] && cp "$SCRIPT_DIR/$f" "$OUTPUT_DIR/$f"
@@ -520,7 +520,7 @@ create_project_structure() {
 generate_scopes_yaml() {
     log_step "Generating scopes.yaml..."
 
-    local scopes_dir="$OUTPUT_DIR/.aurora"
+    local scopes_dir="$OUTPUT_DIR/.boltf"
     mkdir -p "$scopes_dir"
 
     local scopes_yaml=""
@@ -585,7 +585,7 @@ generate_scopes_yaml() {
 # =============================================================================
 # This file declares which scopes are active and records all wizard decisions.
 # Each scope injects its own constitution sections from
-#   .aurora/scopes/<scope>/memory/constitution.md
+#   .boltf/scopes/<scope>/memory/constitution.md
 # The work-management scope is always active (transversal).
 # =============================================================================
 
@@ -648,7 +648,7 @@ ${auto_deploy_lines}  config-management: ${D_CONFIG_MANAGEMENT}
 #   XIX -- Governance
 YAML
 
-    log_success "scopes.yaml generated at .aurora/scopes.yaml"
+    log_success "scopes.yaml generated at .boltf/scopes.yaml"
 }
 
 # --- Prefill constitution -----------------------------------------------------
@@ -656,7 +656,7 @@ YAML
 prefill_constitution() {
     log_step "Prefilling constitution with your decisions..."
 
-    local path="$OUTPUT_DIR/.aurora/memory/constitution.md"
+    local path="$OUTPUT_DIR/.boltf/memory/constitution.md"
     if [[ ! -f "$path" ]]; then
         log_warn "constitution.md not found -- skipping prefill"
         return
@@ -892,8 +892,8 @@ show_summary() {
     if [[ "$D_IAC_TOOL" != "none" ]]; then
         log_info "✓ IaC Tool:   $D_IAC_TOOL"
     fi
-    log_info "✓ Basic constitution created in .aurora/memory/constitution.md"
-    log_info "✓ Scopes configuration saved to .aurora/scopes.yaml"
+    log_info "✓ Basic constitution created in .boltf/memory/constitution.md"
+    log_info "✓ Scopes configuration saved to .boltf/scopes.yaml"
     log_info "✓ Bolt Framework agents and skills copied to .github/"
     echo ""
     echo -e "  ${YELLOW}⚠ IMPORTANT: Two-Step Initialization${NC}"
@@ -936,7 +936,7 @@ show_summary() {
     echo ""
     echo -e "  ${CYAN}📚 Documentation:${NC}"
     echo "     - README.md — Bolt Framework overview"
-    echo "     - .aurora/scopes/README.md — Practice-based initialization guide"
+    echo "     - .boltf/scopes/README.md — Practice-based initialization guide"
     echo ""
 }
 

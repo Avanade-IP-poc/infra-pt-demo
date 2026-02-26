@@ -28,7 +28,7 @@ Phase 4 provisions resources from active scopes by:
 **Execute PowerShell dry-run to analyze what needs provisioning:**
 
 ```powershell
-.\.aurora\scripts\powershell\Invoke-BoltSetupConstitution.ps1 -ProjectPath . -Provision -DryRun
+.\.boltf\scripts\powershell\Invoke-BoltSetupConstitution.ps1 -ProjectPath . -Provision -DryRun
 ```
 
 **Parse the output to identify:**
@@ -40,7 +40,7 @@ Phase 4 provisions resources from active scopes by:
    - markdown-formatting
 
 2. **Scope items** by source type:
-   - `local_file` → Copy from `.aurora/scopes/...`
+   - `local_file` → Copy from `.boltf/scopes/...`
    - `context7` → Download via MCP
    - `awesome_copilot` → Download via MCP
 
@@ -117,7 +117,7 @@ Wait for user confirmation.
 Execute PowerShell script (actual run, not dry-run):
 
 ```powershell
-.\.aurora\scripts\powershell\Invoke-BoltSetupConstitution.ps1 -ProjectPath . -Provision
+.\.boltf\scripts\powershell\Invoke-BoltSetupConstitution.ps1 -ProjectPath . -Provision
 ```
 
 **Monitor script output and report progress:**
@@ -357,7 +357,7 @@ Show summary:
 
 ## Step 4.4: Enhance Provision Report
 
-The PowerShell script created `.aurora/memory/provision-report.md` but it only tracked local files.
+The PowerShell script created `.boltf/memory/provision-report.md` but it only tracked local files.
 
 **Read the existing report** and append download information:
 
@@ -434,9 +434,9 @@ Present complete provisioning results:
 
 ### Reports
 
-📄 **Provision Report**: `.aurora/memory/provision-report.md`
-📄 **Constitution**: `.aurora/memory/constitution.md`
-📄 **Master Constitution**: `.aurora/memory/constitution.master.md`
+📄 **Provision Report**: `.boltf/memory/provision-report.md`
+📄 **Constitution**: `.boltf/memory/constitution.md`
+📄 **Master Constitution**: `.boltf/memory/constitution.master.md`
 
 ### Verification
 
@@ -453,13 +453,13 @@ ls .github/prompts/
 ls .github/instructions/
 
 # View provision report
-cat .aurora/memory/provision-report.md
+cat .boltf/memory/provision-report.md
 ```
 ````
 
 ### Next Steps
 
-1. **Review constitution**: Open `.aurora/memory/constitution.md`
+1. **Review constitution**: Open `.boltf/memory/constitution.md`
 2. **Explore skills**: Browse `.github/skills/` folders
 3. **Start building**: Use `@Bolt Framework` to begin AI-DLC
 4. **Create features**: Use `@Bolt Feature` to define first feature

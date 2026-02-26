@@ -299,7 +299,7 @@ After generating tasks:
 **Check constitution** for `work-management` scope:
 
 ```bash
-grep -i "work-management" .aurora/memory/constitution.md
+grep -i "work-management" .boltf/memory/constitution.md
 ```
 
 **If configured, update Bolt work items** (created by @Bolt Plan):

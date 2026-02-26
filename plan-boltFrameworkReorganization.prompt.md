@@ -190,7 +190,7 @@ En lugar de crear un nuevo concepto "Practice", reutilizamos **scopes** como "pr
 
 ### 2. Skills = Capacidades Modulares Extraídas
 
-Extraer de agentes hacia `.github/skills/` ó `.aurora/available-skills/`:
+Extraer de agentes hacia `.github/skills/` ó `.boltf/available-skills/`:
 
 - `skill-branch-management` (58 líneas bash duplicadas en 5 agentes)
 - `skill-quality-gates` (comandos de validación duplicados en 4 agentes)
@@ -354,7 +354,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
     - **Estructura**: Aplicada automáticamente por new-skill skill
     - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
-14.5. Crear `.github/skills/bolt-setup-constitution/SKILL.md` **[NUEVO]**: - **Usar skill**: Invocar `#file:new-skill` para guiar la creación - **Nota**: Este skill es **EXCEPCIÓN** al límite de 150 líneas (300-400 líneas necesarias) - **Razón de excepción**: Motor de provisión completo con múltiples responsabilidades - new-skill skill alertará sobre el límite, pero se justifica por complejidad - **Responsabilidad**: Provisión inteligente post-init basada en constitution y scopes activos - **Workflow**: 1. Leer `memory/constitution.md` (contiene Practice y scopes activos) 2. Leer `memory/scopes.yaml` (scopes seleccionados) 3. Para cada scope activo: - Leer `.aurora/scopes/{scope}/scope.yaml` - Copiar items (agents, prompts, skills) según `source_type` y `auto_provision: true` - Extraer articles específicos de `.aurora/scopes/{scope}/memory/constitution.md` 4. Merge constitution: Master + Scope-specific articles 5. Actualizar `memory/constitution.md` con constitution completo 6. Copiar skills específicos desde `.aurora/available-skills/` según mapeo Practice 7. **SIEMPRE** copiar `bolt-framework` (skill core, independiente del Practice) 8. Generar reporte de provisión: archivos copiados, articles añadidos - **Inputs**: - ConstitutionPath (default: `memory/constitution.md`) - ScopesConfigPath (default: `memory/scopes.yaml`) - DryRun (default: false) - preview de cambios sin ejecutar - **Output**: Reporte markdown con cambios realizados - **Invocación**: Puede ser llamado por agentes (`@Bolt Constitution`, `@Bolt Framework`) o manualmente después de init
+14.5. Crear `.github/skills/bolt-setup-constitution/SKILL.md` **[NUEVO]**: - **Usar skill**: Invocar `#file:new-skill` para guiar la creación - **Nota**: Este skill es **EXCEPCIÓN** al límite de 150 líneas (300-400 líneas necesarias) - **Razón de excepción**: Motor de provisión completo con múltiples responsabilidades - new-skill skill alertará sobre el límite, pero se justifica por complejidad - **Responsabilidad**: Provisión inteligente post-init basada en constitution y scopes activos - **Workflow**: 1. Leer `memory/constitution.md` (contiene Practice y scopes activos) 2. Leer `memory/scopes.yaml` (scopes seleccionados) 3. Para cada scope activo: - Leer `.boltf/scopes/{scope}/scope.yaml` - Copiar items (agents, prompts, skills) según `source_type` y `auto_provision: true` - Extraer articles específicos de `.boltf/scopes/{scope}/memory/constitution.md` 4. Merge constitution: Master + Scope-specific articles 5. Actualizar `memory/constitution.md` con constitution completo 6. Copiar skills específicos desde `.boltf/available-skills/` según mapeo Practice 7. **SIEMPRE** copiar `bolt-framework` (skill core, independiente del Practice) 8. Generar reporte de provisión: archivos copiados, articles añadidos - **Inputs**: - ConstitutionPath (default: `memory/constitution.md`) - ScopesConfigPath (default: `memory/scopes.yaml`) - DryRun (default: false) - preview de cambios sin ejecutar - **Output**: Reporte markdown con cambios realizados - **Invocación**: Puede ser llamado por agentes (`@Bolt Constitution`, `@Bolt Framework`) o manualmente después de init
 
 15. Expandir `.github/skills/bolt-framework/SKILL.md`:
     - **Usar skill**: Invocar `#file:new-skill` para guiar la expansión
@@ -369,7 +369,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
       - Quality gates por fase
       - Referencias a otros skills (`skill-quality-gates`, `skill-testing-discipline`)
     - Seguir pattern Microsoft: "# Mission → # Workflow → # Output"
-    - **Provisión**: SIEMPRE copiado desde `.aurora/available-skills/bolt-framework/` a `.github/skills/bolt-framework/`
+    - **Provisión**: SIEMPRE copiado desde `.boltf/available-skills/bolt-framework/` a `.github/skills/bolt-framework/`
     - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 16. Actualizar agentes para referenciar skills:
@@ -439,7 +439,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
 📅 Completado: 2026-02-23
 ✏️ Detalles: Actualizada función Show-Summary con mensaje de dos pasos, Practice display, instrucciones @Bolt Constitution y documentación links. - "✓ Project initialized with Practice: {practice}" - "✓ Basic constitution created in memory/constitution.md" - "✓ Scopes configured: {scopes_list}" - "⚠ Next step: Run '@Bolt Constitution' to provision files and complete constitution" - " Or manually: Invoke 'bolt-setup-constitution' skill" - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
-✅ 21. Actualizar `.aurora/scopes/README.md`:
+✅ 21. Actualizar `.boltf/scopes/README.md`:
 📅 Completado: 2026-02-23
 ✏️ Detalles: Añadida sección "Practice-Based Initialization (Two-Step Workflow)" con tabla de Practice → Scopes mapping, explicación de dos pasos, quick start examples. - Documentar Practice → Scopes mapping - Explicar two-step initialization: Init (config) + Skill (provision) - Añadir sección "## Practice-Based Initialization" - Documentar nuevo workflow:
 `       1. Run Init.ps1 → Select Practice → Generate basic constitution + scopes.yaml
@@ -449,21 +449,21 @@ No hay usuarios con workflows dependientes, por lo tanto:
 
 ✅ 22. Implementar `source_type` y `auto_provision` en `scope.yaml`:
 📅 Completado: 2026-02-23
-✏️ Detalles: Añadido campo auto_provision: true a constitution items en 8 scope.yaml files (backend, frontend, cloud-platform, data, integration, ai, crm, work-management). Ready for bolt-setup-constitution skill implementation. - Actualizar cada `.aurora/scopes/*/scope.yaml` para permitir:
+✏️ Detalles: Añadido campo auto_provision: true a constitution items en 8 scope.yaml files (backend, frontend, cloud-platform, data, integration, ai, crm, work-management). Ready for bolt-setup-constitution skill implementation. - Actualizar cada `.boltf/scopes/*/scope.yaml` para permitir:
 
       ```yaml
       items:
         - kind: skill
           name: skill-quality-gates
           source_type: local_file # local_file | context7 | awesome_copilot | web | git_repo
-          source_path: .aurora/available-skills/skill-quality-gates
+          source_path: .boltf/available-skills/skill-quality-gates
           auto_provision: true # copiar automáticamente cuando scope activo
           destination: .github/skills/skill-quality-gates
 
         - kind: agent
           name: bolt-testing
           source_type: local_file
-          source_path: .aurora/available-agents/bolt-testing.agent.md
+          source_path: .boltf/available-agents/bolt-testing.agent.md
           auto_provision: true
           destination: .github/agents/bolt-testing.agent.md
       ```
@@ -483,7 +483,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
     - Incluir troubleshooting common issues
     - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan (sub-tarea 21.1)
 
-    **21.2. Crear helper script** `.aurora/scripts/Invoke-BoltSetupConstitution.ps1`:
+    **21.2. Crear helper script** `.boltf/scripts/Invoke-BoltSetupConstitution.ps1`:
     - PowerShell script que implementa la lógica descrita en el skill
     - Parámetros:
       ```powershell
@@ -505,8 +505,8 @@ No hay usuarios con workflows dependientes, por lo tanto:
     **21.3. Implementar lógica de merge de constitution**:
     - Leer `memory/constitution.md` (básico generado por Init.ps1)
     - Para cada scope activo (leer de `memory/scopes.yaml`):
-      - Leer `.aurora/scopes/{scope}/memory/constitution.md`
-      - Extraer articles específicos (según tabla en `.aurora/scopes/README.md`)
+      - Leer `.boltf/scopes/{scope}/memory/constitution.md`
+      - Extraer articles específicos (según tabla en `.boltf/scopes/README.md`)
       - Validar: no duplicar articles, preservar estructura
     - Generar constitution completo
     - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan (sub-tarea 21.3)
@@ -558,7 +558,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
 
     **Paso 1 - Provisión según scopes activos**:
     - Para cada scope activo:
-      - Leer `.aurora/scopes/{scope}/scope.yaml`
+      - Leer `.boltf/scopes/{scope}/scope.yaml`
       - Filtrar items con `auto_provision: true`
       - Para cada item:
         - Verificar `source_type` (local_file, context7, web, etc.)
@@ -571,7 +571,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
       - Log: archivos copiados, skipped (ya existen), errores
 
     **Paso 2 - Provisión de skills core (SIEMPRE - AUTO-DISCOVERY)**:
-    - **IMPORTANTE**: El script auto-descubre y copia **TODOS los directorios** en `.aurora/available-skills/bolt-framework/`
+    - **IMPORTANTE**: El script auto-descubre y copia **TODOS los directorios** en `.boltf/available-skills/bolt-framework/`
     - **Auto-Discovery**: Usa `Get-ChildItem -Directory` para encontrar todos los skills sin hardcodear nombres
     - **Skills descubiertos automáticamente** (7 en total):
       - `bolt-framework/` - Skill metodológico core (6 fases)
@@ -608,8 +608,8 @@ No hay usuarios con workflows dependientes, por lo tanto:
 
       ✓ Copied 8 skills:
 
-      - skill-branch-management (from .aurora/available-skills)
-      - skill-quality-gates (from .aurora/available-skills)
+      - skill-branch-management (from .boltf/available-skills)
+      - skill-quality-gates (from .boltf/available-skills)
         ...
 
       ✓ Copied 5 agents:
@@ -671,7 +671,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
 
     - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
-23. Actualizar scope constitutions en `.aurora/scopes/*/memory/constitution.md`:
+23. Actualizar scope constitutions en `.boltf/scopes/*/memory/constitution.md`:
     - Verificar que cada scope tiene articles correctos
     - Ejemplo `backend`:
 
@@ -703,10 +703,10 @@ No hay usuarios con workflows dependientes, por lo tanto:
 
 **Duración**: 6-8 horas (aumentado por testing del skill)
 
-✅ **24. Crear test script `.aurora/scripts/Test-InitFlows.ps1`:** - Test 1: Init.ps1 con Practice "Apps & Infra": - Verificar `memory/constitution.md` creado (básico) - Verificar `memory/scopes.yaml` contiene: backend, frontend, cloud-platform - Verificar `.github/` NO tiene archivos (provisión aún no ejecutada)
+✅ **24. Crear test script `.boltf/scripts/Test-InitFlows.ps1`:** - Test 1: Init.ps1 con Practice "Apps & Infra": - Verificar `memory/constitution.md` creado (básico) - Verificar `memory/scopes.yaml` contiene: backend, frontend, cloud-platform - Verificar `.github/` NO tiene archivos (provisión aún no ejecutada)
 
     - Test 2: Invocar `skill-bolt-setup-constitution` skill:
-      - Ejecutar: `& .aurora\scripts\Invoke-BoltSetupConstitution.ps1`
+      - Ejecutar: `& .boltf\scripts\Invoke-BoltSetupConstitution.ps1`
       - Verificar constitution completo con articles de 3 scopes
       - Verificar skills copiados: skill-branch-management, skill-quality-gates, etc.
       - Verificar reporte generado: `memory/provision-report.md`
@@ -721,7 +721,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
       - Provisión solo de scopes seleccionados
 
     - Test 5: Dry Run mode:
-      - Ejecutar: `& .aurora\scripts\Invoke-BoltSetupConstitution.ps1 -DryRun`
+      - Ejecutar: `& .boltf\scripts\Invoke-BoltSetupConstitution.ps1 -DryRun`
       - Verificar preview de cambios sin modificar archivos
 
     - Test 6: Re-provisión (idempotencia):
@@ -822,7 +822,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
 
 **4. Aspire Templates Refactoring (Decisión 7.0)**:
 
-- **Problema**: Templates en `.aurora/templates/aspire/` (baja cohesión con skill)
+- **Problema**: Templates en `.boltf/templates/aspire/` (baja cohesión con skill)
 - **Decisión**: Mover dentro de skill: `skill-bolt-aspire-orchestration/templates/`
 - **Beneficio**: Alta cohesión, pattern consistency, provisión unificada (1 Copy recursivo vs 2)
 
@@ -882,19 +882,19 @@ ls .github/skills/bolt-setup-constitution  # NUEVO
 # Verificar: .github/ vacío o sin provisión completa
 
 # 7. Test provisioning flow (Phase 2 - Skill)
-& .aurora\scripts\Invoke-BoltSetupConstitution.ps1 -Verbose
+& .boltf\scripts\Invoke-BoltSetupConstitution.ps1 -Verbose
 # Verificar: constitution completo, archivos provisionados, provision-report.md
 
 # 8. Test dry-run mode
-& .aurora\scripts\Invoke-BoltSetupConstitution.ps1 -DryRun
+& .boltf\scripts\Invoke-BoltSetupConstitution.ps1 -DryRun
 # Verificar: preview de cambios sin modificar archivos
 
 # 9. Test re-provisioning (idempotencia)
-& .aurora\scripts\Invoke-BoltSetupConstitution.ps1
+& .boltf\scripts\Invoke-BoltSetupConstitution.ps1
 # Ejecutar 2 veces, verificar: archivos no duplicados
 
 # 10. Test full integration
-.\.aurora\scripts\Test-InitFlows.ps1
+.\.boltf\scripts\Test-InitFlows.ps1
 ```
 
 ### Testing Manual
@@ -974,7 +974,7 @@ User: "@Bolt Framework help me create a REST API feature"
 
 ```powershell
 # Direct script invocation with DryRun
-PS> & .aurora\scripts\Invoke-BoltSetupConstitution.ps1 -DryRun
+PS> & .boltf\scripts\Invoke-BoltSetupConstitution.ps1 -DryRun
 
 # Output esperado:
 # [DRY RUN MODE - No files will be modified]
@@ -1001,12 +1001,12 @@ PS> git status
 
 ```powershell
 # Primera provisión
-PS> & .aurora\scripts\Invoke-BoltSetupConstitution.ps1 -Verbose
+PS> & .boltf\scripts\Invoke-BoltSetupConstitution.ps1 -Verbose
 
 # Output: 25 files provisioned
 
 # Segunda provisión (sin cambios en config)
-PS> & .aurora\scripts\Invoke-BoltSetupConstitution.ps1 -Verbose
+PS> & .boltf\scripts\Invoke-BoltSetupConstitution.ps1 -Verbose
 
 # Output esperado:
 # Constitution Merge: ✓ Regenerated (25 articles)
@@ -1030,7 +1030,7 @@ PS> .\Init.ps1
 # Practice: "Data & AI"
 # Scopes: data, ai, integration
 
-PS> & .aurora\scripts\Invoke-BoltSetupConstitution.ps1
+PS> & .boltf\scripts\Invoke-BoltSetupConstitution.ps1
 
 # Verificar skills específicos de Data & AI:
 PS> ls .github/skills/
@@ -1097,7 +1097,7 @@ El skill `skill-bolt-setup-constitution` es el **motor de provisión inteligente
 bolt-setup-constitution/
 ├── SKILL.md                              # Documentación del skill (instrucciones para Copilot)
 └── (Helper script referenciado)
-    └── .aurora/scripts/Invoke-BoltSetupConstitution.ps1
+    └── .boltf/scripts/Invoke-BoltSetupConstitution.ps1
 ```
 
 ### SKILL.md Structure (300-400 líneas)
@@ -1145,7 +1145,7 @@ You are the provisioning engine for Bolt Framework projects. Your responsibility
 
 For each scope in active scopes:
 
-1. Read `.aurora/scopes/{scope}/scope.yaml`
+1. Read `.boltf/scopes/{scope}/scope.yaml`
 2. Filter items where `auto_provision: true`
 3. For each item:
    - Check `source_type`:
@@ -1155,25 +1155,25 @@ For each scope in active scopes:
      - `git_repo`: Clone from git (future)
    - Create destination directories if needed
    - Log action: copied, skipped (exists), failed
-4. Read `.aurora/scopes/{scope}/memory/constitution.md`
-5. Extract scope-specific articles (refer to mapping table in .aurora/scopes/README.md)
+4. Read `.boltf/scopes/{scope}/memory/constitution.md`
+5. Extract scope-specific articles (refer to mapping table in .boltf/scopes/README.md)
 
 ### Step 3.5: Provision Core Skills (ALWAYS - AUTO-DISCOVERY)
 
 **IMPORTANT**: After processing scope-specific items, always provision core skills using **auto-discovery**:
 
-1. **Auto-discover ALL skills** in `.aurora/available-skills/bolt-framework/`:
+1. **Auto-discover ALL skills** in `.boltf/available-skills/bolt-framework/`:
    - PowerShell: `Get-ChildItem -Path $boltFrameworkPath -Directory`
    - Finds ALL subdirectories automatically (no hardcoded list)
    - Current skills (7 total): `bolt-framework`, `skill-bolt-adr`, `skill-bolt-branch-management`, `skill-bolt-constitution-driven-development`, `skill-bolt-quality-gates`, `skill-bolt-setup-constitution`, `skill-bolt-testing-discipline`
 
 2. **Copy each discovered skill** recursively:
-   - Source: `.aurora/available-skills/bolt-framework/{skill-name}/`
+   - Source: `.boltf/available-skills/bolt-framework/{skill-name}/`
    - Destination: `.github/skills/{skill-name}/`
    - Preserves complete directory structure (SKILL.md, examples/, templates/, etc.)
 
 3. **Extensibility**: Adding new skills
-   - Create new directory in `.aurora/available-skills/bolt-framework/new-skill/`
+   - Create new directory in `.boltf/available-skills/bolt-framework/new-skill/`
    - Script automatically discovers and provisions it
    - No code changes needed
 
@@ -1213,20 +1213,20 @@ Agent: Shows provision report to user
 
 ### By Manual Script
 ```powershell
-& .aurora\scripts\Invoke-BoltSetupConstitution.ps1
+& .boltf\scripts\Invoke-BoltSetupConstitution.ps1
 ````
 
 ### With Options
 
 ```powershell
 # Dry run (preview only)
-& .aurora\scripts\Invoke-BoltSetupConstitution.ps1 -DryRun
+& .boltf\scripts\Invoke-BoltSetupConstitution.ps1 -DryRun
 
 # Verbose output
-& .aurora\scripts\Invoke-BoltSetupConstitution.ps1 -Verbose
+& .boltf\scripts\Invoke-BoltSetupConstitution.ps1 -Verbose
 
 # Custom paths
-& .aurora\scripts\Invoke-BoltSetupConstitution.ps1 -ConstitutionPath "custom/constitution.md"
+& .boltf\scripts\Invoke-BoltSetupConstitution.ps1 -ConstitutionPath "custom/constitution.md"
 ```
 
 ## Output
@@ -1297,16 +1297,16 @@ Agent: Shows provision report to user
 
 #### Core Skills (always provisioned)
 
-✓ bolt-framework (from .aurora/available-skills) **[CORE - always included]**
+✓ bolt-framework (from .boltf/available-skills) **[CORE - always included]**
 
 - SKILL.md, HANDOFF-MATRIX.md, examples/, templates/
 
 #### Practice-Specific Skills
 
-✓ skill-branch-management (from .aurora/available-skills)
-✓ skill-quality-gates (from .aurora/available-skills)
-✓ skill-testing-discipline (from .aurora/available-skills)
-✓ skill-constitution-driven-development (from .aurora/available-skills)
+✓ skill-branch-management (from .boltf/available-skills)
+✓ skill-quality-gates (from .boltf/available-skills)
+✓ skill-testing-discipline (from .boltf/available-skills)
+✓ skill-constitution-driven-development (from .boltf/available-skills)
 
 #### Scope-Specific Skills
 
@@ -1365,15 +1365,15 @@ Error: memory/constitution.md not found
 ### Invalid Scope Configuration
 
 ```
-Error: .aurora/scopes/{scope}/scope.yaml not found or invalid
-→ Check scope configuration in .aurora/scopes/
+Error: .boltf/scopes/{scope}/scope.yaml not found or invalid
+→ Check scope configuration in .boltf/scopes/
 ```
 
 ### File Copy Failures
 
 ```
 Warning: Failed to copy skill-xyz
-→ Check source path exists: .aurora/available-skills/skill-xyz
+→ Check source path exists: .boltf/available-skills/skill-xyz
 → Check write permissions on destination: .github/skills/
 ```
 
@@ -1393,7 +1393,7 @@ To force re-provisioning:
 
 ````
 
-### Helper Script Structure (.aurora/scripts/Invoke-BoltSetupConstitution.ps1)
+### Helper Script Structure (.boltf/scripts/Invoke-BoltSetupConstitution.ps1)
 
 ```powershell
 <#
@@ -1477,7 +1477,7 @@ model: claude-sonnet-4.5
 
 1. User asks to setup/provision
 2. Validate prerequisites (memory/constitution.md, memory/scopes.yaml)
-3. Execute: `& .aurora\scripts\Invoke-BoltSetupConstitution.ps1`
+3. Execute: `& .boltf\scripts\Invoke-BoltSetupConstitution.ps1`
 4. Parse provision report
 5. Show summary to user
 6. Ask: "Review constitution?" | "Start development?"
@@ -1500,14 +1500,14 @@ model: claude-sonnet-4.5
 ### Practice vs Scope
 
 - **Decidido**: Practice = Scope Alias (no crear nueva abstracción)
-- **Alternativa rechazada**: Crear `.aurora/practices/` paralelo a `scopes/` (duplicaría gobernanza)
+- **Alternativa rechazada**: Crear `.boltf/practices/` paralelo a `scopes/` (duplicaría gobernanza)
 - **Razón**: Microsoft Docs usa "Collections" que agrupan items; nuestros scopes ya hacen esto. Awesome Copilot confirma pattern: Collection → Items (agents, skills, prompts).
 
 ### Skills Location
 
-- **Decidido**: `.github/skills/` para skills activos (copiados en init), `.aurora/available-skills/` para pool de skills provisionables
+- **Decidido**: `.github/skills/` para skills activos (copiados en init), `.boltf/available-skills/` para pool de skills provisionables
 - **Core skills**: `bolt-framework` SIEMPRE se copia a `.github/skills/`, independiente del Practice
-- **Razón**: `.github/` es estándar GitHub Copilot, `.aurora/` es meta-framework (no se copia a proyecto final)
+- **Razón**: `.github/` es estándar GitHub Copilot, `.boltf/` es meta-framework (no se copia a proyecto final)
 - **Provisión en dos pasos**:
   1. Skills específicos según scopes activos
   2. Skills core (bolt-framework) SIEMPRE
@@ -1718,7 +1718,7 @@ This project uses .NET Aspire for service orchestration due to:
 
 - .NET Aspire Docs: https://learn.microsoft.com/dotnet/aspire
 - Skill: skill-bolt-aspire-orchestration
-- Templates: .aurora/templates/aspire/
+- Templates: .boltf/templates/aspire/
 ```
 
 #### 3. Provisión Condicional (Invoke-BoltSetupConstitution.ps1)
@@ -1761,7 +1761,7 @@ function Copy-AspireResources {
     $items = @()
 
     # 1. Provision skill-bolt-aspire-orchestration
-    $skillSrc = ".aurora/available-skills/aspire/skill-bolt-aspire-orchestration"
+    $skillSrc = ".boltf/available-skills/aspire/skill-bolt-aspire-orchestration"
     $skillDst = ".github/skills/skill-bolt-aspire-orchestration"
     if (Test-Path $skillSrc) {
         Copy-Item $skillSrc $skillDst -Recurse -Force
@@ -1774,7 +1774,7 @@ function Copy-AspireResources {
     }
 
     # 2. Provision templates
-    $templateSrc = ".aurora/templates/aspire"
+    $templateSrc = ".boltf/templates/aspire"
     $templateDst = ".github/templates/aspire"
     if (Test-Path $templateSrc) {
         Copy-Item $templateSrc $templateDst -Recurse -Force
@@ -1862,7 +1862,7 @@ $aspireSection
 
 #### 4. Skill: skill-bolt-aspire-orchestration
 
-**Ubicación**: `.aurora/available-skills/aspire/skill-bolt-aspire-orchestration/SKILL.md`
+**Ubicación**: `.boltf/available-skills/aspire/skill-bolt-aspire-orchestration/SKILL.md`
 **Líneas**: 200+
 
 **Estructura**:
@@ -1932,7 +1932,7 @@ builder.Build().Run();
 
 #### 5. Templates Aspire (4 archivos)
 
-**Ubicación**: `.aurora/templates/aspire/`
+**Ubicación**: `.boltf/templates/aspire/`
 
 **A. AppHost.csproj**:
 
@@ -2154,7 +2154,7 @@ cat memory/scopes.yaml
 
 ```powershell
 # Test 1: Aspire enabled (use-aspire: true)
-PS> & .aurora\scripts\Invoke-BoltSetupConstitution.ps1 -Verbose
+PS> & .boltf\scripts\Invoke-BoltSetupConstitution.ps1 -Verbose
 # Expected: "Provisioning Aspire resources..."
 # Expected: skill-bolt-aspire-orchestration copied to .github/skills/
 # Expected: 4 templates copied to .github/templates/aspire/
@@ -2166,7 +2166,7 @@ ls .github/templates/aspire/
 
 # Test 2: Aspire disabled (use-aspire: false)
 # Modify scopes.yaml: use-aspire: false
-PS> & .aurora\scripts\Invoke-BoltSetupConstitution.ps1 -Verbose
+PS> & .boltf\scripts\Invoke-BoltSetupConstitution.ps1 -Verbose
 # Expected: "Aspire not enabled, skipping"
 # Expected: NO Aspire files copied
 ```
@@ -2227,7 +2227,7 @@ PS> .\Init.ps1
 # Verify: memory/constitution.md has Article XX
 
 # STEP 2: Provision
-PS> & .aurora\scripts\Invoke-BoltSetupConstitution.ps1
+PS> & .boltf\scripts\Invoke-BoltSetupConstitution.ps1
 
 # Verify:
 # - Aspire skill copied
@@ -2257,11 +2257,11 @@ PS> & .aurora\scripts\Invoke-BoltSetupConstitution.ps1
 
 **Creados** (5 archivos, 400+ líneas):
 
-3. **.aurora/available-skills/aspire/skill-bolt-aspire-orchestration/SKILL.md** (200+ lines)
-4. **.aurora/templates/aspire/AppHost.csproj** (20 lines)
-5. **.aurora/templates/aspire/ServiceDefaults.csproj** (15 lines)
-6. **.aurora/templates/aspire/Extensions.cs** (100+ lines)
-7. **.aurora/templates/aspire/Program.cs.template** (20 lines)
+3. **.boltf/available-skills/aspire/skill-bolt-aspire-orchestration/SKILL.md** (200+ lines)
+4. **.boltf/templates/aspire/AppHost.csproj** (20 lines)
+5. **.boltf/templates/aspire/ServiceDefaults.csproj** (15 lines)
+6. **.boltf/templates/aspire/Extensions.cs** (100+ lines)
+7. **.boltf/templates/aspire/Program.cs.template** (20 lines)
 
 **Total**:
 
@@ -2342,8 +2342,8 @@ PS> & .aurora\scripts\Invoke-BoltSetupConstitution.ps1
 - [Aspire AppHost Overview](https://learn.microsoft.com/dotnet/aspire/fundamentals/app-host-overview)
 - [Service Discovery in .NET Aspire](https://learn.microsoft.com/dotnet/aspire/service-discovery/overview)
 - [Deploy .NET Aspire apps to Azure](https://learn.microsoft.com/dotnet/aspire/deployment/azure/overview)
-- Skill: `.aurora/available-skills/aspire/skill-bolt-aspire-orchestration/SKILL.md`
-- Templates: `.aurora/templates/aspire/`
+- Skill: `.boltf/available-skills/aspire/skill-bolt-aspire-orchestration/SKILL.md`
+- Templates: `.boltf/templates/aspire/`
 
 ---
 
@@ -2379,8 +2379,8 @@ PS> & .aurora\scripts\Invoke-BoltSetupConstitution.ps1
 - `.github/agents/bolt-constitution.agent.md` - **[NUEVO]** Agente de provisión
 - `.github/skills/bolt-setup-constitution/SKILL.md` - **[NUEVO]** Motor de provisión
 - `Init.ps1` - Wizard de inicialización simplificado (≈300-400 líneas, reducido de 837)
-- `.aurora/scripts/Invoke-BoltSetupConstitution.ps1` - **[NUEVO]** Helper script de provisión
-- `.aurora/scopes/README.md` - Documentación del sistema de scopes
+- `.boltf/scripts/Invoke-BoltSetupConstitution.ps1` - **[NUEVO]** Helper script de provisión
+- `.boltf/scopes/README.md` - Documentación del sistema de scopes
 - `.github/skills/bolt-framework/SKILL.md` - Skill metodológico principal (expandido a 300-400 líneas)
 - `memory/constitution.md` - Constitution del proyecto (básico → completo)
 - `memory/provision-report.md` - **[NUEVO]** Reporte de provisión
@@ -2460,7 +2460,7 @@ User invokes: @Bolt Constitution "setup constitution"
     └────────┬─────────────────┘
              │
              ├─→ Backend
-             │   ├─ Read .aurora/scopes/backend/scope.yaml
+             │   ├─ Read .boltf/scopes/backend/scope.yaml
              │   ├─ Copy items (auto_provision: true)
              │   │  ├─ skill-backend-api-testing → .github/skills/
              │   │  ├─ bolt-testing.agent.md → .github/agents/
@@ -2468,12 +2468,12 @@ User invokes: @Bolt Constitution "setup constitution"
              │   └─ Extract constitution articles (III, XV, XVI)
              │
              ├─→ Frontend
-             │   ├─ Read .aurora/scopes/frontend/scope.yaml
+             │   ├─ Read .boltf/scopes/frontend/scope.yaml
              │   ├─ Copy items
              │   └─ Extract constitution articles (III, XV, XVII)
              │
              └─→ Cloud-Platform
-                 ├─ Read .aurora/scopes/cloud-platform/scope.yaml
+                 ├─ Read .boltf/scopes/cloud-platform/scope.yaml
                  ├─ Copy items
                  └─ Extract constitution articles (III, X, XI, XII)
              ↓
@@ -2565,7 +2565,7 @@ Crear scope universal `common` con skills aplicables a TODOS los proyectos, inde
 
 #### 1. Scope `common` (Universal Skills)
 
-**Archivo**: `.aurora/scopes/common/scope.yaml`
+**Archivo**: `.boltf/scopes/common/scope.yaml`
 
 **Skills incluidos** (auto-provision: true):
 
@@ -2642,9 +2642,9 @@ Select work management tool (or None for manual tracking)
 
 **Creados** (2 archivos):
 
-1. `.aurora/scopes/common/scope.yaml` (60 líneas)
+1. `.boltf/scopes/common/scope.yaml` (60 líneas)
    - 3 skills universales con auto_provision: true
-2. `.aurora/scopes/common/memory/constitution.md` (80 líneas)
+2. `.boltf/scopes/common/memory/constitution.md` (80 líneas)
    - Articles XXI (Documentation) + XXII (TDD/BDD)
 
 **Modificados** (2 archivos):
@@ -2669,7 +2669,7 @@ PS> .\Init.ps1
 # Expected: common NO aparece en wizard
 
 # Provision
-PS> & .aurora\scripts\Invoke-BoltSetupConstitution.ps1
+PS> & .boltf\scripts\Invoke-BoltSetupConstitution.ps1
 # Expected: "Adding 'common' scope (universal skills always included)"
 # Expected: 3 skills copiados (markdown-formatting, tdd-comprehensive, gherkin-reqnroll)
 ```
@@ -2682,7 +2682,7 @@ PS> .\Init.ps1
 # Select: Azure Boards
 
 # Verify scopes.yaml
-cat .aurora/scopes.yaml | Select-String "work-management-tool"
+cat .boltf/scopes.yaml | Select-String "work-management-tool"
 # Expected: "work-management-tool: azure-boards"
 ```
 

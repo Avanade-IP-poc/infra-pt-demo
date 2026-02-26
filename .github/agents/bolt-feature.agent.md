@@ -74,7 +74,7 @@ When the user requests a feature, you will:
 
 ```bash
 # Execute immediately - DO NOT ASK FOR PERMISSION
-./.aurora/scripts/bash/create-new-feature.sh "[feature-name]" "main"
+./.boltf/scripts/bash/create-new-feature.sh "[feature-name]" "main"
 ```
 
 **Step 3: Inform the user** what was created:
@@ -91,7 +91,7 @@ User says: "Create a user registration feature"
 
 You do (IN THIS ORDER):
 
-1. ✅ Execute: `./.aurora/scripts/bash/create-new-feature.sh "user-registration" "main"`
+1. ✅ Execute: `./.boltf/scripts/bash/create-new-feature.sh "user-registration" "main"`
 2. ✅ Inform: "Created branch `feature/user-registration` and specs directory"
 3. ✅ Read constitution
 4. ✅ Generate specification
@@ -100,7 +100,7 @@ You do (IN THIS ORDER):
 
 ## Constitution Check
 
-**AFTER creating branch**: Read `.aurora/memory/constitution.md` to understand:
+**AFTER creating branch**: Read `.boltf/memory/constitution.md` to understand:
 
 - Project domain and context
 - Tech stack constraints
@@ -115,7 +115,7 @@ You do (IN THIS ORDER):
 
 ```bash
 # You execute this AUTOMATICALLY when user requests a feature
-./.aurora/scripts/bash/create-new-feature.sh "[extracted-feature-name]" "main"
+./.boltf/scripts/bash/create-new-feature.sh "[extracted-feature-name]" "main"
 ```
 
 Output to user:
@@ -129,7 +129,7 @@ Output to user:
 ### Step 2: Read Constitution
 
 ```bash
-cat .aurora/memory/constitution.md
+cat .boltf/memory/constitution.md
 ```
 
 ### Step 3: Gather Feature Context
@@ -294,7 +294,7 @@ Validate spec against constitution:
 
 ### Step 5: Work Management Tool Synchronization
 
-**Check if work management tool is configured** in `.aurora/memory/constitution.md`:
+**Check if work management tool is configured** in `.boltf/memory/constitution.md`:
 
 - Look for `work-management` scope configuration
 - Tool can be: **Azure DevOps**, **Jira**, or **GitHub Projects**

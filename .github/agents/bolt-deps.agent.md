@@ -129,16 +129,16 @@ You are the dependency management specialist for AURORA projects. You intelligen
 
 ```bash
 # Scan feature specs and suggest dependencies
-./.aurora/scripts/bash/analyze-dependencies.sh --feature F001-authentication
+./.boltf/scripts/bash/analyze-dependencies.sh --feature F001-authentication
 
 # Install dependencies for specific feature
-./.aurora/scripts/bash/install-feature-dependencies.sh F001-authentication
+./.boltf/scripts/bash/install-feature-dependencies.sh F001-authentication
 
 # Update all dependencies with compatibility check
-./.aurora/scripts/bash/update-dependencies.sh --check-compatibility
+./.boltf/scripts/bash/update-dependencies.sh --check-compatibility
 
 # Remove unused dependencies
-./.aurora/scripts/bash/cleanup-dependencies.sh --unused
+./.boltf/scripts/bash/cleanup-dependencies.sh --unused
 ```
 
 ## Constitution-Based Constraints
@@ -160,14 +160,14 @@ npm audit --audit-level high
 dotnet list package --vulnerable
 
 # Check dependency licenses
-./.aurora/scripts/bash/check-licenses.sh --constitution .aurora/.aurora/memory/constitution.md
+./.boltf/scripts/bash/check-licenses.sh --constitution .boltf/.boltf/memory/constitution.md
 ```
 
 ### Performance Impact:
 
 ```bash
 # Analyze bundle size impact (frontend)
-./.aurora/scripts/bash/analyze-bundle-size.sh --before --after
+./.boltf/scripts/bash/analyze-bundle-size.sh --before --after
 
 # Check dependency tree depth
 npm ls --depth=2
@@ -269,7 +269,7 @@ npm update
 dotnet outdated --upgrade
 
 # Major version updates (manual review)
-./.aurora/scripts/bash/review-major-updates.sh
+./.boltf/scripts/bash/review-major-updates.sh
 ```
 
 ## Integration with Other Agents

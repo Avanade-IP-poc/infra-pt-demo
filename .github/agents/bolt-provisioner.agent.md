@@ -65,7 +65,7 @@ plan:
       awesome_copilot_items: [...]
 ```
 
-**If no plan provided**, read scopes from `.aurora/scopes.yaml` and parse each `scope.yaml`.
+**If no plan provided**, read scopes from `.boltf/scopes.yaml` and parse each `scope.yaml`.
 
 ### Step 2: Verify Local Provisioning
 
@@ -106,7 +106,7 @@ Report what's already in place:
 
 **Read active scopes and tech stack** from constitution/scopes.yaml.
 
-**Scan `.aurora/available-skills/` for relevant skills**:
+**Scan `.boltf/available-skills/` for relevant skills**:
 
 #### Mapping Rules
 
@@ -123,16 +123,16 @@ Report what's already in place:
 
 ```bash
 # Copy all skills from:
-.aurora/available-skills/dotnet-backend/backend-testing-dotnet/
+.boltf/available-skills/dotnet-backend/backend-testing-dotnet/
   → .github/skills/backend-testing-dotnet/
 
-.aurora/available-skills/dotnet-backend/dotnet-backend-patterns/
+.boltf/available-skills/dotnet-backend/dotnet-backend-patterns/
   → .github/skills/dotnet-backend-patterns/
 
-.aurora/available-skills/testing-must/tdd-red-green-refactor/
+.boltf/available-skills/testing-must/tdd-red-green-refactor/
   → .github/skills/tdd-red-green-refactor/
 
-.aurora/available-skills/testing-must/webapp-testing/
+.boltf/available-skills/testing-must/webapp-testing/
   → .github/skills/webapp-testing/
 ```
 
@@ -170,7 +170,7 @@ Proceed with copying these skills? **(yes/no)**
 
 ```bash
 # For each selected skill
-cp -r .aurora/available-skills/dotnet-backend/backend-testing-dotnet/ \
+cp -r .boltf/available-skills/dotnet-backend/backend-testing-dotnet/ \
      .github/skills/backend-testing-dotnet/
 
 # Verify
@@ -584,12 +584,12 @@ head -20 infra/bicep/appservice-linux-github.bicep  # Should show source comment
 head -10 .github/instructions/bicep-code-best-practices.instructions.md  # Should show frontmatter
 
 # View full report
-cat .aurora/memory/provision-report.md
+cat .boltf/memory/provision-report.md
 ```
 
 ### Next Steps
 
-1. **Review constitution**: `.aurora/memory/constitution.md`
+1. **Review constitution**: `.boltf/memory/constitution.md`
 2. **Explore skills**: Browse `.github/skills/` folders
 3. **Test templates**: Try Bicep templates in `infra/bicep/`
 4. **Use instructions**: Reference `.github/instructions/` in code generation
@@ -680,7 +680,7 @@ If auto-selection finds no skills:
 ```markdown
 ℹ️ **No Auto-Selected Skills**
 
-I didn't find relevant skills in `.aurora/available-skills/` for your scopes.
+I didn't find relevant skills in `.boltf/available-skills/` for your scopes.
 
 **Scopes Active**: [list]
 **Tech Stack**: [detected stack]

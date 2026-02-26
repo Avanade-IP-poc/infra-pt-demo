@@ -26,13 +26,13 @@ function Write-Err { param([string]$M) Write-Host "[ERR]  $M" -ForegroundColor R
 # ─── Validate Virtual Environment ───────────────────────────────────────────
 if (-not (Test-Path $VenvPath)) {
     Write-Err "Python virtual environment not found: $VenvPath"
-    Write-Host "Run: .\.aurora\scripts\powershell\Bootstrap-Python.ps1" -ForegroundColor Yellow
+    Write-Host "Run: .\.boltf\scripts\powershell\Bootstrap-Python.ps1" -ForegroundColor Yellow
     exit 1
 }
 
 if (-not (Test-Path $PythonExe)) {
     Write-Err "Python executable not found: $PythonExe"
-    Write-Host "Recreate venv: .\.aurora\scripts\powershell\Bootstrap-Python.ps1 -Force" -ForegroundColor Yellow
+    Write-Host "Recreate venv: .\.boltf\scripts\powershell\Bootstrap-Python.ps1 -Force" -ForegroundColor Yellow
     exit 1
 }
 

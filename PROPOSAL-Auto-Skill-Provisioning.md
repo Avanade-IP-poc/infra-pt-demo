@@ -76,7 +76,7 @@ graph TD
 
 | Hecho                          | Fuente                                       | Ejemplo                                     |
 | ------------------------------ | -------------------------------------------- | ------------------------------------------- |
-| `activeScopes`                 | `.aurora/scopes.yaml`                        | `["backend", "frontend", "cloud-platform"]` |
+| `activeScopes`                 | `.boltf/scopes.yaml`                        | `["backend", "frontend", "cloud-platform"]` |
 | `techStack.backend`            | `scopes.yaml → decisions.backend.language`   | `"csharp"`                                  |
 | `techStack.frontend`           | `scopes.yaml → decisions.frontend.framework` | `"react"`                                   |
 | `decisions.cicd.iacTool`       | `scopes.yaml → decisions.cicd.iacTool`       | `"bicep"`                                   |
@@ -173,7 +173,7 @@ function Test-AutoProvisionRule {
 # En Invoke-BoltSetupConstitution.ps1
 
 # 1. Cargar hechos desde scopes.yaml + constitution
-$scopesYaml = Get-Content ".aurora/scopes.yaml" | ConvertFrom-Yaml
+$scopesYaml = Get-Content ".boltf/scopes.yaml" | ConvertFrom-Yaml
 $constitutionContent = Get-Content "memory/constitution.md" -Raw
 
 $facts = @{
@@ -193,7 +193,7 @@ Write-Info "  - techStack.frontend: $($facts.techStack.frontend)"
 
 # 2. Iterar items de cada scope
 foreach ($scopeName in $facts.activeScopes) {
-    $scopeYaml = Get-Content ".aurora/scopes/$scopeName/scope.yaml" | ConvertFrom-Yaml
+    $scopeYaml = Get-Content ".boltf/scopes/$scopeName/scope.yaml" | ConvertFrom-Yaml
 
     foreach ($item in $scopeYaml.items) {
         # Evaluar regla
@@ -239,7 +239,7 @@ interface ProvisionFacts {
 }
 
 async function loadFacts(): Promise<ProvisionFacts> {
-  const scopesContent = readFileSync('.aurora/scopes.yaml', 'utf8');
+  const scopesContent = readFileSync('.boltf/scopes.yaml', 'utf8');
   const scopesYaml = loadYaml(scopesContent) as any;
 
   return {
@@ -259,7 +259,7 @@ async function evaluateAutoProvisionRules() {
   console.log('📊 Facts:', JSON.stringify(facts, null, 2));
 
   for (const scopeName of facts.activeScopes) {
-    const scopePath = `.aurora/scopes/${scopeName}/scope.yaml`;
+    const scopePath = `.boltf/scopes/${scopeName}/scope.yaml`;
     const scopeContent = readFileSync(scopePath, 'utf8');
     const scopeYaml = loadYaml(scopeContent) as any;
 
@@ -289,7 +289,7 @@ async function evaluateAutoProvisionRules() {
 
 ### Fase 3: Biblioteca de Reglas Comunes
 
-**Archivo**: `.aurora/provisioning-rules.yaml`
+**Archivo**: `.boltf/provisioning-rules.yaml`
 
 ```yaml
 # Biblioteca de reglas reutilizables
@@ -371,7 +371,7 @@ items:
 ### Backend Scope
 
 ```yaml
-# .aurora/scopes/backend/scope.yaml
+# .boltf/scopes/backend/scope.yaml
 version: 1
 scope: backend
 description: Backend APIs, services, domain logic
@@ -442,7 +442,7 @@ items:
 ### Frontend Scope
 
 ```yaml
-# .aurora/scopes/frontend/scope.yaml
+# .boltf/scopes/frontend/scope.yaml
 version: 1
 scope: frontend
 description: Web/mobile UI, SPA, design systems
@@ -513,7 +513,7 @@ items:
 ### Cloud Platform Scope
 
 ```yaml
-# .aurora/scopes/cloud-platform/scope.yaml
+# .boltf/scopes/cloud-platform/scope.yaml
 version: 1
 scope: cloud-platform
 description: Infrastructure, Landing Zones, IaC
@@ -593,7 +593,7 @@ items:
 
 **Días 9-10**: Actualizar Scopes
 
-- [ ] Actualizar `.aurora/scopes/scope-template.yaml`
+- [ ] Actualizar `.boltf/scopes/scope-template.yaml`
 - [ ] Añadir `auto_provision_rule` a scopes existentes:
   - [ ] backend/scope.yaml (C# vs Node.js)
   - [ ] frontend/scope.yaml (React, Angular, Vue)
@@ -615,7 +615,7 @@ items:
 
 **Días 14-15**: Documentación
 
-- [ ] Crear `.aurora/docs/provisioning-rules.md`
+- [ ] Crear `.boltf/docs/provisioning-rules.md`
 - [ ] Crear biblioteca de reglas comunes (provisioning-rules.yaml)
 - [ ] Actualizar README.md con ejemplos de reglas
 - [ ] Crear ADR documentando decisión de arquitectura
@@ -831,7 +831,7 @@ console.log(jsonLogic.apply(rule, facts)); // true
 ### Schema de Validación
 
 ```yaml
-# .aurora/schemas/auto-provision-rule.schema.json
+# .boltf/schemas/auto-provision-rule.schema.json
 {
   '$schema': 'http://json-schema.org/draft-07/schema#',
   'title': 'Auto Provision Rule',
@@ -863,7 +863,7 @@ console.log(jsonLogic.apply(rule, facts)); // true
 # .git/hooks/pre-commit
 
 # Validar todas las reglas en scopes/*.yaml
-for file in .aurora/scopes/*/scope.yaml; do
+for file in .boltf/scopes/*/scope.yaml; do
   echo "Validating $file..."
   # Extraer auto_provision_rule y validar contra schema
   # (implementación con yq + ajv)
@@ -917,11 +917,11 @@ LLM analiza proyecto y sugiere reglas:
 
 ### Añadir Nuevo Skill con Regla
 
-1. Crear skill en `.aurora/available-skills/<tech>/<skill-name>/`
+1. Crear skill en `.boltf/available-skills/<tech>/<skill-name>/`
 2. Añadir item a scope.yaml correspondiente
 3. Definir `auto_provision_rule` basada en tech stack
 4. Testear con `Init.ps1 -DryRun`
-5. Documentar en `.aurora/available-skills/README.md`
+5. Documentar en `.boltf/available-skills/README.md`
 
 ### Reportar Bug en Regla
 

@@ -60,29 +60,29 @@ You are the documentation specialist for AURORA projects. You create, maintain, 
 
 ```bash
 # Generate all documentation from codebase
-./.aurora/scripts/bash/generate-docs.sh --full --scan-code
+./.boltf/scripts/bash/generate-docs.sh --full --scan-code
 
 # Update API documentation from controllers
-./.aurora/scripts/bash/update-api-docs.sh --from-code --format openapi
+./.boltf/scripts/bash/update-api-docs.sh --from-code --format openapi
 
 # Generate architecture diagrams from code structure
-./.aurora/scripts/bash/generate-architecture.sh --format mermaid --output docs/architecture/
+./.boltf/scripts/bash/generate-architecture.sh --format mermaid --output docs/architecture/
 
 # Extract inline documentation
-./.aurora/scripts/bash/extract-code-docs.sh --languages typescript,csharp --output docs/code/
+./.boltf/scripts/bash/extract-code-docs.sh --languages typescript,csharp --output docs/code/
 ```
 
 ### Specification-Driven Documentation:
 
 ```bash
 # Generate user documentation from feature specs
-./.aurora/scripts/bash/generate-user-docs.sh --from-specs specs/
+./.boltf/scripts/bash/generate-user-docs.sh --from-specs specs/
 
 # Create deployment guides from infrastructure code
-./.aurora/scripts/bash/generate-deployment-docs.sh --from-bicep infrastructure/
+./.boltf/scripts/bash/generate-deployment-docs.sh --from-bicep infrastructure/
 
 # Build troubleshooting guides from monitoring alerts
-./.aurora/scripts/bash/generate-troubleshooting.sh --from-alerts monitoring/alerts.yml
+./.boltf/scripts/bash/generate-troubleshooting.sh --from-alerts monitoring/alerts.yml
 ```
 
 ## API Documentation Auto-Generation
@@ -253,7 +253,7 @@ graph TB
 
 ```bash
 # Generate user guide from feature spec
-./.aurora/scripts/bash/generate-user-guide.sh --feature F001-authentication --output docs/user-guide/
+./.boltf/scripts/bash/generate-user-guide.sh --feature F001-authentication --output docs/user-guide/
 ```
 
 Generated Output:
@@ -454,16 +454,16 @@ _ADR Template v1.0 - Bolt Framework-DLC_
 
 ```bash
 # Validate documentation completeness
-./.aurora/scripts/bash/validate-docs.sh --check-coverage --min-coverage 80
+./.boltf/scripts/bash/validate-docs.sh --check-coverage --min-coverage 80
 
 # Check for broken links
-./.aurora/scripts/bash/check-doc-links.sh --fix-relative-paths
+./.boltf/scripts/bash/check-doc-links.sh --fix-relative-paths
 
 # Spell check and grammar
-./.aurora/scripts/bash/check-doc-quality.sh --spell-check --grammar-check
+./.boltf/scripts/bash/check-doc-quality.sh --spell-check --grammar-check
 
 # Ensure constitution compliance
-./.aurora/scripts/bash/validate-doc-compliance.sh --constitution .aurora/memory/constitution.md
+./.boltf/scripts/bash/validate-doc-compliance.sh --constitution .boltf/memory/constitution.md
 ```
 
 ### Documentation Metrics:
@@ -493,7 +493,7 @@ quality_scores:
 # Auto-update documentation on code changes
 - name: Update Documentation
   run: |
-    ./.aurora/scripts/bash/generate-docs.sh --incremental
+    ./.boltf/scripts/bash/generate-docs.sh --incremental
     git add docs/
     git commit -m "docs: auto-update documentation [skip ci]"
     git push
@@ -503,10 +503,10 @@ quality_scores:
 
 ```bash
 # Generate static documentation site
-./.aurora/scripts/bash/build-docs-site.sh --generator docusaurus --theme aurora
+./.boltf/scripts/bash/build-docs-site.sh --generator docusaurus --theme aurora
 
 # Deploy documentation site
-./.aurora/scripts/bash/deploy-docs.sh --target netlify --domain docs.aurora.com
+./.boltf/scripts/bash/deploy-docs.sh --target netlify --domain docs.boltf.com
 ```
 
 ## Knowledge Management
@@ -515,20 +515,20 @@ quality_scores:
 
 ```bash
 # Index documentation for search
-./.aurora/scripts/bash/index-docs.sh --search-engine elasticsearch
+./.boltf/scripts/bash/index-docs.sh --search-engine elasticsearch
 
 # Generate documentation sitemap
-./.aurora/scripts/bash/generate-doc-sitemap.sh --output docs/sitemap.xml
+./.boltf/scripts/bash/generate-doc-sitemap.sh --output docs/sitemap.xml
 ```
 
 ### Version Management:
 
 ```bash
 # Create documentation version for release
-./.aurora/scripts/bash/version-docs.sh --version v1.2.0
+./.boltf/scripts/bash/version-docs.sh --version v1.2.0
 
 # Archive old documentation versions
-./.aurora/scripts/bash/archive-docs.sh --older-than 6months
+./.boltf/scripts/bash/archive-docs.sh --older-than 6months
 ```
 
 ## Integration with AURORA Ecosystem

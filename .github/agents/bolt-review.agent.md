@@ -129,7 +129,7 @@ Perform comprehensive code review validating constitution compliance, architectu
 
 ```bash
 # Read constitution
-cat .aurora/memory/constitution.md
+cat .boltf/memory/constitution.md
 
 # Read feature spec
 cat specs/[XXX-feature-name]/requirements/requirements.md

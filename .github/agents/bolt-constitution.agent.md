@@ -56,7 +56,7 @@ handoffs:
 
 **IMPORTANT**: This agent provisions **ALL Bolt Framework core skills** automatically via auto-discovery:
 
-- **Auto-discovers** all directories in `.aurora/available-skills/bolt-framework/`
+- **Auto-discovers** all directories in `.boltf/available-skills/bolt-framework/`
 - **No hardcoded list** - extensible by design
 - **Current skills** (7 total):
   - `bolt-framework` - Methodology core (6 phases: INCEPTION → RETIREMENT)
@@ -69,7 +69,7 @@ handoffs:
 
 **Provisioning Details:**
 
-- Source: `.aurora/available-skills/bolt-framework/{skill-name}/`
+- Source: `.boltf/available-skills/bolt-framework/{skill-name}/`
 - Destination: `.github/skills/{skill-name}/`
 - Copies complete structure: `SKILL.md`, `examples/`, `templates/`, etc.
 - Happens ALWAYS, regardless of Practice or scopes selected
@@ -100,8 +100,8 @@ handoffs:
 Check required files exist:
 
 ```bash
-.aurora/scopes.yaml                  # ✓ Scopes configuration
-.aurora/memory/constitution.md       # ✓ Base template
+.boltf/scopes.yaml                  # ✓ Scopes configuration
+.boltf/memory/constitution.md       # ✓ Base template
 ```
 
 If missing, inform user:
@@ -111,8 +111,8 @@ If missing, inform user:
 
 I need these files to complete the setup:
 
-- `.aurora/scopes.yaml` - Defines which scopes are active
-- `.aurora/memory/constitution.md` - Base constitution template
+- `.boltf/scopes.yaml` - Defines which scopes are active
+- `.boltf/memory/constitution.md` - Base constitution template
 
 **Action Required**: Run initialization first:
 
@@ -153,14 +153,14 @@ Read and present configuration to user:
 Execute PowerShell script to merge all constitutions:
 
 ```powershell
-.\.aurora\scripts\powershell\Invoke-BoltSetupConstitution.ps1 -ProjectPath . -GenerateMaster
+.\.boltf\scripts\powershell\Invoke-BoltSetupConstitution.ps1 -ProjectPath . -GenerateMaster
 ```
 
 The script will:
 
 1. Start with base constitution from Init.ps1
 2. Append each scope's constitution with section markers
-3. Save to `.aurora/memory/constitution.master.md`
+3. Save to `.boltf/memory/constitution.master.md`
 4. Backup original as `constitution.original.md`
 
 Present result to user:
@@ -168,7 +168,7 @@ Present result to user:
 ```markdown
 ✅ **Master Constitution Generated**
 
-📄 **File**: `.aurora/memory/constitution.master.md`
+📄 **File**: `.boltf/memory/constitution.master.md`
 
 **Contents**:
 
@@ -399,7 +399,7 @@ Structure:
 Execute:
 
 ```powershell
-.\.aurora\scripts\powershell\Invoke-BoltSetupConstitution.ps1 -ProjectPath . -GenerateFinal -Refinements $refinementLedger
+.\.boltf\scripts\powershell\Invoke-BoltSetupConstitution.ps1 -ProjectPath . -GenerateFinal -Refinements $refinementLedger
 ```
 
 Present to user:
@@ -407,7 +407,7 @@ Present to user:
 ```markdown
 ## ✅ Final Constitution Generated
 
-📄 **File**: `.aurora/memory/constitution.md`
+📄 **File**: `.boltf/memory/constitution.md`
 
 **Comparison**:
 
@@ -446,7 +446,7 @@ For each active scope, read its `scope.yaml` and extract enabled items:
 
 ```powershell
 foreach ($scope in $activeScopes) {
-    $scopeYaml = Get-Content ".aurora/scopes/$scope/scope.yaml"
+    $scopeYaml = Get-Content ".boltf/scopes/$scope/scope.yaml"
     $enabledItems = $scopeYaml.items | Where-Object { $_.enabled -eq $true }
 
     # Group by kind: prompts, instructions, skills, templates, agents
@@ -527,7 +527,7 @@ Mandatory Bolt Framework skills:
 
 **Modified**:
 
-- `.aurora/memory/provision-report.md` - Complete inventory
+- `.boltf/memory/provision-report.md` - Complete inventory
 ```
 
 #### Step 4.3: Execute Provisioning
@@ -545,7 +545,7 @@ Execute the provisioning script:`
 Execute the provisioning script:
 
 ```powershell
-.\.aurora\scripts\powershell\Invoke-BoltSetupConstitution.ps1 -ProjectPath . -Provision
+.\.boltf\scripts\powershell\Invoke-BoltSetupConstitution.ps1 -ProjectPath . -Provision
 ````
 
 Show progress updates:
@@ -577,7 +577,7 @@ Show progress updates:
 Execute dry-run:
 
 ```powershell
-.\.aurora\scripts\powershell\Invoke-BoltSetupConstitution.ps1 -ProjectPath . -DryRun
+.\.boltf\scripts\powershell\Invoke-BoltSetupConstitution.ps1 -ProjectPath . -DryRun
 ```
 
 Show preview and ask:
@@ -609,16 +609,16 @@ All four phases finished successfully.
 
 **Phase 1 - Master Constitution**:
 
-- 📄 `.aurora/memory/constitution.master.md` ([X] KB, complete reference)
-- 📄 `.aurora/memory/constitution.original.md` (backup)
+- 📄 `.boltf/memory/constitution.master.md` ([X] KB, complete reference)
+- 📄 `.boltf/memory/constitution.original.md` (backup)
 
 **Phase 2 - Refinement**:
 
-- 📄 `.aurora/memory/refinement-ledger.yaml` ([Y] decisions recorded)
+- 📄 `.boltf/memory/refinement-ledger.yaml` ([Y] decisions recorded)
 
 **Phase 3 - Final Constitution**:
 
-- 📄 `.aurora/memory/constitution.md` ([Z] KB, focused version)
+- 📄 `.boltf/memory/constitution.md` ([Z] KB, focused version)
 - **This is the constitution agents will use**
 
 **Phase 4 - Provisioned Resources**:
@@ -628,19 +628,19 @@ All four phases finished successfully.
 - 📚 `.github/instructions/` - [P] instructions
 - 🤖 `.github/agents/` - [Q] agents
 - 📦 `[various]` - [R] templates
-- 📊 `.aurora/memory/provision-report.md` - Complete inventory
+- 📊 `.boltf/memory/provision-report.md` - Complete inventory
 
 ### Quick Verification
 
 ```bash
 # Check final constitution
-cat .aurora/memory/constitution.md
+cat .boltf/memory/constitution.md
 
 # Compare with master
-diff .aurora/memory/constitution.md .aurora/memory/constitution.master.md
+diff .boltf/memory/constitution.md .boltf/memory/constitution.master.md
 
 # View provision report
-cat .aurora/memory/provision-report.md
+cat .boltf/memory/provision-report.md
 
 # List skills
 ls .github/skills/
@@ -651,14 +651,14 @@ ls .github/skills/
 
 **1. Review Your Constitution**
 
-- Open `.aurora/memory/constitution.md`
+- Open `.boltf/memory/constitution.md`
 - This is the "law" all agents follow
 - Compare with `constitution.master.md` to see refinements
 
 **2. Understand File Structure**
 
 ```
-.aurora/
+.boltf/
 ├── memory/
 │   ├── constitution.md          ← FINAL (refined)
 │   ├── constitution.master.md   ← COMPLETE (all scopes)
@@ -715,7 +715,7 @@ If files don't exist:
 
 ❌ ERROR: Configuration File Not Found
 
-I couldn't find `.aurora/scopes.yaml` in your project.
+I couldn't find `.boltf/scopes.yaml` in your project.
 
 **What This Means**:
 The scopes.yaml file defines which parts of Bolt Framework are active in your project. Without it, I can't complete the setup.
@@ -751,13 +751,13 @@ The scope "[scope-name]" is marked as active in your scopes.yaml, but its config
 
 Option 1 - Remove the problematic scope:
 
-1. Edit `.aurora/scopes.yaml`
+1. Edit `.boltf/scopes.yaml`
 2. Remove "[scope-name]" from the active scopes list
 3. Invoke me again
 
 Option 2 - Fix the scope manifest:
 
-1. Check `.aurora/scopes/[scope-name]/scope.yaml` exists
+1. Check `.boltf/scopes/[scope-name]/scope.yaml` exists
 2. Validate YAML syntax
 3. Ensure required fields are present (name, description, etc.)
 4. Invoke me again
@@ -789,7 +789,7 @@ The provisioning script encountered an error during execution.
 **Troubleshooting**:
 
 1. Check the error message above for specific details
-2. Verify file permissions (script needs write access to .github/ and .aurora/)
+2. Verify file permissions (script needs write access to .github/ and .boltf/)
 3. Ensure PowerShell execution policy allows scripts
 4. Check disk space availability
 
@@ -802,7 +802,7 @@ B. Try dry-run to diagnose:
 .\aurora\scripts\powershell\Invoke-BoltSetupConstitution.ps1 -ProjectPath . -DryRun
 
 C. Start fresh:
-Remove .aurora/ and .github/ directories and run Init.ps1 again
+Remove .boltf/ and .github/ directories and run Init.ps1 again
 
 Would you like me to help troubleshoot this error?
 
@@ -814,7 +814,7 @@ When NOT completing initialization (user wants to manually edit constitution):
 
 ### 1. Load or Create Constitution
 
-Check for existing constitution at `/.aurora/memory/constitution.md`:
+Check for existing constitution at `/.boltf/memory/constitution.md`:
 
 - If exists: Load and prepare for update
 - If not exists: Create from template
@@ -961,7 +961,7 @@ Security:
 
 ### 7. Generate Constitution Document
 
-Write the complete constitution to `/.aurora/memory/constitution.md` with:
+Write the complete constitution to `/.boltf/memory/constitution.md` with:
 
 1. **Header**: Project name, version, dates
 2. **Technology Stack**: All layer decisions
@@ -996,7 +996,7 @@ After constitution update:
 
 **Files Updated**:
 
-- /.aurora/memory/constitution.md (created/updated)
+- /.boltf/memory/constitution.md (created/updated)
 - /.eslintrc.js (configured for stack)
 - /tsconfig.json (configured for stack)
 - /.github/workflows/ci.yml (gates configured)
