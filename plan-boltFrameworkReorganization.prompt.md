@@ -36,8 +36,8 @@ Este plan transforma el framework "Aurora" en **Bolt Framework** con arquitectur
 
 - **Estado del Plan**: 🟡 En Progreso
 - **Fase Actual**: Phase 5.7 - ✅ 2review Cleanup (Completed)
-- **Última actualización**: 2026-02-26
-- **Progreso global**: 41/44 tareas completadas (93%)
+- **Última actualización**: 2026-02-27
+- **Progreso global**: 41/45 tareas completadas (91%)
 - **Nota**: Task 28 (PR) omitida por decisión del usuario - se creará PR más adelante
 
 ### Leyenda de Estados
@@ -60,7 +60,8 @@ Este plan transforma el framework "Aurora" en **Bolt Framework** con arquitectur
 | Phase 5.5 | 6      | 5           | 🟡 En Progreso | 83%      |
 | Phase 5.6 | 5      | 5           | ✅ Completada  | 100%     |
 | Phase 5.7 | 3      | 3           | ✅ Completada  | 100%     |
-| **TOTAL** | **44** | **41**      | 🟡 Activo      | **93%**  |
+| Phase 5.8 | 1      | 0           | ⬜ Pendiente   | 0%       |
+| **TOTAL** | **45** | **41**      | 🟡 Activo      | **91%**  |
 
 **Notas**:
 
@@ -68,6 +69,7 @@ Este plan transforma el framework "Aurora" en **Bolt Framework** con arquitectur
 - Task 27.5 (Work Mgmt Sync) agregada como funcionalidad adicional ✅
 - Phase 5.5 (Aspire Integration) implementada como característica opcional ✅
 - Phase 5.6 (Universal Skills + Work Mgmt Tool) implementada con Opción B ✅
+- Phase 5.8 (GitHub Copilot CLI/SDK Migration) pendiente - migrar scripts de skill-creator ⬜
 - Phase 5.7 (2review Cleanup) completada - 18 skills procesados (8 borrados, 9 movidos) ✅
 
 ### Cómo Actualizar Este Plan
@@ -872,9 +874,230 @@ items:
 
 #### Próximos Pasos
 
-1. ⬜ **Phase 5.8**: Crear skill playwright-e2e completo (actualmente placeholder vacío)
-2. ⬜ **Task 28**: Manual testing de two-step workflow completo
-3. ⬜ **Aspire refactoring**: Mover templates dentro del skill (Decisión 7.0)
+1. ⬜ **Phase 5.8**: GitHub Copilot CLI/SDK Migration para skill-creator
+2. ⬜ **Playwright E2E**: Crear skill playwright-e2e completo (actualmente placeholder vacío)
+3. ⬜ **Task 28**: Manual testing de two-step workflow completo
+4. ⬜ **Aspire refactoring**: Mover templates dentro del skill (Decisión 7.0)
+
+---
+
+### Phase 5.8: GitHub Copilot CLI/SDK Migration
+
+**Duración**: 3-5 horas
+**Status**: ⬜ Pendiente
+
+**Objetivo**: Migrate skill-creator Python scripts from external claude CLI dependency to native GitHub Copilot CLI or SDK integration.
+
+#### Context
+
+**Current State**:
+
+- Bolt Skill Creator agent uses manual optimization workflow (Phase 8)
+- Python scripts in `.github/skills/skill-creator/scripts/` include:
+  - ✅ `run_loop.py` - Evaluation automation (no external deps)
+  - ✅ `generate_review.py` - HTML review generation (no external deps)
+  - ✅ `aggregate_benchmark.py` - Benchmark analysis (no external deps)
+  - ⚠️ `optimize_description.py` - Uses claude CLI (external dependency - currently deprecated in agent)
+  - ✅ `package_skill.py` - Skill packaging (no external deps)
+
+**Problem**:
+
+- `optimize_description.py` requires external `claude` CLI installation
+- Not all users have claude CLI configured
+- Creates friction in skill creation workflow
+- Agent currently promotes manual-only optimization to avoid dependency issues
+
+**Opportunity**:
+
+- GitHub Copilot CLI/SDK natively available to all Copilot users
+- Better developer experience (built-in tool)
+- Can re-enable automated optimization without external dependencies
+- Leverages native GitHub ecosystem
+
+#### Tasks
+
+⬜ **39. Research GitHub Copilot CLI/SDK Capabilities**:
+
+**Sub-tasks**:
+
+- Investigate GitHub Copilot CLI chat capabilities for description optimization
+- Evaluate GitHub Copilot SDK programmatic access for script integration
+- Compare feature parity with claude CLI (prompt engineering, response parsing)
+- Document API surface, authentication, and rate limits
+
+**Deliverables**:
+
+- `docs/github-copilot-integration-analysis.md` with:
+  - CLI vs SDK comparison table
+  - Code examples for basic chat interactions
+  - Authentication requirements (token, permissions)
+  - Rate limiting considerations
+  - Migration strategy recommendations
+
+⬜ **40. Implement GitHub Copilot Integration**:
+
+**Sub-tasks**:
+
+- **Option A (CLI-based)**:
+  - Update `optimize_description.py` to invoke `gh copilot` CLI
+  - Replace `claude.send()` with subprocess calls to `gh copilot suggest`
+  - Implement response parsing for structured output
+  - Add error handling for missing `gh` CLI
+
+- **Option B (SDK-based)**:
+  - Add GitHub Copilot SDK dependency to Python environment
+  - Refactor `optimize_description.py` to use SDK methods
+  - Implement authentication flow (DefaultAzureCredential or token)
+  - Add async/await support if needed
+
+**Deliverables**:
+
+- Updated `optimize_description.py` using GitHub Copilot CLI or SDK
+- Updated `docs/python-integration.md` with new dependencies
+- Updated `.github/skills/skill-creator/README.md` with setup instructions
+- Test prompts validating optimization quality (A/B comparison with claude)
+
+⬜ **41. Update Bolt Skill Creator Agent**:
+
+**Sub-tasks**:
+
+- Revert Phase 8 from "Manual Only" to "Automated + Manual"
+- Update commands table with new `optimize_description.py` command
+- Add prerequisites: GitHub Copilot CLI or SDK installation
+- Update SQL formatter example with script execution
+- Add troubleshooting section for GitHub Copilot-specific issues
+
+**Deliverables**:
+
+- Updated `.github/agents/bolt-skill-creator.agent.md`:
+  - Phase 8: "Optimize Description (Automated + Manual Fallback)"
+  - Commands table: Re-add optimize_description row
+  - Prerequisites: "GitHub Copilot CLI (`gh copilot`) or SDK installed"
+  - Troubleshooting: "Run `gh copilot --version` to verify installation"
+
+⬜ **42. Validation & Documentation**:
+
+**Sub-tasks**:
+
+- Run end-to-end skill creation workflow with automated optimization
+- Compare optimization quality: Manual vs GitHub Copilot vs claude CLI
+- Update `docs/bolt-skill-creator-implementation.md` with migration notes
+- Add migration guide for users currently using claude CLI
+- Update constitution provisioning if needed (new dependencies)
+
+**Deliverables**:
+
+- Test results: `docs/optimization-quality-comparison.md`
+- Migration guide: `docs/claude-to-github-copilot-migration.md`
+- Updated `PYTHON-IMPLEMENTATION-SUMMARY.md` with GitHub Copilot integration
+
+#### Benefits
+
+**1. Native Integration**:
+
+- GitHub Copilot CLI/SDK available to all Copilot users
+- No external CLI setup friction
+- Better authentication (GitHub token)
+
+**2. Re-enable Automated Optimization**:
+
+- Users can run script-based optimization without claude CLI
+- Reduces manual work for description improvements
+- Consistent optimization quality
+
+**3. Ecosystem Alignment**:
+
+- Leverages GitHub-native tooling
+- Future-proof (GitHub Copilot evolving rapidly)
+- Better support and documentation
+
+**4. User Experience**:
+
+- One-time GitHub authentication vs per-tool API keys
+- Faster optimization (local vs API roundtrip)
+- Integrated error messages and troubleshooting
+
+#### Success Criteria
+
+✅ **Technical**:
+
+- `optimize_description.py` runs successfully without claude CLI
+- Script works with both GitHub Copilot CLI and SDK
+- Optimization quality matches or exceeds claude CLI baseline
+- Error handling for missing GitHub Copilot installation
+
+✅ **User Experience**:
+
+- Bolt Skill Creator agent documents automated optimization workflow
+- Prerequisites clearly state GitHub Copilot CLI/SDK requirement
+- Troubleshooting guide covers common GitHub Copilot issues
+- Migration guide available for existing claude CLI users
+
+✅ **Documentation**:
+
+- All Python integration docs updated
+- Agent workflow reflects new capabilities
+- Examples show both automated and manual approaches
+- Implementation summary includes GitHub Copilot integration
+
+#### Dependencies
+
+**Before Phase 5.8**:
+
+- ✅ Python environment integrated (Phase 5 - Task 24-27)
+- ✅ Bolt Skill Creator agent created (Feb 27, 2026)
+- ✅ claude CLI dependency removed from agent (Feb 27, 2026)
+- ✅ Manual optimization workflow documented (Feb 27, 2026)
+
+**During Phase 5.8**:
+
+- GitHub Copilot subscription active
+- GitHub Copilot CLI (`gh copilot`) or SDK available
+- Test environment for A/B optimization comparison
+
+#### Files to Modify
+
+**Python Scripts** (3 files):
+
+- `.github/skills/skill-creator/scripts/optimize_description.py` (major refactor)
+- `.github/skills/skill-creator/scripts/requirements.txt` (add GitHub SDK if needed)
+- `.github/skills/skill-creator/scripts/__init__.py` (if SDK imports needed)
+
+**Documentation** (5 files):
+
+- `.github/agents/bolt-skill-creator.agent.md` (revert Phase 8 to automated)
+- `docs/python-integration.md` (add GitHub Copilot section)
+- `docs/bolt-skill-creator-implementation.md` (update implementation notes)
+- `PYTHON-IMPLEMENTATION-SUMMARY.md` (add GitHub Copilot integration)
+- `.github/skills/skill-creator/README.md` (update setup instructions)
+
+**New Files** (3 files):
+
+- `docs/github-copilot-integration-analysis.md` (research findings)
+- `docs/optimization-quality-comparison.md` (test results)
+- `docs/claude-to-github-copilot-migration.md` (migration guide)
+
+#### Risks & Mitigation
+
+**Risk 1: GitHub Copilot API Limitations**:
+
+- **Mitigation**: Keep manual optimization as fallback, document limitations
+- **Fallback**: Hybrid approach (automated + manual review)
+
+**Risk 2: Authentication Complexity**:
+
+- **Mitigation**: Use `gh auth` for CLI, DefaultAzureCredential for SDK
+- **Documentation**: Clear step-by-step authentication guide
+
+**Risk 3: Optimization Quality Degradation**:
+
+- **Mitigation**: A/B testing during Phase 5.8, iterate prompts
+- **Acceptance Criteria**: Quality must match or exceed claude CLI baseline
+
+**Risk 4: Breaking Changes in GitHub Copilot**:
+
+- **Mitigation**: Version pinning, regression tests
+- **Documentation**: Tested versions documented in requirements.txt
 
 ---
 

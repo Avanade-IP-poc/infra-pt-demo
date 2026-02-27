@@ -24,8 +24,15 @@ SOURCE_DIR=""
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # --- Decision variables -------------------------------------------------------
+D_PRACTICE=""
 D_PROJECT_TYPE=""
 D_SCOPES=()
+D_USE_ASPIRE="false"
+D_WORK_MANAGEMENT_TOOL="none"
+D_LOCAL_ORCHESTRATION="none"
+D_FRONTEND_FRAMEWORK="none"
+D_CLOUD_DEV_ENVIRONMENT="none"
+D_CONTAINER_RUNTIME="none"
 D_ENVIRONMENTS=()
 D_CONFIG_MANAGEMENT=""
 D_SECRETS_DEV=""
@@ -241,19 +248,69 @@ check_prerequisites() {
 
 collect_all_decisions() {
 
+    # ── Step 0 — Practice Selection ────────────────────────────────────────
+    echo ""
+    log_step "Step 0 — Practice Selection"
+
+    echo ""
+    echo -e "  ${CYAN}Select a Practice to guide initialization:${NC}"
+    echo -e "  ${WHITE}Practice = pre-configured Scopes + specialized workflows${NC}"
+    echo ""
+
+    read_choice "Select your Practice" 1 \
+        "Apps & Infra    — Web/mobile apps + cloud infrastructure" \
+        "Data & AI       — Data platforms, analytics, AI/ML" \
+        "CRM             — Dynamics 365, Power Platform" \
+        "Custom          — Manual scope selection" \
+        --- "Apps & Infra" "Data & AI" "CRM" "Custom"
+    D_PRACTICE="$REPLY_CHOICE"
+
+    # ── Article I §1.1 — Active Scopes ──────────────────────────────────────
     echo ""
     log_step "Article I — Active Scopes"
 
-    read_multi_choice "§1.1  Active scopes (select all that apply)" \
-        "backend        — Server-side APIs, services, domain logic" \
-        "frontend       — Web/mobile UI, SPA, design system" \
-        "cloud-platform — Infrastructure, Landing Zones, IaC" \
-        "data           — Databases, ETL/ELT, analytics" \
-        "integration    — API management, messaging, connectors" \
-        "ai             — AI/ML models, agents, prompt engineering" \
-        "crm            — Dynamics 365, Power Platform, Dataverse" \
-        --- "backend" "frontend" "cloud-platform" "data" "integration" "ai" "crm"
-    D_SCOPES=("${REPLY_MULTI[@]}")
+    # Practice → Scopes mapping
+    declare -A practice_scopes
+    practice_scopes["Apps & Infra"]="backend frontend cloud-platform"
+    practice_scopes["Data & AI"]="data ai integration"
+    practice_scopes["CRM"]="crm"
+
+    if [[ "$D_PRACTICE" == "Custom" ]]; then
+        # Manual selection (original flow)
+        echo -e "  ${WHITE}ℹ Manual scope selection mode${NC}"
+        read_multi_choice "§1.1  Active scopes (select all that apply)" \
+            "backend        — Server-side APIs, services, domain logic" \
+            "frontend       — Web/mobile UI, SPA, design system" \
+            "cloud-platform — Infrastructure, Landing Zones, IaC" \
+            "data           — Databases, ETL/ELT, analytics" \
+            "integration    — API management, messaging, connectors" \
+            "ai             — AI/ML models, agents, prompt engineering" \
+            "crm            — Dynamics 365, Power Platform, Dataverse" \
+            --- "backend" "frontend" "cloud-platform" "data" "integration" "ai" "crm"
+        D_SCOPES=("${REPLY_MULTI[@]}")
+    else
+        # Practice-based pre-selection
+        local preselected_scopes=(${practice_scopes[$D_PRACTICE]})
+        echo -e "  ${GREEN}ℹ Practice '$D_PRACTICE' pre-selects: ${preselected_scopes[*]}${NC}"
+
+        read_yes_no "  Confirm these scopes?" "true"
+        if [[ "$REPLY_YN" == "true" ]]; then
+            D_SCOPES=("${preselected_scopes[@]}")
+        else
+            # User wants to customize
+            echo -e "  ${WHITE}ℹ Customizing scopes for '$D_PRACTICE' practice${NC}"
+            read_multi_choice "§1.1  Active scopes (select all that apply)" \
+                "backend        — Server-side APIs, services, domain logic" \
+                "frontend       — Web/mobile UI, SPA, design system" \
+                "cloud-platform — Infrastructure, Landing Zones, IaC" \
+                "data           — Databases, ETL/ELT, analytics" \
+                "integration    — API management, messaging, connectors" \
+                "ai             — AI/ML models, agents, prompt engineering" \
+                "crm            — Dynamics 365, Power Platform, Dataverse" \
+                --- "backend" "frontend" "cloud-platform" "data" "integration" "ai" "crm"
+            D_SCOPES=("${REPLY_MULTI[@]}")
+        fi
+    fi
 
     if [[ ${#D_SCOPES[@]} -eq 0 ]]; then
         log_warn "No scopes selected -- defaulting to 'backend'"
@@ -272,6 +329,157 @@ collect_all_decisions() {
         D_PROJECT_TYPE="infra-only"
     else
         D_PROJECT_TYPE="app-only"
+    fi
+
+    # ── Step 1.5 — .NET Aspire Orchestration (Optional) ────────────────────
+    echo ""
+    log_step "Step 1.5 — Service Orchestration (.NET Aspire)"
+
+    # Detect multi-service architecture
+    local service_count=0
+    for s in "${D_SCOPES[@]}"; do
+        [[ "$s" == "backend" ]] && ((service_count++))
+        [[ "$s" == "frontend" ]] && ((service_count++))
+        [[ "$s" == "cloud-platform" || "$s" == "data" || "$s" == "integration" ]] && ((service_count++))
+    done
+
+    D_USE_ASPIRE="false"
+
+    # Only recommend Aspire for multi-service architectures with Apps & Infra practice
+    if [[ "$D_PRACTICE" == "Apps & Infra" && $service_count -ge 2 ]]; then
+        echo ""
+        echo -e "  ${CYAN}ℹ Multi-service architecture detected ($service_count+ services)${NC}"
+        echo -e "  ${WHITE}.NET Aspire streamlines orchestration for distributed applications.${NC}"
+        echo ""
+        echo -e "  ${GREEN}✅ Benefits:${NC}"
+        echo -e "     ${WHITE}• Automatic service discovery (no hardcoded URLs)${NC}"
+        echo -e "     ${WHITE}• Built-in observability dashboard (OpenTelemetry)${NC}"
+        echo -e "     ${WHITE}• Simplified local development (one command launches all)${NC}"
+        echo -e "     ${WHITE}• Unified deployment to Azure with 'azd'${NC}"
+        echo ""
+        echo -e "  ${YELLOW}⚠️  Requirements:${NC}"
+        echo -e "     ${WHITE}• .NET 8+ SDK${NC}"
+        echo -e "     ${WHITE}• Docker Desktop (for local development)${NC}"
+        echo -e "     ${WHITE}• AppHost project (orchestrator created during provisioning)${NC}"
+        echo ""
+
+        read_yes_no "  Use .NET Aspire for service orchestration?" "true"
+        D_USE_ASPIRE="$REPLY_YN"
+
+        if [[ "$D_USE_ASPIRE" == "true" ]]; then
+            log_success "Aspire enabled — AppHost and ServiceDefaults will be provisioned"
+        else
+            log_info "Aspire disabled — using traditional service deployment"
+        fi
+    else
+        # Don't ask for simple architectures
+        echo -e "  ${WHITE}ℹ Single-service architecture detected — Aspire not recommended${NC}"
+        echo -e "  ${WHITE}.NET Aspire is designed for 2+ services with external resources${NC}"
+        D_USE_ASPIRE="false"
+    fi
+
+    # ── Step 1.6 — Work Management Tool Integration (Optional) ─────────────
+    echo ""
+    log_step "Step 1.6 — Work Management Tool Integration"
+
+    echo ""
+    echo -e "  ${CYAN}ℹ Bolt Framework can integrate with work management tools${NC}"
+    echo -e "  ${WHITE}This enables automatic sync of:${NC}"
+    echo -e "     ${WHITE}• Feature specs → Work items/Issues${NC}"
+    echo -e "     ${WHITE}• Implementation plans → Tasks${NC}"
+    echo -e "     ${WHITE}• Bolt iterations → Status updates${NC}"
+    echo ""
+
+    read_choice "Select work management tool (or None for manual tracking)" 1 \
+        "None (manual tracking)" \
+        "Azure Boards (Azure DevOps work items)" \
+        "GitHub Projects (GitHub Issues integration)" \
+        "Jira (Atlassian work management)" \
+        --- "none" "azure-boards" "github-projects" "jira"
+    D_WORK_MANAGEMENT_TOOL="$REPLY_CHOICE"
+
+    if [[ "$D_WORK_MANAGEMENT_TOOL" != "none" ]]; then
+        log_success "Work management tool: $D_WORK_MANAGEMENT_TOOL"
+        echo -e "  ${WHITE}ℹ Configure connection details in constitution after provisioning${NC}"
+    else
+        log_info "Manual tracking — no automatic sync configured"
+    fi
+
+    # ── Step 1.7 — Development Environment Configuration ───────────────────
+    echo ""
+    log_step "Step 1.7 — Development Environment Configuration"
+
+    echo ""
+    echo -e "  ${CYAN}ℹ Configure your local development environment${NC}"
+    echo -e "  ${WHITE}This determines which tools and configurations are provisioned${NC}"
+    echo ""
+
+    # Local Orchestration (if multi-service)
+    D_LOCAL_ORCHESTRATION="none"
+    if [[ $service_count -ge 2 ]]; then
+        if [[ "$D_USE_ASPIRE" == "true" ]]; then
+            # Aspire selected — use it as orchestration
+            D_LOCAL_ORCHESTRATION="aspire"
+            log_info "Local orchestration: .NET Aspire (selected in Step 1.5)"
+        else
+            # Aspire not selected — ask for alternative
+            echo -e "  ${YELLOW}Multi-service architecture requires local orchestration${NC}"
+            read_choice "Select local orchestration tool" 1 \
+                "Docker Compose (YAML-based, simple)" \
+                "Kubernetes (minikube/kind for local dev)" \
+                "Podman Compose (rootless alternative)" \
+                "None (manual service startup)" \
+                --- "docker-compose" "kubernetes" "podman" "none"
+            D_LOCAL_ORCHESTRATION="$REPLY_CHOICE"
+        fi
+    fi
+
+    # Frontend Framework (if frontend scope active)
+    D_FRONTEND_FRAMEWORK="none"
+    local has_frontend=false
+    for s in "${D_SCOPES[@]}"; do
+        [[ "$s" == "frontend" ]] && has_frontend=true
+    done
+    if [[ "$has_frontend" == "true" ]]; then
+        echo ""
+        read_choice "Select frontend framework (provisions matching instructions)" 1 \
+            "React (hooks, components, state management)" \
+            "Angular (standalone components, signals)" \
+            "Vue.js (Composition API, Pinia)" \
+            "None or multiple (will provision manually)" \
+            --- "react" "angular" "vue" "none"
+        D_FRONTEND_FRAMEWORK="$REPLY_CHOICE"
+
+        if [[ "$D_FRONTEND_FRAMEWORK" != "none" ]]; then
+            log_success "Framework: $D_FRONTEND_FRAMEWORK — matching instructions enabled"
+        fi
+    fi
+
+    # Cloud Development Environment
+    echo ""
+    read_choice "Will you use cloud-based development environments?" 1 \
+        "No (local development only)" \
+        "GitHub Codespaces (cloud-based VS Code)" \
+        "VS Code Remote - Containers (devcontainer.json)" \
+        "Both Codespaces + Devcontainers" \
+        --- "none" "codespaces" "devcontainers" "both"
+    D_CLOUD_DEV_ENVIRONMENT="$REPLY_CHOICE"
+
+    if [[ "$D_CLOUD_DEV_ENVIRONMENT" != "none" ]]; then
+        log_success "Cloud dev: $D_CLOUD_DEV_ENVIRONMENT — devcontainer configs will be provisioned"
+    fi
+
+    # Container Runtime
+    echo ""
+    read_choice "Select container runtime (for local development)" 1 \
+        "Docker Desktop (standard, includes Compose)" \
+        "Podman (rootless, Docker-compatible)" \
+        "None (no containerization)" \
+        --- "docker" "podman" "none"
+    D_CONTAINER_RUNTIME="$REPLY_CHOICE"
+
+    if [[ "$D_CONTAINER_RUNTIME" != "none" ]]; then
+        log_success "Container runtime: $D_CONTAINER_RUNTIME"
     fi
 
     echo ""
@@ -590,8 +798,17 @@ generate_scopes_yaml() {
 # =============================================================================
 
 project:
+  practice: ${D_PRACTICE}               # Apps & Infra | Data & AI | CRM | Custom
   type: ${D_PROJECT_TYPE}               # derived from scopes
-  migration-type: ${PROJECT_TYPE}   # green | brown
+  migration-type: ${PROJECT_TYPE}       # green | brown
+  use-aspire: ${D_USE_ASPIRE}           # Aspire orchestration (Step 1.5)
+  work-management-tool: ${D_WORK_MANAGEMENT_TOOL}  # azure-boards | github-projects | jira | none
+
+  # Development Environment (Step 1.7)
+  local-orchestration: ${D_LOCAL_ORCHESTRATION}     # docker-compose | kubernetes | podman | aspire | none
+  frontend-framework: ${D_FRONTEND_FRAMEWORK}       # react | angular | vue | none
+  cloud-dev-environment: ${D_CLOUD_DEV_ENVIRONMENT} # codespaces | devcontainers | both | none
+  container-runtime: ${D_CONTAINER_RUNTIME}         # docker | podman | none
 
 active-scopes:
 ${scopes_yaml}
@@ -879,6 +1096,52 @@ add_demo_content() {
     fi
 }
 
+# --- Python Environment Setup (Optional) --------------------------------------
+
+initialize_python_environment() {
+    #
+    # Optional Python environment setup during initialization
+    #
+    # Attempts to configure Python virtual environment (.bolt-venv) for skills
+    # that require Python (e.g., skill-creator). Non-blocking - project initialization
+    # continues even if Python setup fails.
+    #
+    # Returns 0 if Python was successfully configured, 1 otherwise
+    #
+
+    echo ""
+    log_step "Setting up Python environment (optional)..."
+
+    local bootstrap_script="$OUTPUT_DIR/.boltf/scripts/bash/bootstrap-python.sh"
+
+    # Check if bootstrap-python.sh exists
+    if [[ ! -f "$bootstrap_script" ]]; then
+        log_warn "Python bootstrap script not found (skills/Python features unavailable)"
+        log_info "Some advanced skills may require Python - you can run bootstrap manually later"
+        return 1
+    fi
+
+    log_info "Checking Python availability..."
+
+    # Execute bootstrap-python.sh in the target directory
+    if "$bootstrap_script" --project-root "$OUTPUT_DIR" --skip-install >/dev/null 2>&1; then
+        log_success "Python environment configured successfully"
+        log_info "Virtual environment: .bolt-venv/"
+        log_info "Python-based skills ready (e.g., skill-creator)"
+        return 0
+    else
+        local exit_code=$?
+        log_warn "Python setup completed with warnings (exit code: $exit_code)"
+        log_info "Python features may have limited availability"
+        echo ""
+        log_info "This is optional - you can setup Python later by running:"
+        echo -e "  ${YELLOW}.boltf/scripts/bash/bootstrap-python.sh --project-root .${NC}"
+        echo ""
+        log_info "Project initialization will continue without Python features"
+        return 1
+    fi
+}
+
 # --- Summary ------------------------------------------------------------------
 
 show_summary() {
@@ -887,14 +1150,32 @@ show_summary() {
     echo -e "  ${GREEN}│   Bolt Framework Project Initialized! (Phase 1 of 2)         │${NC}"
     echo -e "  ${GREEN}└──────────────────────────────────────────────────────────────┘${NC}"
     echo ""
-    log_info "✓ Practice:   $D_PROJECT_TYPE"
+    log_info "✓ Practice:   $D_PRACTICE"
+    log_info "✓ Project Type: $D_PROJECT_TYPE"
     log_info "✓ Scopes:     ${D_SCOPES[*]}"
+    if [[ "$D_USE_ASPIRE" == "true" ]]; then
+        log_info "✓ Orchestration: .NET Aspire"
+    fi
+    if [[ "$D_WORK_MANAGEMENT_TOOL" != "none" ]]; then
+        log_info "✓ Work Mgmt:  $D_WORK_MANAGEMENT_TOOL"
+    fi
     if [[ "$D_IAC_TOOL" != "none" ]]; then
         log_info "✓ IaC Tool:   $D_IAC_TOOL"
     fi
     log_info "✓ Basic constitution created in .boltf/memory/constitution.md"
     log_info "✓ Scopes configuration saved to .boltf/scopes.yaml"
     log_info "✓ Bolt Framework agents and skills copied to .github/"
+
+    # Python environment status
+    if [[ "$D_PYTHON_CONFIGURED" == "true" ]]; then
+        log_info "✓ Python environment: Configured (.bolt-venv/)"
+        log_info "  - Advanced skills available: skill-creator (AI-powered)"
+    else
+        log_warn "⚠ Python environment: Not configured"
+        log_info "  - Run later: .boltf/scripts/bash/bootstrap-python.sh"
+        log_info "  - Enables: skill-creator and other Python-based features"
+    fi
+
     echo ""
     echo -e "  ${YELLOW}⚠ IMPORTANT: Two-Step Initialization${NC}"
     echo -e "     ${WHITE}Phase 1: init.sh (completed) — Basic configuration${NC}"
@@ -999,6 +1280,12 @@ main() {
     generate_scopes_yaml
     prefill_constitution
     add_demo_content
+
+    # Python environment setup (optional, non-blocking)
+    D_PYTHON_CONFIGURED=false
+    if initialize_python_environment; then
+        D_PYTHON_CONFIGURED=true
+    fi
 
     show_summary
 }

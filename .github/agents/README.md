@@ -87,13 +87,14 @@ Agents are conversational AI assistants specialized for specific tasks. Each age
 
 ### 🛠️ Infrastructure & DevOps
 
-| Agent                | File                         | Purpose                           |
-| -------------------- | ---------------------------- | --------------------------------- |
-| Aurora Templates     | `aurora-templates.agent.md`  | Project templates and scaffolding |
-| Aurora CI/CD         | `aurora-cicd.agent.md`       | Pipeline configuration            |
-| Aurora Dependencies  | `aurora-deps.agent.md`       | Dependency management             |
-| Aurora Documentation | `aurora-docs.agent.md`       | Documentation generation          |
-| Aurora Monitoring    | `aurora-monitoring.agent.md` | Observability setup               |
+| Agent                | File                          | Purpose                             |
+| -------------------- | ----------------------------- | ----------------------------------- |
+| Bolt Skill Creator   | `bolt-skill-creator.agent.md` | AI-powered skill creation & testing |
+| Aurora Templates     | `aurora-templates.agent.md`   | Project templates and scaffolding   |
+| Aurora CI/CD         | `aurora-cicd.agent.md`        | Pipeline configuration              |
+| Aurora Dependencies  | `aurora-deps.agent.md`        | Dependency management               |
+| Aurora Documentation | `aurora-docs.agent.md`        | Documentation generation            |
+| Aurora Monitoring    | `aurora-monitoring.agent.md`  | Observability setup                 |
 
 ## Usage
 

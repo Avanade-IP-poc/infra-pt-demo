@@ -222,16 +222,17 @@ You must select:
 
 After initialization, use specialized AI agents:
 
-| Agent                | Purpose               | Usage                               |
-| -------------------- | --------------------- | ----------------------------------- |
-| `@Bolt Framework`    | Main orchestrator     | Project coordination                |
-| `@Bolt Constitution` | Constitution setup    | Two-step initialization (Step 2)    |
-| `@Bolt Provisioner`  | Resource provisioning | Download skills from online sources |
-| `@Bolt Feature`      | Feature creation      | New feature development             |
-| `@Bolt Implement`    | Code implementation   | Micro-iteration (Bolts) execution   |
-| `@Bolt Testing`      | Test generation       | TDD/BDD test automation             |
-| `@Bolt Architect`    | Architecture design   | System architecture & ADRs          |
-| `@Bolt Ops`          | Operations            | Deployment & monitoring             |
+| Agent                 | Purpose               | Usage                               |
+| --------------------- | --------------------- | ----------------------------------- |
+| `@Bolt Framework`     | Main orchestrator     | Project coordination                |
+| `@Bolt Constitution`  | Constitution setup    | Two-step initialization (Step 2)    |
+| `@Bolt Provisioner`   | Resource provisioning | Download skills from online sources |
+| `@Bolt Feature`       | Feature creation      | New feature development             |
+| `@Bolt Implement`     | Code implementation   | Micro-iteration (Bolts) execution   |
+| `@Bolt Testing`       | Test generation       | TDD/BDD test automation             |
+| `@Bolt Skill Creator` | Skill development     | AI-powered skill creation & testing |
+| `@Bolt Architect`     | Architecture design   | System architecture & ADRs          |
+| `@Bolt Ops`           | Operations            | Deployment & monitoring             |
 
 ### 🚀 Bolt Provisioner - Multi-Source Skill Downloading
 

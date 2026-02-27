@@ -331,6 +331,87 @@ function Get-AllDecisions {
         Write-Info "Manual tracking — no automatic sync configured"
     }
 
+    # ── Step 1.7 — Development Environment Configuration ───────────────────
+    Write-Host ""
+    Write-Step "Step 1.7 — Development Environment Configuration"
+
+    Write-Host ""
+    Write-Host "  ℹ Configure your local development environment" -ForegroundColor Cyan
+    Write-Host "  This determines which tools and configurations are provisioned" -ForegroundColor DarkGray
+    Write-Host ""
+
+    # Local Orchestration (if multi-service)
+    $d.LocalOrchestration = "none"
+    if ($serviceCount -ge 2) {
+        if ($d.UseAspire) {
+            # Aspire selected — use it as orchestration
+            $d.LocalOrchestration = "aspire"
+            Write-Info "Local orchestration: .NET Aspire (selected in Step 1.5)"
+        } else {
+            # Aspire not selected — ask for alternative
+            Write-Host "  Multi-service architecture requires local orchestration" -ForegroundColor Yellow
+            $d.LocalOrchestration = Read-Choice `
+                -Title "Select local orchestration tool" `
+                -Options @(
+                    "Docker Compose (YAML-based, simple)",
+                    "Kubernetes (minikube/kind for local dev)",
+                    "Podman Compose (rootless alternative)",
+                    "None (manual service startup)"
+                ) `
+                -Values @("docker-compose", "kubernetes", "podman", "none") `
+                -Default 1
+        }
+    }
+
+    # Frontend Framework (if frontend scope active)
+    $d.FrontendFramework = "none"
+    if ($d.Scopes -contains "frontend") {
+        Write-Host ""
+        $d.FrontendFramework = Read-Choice `
+            -Title "Select frontend framework (provisions matching instructions)" `
+            -Options @(
+                "React (hooks, components, state management)",
+                "Angular (standalone components, signals)",
+                "Vue.js (Composition API, Pinia)",
+                "None or multiple (will provision manually)"
+            ) `
+            -Values @("react", "angular", "vue", "none") `
+            -Default 1
+
+        if ($d.FrontendFramework -ne "none") {
+            Write-Success "Framework: $($d.FrontendFramework) — matching instructions enabled"
+        }
+    }
+
+    # Cloud Development Environment
+    Write-Host ""
+    $d.CloudDevEnvironment = Read-Choice `
+        -Title "Will you use cloud-based development environments?" `
+        -Options @(
+            "No (local development only)",
+            "GitHub Codespaces (cloud-based VS Code)",
+            "VS Code Remote - Containers (devcontainer.json)",
+            "Both Codespaces + Devcontainers"
+        ) `
+        -Values @("none", "codespaces", "devcontainers", "both") `
+        -Default 1
+
+    if ($d.CloudDevEnvironment -ne "none") {
+        Write-Success "Cloud dev: $($d.CloudDevEnvironment) — devcontainer configs will be provisioned"
+    }
+
+    # Container Runtime
+    Write-Host ""
+    $d.ContainerRuntime = Read-Choice `
+        -Title "Container runtime for local development" `
+        -Options @(
+            "Docker Desktop (standard, GUI management)",
+            "Podman (rootless, daemonless)",
+            "None (no containerization)"
+        ) `
+        -Values @("docker", "podman", "none") `
+        -Default 1
+
     # ── Article X — Environments & Configuration ────────────────────────────
     Write-Host ""
     Write-Step "Article X — Environments & Configuration"
@@ -682,6 +763,12 @@ project:
   migration-type: $ProjectType   # green | brown
   use-aspire: $($Decisions.UseAspire.ToString().ToLower())   # .NET Aspire orchestration (Step 1.5)
   work-management-tool: $($Decisions.WorkManagementTool)    # Work item tracking integration (Step 1.6)
+
+  # Development Environment (Step 1.7)
+  local-orchestration: $($Decisions.LocalOrchestration)     # docker-compose | kubernetes | podman | aspire | none
+  frontend-framework: $($Decisions.FrontendFramework)       # react | angular | vue | none
+  cloud-dev-environment: $($Decisions.CloudDevEnvironment)  # codespaces | devcontainers | both | none
+  container-runtime: $($Decisions.ContainerRuntime)         # docker | podman | none
 
 active-scopes:
 $scopesYaml
