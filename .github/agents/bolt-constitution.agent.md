@@ -434,6 +434,195 @@ Your choice? **(A, B, or C)**
 
 ---
 
+### Phase 3.5: Service Orchestration Decision (Article VIII-C)
+
+**Objective**: Validate Aspire orchestration decision and educate user if needed.
+
+**IMPORTANT**: This phase ONLY runs when ALL conditions are met:
+
+1. ✅ `cloud-platform` scope is active
+2. ✅ `local-orchestration: aspire` in `.boltf/memory/scopes.yaml`
+3. ✅ Article VIII-C Section 8C.1 is UNCHECKED in `memory/constitution.md`
+
+**If ANY condition fails, skip to Phase 4 directly.**
+
+#### Step 3.5.1: Check Conditions
+
+Read `.boltf/memory/scopes.yaml`:
+
+```yaml
+project:
+  practice: Apps & Infra
+  local-orchestration: aspire # ← Check this field
+scopes:
+  - name: cloud-platform
+    enabled: true # ← Check scope is active
+```
+
+Read `memory/constitution.md` and locate Article VIII-C:
+
+```markdown
+## Article VIII-C: Service Orchestration with .NET Aspire
+
+### Section 8C.1: Aspire Adoption Decision
+
+**Choose ONE**:
+
+- [ ] **Yes** - Enable .NET Aspire for service orchestration ← UNCHECKED
+- [ ] **No** - Manual orchestration (Docker Compose / Kubernetes / Podman)
+```
+
+**If all 3 conditions met** → Continue to Step 3.5.2
+**If any condition fails** → Skip to Phase 4
+
+#### Step 3.5.2: Educate User Conversationally
+
+**DO NOT use CLI-style prompts. Use conversational education:**
+
+```markdown
+## 🚀 Service Orchestration Detected
+
+I noticed your project configuration:
+
+- **Practice**: Apps & Infra
+- **Local Orchestration**: .NET Aspire selected
+- **Multi-service architecture**: [X services detected - backend/frontend/cloud-platform]
+
+Before we provision resources, let me explain .NET Aspire so you can make an informed decision:
+
+### ✅ What is .NET Aspire?
+
+.NET Aspire is Microsoft's **cloud-ready stack** for building distributed applications. Think of it as:
+
+- **Orchestration**: One `dotnet run` launches ALL your services locally
+- **Service Discovery**: Services find each other automatically (no hardcoded URLs)
+- **Observability**: Built-in dashboard at `http://localhost:15888` for traces, metrics, logs
+- **Deployment**: `azd up` deploys everything to Azure with Bicep generation
+
+### 🎯 When Aspire Makes Sense
+
+Your project matches these criteria:
+
+✅ **Multi-service architecture** - You have backend + frontend + cloud resources
+✅ **Development experience priority** - Team wants fast local setup
+✅ **Azure deployment** - Planning to deploy to Azure (Aspire generates Bicep)
+✅ **Observability matters** - Need visibility into service interactions
+
+### ⚠️ Trade-offs to Consider
+
+**Benefits**:
+
+- 🚀 Reduced boilerplate - No manual service discovery config
+- 📊 Out-of-the-box telemetry - OpenTelemetry integrated
+- 🔄 Development/production parity - Same patterns locally and in cloud
+- 🎯 Unified deployment - One command deploys entire solution
+
+**Costs**:
+
+- 🐳 **Docker required** - Aspire needs Docker Desktop for local containers
+- 📚 **Learning curve** - AppHost patterns and `WithReference()` API
+- 🔧 **.NET 8+ required** - Not available for older frameworks
+- 📦 **Additional project** - AppHost adds complexity to solution structure
+
+### 🤔 Your Decision
+
+Based on your project needs, do you want to **enable .NET Aspire orchestration**?
+
+**If YES**: I'll mark Article VIII-C Section 8C.1 and provision Aspire resources:
+
+- Skill: `skill-bolt-aspire-orchestration` → `.github/skills/`
+- Templates: AppHost.csproj, ServiceDefaults.csproj, Extensions.cs, Program.cs.template → `.github/templates/aspire/`
+
+**If NO**: I'll mark Article VIII-C with "Manual orchestration" and skip Aspire resources. You can still use Docker Compose, Kubernetes, or Podman.
+
+**Your choice - Enable .NET Aspire?** (Yes/No)
+```
+
+#### Step 3.5.3: Mark Constitution Based on Decision
+
+**If user chooses YES**:
+
+Update `memory/constitution.md` Article VIII-C Section 8C.1:
+
+```markdown
+## Article VIII-C: Service Orchestration with .NET Aspire
+
+### Section 8C.1: Aspire Adoption Decision
+
+**Choose ONE**:
+
+- [x] **Yes** - Enable .NET Aspire for service orchestration ← MARK THIS
+- [ ] **No** - Manual orchestration (Docker Compose / Kubernetes / Podman)
+```
+
+Confirm:
+
+```markdown
+✅ **Decision Recorded**: .NET Aspire enabled
+
+Article VIII-C Section 8C.1 marked in constitution.
+
+**Next steps in provisioning**:
+
+- Download Aspire templates from GitHub (dotnet/aspire repo)
+- Provision skill-bolt-aspire-orchestration
+- Generate provision report with Aspire section
+
+Continuing to Phase 4...
+```
+
+**If user chooses NO**:
+
+Update `memory/constitution.md` Article VIII-C Section 8C.1:
+
+```markdown
+## Article VIII-C: Service Orchestration with .NET Aspire
+
+### Section 8C.1: Aspire Adoption Decision
+
+**Choose ONE**:
+
+- [ ] **Yes** - Enable .NET Aspire for service orchestration
+- [x] **No** - Manual orchestration (Docker Compose / Kubernetes / Podman) ← MARK THIS
+```
+
+Confirm:
+
+```markdown
+✅ **Decision Recorded**: Manual orchestration
+
+Article VIII-C Section 8C.1 marked in constitution.
+
+**Aspire resources will NOT be provisioned.** You can use Docker Compose, Kubernetes, or Podman for local orchestration.
+
+Continuing to Phase 4...
+```
+
+#### Step 3.5.4: Update scopes.yaml (Optional)
+
+**If user chose NO** (changed mind from Init.ps1 selection):
+
+Update `.boltf/memory/scopes.yaml`:
+
+```yaml
+project:
+  practice: Apps & Infra
+  local-orchestration: none # ← Change from 'aspire' to 'none' or 'docker-compose'
+```
+
+Ask user:
+
+```markdown
+Since you chose **Manual orchestration**, should I update `scopes.yaml` to reflect this?
+
+Current value: `local-orchestration: aspire`
+Suggested value: `local-orchestration: docker-compose` (or `none` if no orchestration)
+
+**Update scopes.yaml?** (Yes/No)
+```
+
+---
+
 ### Phase 4: Provision Resources
 
 **Objective**: Download/copy all resources defined in scope.yaml files.

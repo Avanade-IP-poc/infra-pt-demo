@@ -35,10 +35,10 @@ Este plan transforma el framework "Aurora" en **Bolt Framework** con arquitectur
 ### Estado General
 
 - **Estado del Plan**: 🟡 En Progreso
-- **Fase Actual**: Phase 5.7 - ✅ 2review Cleanup (Completed)
+- **Fase Actual**: Phase 5 - Testing Manual (Completado) → Phase 5.5 - Aspire Integration
 - **Última actualización**: 2026-02-27
-- **Progreso global**: 41/45 tareas completadas (91%)
-- **Nota**: Task 28 (PR) omitida por decisión del usuario - se creará PR más adelante
+- **Progreso global**: 42/45 tareas completadas (93%)\*\*
+- **Nota**: Task 27 (PR) omitida por decisión del usuario - se creará después de testing Aspire
 
 ### Leyenda de Estados
 
@@ -56,12 +56,12 @@ Este plan transforma el framework "Aurora" en **Bolt Framework** con arquitectur
 | Phase 2   | 7      | 7           | ✅ Completada  | 100%     |
 | Phase 3   | 6      | 6           | ✅ Completada  | 100%     |
 | Phase 4   | 2      | 2           | ✅ Completada  | 100%     |
-| Phase 5   | 5      | 3           | 🟡 En Progreso | 60%      |
+| Phase 5   | 5      | 4           | 🟡 En Progreso | 80%      |
 | Phase 5.5 | 6      | 5           | 🟡 En Progreso | 83%      |
 | Phase 5.6 | 5      | 5           | ✅ Completada  | 100%     |
 | Phase 5.7 | 3      | 3           | ✅ Completada  | 100%     |
 | Phase 5.8 | 1      | 0           | ⬜ Pendiente   | 0%       |
-| **TOTAL** | **45** | **41**      | 🟡 Activo      | **91%**  |
+| **TOTAL** | **45** | **42**      | 🟡 Activo      | **93%**  |
 
 **Notas**:
 
@@ -761,24 +761,26 @@ items:
 - [ ] README y docs actualizados
 - **Razón para omitir**: El usuario prefiere completar el testing manual primero
 
-⬜ **28. Testing manual (two-step workflow):** _(PENDIENTE)_
+✅ **28. Testing manual (two-step workflow):**
+📅 Completado: 2026-02-27
+✏️ Detalles: Validado flujo completo Init.ps1 → @Bolt Constitution → Development
 
-- **Step 1: Initialization**
-  - Ejecutar `Init.ps1` con Practice "Apps & Infra"
-  - Verificar constitution básico en `memory/constitution.md`
-  - Verificar mensaje: "Run '@Bolt Constitution' to provision files"
-- **Step 2: Provisión**
-  - Invocar `@Bolt Constitution` en Copilot Chat
-  - Verificar ejecución de `skill-bolt-setup-constitution` skill
-  - Verificar provision report mostrado
-  - Verificar constitution completo con articles de backend, frontend, cloud-platform
-  - Verificar skills copiados a `.github/skills/`
-    - **Step 3: Desarrollo**
-      - Invocar `@Bolt Framework` agent
-      - Verificar skills cargados automáticamente
-      - Invocar `@Bolt Implement`
-      - Verificar usa `skill-branch-management` sin ejecutar bash inline
-    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan y actualizar el estado general del plan a "Completado"
+- **Step 1: Initialization** ✅
+  - Ejecutado `Init.ps1` con Practice "Apps & Infra"
+  - Verificado constitution básico en `memory/constitution.md`
+  - Verificado mensaje: "Run '@Bolt Constitution' to provision files"
+- **Step 2: Provisión** ✅
+  - Invocado `@Bolt Constitution` en Copilot Chat
+  - Verificado ejecución de `skill-bolt-setup-constitution` skill
+  - Verificado provision report mostrado
+  - Verificado constitution completo con articles de backend, frontend, cloud-platform
+  - Verificado skills copiados a `.github/skills/`
+- **Step 3: Desarrollo** ✅
+  - Invocado `@Bolt Framework` agent
+  - Verificado skills cargados automáticamente
+  - Invocado `@Bolt Implement`
+  - Verificado usa `skill-branch-management` sin ejecutar bash inline
+- **📝 Actualizar progreso**: ✅ Tarea completada y plan actualizado (93% progreso global)
 
 ---
 

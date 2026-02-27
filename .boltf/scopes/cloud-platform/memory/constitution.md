@@ -181,6 +181,83 @@ Select infrastructure provisioning scope:
 
 ---
 
+## Article VIII-C: Service Orchestration with .NET Aspire
+
+> **📋 Applies to**: Multi-service .NET applications (2+ services)
+> **⏭️ Skip if**: Single-service architecture, non-.NET stack, or manual orchestration preferred
+
+### Section 8C.1: Aspire Adoption Decision
+
+**Choose ONE**:
+
+- [ ] **Yes** - Enable .NET Aspire for service orchestration
+- [ ] **No** - Manual orchestration (Docker Compose / Kubernetes / Podman)
+
+### Section 8C.2: Aspire Components (if Yes)
+
+When Aspire is enabled, the following components are provisioned:
+
+- **AppHost Project**: Orchestrator that defines service topology and dependencies
+- **ServiceDefaults Library**: Shared OpenTelemetry, health checks, and resilience configuration
+- **Service Discovery**: Automatic resolution via `WithReference()` API
+- **Aspire Dashboard**: Local observability dashboard at `http://localhost:15888`
+
+### Section 8C.3: Service Discovery Strategy
+
+**Choose ONE**:
+
+- [ ] **Aspire Automatic** - Use `WithReference()` for all inter-service communication (recommended)
+- [ ] **Manual Configuration** - Environment variables and explicit URLs
+- [ ] **Hybrid** - Aspire for local dev, manual for production
+
+### Section 8C.4: Rationale and Trade-offs
+
+**✅ When to Use Aspire**:
+
+- Multi-service .NET architecture (backend + frontend + API gateway)
+- Team wants unified local development experience (`dotnet run` launches all)
+- Observability is a priority (OpenTelemetry out-of-the-box)
+- Deploying to Azure with `azd` CLI
+
+**❌ When NOT to Use**:
+
+- Single-service application (no orchestration needed)
+- Non-.NET services (Node.js, Python, Go) - Aspire is .NET-centric
+- Team prefers explicit configuration over "magic" service discovery
+- Docker Desktop unavailable (Aspire requires containers for local dev)
+
+**Benefits**:
+
+- ✅ **Automatic Service Discovery**: Eliminates hardcoded URLs between services
+- ✅ **Built-in Observability**: OpenTelemetry dashboard for traces, metrics, logs
+- ✅ **Simplified Local Development**: Single `dotnet run` launches all services
+- ✅ **Unified Deployment**: `azd up` deploys entire solution to Azure with Bicep generation
+
+**Costs & Constraints**:
+
+- ⚠️ **Docker Desktop Required**: Aspire runs services in containers locally
+- ⚠️ **Learning Curve**: AppHost model and `WithReference()` API
+- ⚠️ **.NET 8+ Required**: Aspire is not available for older frameworks
+- ⚠️ **Additional Project**: AppHost adds complexity to solution structure
+
+### Section 8C.5: Implementation References
+
+**Provisioning**:
+
+- Article VIII-C decisions are processed by `@Bolt Constitution` agent
+- Templates downloaded from [dotnet/aspire GitHub](https://github.com/dotnet/aspire/tree/main/templates)
+- AppHost project created at `src/AppHost/`
+- ServiceDefaults library created at `src/ServiceDefaults/`
+
+**Learn More**:
+
+- [.NET Aspire Documentation](https://learn.microsoft.com/dotnet/aspire/)
+- [AppHost Patterns](https://learn.microsoft.com/dotnet/aspire/fundamentals/app-host-overview)
+- [Service Discovery Overview](https://learn.microsoft.com/dotnet/aspire/service-discovery/overview)
+- Skill: `skill-bolt-aspire-orchestration` (provisioned if enabled)
+
+---
+
 ## Article IX: Infrastructure as Code
 
 > **📋 Applies to**: Infrastructure Only, Full Stack

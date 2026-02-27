@@ -618,6 +618,56 @@ function Copy-CoreSkills {
 
 # ─── Step 4.5: Provision Aspire Resources (Conditional) ──────────────────────
 
+function Get-GitHubAspireTemplates {
+    <#
+    .SYNOPSIS  Downloads .NET Aspire templates from GitHub repository
+    .DESCRIPTION  Fetches latest Aspire templates from dotnet/aspire official repo
+    #>
+    param(
+        [Parameter(Mandatory)]
+        [string]$Destination
+    )
+
+    $baseUrl = "https://raw.githubusercontent.com/dotnet/aspire/main/templates"
+    $templates = @(
+        'AppHost.csproj',
+        'ServiceDefaults.csproj',
+        'Extensions.cs',
+        'Program.cs.template'
+    )
+
+    $downloaded = @()
+
+    # Create destination directory
+    if (-not (Test-Path $Destination)) {
+        New-Item -ItemType Directory -Path $Destination -Force | Out-Null
+    }
+
+    foreach ($template in $templates) {
+        $url = "$baseUrl/$template"
+        $destPath = Join-Path $Destination $template
+
+        try {
+            if (-not $DryRun) {
+                Write-Info "Downloading Aspire template: $template"
+                Invoke-WebRequest -Uri $url -OutFile $destPath -UseBasicParsing -ErrorAction Stop
+                Write-Success "Downloaded: $template"
+                $downloaded += "Template: $template (from GitHub)"
+            }
+            else {
+                Write-Info "[DRY RUN] Would download Aspire template: $template from $url"
+                $downloaded += "Template: $template (dry-run)"
+            }
+        }
+        catch {
+            Write-Warn "Failed to download $template from GitHub: $($_.Exception.Message)"
+            Write-Info "URL attempted: $url"
+        }
+    }
+
+    return $downloaded
+}
+
 function Copy-AspireResources {
     param(
         [string]$ProjectPath,
@@ -659,46 +709,12 @@ function Copy-AspireResources {
         Write-Warn "Aspire skill not found: $skillSourcePath (skipping)"
     }
 
-    # 2. Provision Aspire templates
-    $templates = @('AppHost.csproj', 'ServiceDefaults.csproj', 'Program.cs.template')
-    $templatesSourcePath = Join-Path $ProjectPath ".boltf\templates\aspire"
+    # 2. Provision Aspire templates (download from GitHub)
     $templatesDestPath = Join-Path $ProjectPath ".github\templates\aspire"
 
-    if (Test-Path $templatesSourcePath) {
-        foreach ($template in $templates) {
-            $templateSource = Join-Path $templatesSourcePath $template
-            $templateDest = Join-Path $templatesDestPath $template
-
-            if (-not (Test-Path $templateSource)) {
-                Write-Warn "Aspire template not found: $template (skipping)"
-                continue
-            }
-
-            if ((Test-Path $templateDest) -and -not $Force) {
-                Write-Info "Aspire template already exists: $template (preserving)"
-                $provisionedAspire += "Template: $template (preserved)"
-            }
-            else {
-                if (-not $DryRun) {
-                    # Create destination directory
-                    if (-not (Test-Path $templatesDestPath)) {
-                        New-Item -ItemType Directory -Path $templatesDestPath -Force | Out-Null
-                    }
-
-                    Copy-Item -Path $templateSource -Destination $templateDest -Force
-                    Write-Success "Aspire template provisioned: $template"
-                    $provisionedAspire += "Template: $template"
-                }
-                else {
-                    Write-Info "[DRY RUN] Would provision Aspire template: $template"
-                    $provisionedAspire += "Template: $template (dry-run)"
-                }
-            }
-        }
-    }
-    else {
-        Write-Warn "Aspire templates path not found: $templatesSourcePath (skipping templates)"
-    }
+    Write-Info "Downloading Aspire templates from GitHub (dotnet/aspire)"
+    $downloadedTemplates = Get-GitHubAspireTemplates -Destination $templatesDestPath
+    $provisionedAspire += $downloadedTemplates
 
     if ($provisionedAspire.Count -gt 0) {
         Write-Success "Aspire resources provisioned: $($provisionedAspire.Count) items"
@@ -952,10 +968,11 @@ function Main {
             Write-Host "  🔹 Phase 4: Provision Resources" -ForegroundColor Magenta
             Write-Host ""
 
-            # Read scopes.yaml to get Aspire flag
+            # Read scopes.yaml to check if Aspire orchestration is selected
             $scopesYamlPath = Join-Path $resolvedPath ".boltf\memory\scopes.yaml"
             $scopesConfig = Read-Yaml -FilePath $scopesYamlPath
-            $useAspire = if ($scopesConfig.project.'use-aspire') { $scopesConfig.project.'use-aspire' } else { $false }
+            $localOrch = if ($scopesConfig.project.'local-orchestration') { $scopesConfig.project.'local-orchestration' } else { 'none' }
+            $useAspire = ($localOrch -eq 'aspire')
 
             $scopeFiles = Copy-ProvisionedFiles -ProjectPath $resolvedPath -Scopes $scopes.all
             $coreSkills = Copy-CoreSkills -ProjectPath $resolvedPath
