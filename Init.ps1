@@ -1086,6 +1086,66 @@ function Add-DemoContent {
     }
 }
 
+# ─── Python Environment Setup (Optional) ──────────────────────────────────────
+
+function Initialize-PythonEnvironment {
+    <#
+    .SYNOPSIS
+    Optional Python environment setup during initialization
+
+    .DESCRIPTION
+    Attempts to configure Python virtual environment (.bolt-venv) for skills
+    that require Python (e.g., skill-creator). Non-blocking - project initialization
+    continues even if Python setup fails.
+
+    .OUTPUTS
+    Returns $true if Python was successfully configured, $false otherwise
+    #>
+
+    Write-Host ""
+    Write-Step "Setting up Python environment (optional)..."
+
+    $bootstrapScript = Join-Path $OutputDirectory ".boltf\scripts\powershell\Bootstrap-Python.ps1"
+
+    # Check if Bootstrap-Python.ps1 exists
+    if (-not (Test-Path $bootstrapScript)) {
+        Write-Warn "Python bootstrap script not found (skills/Python features unavailable)"
+        Write-Info "Some advanced skills may require Python - you can run bootstrap manually later"
+        return $false
+    }
+
+    try {
+        Write-Info "Checking Python availability..."
+
+        # Execute Bootstrap-Python.ps1 in the target directory
+        Push-Location $OutputDirectory
+        try {
+            & $bootstrapScript -ProjectRoot $OutputDirectory -SkipInstall *>&1 | Out-Null
+            $exitCode = $LASTEXITCODE
+
+            if ($exitCode -eq 0) {
+                Write-Success "Python environment configured successfully"
+                Write-Info "Virtual environment: .bolt-venv/"
+                Write-Info "Python-based skills ready (e.g., skill-creator)"
+                return $true
+            } else {
+                Write-Warn "Python setup completed with warnings (exit code: $exitCode)"
+                Write-Info "Python features may have limited availability"
+                return $false
+            }
+        } finally {
+            Pop-Location
+        }
+    } catch {
+        Write-Warn "Failed to configure Python environment: $($_.Exception.Message)"
+        Write-Info "This is optional - you can setup Python later by running:"
+        Write-Host "  .boltf\scripts\powershell\Bootstrap-Python.ps1" -ForegroundColor Yellow
+        Write-Host ""
+        Write-Info "Project initialization will continue without Python features"
+        return $false
+    }
+}
+
 # ─── Summary ─────────────────────────────────────────────────────────────────
 
 function Show-Summary {
@@ -1098,6 +1158,13 @@ function Show-Summary {
     Write-Host ""
     Write-Host "  ✓ Practice:   $($D.Practice)" -ForegroundColor Green
     Write-Host "  ✓ Scopes:     $($D.Scopes -join ', ')" -ForegroundColor Green
+
+    # Python environment status
+    if ($D.PythonConfigured) {
+        Write-Host "  ✓ Python:     Configured (.bolt-venv/)" -ForegroundColor Green
+    } else {
+        Write-Host "  ⚠ Python:     Not configured (optional)" -ForegroundColor Yellow
+    }
     if ($D.IaCTool -ne "none") {
         Write-Host "  ✓ IaC Tool:   $($D.IaCTool)" -ForegroundColor Green
     }
@@ -1224,6 +1291,10 @@ function Main {
     New-ScopesYaml       -Decisions $decisions
     New-BasicConstitution -D $decisions  # Phase 1: Basic template (NEW)
     Add-DemoContent
+
+    # Optional: Setup Python environment for Python-based skills
+    $pythonConfigured = Initialize-PythonEnvironment
+    $decisions.PythonConfigured = $pythonConfigured
 
     Show-Summary -D $decisions
 }

@@ -67,6 +67,26 @@ items:
       Framework-agnostic architecture patterns.
 
   # ============================================
+  # OBSERVABILITY & TELEMETRY
+  # ============================================
+
+  - id: frontend-aspire-opentelemetry
+    kind: skills
+    enabled: false
+    auto_provision: false
+    tags: ['aspire', 'opentelemetry', 'csharp']
+    source:
+      type: local_folder
+      path: available-skills/aspire/skill-aspire-opentelemetry-frontend
+    destination:
+      folder: .github/skills
+      name: aspire-opentelemetry-frontend
+    description: >
+      OpenTelemetry instrumentation for frontend apps (Angular/React) with .NET Aspire dashboard integration.
+      Distributed tracing from browser to backend with W3C Trace Context propagation.
+      CRITICAL: Use when project has Aspire backend and needs E2E observability.
+
+  # ============================================
   # MCP & EXTERNAL RESOURCES
   # ============================================
 

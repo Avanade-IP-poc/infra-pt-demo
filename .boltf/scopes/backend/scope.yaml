@@ -22,6 +22,26 @@ items:
       CRITICAL: NO SQLite for integration tests - use real database.
 
   # ============================================
+  # OBSERVABILITY & TELEMETRY
+  # ============================================
+
+  - id: backend-aspire-opentelemetry-frontend
+    kind: skills
+    enabled: false
+    auto_provision: false
+    tags: ['aspire', 'opentelemetry', 'csharp']
+    source:
+      type: local_folder
+      path: available-skills/aspire/skill-aspire-opentelemetry-frontend
+    destination:
+      folder: .github/skills
+      name: aspire-opentelemetry-frontend
+    description: >
+      OpenTelemetry instrumentation for frontend apps with Aspire dashboard.
+      Enable this when AppHost includes JavaScript/npm frontend apps needing observability.
+      Provides Angular and React implementation patterns.
+
+  # ============================================
   # MCP & EXTERNAL RESOURCES
   # ============================================
 
