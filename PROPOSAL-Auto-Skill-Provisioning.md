@@ -1,8 +1,8 @@
 # Propuesta: Sistema de Autoconfiguración Inteligente de Skills
 
-**Fecha**: 2026-02-25  
-**Estado**: Propuesta  
-**Autor**: @Bolt Researcher  
+**Fecha**: 2026-02-25
+**Estado**: Propuesta
+**Autor**: @Bolt Researcher
 **Versión**: 1.0.0
 
 ## 🎯 Resumen Ejecutivo
@@ -76,7 +76,7 @@ graph TD
 
 | Hecho                          | Fuente                                       | Ejemplo                                     |
 | ------------------------------ | -------------------------------------------- | ------------------------------------------- |
-| `activeScopes`                 | `.boltf/scopes.yaml`                        | `["backend", "frontend", "cloud-platform"]` |
+| `activeScopes`                 | `.boltf/scopes.yaml`                         | `["backend", "frontend", "cloud-platform"]` |
 | `techStack.backend`            | `scopes.yaml → decisions.backend.language`   | `"csharp"`                                  |
 | `techStack.frontend`           | `scopes.yaml → decisions.frontend.framework` | `"react"`                                   |
 | `decisions.cicd.iacTool`       | `scopes.yaml → decisions.cicd.iacTool`       | `"bicep"`                                   |
@@ -988,3 +988,4 @@ auto_provision_rule:
 ---
 end-of-document: true
 ---
+```

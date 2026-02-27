@@ -260,7 +260,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
 ✏️ Detalles: Actualizada descripción "AURORA methodology" a "Bolt Framework methodology"
 ✅ 6. Renombrar todos los archivos de agentes en `.github/agents/`:
 📅 Completado: 2026-02-23
-✏️ Detalles: Renombrados 28 archivos aurora-*.agent.md a bolt-*.agent.md exitosamente
+✏️ Detalles: Renombrados 28 archivos aurora-_.agent.md a bolt-_.agent.md exitosamente
 
 - `aurora-testing.agent.md` → `bolt-testing.agent.md`
 - `aurora-implement.agent.md` → `bolt-implement.agent.md`
@@ -310,87 +310,77 @@ No hay usuarios con workflows dependientes, por lo tanto:
 > - NO es solo copiar un template, es usar el skill como herramienta de creación activa
 
 1. Crear `.github/skills/skill-branch-management/SKILL.md`:
-    - **Usar skill**: Invocar `#file:new-skill` para guiar la creación
-    - Copilot cargará new-skill skill y aplicará sus validaciones
-    - Extraer bash script de verificación de branch (presente en `aurora-testing.agent.md`, `aurora-implement.agent.md`, `aurora-feature.agent.md`, `aurora-bugfix.agent.md`, `aurora-spike.agent.md`)
-    - Incluir procedimientos de creación/switching/merge de branches
-    - **Límite**: 50-150 líneas (enforced by new-skill)
-    - **Estructura**: Aplicada automáticamente por new-skill skill
-    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+   - **Usar skill**: Invocar `#file:new-skill` para guiar la creación
+   - Copilot cargará new-skill skill y aplicará sus validaciones
+   - Extraer bash script de verificación de branch (presente en `aurora-testing.agent.md`, `aurora-implement.agent.md`, `aurora-feature.agent.md`, `aurora-bugfix.agent.md`, `aurora-spike.agent.md`)
+   - Incluir procedimientos de creación/switching/merge de branches
+   - **Límite**: 50-150 líneas (enforced by new-skill)
+   - **Estructura**: Aplicada automáticamente por new-skill skill
+   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 2. Crear `.github/skills/skill-quality-gates/SKILL.md`:
-    - **Usar skill**: Invocar `#file:new-skill` para guiar la creación
-    - Extraer comandos de validación (lint, unit tests, architecture compliance)
-    - Consolidar workflows "AUTOMATIC EXECUTION" (duplicados en 4 agentes)
-    - Contenido:
-      - Per-language quality gates: TypeScript, Python, C#, etc.
-      - Comandos básicos de validación
-      - Cuándo ejecutar quality gates
-    - **Límite**: 100-150 líneas (más complejo por multi-language, validado por new-skill)
-    - **Estructura**: YAML frontmatter + secciones (aplicadas por new-skill)
-    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+   - **Usar skill**: Invocar `#file:new-skill` para guiar la creación
+   - Extraer comandos de validación (lint, unit tests, architecture compliance)
+   - Consolidar workflows "AUTOMATIC EXECUTION" (duplicados en 4 agentes)
+   - Contenido:
+     - Per-language quality gates: TypeScript, Python, C#, etc.
+     - Comandos básicos de validación
+     - Cuándo ejecutar quality gates
+   - **Límite**: 100-150 líneas (más complejo por multi-language, validado por new-skill)
+   - **Estructura**: YAML frontmatter + secciones (aplicadas por new-skill)
+   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 3. Crear `.github/skills/skill-testing-discipline/SKILL.md`:
-    - **Usar skill**: Invocar `#file:new-skill` para guiar la creación
-    - Extraer metodologías TDD/BDD de `aurora-testing.agent.md` (líneas ~180-380)
-    - Incluir patterns: red-green-refactor, Given-When-Then, test pyramid
-    - Contenido:
-      - Cuándo aplicar TDD vs BDD
-      - Ciclo TDD básico
-      - Workflows: red-green-refactor, Given-When-Then, test pyramid
-      - Enlaces a ejemplos completos
-    - **Límite**: 100-150 líneas (validado por new-skill)
-    - **Estructura**: Aplicada automáticamente por new-skill skill
-    - Separar de agent instructions para reutilización
-    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+   - **Usar skill**: Invocar `#file:new-skill` para guiar la creación
+   - Extraer metodologías TDD/BDD de `aurora-testing.agent.md` (líneas ~180-380)
+   - Incluir patterns: red-green-refactor, Given-When-Then, test pyramid
+   - Contenido:
+     - Cuándo aplicar TDD vs BDD
+     - Ciclo TDD básico
+     - Workflows: red-green-refactor, Given-When-Then, test pyramid
+     - Enlaces a ejemplos completos
+   - **Límite**: 100-150 líneas (validado por new-skill)
+   - **Estructura**: Aplicada automáticamente por new-skill skill
+   - Separar de agent instructions para reutilización
+   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
-4. Crear `.github/skills/skill-constitution-driven-development/SKILL.md`:
-    - **Usar skill**: Invocar `#file:new-skill` para guiar la creación
-    - Extraer tablas de compliance (presentes en 10+ agentes)
-    - Procedimientos para validar contra `memory/constitution.md`
-    - Contenido:
-      - Cuándo validar constitution compliance
-      - Validación básica
-      - Mapeo de Articles → validation steps, tablas de compliance
-    - **Límite**: 80-120 líneas (validado por new-skill)
-    - **Estructura**: Aplicada automáticamente por new-skill skill
-    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+4. Crear `.github/skills/skill-constitution-driven-development/SKILL.md`: - **Usar skill**: Invocar `#file:new-skill` para guiar la creación - Extraer tablas de compliance (presentes en 10+ agentes) - Procedimientos para validar contra `memory/constitution.md` - Contenido: - Cuándo validar constitution compliance - Validación básica - Mapeo de Articles → validation steps, tablas de compliance - **Límite**: 80-120 líneas (validado por new-skill) - **Estructura**: Aplicada automáticamente por new-skill skill - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
-14.5. Crear `.github/skills/bolt-setup-constitution/SKILL.md` **[NUEVO]**: - **Usar skill**: Invocar `#file:new-skill` para guiar la creación - **Nota**: Este skill es **EXCEPCIÓN** al límite de 150 líneas (300-400 líneas necesarias) - **Razón de excepción**: Motor de provisión completo con múltiples responsabilidades - new-skill skill alertará sobre el límite, pero se justifica por complejidad - **Responsabilidad**: Provisión inteligente post-init basada en constitution y scopes activos - **Workflow**: 1. Leer `memory/constitution.md` (contiene Practice y scopes activos) 2. Leer `memory/scopes.yaml` (scopes seleccionados) 3. Para cada scope activo: - Leer `.boltf/scopes/{scope}/scope.yaml` - Copiar items (agents, prompts, skills) según `source_type` y `auto_provision: true` - Extraer articles específicos de `.boltf/scopes/{scope}/memory/constitution.md` 4. Merge constitution: Master + Scope-specific articles 5. Actualizar `memory/constitution.md` con constitution completo 6. Copiar skills específicos desde `.boltf/available-skills/` según mapeo Practice 7. **SIEMPRE** copiar `bolt-framework` (skill core, independiente del Practice) 8. Generar reporte de provisión: archivos copiados, articles añadidos - **Inputs**: - ConstitutionPath (default: `memory/constitution.md`) - ScopesConfigPath (default: `memory/scopes.yaml`) - DryRun (default: false) - preview de cambios sin ejecutar - **Output**: Reporte markdown con cambios realizados - **Invocación**: Puede ser llamado por agentes (`@Bolt Constitution`, `@Bolt Framework`) o manualmente después de init
+   14.5. Crear `.github/skills/bolt-setup-constitution/SKILL.md` **[NUEVO]**: - **Usar skill**: Invocar `#file:new-skill` para guiar la creación - **Nota**: Este skill es **EXCEPCIÓN** al límite de 150 líneas (300-400 líneas necesarias) - **Razón de excepción**: Motor de provisión completo con múltiples responsabilidades - new-skill skill alertará sobre el límite, pero se justifica por complejidad - **Responsabilidad**: Provisión inteligente post-init basada en constitution y scopes activos - **Workflow**: 1. Leer `memory/constitution.md` (contiene Practice y scopes activos) 2. Leer `memory/scopes.yaml` (scopes seleccionados) 3. Para cada scope activo: - Leer `.boltf/scopes/{scope}/scope.yaml` - Copiar items (agents, prompts, skills) según `source_type` y `auto_provision: true` - Extraer articles específicos de `.boltf/scopes/{scope}/memory/constitution.md` 4. Merge constitution: Master + Scope-specific articles 5. Actualizar `memory/constitution.md` con constitution completo 6. Copiar skills específicos desde `.boltf/available-skills/` según mapeo Practice 7. **SIEMPRE** copiar `bolt-framework` (skill core, independiente del Practice) 8. Generar reporte de provisión: archivos copiados, articles añadidos - **Inputs**: - ConstitutionPath (default: `memory/constitution.md`) - ScopesConfigPath (default: `memory/scopes.yaml`) - DryRun (default: false) - preview de cambios sin ejecutar - **Output**: Reporte markdown con cambios realizados - **Invocación**: Puede ser llamado por agentes (`@Bolt Constitution`, `@Bolt Framework`) o manualmente después de init
 
-1. Expandir `.github/skills/bolt-framework/SKILL.md`:
-    - **Usar skill**: Invocar `#file:new-skill` para guiar la expansión
-    - **Nota**: Este skill es **EXCEPCIÓN** al límite de 150 líneas (300-400 líneas necesarias)
-    - **Razón de excepción**: Skill metodológico core que documenta 6 fases completas del framework
-    - **IMPORTANTE**: `bolt-framework` es un **skill core** que SIEMPRE se copia, independientemente del Practice
-    - new-skill skill alertará sobre el límite, pero se justifica como skill core
-    - **Actualmente**: 123 líneas superficiales (overview de 6 fases)
-    - **Objetivo**: 300-400 líneas con workflows detallados (skill metodológico core):
-      - Step-by-step procedures para cada fase (INCEPTION, DISCOVERY, CONSTRUCTION, TRANSITION, PRODUCTION, RETIREMENT)
-      - Validation checklists (qué validar antes de avanzar de fase)
-      - Quality gates por fase
-      - Referencias a otros skills (`skill-quality-gates`, `skill-testing-discipline`)
-    - Seguir pattern Microsoft: "# Mission → # Workflow → # Output"
-    - **Provisión**: SIEMPRE copiado desde `.boltf/available-skills/bolt-framework/` a `.github/skills/bolt-framework/`
-    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+5. Expandir `.github/skills/bolt-framework/SKILL.md`:
+   - **Usar skill**: Invocar `#file:new-skill` para guiar la expansión
+   - **Nota**: Este skill es **EXCEPCIÓN** al límite de 150 líneas (300-400 líneas necesarias)
+   - **Razón de excepción**: Skill metodológico core que documenta 6 fases completas del framework
+   - **IMPORTANTE**: `bolt-framework` es un **skill core** que SIEMPRE se copia, independientemente del Practice
+   - new-skill skill alertará sobre el límite, pero se justifica como skill core
+   - **Actualmente**: 123 líneas superficiales (overview de 6 fases)
+   - **Objetivo**: 300-400 líneas con workflows detallados (skill metodológico core):
+     - Step-by-step procedures para cada fase (INCEPTION, DISCOVERY, CONSTRUCTION, TRANSITION, PRODUCTION, RETIREMENT)
+     - Validation checklists (qué validar antes de avanzar de fase)
+     - Quality gates por fase
+     - Referencias a otros skills (`skill-quality-gates`, `skill-testing-discipline`)
+   - Seguir pattern Microsoft: "# Mission → # Workflow → # Output"
+   - **Provisión**: SIEMPRE copiado desde `.boltf/available-skills/bolt-framework/` a `.github/skills/bolt-framework/`
+   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
-2. Actualizar agentes para referenciar skills:
-    - Remover contenido duplicado de cada agent
-    - Agregar en Instructions: "Use `skill-branch-management` for branch operations"
-    - Agregar en YAML frontmatter si necesario (algunos agents pueden poner skills in `tools` section)
-    - Ejemplo en `bolt-implement.agent.md`:
+6. Actualizar agentes para referenciar skills:
+   - Remover contenido duplicado de cada agent
+   - Agregar en Instructions: "Use `skill-branch-management` for branch operations"
+   - Agregar en YAML frontmatter si necesario (algunos agents pueden poner skills in `tools` section)
+   - Ejemplo en `bolt-implement.agent.md`:
 
-      ```markdown
-      ## Branch Workflow
+     ```markdown
+     ## Branch Workflow
 
-      Use `skill-branch-management` to verify and manage feature branches.
+     Use `skill-branch-management` to verify and manage feature branches.
 
-      ## Quality Validation
+     ## Quality Validation
 
-      Use `skill-quality-gates` to run linting, unit tests, and architecture validation.
-      ```
+     Use `skill-quality-gates` to run linting, unit tests, and architecture validation.
+     ```
 
-    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 ### Phase 3: Implementar Modelo Practice en Init.ps1 (Setup Mínimo)
 
@@ -409,7 +399,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
 
 ✅ 18. Generar constitution básico en Init.ps1:
 📅 Completado: 2026-02-23
-✏️ Detalles: Creada función New-BasicConstitution que genera template mínimo con metadata, Practice y scopes. Antigua Set-ConstitutionDecisions renombrada a \_DEPRECATED. Init.ps1 líneas: 837 → 964 (temporal, provisioning eliminará complejidad).
+✏️ Detalles: Creada función New-BasicConstitution que genera template mínimo con metadata, Practice y scopes. Antigua Set-ConstitutionDecisions renombrada a _DEPRECATED_. Init.ps1 líneas: 837 → 964 (temporal, provisioning eliminará complejidad).
 
 - Crear `memory/constitution.md` con estructura mínima:
 
@@ -487,229 +477,229 @@ items:
 
 1. Crear implementación completa de `skill-bolt-setup-constitution` skill:
 
-    **21.1. Crear SKILL.md** (ya parcialmente definido en step 14.5):
-    - Expandir con ejemplos de invocación
-    - Documentar formato de reporte
-    - Incluir troubleshooting common issues
-    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan (sub-tarea 21.1)
+   **21.1. Crear SKILL.md** (ya parcialmente definido en step 14.5):
+   - Expandir con ejemplos de invocación
+   - Documentar formato de reporte
+   - Incluir troubleshooting common issues
+   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan (sub-tarea 21.1)
 
-    **21.2. Crear helper script** `.boltf/scripts/Invoke-BoltSetupConstitution.ps1`:
-    - PowerShell script que implementa la lógica descrita en el skill
-    - Parámetros:
+   **21.2. Crear helper script** `.boltf/scripts/Invoke-BoltSetupConstitution.ps1`:
+   - PowerShell script que implementa la lógica descrita en el skill
+   - Parámetros:
 
-      ```powershell
-      param(
-          [string]$ConstitutionPath = "memory/constitution.md",
-          [string]$ScopesConfigPath = "memory/scopes.yaml",
-          [switch]$DryRun,
-          [switch]$Verbose
-      )
-      ```
+     ```powershell
+     param(
+         [string]$ConstitutionPath = "memory/constitution.md",
+         [string]$ScopesConfigPath = "memory/scopes.yaml",
+         [switch]$DryRun,
+         [switch]$Verbose
+     )
+     ```
 
-    - Funciones principales:
-      - `Read-ConstitutionMetadata`: Extrae Practice y scopes de constitution básico
-      - `Read-ScopeConfiguration`: Lee scope.yaml de cada scope activo
-      - `Copy-ScopeItems`: Copia items (agents, prompts, skills) según auto_provision
-      - `Merge-ScopeConstitutions`: Merge articles de scopes activos
-      - `Generate-ProvisionReport`: Genera reporte markdown con cambios
-    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan (sub-tarea 21.2)
+   - Funciones principales:
+     - `Read-ConstitutionMetadata`: Extrae Practice y scopes de constitution básico
+     - `Read-ScopeConfiguration`: Lee scope.yaml de cada scope activo
+     - `Copy-ScopeItems`: Copia items (agents, prompts, skills) según auto_provision
+     - `Merge-ScopeConstitutions`: Merge articles de scopes activos
+     - `Generate-ProvisionReport`: Genera reporte markdown con cambios
+   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan (sub-tarea 21.2)
 
-    **21.3. Implementar lógica de merge de constitution**:
-    - Leer `memory/constitution.md` (básico generado por Init.ps1)
-    - Para cada scope activo (leer de `memory/scopes.yaml`):
-      - Leer `.boltf/scopes/{scope}/memory/constitution.md`
-      - Extraer articles específicos (según tabla en `.boltf/scopes/README.md`)
-      - Validar: no duplicar articles, preservar estructura
-    - Generar constitution completo
-    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan (sub-tarea 21.3)
+   **21.3. Implementar lógica de merge de constitution**:
+   - Leer `memory/constitution.md` (básico generado por Init.ps1)
+   - Para cada scope activo (leer de `memory/scopes.yaml`):
+     - Leer `.boltf/scopes/{scope}/memory/constitution.md`
+     - Extraer articles específicos (según tabla en `.boltf/scopes/README.md`)
+     - Validar: no duplicar articles, preservar estructura
+   - Generar constitution completo
+   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan (sub-tarea 21.3)
 
-    **Ejemplo de constitution completo**:
+   **Ejemplo de constitution completo**:
 
-    ```markdown
-    # Project Constitution
+   ```markdown
+   # Project Constitution
 
-    ## Metadata
+   ## Metadata
 
-    - Practice: Apps & Infra
-    - Active Scopes: backend, frontend, cloud-platform
-    - Initialized: 2026-02-23
-    - Last Provision: 2026-02-23 14:30:00
+   - Practice: Apps & Infra
+   - Active Scopes: backend, frontend, cloud-platform
+   - Initialized: 2026-02-23
+   - Last Provision: 2026-02-23 14:30:00
 
-    # Article I: Active Scopes
+   # Article I: Active Scopes
 
-    - backend
-    - frontend
-    - cloud-platform
+   - backend
+   - frontend
+   - cloud-platform
 
-    # Article III: Tech Stack
+   # Article III: Tech Stack
 
-    ## Backend
+   ## Backend
 
-    - APIs: REST with FastAPI/Express/ASP.NET Core
-      ...
+   - APIs: REST with FastAPI/Express/ASP.NET Core
+     ...
 
-    ## Frontend
+   ## Frontend
 
-    - Framework: React/Vue/Angular
-      ...
+   - Framework: React/Vue/Angular
+     ...
 
-    # Article XV: Testing Strategy
+   # Article XV: Testing Strategy
 
-    ## Backend Testing
+   ## Backend Testing
 
-    - API integration tests
-      ...
+   - API integration tests
+     ...
 
-    ## Frontend Testing
+   ## Frontend Testing
 
-    - Component tests with Testing Library
-      ...
-    ```
+   - Component tests with Testing Library
+     ...
+   ```
 
-    **21.4. Implementar lógica de provisión de archivos** (DOS PASOS):
+   **21.4. Implementar lógica de provisión de archivos** (DOS PASOS):
 
-    **Paso 1 - Provisión según scopes activos**:
-    - Para cada scope activo:
-      - Leer `.boltf/scopes/{scope}/scope.yaml`
-      - Filtrar items con `auto_provision: true`
-      - Para cada item:
-        - Verificar `source_type` (local_file, context7, web, etc.)
-        - Si `source_type: local_file`:
-          - Copiar desde `source_path` a `destination`
-          - Crear directorios si no existen
-          - Preservar permisos y metadata
-        - Si `source_type: context7` o `web`:
-          - Descargar contenido (para fase posterior)
-      - Log: archivos copiados, skipped (ya existen), errores
+   **Paso 1 - Provisión según scopes activos**:
+   - Para cada scope activo:
+     - Leer `.boltf/scopes/{scope}/scope.yaml`
+     - Filtrar items con `auto_provision: true`
+     - Para cada item:
+       - Verificar `source_type` (local_file, context7, web, etc.)
+       - Si `source_type: local_file`:
+         - Copiar desde `source_path` a `destination`
+         - Crear directorios si no existen
+         - Preservar permisos y metadata
+       - Si `source_type: context7` o `web`:
+         - Descargar contenido (para fase posterior)
+     - Log: archivos copiados, skipped (ya existen), errores
 
-    **Paso 2 - Provisión de skills core (SIEMPRE - AUTO-DISCOVERY)**:
-    - **IMPORTANTE**: El script auto-descubre y copia **TODOS los directorios** en `.boltf/available-skills/bolt-framework/`
-    - **Auto-Discovery**: Usa `Get-ChildItem -Directory` para encontrar todos los skills sin hardcodear nombres
-    - **Skills descubiertos automáticamente** (7 en total):
-      - `bolt-framework/` - Skill metodológico core (6 fases)
-      - `skill-bolt-adr/` - Architecture Decision Records (MADR)
-      - `skill-bolt-branch-management/` - Git branch workflows
-      - `skill-bolt-constitution-driven-development/` - Constitution compliance
-      - `skill-bolt-quality-gates/` - Quality validation
-      - `skill-bolt-setup-constitution/` - Provisioning engine (self-reference)
-      - `skill-bolt-testing-discipline/` - TDD/BDD workflows
-    - **Extensibilidad**: Agregar nuevos skills en `bolt-framework/` → se copian automáticamente
-    - Destino: `.github/skills/{nombre-skill}/` (preserva estructura completa)
-    - Log: "Core skill 'bolt-framework' provisioned (always included)" + count de skills
-    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan (sub-tarea 21.4)
+   **Paso 2 - Provisión de skills core (SIEMPRE - AUTO-DISCOVERY)**:
+   - **IMPORTANTE**: El script auto-descubre y copia **TODOS los directorios** en `.boltf/available-skills/bolt-framework/`
+   - **Auto-Discovery**: Usa `Get-ChildItem -Directory` para encontrar todos los skills sin hardcodear nombres
+   - **Skills descubiertos automáticamente** (7 en total):
+     - `bolt-framework/` - Skill metodológico core (6 fases)
+     - `skill-bolt-adr/` - Architecture Decision Records (MADR)
+     - `skill-bolt-branch-management/` - Git branch workflows
+     - `skill-bolt-constitution-driven-development/` - Constitution compliance
+     - `skill-bolt-quality-gates/` - Quality validation
+     - `skill-bolt-setup-constitution/` - Provisioning engine (self-reference)
+     - `skill-bolt-testing-discipline/` - TDD/BDD workflows
+   - **Extensibilidad**: Agregar nuevos skills en `bolt-framework/` → se copian automáticamente
+   - Destino: `.github/skills/{nombre-skill}/` (preserva estructura completa)
+   - Log: "Core skill 'bolt-framework' provisioned (always included)" + count de skills
+   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan (sub-tarea 21.4)
 
-    **21.5. Generar reporte de provisión**:
-    - Formato markdown:
+   **21.5. Generar reporte de provisión**:
+   - Formato markdown:
 
-      ```markdown
-      # Bolt Setup Constitution - Provision Report
+     ```markdown
+     # Bolt Setup Constitution - Provision Report
 
-      **Date**: 2026-02-23 14:30:00
-      **Practice**: Apps & Infra
-      **Scopes**: backend, frontend, cloud-platform
+     **Date**: 2026-02-23 14:30:00
+     **Practice**: Apps & Infra
+     **Scopes**: backend, frontend, cloud-platform
 
-      ## Constitution Merge
+     ## Constitution Merge
 
-      ✓ Merged 12 articles from 3 scopes
+     ✓ Merged 12 articles from 3 scopes
 
-      - backend: Articles III, XV, XVI (Tech Stack, Testing, Security)
-      - frontend: Articles III, XV, XVII (Tech Stack, Testing, UI/UX)
-      - cloud-platform: Articles III, XI, XII (Tech Stack, CI/CD, Observability)
+     - backend: Articles III, XV, XVI (Tech Stack, Testing, Security)
+     - frontend: Articles III, XV, XVII (Tech Stack, Testing, UI/UX)
+     - cloud-platform: Articles III, XI, XII (Tech Stack, CI/CD, Observability)
 
-      ## Files Provisioned
+     ## Files Provisioned
 
-      ✓ Copied 8 skills:
+     ✓ Copied 8 skills:
 
-      - skill-branch-management (from .boltf/available-skills)
-      - skill-quality-gates (from .boltf/available-skills)
-        ...
+     - skill-branch-management (from .boltf/available-skills)
+     - skill-quality-gates (from .boltf/available-skills)
+       ...
 
-      ✓ Copied 5 agents:
+     ✓ Copied 5 agents:
 
-      - bolt-testing.agent.md (from backend scope)
-        ...
+     - bolt-testing.agent.md (from backend scope)
+       ...
 
-      ## Warnings
+     ## Warnings
 
-      ⚠ Skipped 2 files (already exist):
+     ⚠ Skipped 2 files (already exist):
 
-      - .github/skills/bolt-framework (existing)
-        ...
+     - .github/skills/bolt-framework (existing)
+       ...
 
-      ## Next Steps
+     ## Next Steps
 
-      1. Review constitution: memory/constitution.md
-      2. Verify skills: .github/skills/
-      3. Start development: Invoke @Bolt Framework
-      ```
+     1. Review constitution: memory/constitution.md
+     2. Verify skills: .github/skills/
+     3. Start development: Invoke @Bolt Framework
+     ```
 
-    - Guardar reporte en `memory/provision-report.md`
-    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan (sub-tarea 21.5)
+   - Guardar reporte en `memory/provision-report.md`
+   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan (sub-tarea 21.5)
 
 2. Crear agente `@Bolt Constitution` que invoca el skill:
-    - Crear `.github/agents/bolt-constitution.agent.md`:
+   - Crear `.github/agents/bolt-constitution.agent.md`:
 
-      ```yaml
-      ---
-      name: Bolt Constitution
-      description: Setup and manage project constitution and file provisioning
-      tools:
-        - edit/editFiles
-        - new
-        - codebase
-      model: claude-sonnet-4.5
-      ---
+     ```yaml
+     ---
+     name: Bolt Constitution
+     description: Setup and manage project constitution and file provisioning
+     tools:
+       - edit/editFiles
+       - new
+       - codebase
+     model: claude-sonnet-4.5
+     ---
 
-      # Bolt Constitution Agent
+     # Bolt Constitution Agent
 
-      You help setup and manage Bolt Framework project constitution.
+     You help setup and manage Bolt Framework project constitution.
 
-      ## Primary Workflow
+     ## Primary Workflow
 
-      When user asks to provision or setup constitution:
-      1. Verify `memory/constitution.md` exists (basic constitution from Init.ps1)
-      2. Verify `memory/scopes.yaml` exists
-      3. Invoke `skill-bolt-setup-constitution` skill (call helper script)
-      4. Show provision report to user
-      5. Ask if user wants to review constitution or start development
+     When user asks to provision or setup constitution:
+     1. Verify `memory/constitution.md` exists (basic constitution from Init.ps1)
+     2. Verify `memory/scopes.yaml` exists
+     3. Invoke `skill-bolt-setup-constitution` skill (call helper script)
+     4. Show provision report to user
+     5. Ask if user wants to review constitution or start development
 
-      ## Commands
+     ## Commands
 
-      - "Setup constitution" → Run provision workflow
-      - "Provision files" → Run provision workflow
-      - "Show provision report" → Display memory/provision-report.md
-      - "Dry run" → Run provision with DryRun flag (preview only)
-      ```
+     - "Setup constitution" → Run provision workflow
+     - "Provision files" → Run provision workflow
+     - "Show provision report" → Display memory/provision-report.md
+     - "Dry run" → Run provision with DryRun flag (preview only)
+     ```
 
-    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 3. Actualizar scope constitutions en `.boltf/scopes/*/memory/constitution.md`:
-    - Verificar que cada scope tiene articles correctos
-    - Ejemplo `backend`:
+   - Verificar que cada scope tiene articles correctos
+   - Ejemplo `backend`:
 
-      ```markdown
-      # Backend Scope Constitution Articles
+     ```markdown
+     # Backend Scope Constitution Articles
 
-      # Article III: Tech Stack (Backend)
+     # Article III: Tech Stack (Backend)
 
-      - APIs: REST with FastAPI/Express/ASP.NET Core
-      - Database: PostgreSQL/MongoDB
-      - ORM: SQLAlchemy/Prisma/Entity Framework
+     - APIs: REST with FastAPI/Express/ASP.NET Core
+     - Database: PostgreSQL/MongoDB
+     - ORM: SQLAlchemy/Prisma/Entity Framework
 
-      # Article XV: Testing Strategy (Backend)
+     # Article XV: Testing Strategy (Backend)
 
-      - API integration tests with Postman/REST Client
-      - Database migrations tested
-      - Unit tests for business logic (>80% coverage)
+     - API integration tests with Postman/REST Client
+     - Database migrations tested
+     - Unit tests for business logic (>80% coverage)
 
-      # Article XVI: Security (Backend)
+     # Article XVI: Security (Backend)
 
-      - Authentication: JWT/OAuth2
-      - Input validation on all endpoints
-      - SQL injection prevention
-      ```
+     - Authentication: JWT/OAuth2
+     - Input validation on all endpoints
+     - SQL injection prevention
+     ```
 
-    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+   - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 ### Phase 5: Validación y Testing
 
@@ -757,7 +747,7 @@ items:
 - Detección automática desde constitution (work-management scope)
 - **📝 Completado**: 2026-02-23 - Commit c6b6f22
 
-⏭️ **27. Crear PR con checklist:** *(OMITIDO - Se creará después del testing manual)*
+⏭️ **27. Crear PR con checklist:** _(OMITIDO - Se creará después del testing manual)_
 
 - [ ] Renombrado completo (Aurora → Bolt Framework)
 - [ ] 5 skills extraídos y creados
@@ -769,7 +759,7 @@ items:
 - [ ] README y docs actualizados
 - **Razón para omitir**: El usuario prefiere completar el testing manual primero
 
-⬜ **28. Testing manual (two-step workflow):** *(PENDIENTE)*
+⬜ **28. Testing manual (two-step workflow):** _(PENDIENTE)_
 
 - **Step 1: Initialization**
   - Ejecutar `Init.ps1` con Practice "Apps & Infra"
@@ -781,7 +771,6 @@ items:
   - Verificar provision report mostrado
   - Verificar constitution completo con articles de backend, frontend, cloud-platform
   - Verificar skills copiados a `.github/skills/`
-
     - **Step 3: Desarrollo**
       - Invocar `@Bolt Framework` agent
       - Verificar skills cargados automáticamente
@@ -1140,7 +1129,7 @@ bolt-setup-constitution/
 
 ### SKILL.md Structure (300-400 líneas)
 
-```markdown
+````markdown
 ---
 name: bolt-setup-constitution
 description: Intelligent provisioning engine for Bolt Framework projects
@@ -1247,6 +1236,7 @@ User: "Setup constitution"
 Agent: Invokes bolt-setup-constitution skill
 Agent: Shows provision report to user
 ```
+````
 
 ### By Manual Script
 
@@ -1482,7 +1472,7 @@ param(
 # - Main orchestration logic
 
 # Implementation details in Phase 4, Step 21.2
-````
+```
 
 ### Integration with @Bolt Constitution Agent
 

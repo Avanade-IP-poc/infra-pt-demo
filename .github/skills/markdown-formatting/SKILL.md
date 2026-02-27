@@ -29,9 +29,9 @@ Don't skip levels (H2 → H4 is wrong)
 Always use fenced blocks with language:
 
 \\\\markdown
-\\\	ypescript
+\\\ ypescript
 interface User {
-  id: string;
+id: string;
 }
 \\\
 
@@ -60,9 +60,9 @@ Common languages: `typescript`, `javascript`, `python`, `bash`, `powershell`, `j
 ### Emphasis
 
 ```markdown
-*italic* or _italic_ (prefer `*`)
-**bold** or __bold__ (prefer `**`)
-***bold italic***
+_italic_ or _italic_ (prefer `*`)
+**bold** or **bold** (prefer `**`)
+**_bold italic_**
 `inline code`
 ```
 
@@ -78,7 +78,7 @@ Common languages: `typescript`, `javascript`, `python`, `bash`, `powershell`, `j
 
 ```markdown
 | Column 1 | Column 2 |
-|----------|----------|
+| -------- | -------- |
 | Data     | Data     |
 ```
 

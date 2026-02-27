@@ -2,11 +2,11 @@
 
 ## Business Calculator Application
 
-**Project Code**: CALC-NEW-2025  
-**Issue Date**: December 9, 2025  
-**Response Deadline**: December 23, 2025  
-**Project Start**: January 2026  
-**Expected Delivery**: March 2026  
+**Project Code**: CALC-NEW-2025
+**Issue Date**: December 9, 2025
+**Response Deadline**: December 23, 2025
+**Project Start**: January 2026
+**Expected Delivery**: March 2026
 
 ---
 
@@ -314,29 +314,29 @@ Without a centralized calculator:
 
 ### 6.1 In Scope
 
-✅ Web-based calculator application  
-✅ User authentication and authorization  
-✅ Calculation history and audit trail  
-✅ Basic and business arithmetic operations  
-✅ Financial functions (interest, PV, FV, PMT)  
-✅ Saved calculation templates  
-✅ API for integrations  
-✅ Responsive UI (desktop, tablet, mobile)  
-✅ Export functionality (CSV, PDF, Excel)  
-✅ User documentation and training materials  
-✅ Deployment to production  
-✅ 3 months post-launch support  
+✅ Web-based calculator application
+✅ User authentication and authorization
+✅ Calculation history and audit trail
+✅ Basic and business arithmetic operations
+✅ Financial functions (interest, PV, FV, PMT)
+✅ Saved calculation templates
+✅ API for integrations
+✅ Responsive UI (desktop, tablet, mobile)
+✅ Export functionality (CSV, PDF, Excel)
+✅ User documentation and training materials
+✅ Deployment to production
+✅ 3 months post-launch support
 
 ### 6.2 Out of Scope
 
-❌ Native mobile apps (iOS/Android)  
-❌ Scientific calculator functions  
-❌ Statistical analysis features  
-❌ Graphing/charting capabilities  
-❌ Integration with accounting systems (future phase)  
-❌ Multi-language support (English only initially)  
-❌ White-label/multi-tenant capability  
-❌ Blockchain/cryptocurrency calculations  
+❌ Native mobile apps (iOS/Android)
+❌ Scientific calculator functions
+❌ Statistical analysis features
+❌ Graphing/charting capabilities
+❌ Integration with accounting systems (future phase)
+❌ Multi-language support (English only initially)
+❌ White-label/multi-tenant capability
+❌ Blockchain/cryptocurrency calculations
 
 ---
 
@@ -344,17 +344,17 @@ Without a centralized calculator:
 
 ### 7.1 Key Milestones
 
-| Phase            | Duration | Deliverable                              |
-| ---------------- | -------- | ---------------------------------------- |
-| **Inception**    | Week 1-2 | Architecture, designs, plan              |
-| **Sprint 1**     | Week 3-4 | Core calculation engine + tests          |
-| **Sprint 2**     | Week 5-6 | User auth + history                      |
-| **Sprint 3**     | Week 7-8 | Business operations + financial functions|
-| **Sprint 4** | Week 9-10 | API + integrations |
-| **Sprint 5** | Week 11-12 | UI polish + documentation |
-| **UAT** | Week 13 | User acceptance testing |
-| **Launch** | Week 14 | Production deployment |
-| **Support** | Week 15-26 | Post-launch support (3 months) |
+| Phase         | Duration   | Deliverable                               |
+| ------------- | ---------- | ----------------------------------------- |
+| **Inception** | Week 1-2   | Architecture, designs, plan               |
+| **Sprint 1**  | Week 3-4   | Core calculation engine + tests           |
+| **Sprint 2**  | Week 5-6   | User auth + history                       |
+| **Sprint 3**  | Week 7-8   | Business operations + financial functions |
+| **Sprint 4**  | Week 9-10  | API + integrations                        |
+| **Sprint 5**  | Week 11-12 | UI polish + documentation                 |
+| **UAT**       | Week 13    | User acceptance testing                   |
+| **Launch**    | Week 14    | Production deployment                     |
+| **Support**   | Week 15-26 | Post-launch support (3 months)            |
 
 **Total Duration**: 14 weeks development + 12 weeks support = 26 weeks
 
@@ -478,13 +478,13 @@ Proposals must include:
 
 ### 10.2 Evaluation Criteria
 
-| Criteria                 | Weight | Description                                |
-| ------------------------ | ------ | ------------------------------------------ |
-| **Technical Approach**   | 35%    | Architecture, stack, methodology           |
-| **Team Qualifications**  | 25%    | Experience, expertise, references          |
-| **Project Plan**         | 20%    | Timeline, milestones, risk management      |
-| **Cost**                 | 15%    | Value for money, transparency              |
-| **Company Stability** | 5% | Financial health, track record |
+| Criteria                | Weight | Description                           |
+| ----------------------- | ------ | ------------------------------------- |
+| **Technical Approach**  | 35%    | Architecture, stack, methodology      |
+| **Team Qualifications** | 25%    | Experience, expertise, references     |
+| **Project Plan**        | 20%    | Timeline, milestones, risk management |
+| **Cost**                | 15%    | Value for money, transparency         |
+| **Company Stability**   | 5%     | Financial health, track record        |
 
 **Minimum Score to Advance**: 70/100
 
@@ -540,16 +540,16 @@ All vendors must:
 
 Project will be considered successful when:
 
-✅ All MUST HAVE functional requirements implemented  
-✅ All MUST HAVE non-functional requirements met  
-✅ Test coverage > 80%  
-✅ Zero critical or high-severity bugs  
-✅ Performance benchmarks achieved  
-✅ Security audit passed  
-✅ UAT sign-off from 10 representative users  
-✅ Documentation complete  
-✅ Training delivered to 20 power users  
-✅ Production deployment successful  
+✅ All MUST HAVE functional requirements implemented
+✅ All MUST HAVE non-functional requirements met
+✅ Test coverage > 80%
+✅ Zero critical or high-severity bugs
+✅ Performance benchmarks achieved
+✅ Security audit passed
+✅ UAT sign-off from 10 representative users
+✅ Documentation complete
+✅ Training delivered to 20 power users
+✅ Production deployment successful
 
 ### 12.2 Key Performance Indicators (KPIs)
 
@@ -588,18 +588,18 @@ Project will be considered successful when:
 
 ### 14.1 RFP Coordinator
 
-**Name**: Jane Smith  
-**Title**: Director of IT Procurement  
-**Email**: <jane.smith@company.com>  
-**Phone**: +1 (555) 123-4567  
-**Office Hours**: Monday-Friday, 9:00 AM - 5:00 PM EST  
+**Name**: Jane Smith
+**Title**: Director of IT Procurement
+**Email**: <jane.smith@company.com>
+**Phone**: +1 (555) 123-4567
+**Office Hours**: Monday-Friday, 9:00 AM - 5:00 PM EST
 
 ### 14.2 Technical Contact
 
-**Name**: John Doe  
-**Title**: Chief Technology Officer  
-**Email**: <john.doe@company.com>  
-**Phone**: +1 (555) 123-4568  
+**Name**: John Doe
+**Title**: Chief Technology Officer
+**Email**: <john.doe@company.com>
+**Phone**: +1 (555) 123-4568
 
 ### 14.3 Questions
 
@@ -680,12 +680,12 @@ Expected Result: $11,614.72
 
 #### END OF RFP
 
-**Document Version**: 1.0  
-**Last Updated**: December 9, 2025  
-**Status**: Open for Proposals  
-**Next Review**: December 23, 2025  
+**Document Version**: 1.0
+**Last Updated**: December 9, 2025
+**Status**: Open for Proposals
+**Next Review**: December 23, 2025
 
 ---
 
-© 2025 Company Name. All Rights Reserved.  
+© 2025 Company Name. All Rights Reserved.
 This RFP is confidential and proprietary.
