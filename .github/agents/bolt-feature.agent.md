@@ -15,7 +15,7 @@ tools:
     'awesome-copilot/*',
     'microsoftdocs/mcp/*',
   ]
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: 📖 Generate Use Cases
     agent: Bolt Use Case
@@ -367,4 +367,4 @@ Create the feature spec file and confirm:
 
 For detailed business analysis guidance:
 
-- `#file:.github/prompts/aurora-business-analysis.prompt.md`
+- [#file:.github/prompts/bolt-business-analysis.prompt.md]

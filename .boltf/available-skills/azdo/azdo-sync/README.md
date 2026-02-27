@@ -1,17 +1,17 @@
 # Azure DevOps Sync Skill
 
-> **Bidirectional synchronization between AURORA-IA-DLC and Azure DevOps**
+> **Bidirectional synchronization between Bolt Framework and Azure DevOps**
 
 ## Overview
 
-This skill enables seamless integration between AURORA methodology artifacts and Azure DevOps work items, ensuring development teams can leverage both the structured AURORA approach and Azure DevOps Boards for project tracking.
+This skill enables seamless integration between Bolt Framework Methodology artifacts and Azure DevOps work items, ensuring development teams can leverage both the structured BOLT approach and Azure DevOps Boards for project tracking.
 
 ## What This Skill Provides
 
 ### ✅ Capabilities
 
 - **Push Sync**: Convert `specs/` folders → Azure DevOps Features/User Stories/Tasks
-- **Pull Sync**: Import existing DevOps work items → AURORA spec structure
+- **Pull Sync**: Import existing DevOps work items → Bolt Framework spec structure
 - **Status Sync**: Update task completion states from DevOps → `planning/tasks.md`
 - **Metadata Tracking**: Maintain bidirectional traceability with `.metadata/devops-sync.json`
 - **Git Integration**: Link commits to work items using `AB#{id}` convention
@@ -19,7 +19,7 @@ This skill enables seamless integration between AURORA methodology artifacts and
 
 ### 📋 Artifact Mappings
 
-| AURORA Artifact                  | Azure DevOps Work Item | Relationship     |
+| BOLT Artifact                    | Azure DevOps Work Item | Relationship     |
 | -------------------------------- | ---------------------- | ---------------- |
 | `specs/XXX-feature-name/`        | **Feature** (or Epic)  | 1:1              |
 | User Story in `requirements.md`  | **User Story**         | N:1 (to Feature) |
@@ -45,14 +45,14 @@ az devops configure --defaults organization=https://dev.azure.com/<your-org> pro
 az devops project show --project "<your-project>"
 ```
 
-### 2. Push AURORA Feature to DevOps
+### 2. Push Bolt Feature to DevOps
 
 ```powershell
-# After creating a feature with @Aurora Feature
-.\.github\skills\azure-devops-sync\scripts\powershell\Sync-AuroraToDevOps.ps1 -FeaturePath "specs/001-time-tracking" -DryRun
+# After creating a feature with @Bolt Feature
+.\.github\skills\azure-devops-sync\scripts\powershell\Sync-BoltToDevOps.ps1 -FeaturePath "specs/001-time-tracking" -DryRun
 
 # If preview looks good, execute:
-.\.github\skills\azure-devops-sync\scripts\powershell\Sync-AuroraToDevOps.ps1 -FeaturePath "specs/001-time-tracking"
+.\.github\skills\azure-devops-sync\scripts\powershell\Sync-BoltToDevOps.ps1 -FeaturePath "specs/001-time-tracking"
 ```
 
 **Result**: Creates Feature work item with child User Stories and Tasks, generates `.metadata/devops-sync.json`
@@ -78,13 +78,13 @@ az boards work-item query `
   --output table
 
 # Import Feature #12345
-.\.github\skills\azure-devops-sync\scripts\powershell\Import-DevOpsToAurora.ps1 `
+.\.github\skills\azure-devops-sync\scripts\powershell\Import-DevOpsToBolt.ps1 `
   -WorkItemId 12345 `
   -OutputPath "specs/001-time-tracking" `
   -IncludeChildren
 ```
 
-**Result**: Generates AURORA spec folder from existing DevOps work items
+**Result**: Generates Bolt Framework spec folder from existing DevOps work items
 
 ## File Structure
 
@@ -107,7 +107,7 @@ specs/001-time-tracking/
 ```json
 {
   "version": "1.0.0",
-  "auroraFeatureId": "001-time-tracking",
+  "boltFeatureId": "001-time-tracking",
   "azureDevOps": {
     "organization": "https://dev.azure.com/<your-org>",
     "project": "<your-project>",
@@ -115,7 +115,7 @@ specs/001-time-tracking/
     "userStories": [
       {
         "workItemId": 12346,
-        "auroraStoryId": "US-001",
+        "boltStoryId": "US-001",
         "title": "Log daily hours",
         "state": "Active"
       }
@@ -123,7 +123,7 @@ specs/001-time-tracking/
     "tasks": [
       {
         "workItemId": 12347,
-        "auroraBoltId": "001-time-tracking-001",
+        "boltTaskId": "001-time-tracking-001",
         "title": "Implement TimeEntry aggregate",
         "state": "Completed"
       }
@@ -136,9 +136,9 @@ specs/001-time-tracking/
 
 ## Scripts Reference
 
-### Sync-AuroraToDevOps.ps1
+### Sync-BoltToDevOps.ps1
 
-**Purpose**: Push AURORA specs → Azure DevOps
+**Purpose**: Push Bolt Framework specs → Azure DevOps
 
 **Parameters**:
 
@@ -150,15 +150,15 @@ specs/001-time-tracking/
 **Example**:
 
 ```powershell
-.\.github\skills\azure-devops-sync\scripts\powershell\Sync-AuroraToDevOps.ps1 `
+.\.github\skills\azure-devops-sync\scripts\powershell\Sync-BoltToDevOps.ps1 `
   -FeaturePath "specs/001-time-tracking" `
   -Mode Incremental `
   -DryRun
 ```
 
-### Import-DevOpsToAurora.ps1
+### Import-DevOpsToBolt.ps1
 
-**Purpose**: Pull Azure DevOps work items → AURORA specs
+**Purpose**: Pull Azure DevOps work items → Bolt Framework specs
 
 **Parameters**:
 
@@ -170,7 +170,7 @@ specs/001-time-tracking/
 **Example**:
 
 ```powershell
-.\.github\skills\azure-devops-sync\scripts\powershell\Import-DevOpsToAurora.ps1 `
+.\.github\skills\azure-devops-sync\scripts\powershell\Import-DevOpsToBolt.ps1 `
   -WorkItemId 12345 `
   -OutputPath "specs/001-time-tracking" `
   -IncludeChildren
@@ -199,12 +199,12 @@ specs/001-time-tracking/
 
 ### 1. Tagging Convention
 
-Always tag work items with `AURORA` for filtering:
+Always tag work items with `BOLT` for filtering:
 
 ```powershell
-# Query all AURORA work items
+# Query all BOLT work items
 az boards work-item query `
-  --wiql "SELECT [System.Id], [System.Title] FROM WorkItems WHERE [System.Tags] CONTAINS 'AURORA'" `
+  --wiql "SELECT [System.Id], [System.Title] FROM WorkItems WHERE [System.Tags] CONTAINS 'BOLT'" `
   --output table
 ```
 
@@ -236,10 +236,10 @@ Related: specs/001-time-tracking/"
 
 ```powershell
 # Preview
-.\.github\skills\azure-devops-sync\scripts\powershell\Sync-AuroraToDevOps.ps1 -FeaturePath "specs/001-time-tracking" -DryRun
+.\.github\skills\azure-devops-sync\scripts\powershell\Sync-BoltToDevOps.ps1 -FeaturePath "specs/001-time-tracking" -DryRun
 
 # Review output, then execute if correct
-.\.github\skills\azure-devops-sync\scripts\powershell\Sync-AuroraToDevOps.ps1 -FeaturePath "specs/001-time-tracking"
+.\.github\skills\azure-devops-sync\scripts\powershell\Sync-BoltToDevOps.ps1 -FeaturePath "specs/001-time-tracking"
 ```
 
 ## CI/CD Integration
@@ -274,7 +274,7 @@ steps:
     displayName: 'Push New Features to DevOps'
     inputs:
       targetType: 'filePath'
-      filePath: '.github/skills/azure-devops-sync/scripts/powershell/Sync-AuroraToDevOps.ps1'
+      filePath: '.github/skills/azure-devops-sync/scripts/powershell/Sync-BoltToDevOps.ps1'
       arguments: '-Mode Incremental'
     env:
       AZURE_DEVOPS_EXT_PAT: $(DevOpsPAT)
@@ -284,7 +284,7 @@ steps:
 
 ### Authentication Errors
 
-```
+```text
 ERROR: Failed to connect to Azure DevOps
 ```
 
@@ -304,7 +304,7 @@ az devops login --organization https://dev.azure.com/<your-org>
 
 ### Duplicate Work Items
 
-```
+```text
 Work item already exists (ID: 12345)
 ```
 
@@ -312,8 +312,8 @@ Work item already exists (ID: 12345)
 
 ### Sync Conflicts
 
-```
-Both AURORA and DevOps modified simultaneously
+```text
+Both BOLT and DevOps modified simultaneously
 ```
 
 **Solution**: Manual merge required. Review both sources and decide which has correct information.
@@ -344,4 +344,4 @@ Both AURORA and DevOps modified simultaneously
 
 **Skill Version**: 1.0.0
 **Last Updated**: 2026-02-13
-**AURORA Compatibility**: 1.0.0+
+**BOLT Compatibility**: 1.0.0+

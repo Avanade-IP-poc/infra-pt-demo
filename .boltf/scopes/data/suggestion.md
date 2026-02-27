@@ -11,6 +11,6 @@ Sin contenido sugerido por ahora, hasta disponer de evidencia concreta en el pro
 ## Fuentes
 
 - `.boltf/docs/templates/requirements-template.md`
-- `.github/prompts/aurora-domain-modeling.prompt.md`
+- `.github/prompts/bolt-domain-modeling.prompt.md`
 - `.boltf/scripts/powershell/Validate-Specs.ps1`
 - `.github/skills/bolt-adr/SKILL.md`

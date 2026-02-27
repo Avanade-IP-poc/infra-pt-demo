@@ -10,5 +10,5 @@ Sin contenido sugerido por ahora, hasta disponer de evidencia concreta en el pro
 
 ## Fuentes
 
-- `.github/prompts/aurora-business-analysis.prompt.md` (mención puntual)
-- `.github/prompts/aurora-decommission.prompt.md` (mención puntual)
+- `.github/prompts/bolt-business-analysis.prompt.md` (mención puntual)
+- `.github/prompts/bolt-decommission.prompt.md` (mención puntual)

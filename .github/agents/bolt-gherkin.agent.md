@@ -15,7 +15,7 @@ tools:
     'awesome-copilot/*',
     'microsoftdocs/mcp/*',
   ]
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: 🧪 Generate Unit Tests (BDD)
     agent: Bolt Testing
@@ -317,4 +317,4 @@ After generating Gherkin scenarios:
 
 For detailed test guidance:
 
-- `#file:.github/prompts/bolt-test-generation.prompt.md`
+- [#file:.github/prompts/bolt-test-generation.prompt.md]

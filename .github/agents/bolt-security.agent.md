@@ -2,7 +2,7 @@
 name: Bolt Security
 description: 🔒 Security Guardian & Policy Enforcer - comprehensive stack-agnostic security analysis with OWASP compliance and constitution-driven policies
 tools: [search, read, memory, web, vscode, agent, 'github/*', 'context7/*', 'microsoftdocs/mcp/*']
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: Security Constitution
     agent: Bolt Constitution
@@ -557,7 +557,7 @@ Constitution requirements:
 
 ## Integration Points
 
-### With Other Aurora Agents
+### With Other Bolt Framework agents
 
 - **Bolt Constitution**: Policy updates and validation
 - **Bolt Review**: Security gate integration

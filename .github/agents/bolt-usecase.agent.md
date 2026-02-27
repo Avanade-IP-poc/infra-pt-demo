@@ -15,7 +15,7 @@ tools:
     'awesome-copilot/*',
     'microsoftdocs/mcp/*',
   ]
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: 🥒 Generate Gherkin
     agent: Bolt Gherkin
@@ -220,4 +220,4 @@ After generating use cases:
 
 For detailed domain modeling:
 
-- `#file:.github/prompts/bolt-domain-modeling.prompt.md`
+- [#file:.github/prompts/bolt-domain-modeling.prompt.md]

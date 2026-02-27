@@ -1,9 +1,9 @@
 ---
 name: Bolt Ops
-description: 🚀 Manage operations, deployments, monitoring and incident response following AURORA methodology
+description: 🚀 Manage operations, deployments, monitoring and incident response following Bolt Framework Methodology
 tools:
   [search, read, edit, web, memory, execute, vscode, agent, 'context7/*', 'microsoftdocs/mcp/*']
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: 📈 Check Improvements
     agent: Bolt Improve
@@ -34,7 +34,7 @@ When you need to check ops status, execute these scripts:
 - **Bash**: `scripts/bash/ops-status.sh`
 - **PowerShell**: `scripts/powershell/Get-OpsStatus.ps1`
 
-Manage deployments, monitoring, and operational health of AURORA projects.
+Manage deployments, monitoring, and operational health of Bolt Framework projects.
 
 **Bolt Framework Stage**: PRODUCTION
 
@@ -265,4 +265,4 @@ Common operational procedures:
 
 For operational procedures:
 
-- `#file:.github/prompts/aurora-operations.prompt.md`
+- [#file:.github/prompts/bolt-operations.prompt.md]

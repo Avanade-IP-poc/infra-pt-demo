@@ -16,7 +16,7 @@ Use this skill when you need to:
 - Manage existing branches (rename, delete, list).
 - Work with commits (view history, create commits).
 - Create and manage pull requests.
-- Ensure that branches follow naming conventions consistently with AURORA framework.
+- Ensure that branches follow naming conventions consistently with BOLT framework.
 - Ensure that a feature branch is properly merged in main after its spec is closed before being
   deleted.
 - Ensure that a bolt branch is properly merged into it's feature branch when de bolt is closed and
@@ -109,7 +109,7 @@ Use this skill when you need to:
 - Eliminar ramas que ya no son necesarias.
 - Ver el árbol de archivos de una rama específica.
 - Verificar el estado de las ramas (actualizadas, desactualizadas).
-- Sincronizar las ramas de acuerdo a la lógica de AURORA.
+- Sincronizar las ramas de acuerdo a la lógica de BOLT Framework.
 
 ### 3. Trabajar con commits
 

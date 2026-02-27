@@ -1,8 +1,8 @@
 ---
 name: Bolt Release
-description: 📦 Orchestrate release process following semantic versioning and AURORA methodology
+description: 📦 Orchestrate release process following semantic versioning and Bolt Framework Methodology
 tools: [search, read, edit, web, execute, vscode, agent, 'context7/*', 'microsoftdocs/mcp/*']
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: 🔍 Pre-release Check
     agent: Bolt Analyze
@@ -273,4 +273,4 @@ npm pack
 
 For release templates:
 
-- `#file:.github/prompts/aurora-release.prompt.md`
+- [#file:.github/prompts/bolt-release.prompt.md]

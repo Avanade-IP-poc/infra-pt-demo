@@ -24,7 +24,7 @@ markdown-formatting/
 
 1. **Read the skill**: [SKILL.md](SKILL.md)
 2. **Choose a template**: See [templates/](templates/)
-3. **Follow best practices**: CommonMark + AURORA conventions
+3. **Follow best practices**: CommonMark + Bolt Framework conventions
 4. **Validate**: Use markdownlint
 
 ### Installation

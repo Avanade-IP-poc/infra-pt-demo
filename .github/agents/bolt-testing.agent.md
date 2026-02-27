@@ -17,7 +17,7 @@ tools:
     'awesome-copilot/*',
     'microsoftdocs/mcp/*',
   ]
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: 🏗️ Implement (TDD Green)
     agent: Bolt Implement
@@ -312,4 +312,4 @@ After generating tests:
 
 For detailed test guidance:
 
-- `#file:.github/prompts/bolt-test-generation.prompt.md`
+- [#file:.github/prompts/bolt-test-generation.prompt.md]

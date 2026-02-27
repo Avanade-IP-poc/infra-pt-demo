@@ -14,7 +14,7 @@ tools:
     'awesome-copilot/*',
     'microsoftdocs/mcp/*',
   ]
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: 🔍 Analyze Consistency
     agent: Bolt Analyze
@@ -355,5 +355,5 @@ EOF
 
 For detailed planning guidance:
 
-- `#file:.github/prompts/aurora-planning.prompt.md`
+- [#file:.github/prompts/bolt-planning.prompt.md]
 ````

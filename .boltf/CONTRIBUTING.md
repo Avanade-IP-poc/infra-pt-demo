@@ -1,3 +1,3 @@
-# Contributing to AURORA-IA / AI-DLC Project
+# Contributing to BOLT-FRAMEWORK / AI-DLC Project
 
 [TBD]

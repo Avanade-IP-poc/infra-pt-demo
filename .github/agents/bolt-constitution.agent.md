@@ -15,15 +15,11 @@ tools:
     'awesome-copilot/*',
     'microsoftdocs/mcp/*',
   ]
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: 🚀 Provision Resources (Phase 4)
     agent: Bolt Provisioner
-    prompt: |
-      Provision all resources for active scopes. Download from Context7, Awesome Copilot, and auto-select relevant skills from available-skills.
-
-      Active scopes: [provide list]
-      Tech stack: [provide from constitution]
+    prompt: "Provision all resources for active scopes. Download from Context7, Awesome Copilot, and auto-select relevant skills from available-skills.\n\nRead active scopes from: .boltf/memory/scopes.yaml\nRead tech stack from: .boltf/memory/constitution.md (Article III)"
     send: false
   - label: ✨ Build Specification
     agent: Bolt Specify
@@ -39,33 +35,7 @@ handoffs:
     send: false
   - label: 📝 Document Architecture
     agent: Bolt ADR
-    prompt: |
-      Create ADR-001 documenting the initial architecture decisions made during Bolt Framework initialization.
-
-      **Context from Initialization**:
-      - Practice: [provide from scopes.yaml]
-      - Active Scopes: [provide list from scopes.yaml]
-      - Aspire Orchestration: [provide use-aspire value from scopes.yaml]
-      - Work Management Tool: [provide work-management-tool from scopes.yaml]
-      - Service Count: [provide if Aspire was detected]
-
-      **Constitution References**:
-      - Article I: Active Scopes
-      - Article III: Tech Stack (scope-specific)
-      - Article XX: Orchestration with .NET Aspire (if enabled)
-
-      **Rationale to Document**:
-      - WHY this Practice was chosen (business domain, team expertise)
-      - WHY these scopes were selected (application requirements)
-      - WHY Aspire orchestration was enabled/disabled (service architecture)
-      - Trade-offs accepted (from constitution articles)
-
-      **Output Format**: ADR-001 in `memory/adrs/` following MADR format
-
-      **References**:
-      - Constitution: .boltf/memory/constitution.md
-      - Scopes Config: .boltf/memory/scopes.yaml
-      - Provision Report: .boltf/memory/provision-report.md
+    prompt: "Create ADR-001 documenting the initial architecture decisions made during Bolt Framework initialization.\n\n**Context from Initialization**:\nRead configuration from .boltf/memory/scopes.yaml:\n- Practice: project.practice field\n- Active Scopes: scopes array (where enabled: true)\n- Aspire Orchestration: project.local-orchestration field\n- Work Management Tool: project.work-management-tool field\n- Service Count: Count folders in src/ or check AppHost.csproj references\n\n**Constitution References**:\n- Article I: Active Scopes\n- Article III: Tech Stack (scope-specific)\n- Article XX: Orchestration with .NET Aspire (if enabled)\n\n**Rationale to Document**:\n- WHY this Practice was chosen (business domain, team expertise)\n- WHY these scopes were selected (application requirements)\n- WHY Aspire orchestration was enabled/disabled (service architecture)\n- Trade-offs accepted (from constitution articles)\n\n**Output Format**: ADR-001 in memory/adrs/ following MADR format\n\n**References**:\n- Constitution: .boltf/memory/constitution.md\n- Scopes Config: .boltf/memory/scopes.yaml\n- Provision Report: .boltf/memory/provision-report.md"
     send: false
 ---
 
@@ -1056,10 +1026,10 @@ The provisioning script encountered an error during execution.
 **Recovery Options**:
 
 A. Retry with verbose logging:
-.\aurora\scripts\powershell\Invoke-BoltSetupConstitution.ps1 -ProjectPath . -Verbose
+.\.boltf\scripts\powershell\Invoke-BoltSetupConstitution.ps1 -ProjectPath . -Verbose
 
 B. Try dry-run to diagnose:
-.\aurora\scripts\powershell\Invoke-BoltSetupConstitution.ps1 -ProjectPath . -DryRun
+.\.boltf\scripts\powershell\Invoke-BoltSetupConstitution.ps1 -ProjectPath . -DryRun
 
 C. Start fresh:
 Remove .boltf/ and .github/ directories and run Init.ps1 again
@@ -1315,6 +1285,6 @@ To change the constitution:
 
 For detailed guidance, reference:
 
-- `#file:.github/prompts/aurora-architecture.prompt.md` - Architecture patterns
-- `#file:.github/prompts/aurora-infrastructure.prompt.md` - Infrastructure setup
-- `#file:.github/prompts/aurora-security-review.prompt.md` - Security policies
+- [#file:.github/prompts/bolt-architecture.prompt.md] - Architecture patterns
+- [#file:.github/prompts/bolt-infrastructure.prompt.md] - Infrastructure setup
+- [#file:.github/prompts/bolt-security-review.prompt.md] - Security policies

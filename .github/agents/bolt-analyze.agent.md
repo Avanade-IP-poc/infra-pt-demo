@@ -1,12 +1,12 @@
 ---
 name: Bolt Analyze
-description: 🔍 Run consistency analysis between all AURORA artifacts ensuring specification-implementation alignment
+description: 🔍 Run consistency analysis between all Bolt Framework artifacts ensuring specification-implementation alignment
 tools:
   [
     search,
     read,
     web,
-    problems,
+    read,
     vscode,
     agent,
     'github/*',
@@ -14,7 +14,7 @@ tools:
     'awesome-copilot/*',
     'microsoftdocs/mcp/*',
   ]
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: 🏗️ Fix Implementation
     agent: Bolt Implement
@@ -258,4 +258,4 @@ features:
 
 For detailed analysis guidance:
 
-- `#file:.github/prompts/aurora-consistency-analysis.prompt.md`
+- [#file:.github/prompts/bolt-consistency-analysis.prompt.md]

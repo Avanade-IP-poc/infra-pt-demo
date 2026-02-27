@@ -8,12 +8,12 @@ description: Bidirectional sync between Bolt Framework specs/ and Azure DevOps w
 ## When to Use
 
 - Push feature specs from `specs/XXX/` to Azure DevOps backlog
-- Pull task status updates from DevOps to AURORA
-- Import existing DevOps work items into AURORA format
-- When creating or updating a feature manually or with @Aurora Feature, @Aurora Clarify or @Aurora Specify agents
-- When creating the Technical Plan with @Aurora Plan agent
-- When creating the Bolt tasks with @Aurora Bolt agent
-- When creating or updating User Stories with @Aurora Use Case agent
+- Pull task status updates from DevOps to BOLT
+- Import existing DevOps work items into Bolt Framework format
+- When creating or updating a feature manually or with @Bolt Feature, @Bolt Clarify or @Bolt Specify agents
+- When creating the Technical Plan with @Bolt Plan agent
+- When creating the Bolt tasks with @Bolt Bolt agent
+- When creating or updating User Stories with @Bolt Use Case agent
 - Whenever the user wantks to synchronize with Azure DevOps
 
 ## Setup
@@ -60,7 +60,7 @@ az devops configure --defaults organization=https://dev.azure.com/<your-org> pro
 
 ## Mappings
 
-| AURORA → DevOps   | Source                         | State Mapping                                          |
+| BOLT → DevOps     | Source                         | State Mapping                                          |
 | ----------------- | ------------------------------ | ------------------------------------------------------ |
 | Feature → Feature | `specs/XXX/feature.md`         | DISCOVERY=New, CONSTRUCTION=Active, PRODUCTION=Closed  |
 | User Story → PBI  | `requirements/requirements.md` | not-started=New, in-progress=Committed, completed=Done |
@@ -74,13 +74,13 @@ az devops configure --defaults organization=https://dev.azure.com/<your-org> pro
 
 ```powershell
 # Push specs to DevOps
-.\.boltf\available-skills\azdo-sync\scripts\powershell\Sync-AuroraToDevOps.ps1 -FeaturePath "specs/001-time-tracking"
+.\.boltf\available-skills\azdo-sync\scripts\powershell\Sync-BoltToDevOps.ps1 -FeaturePath "specs/001-time-tracking"
 
 # Pull status updates
 .\.boltf\available-skills\azdo-sync\scripts\powershell\Sync-DevOpsStatus.ps1 -FeaturePath "specs/001-time-tracking"
 
 # Import existing work item
-.\.boltf\available-skills\azdo-sync\scripts\powershell\Import-DevOpsToAurora.ps1 -WorkItemId 12345 -OutputPath "specs/002-imported"
+.\.boltf\available-skills\azdo-sync\scripts\powershell\Import-DevOpsToBolt.ps1 -WorkItemId 12345 -OutputPath "specs/002-imported"
 
 # Assign work items to a sprint
 .\.boltf\available-skills\azdo-sync\scripts\powershell\Assign-WorkItemsToSprint.ps1 -StartId 31530 -EndId 31604 -SprintNumber 1
@@ -98,15 +98,15 @@ All bash scripts auto-load `.env` from the project root via `_env-loader.sh`. Pa
 
 ```bash
 # Push specs to DevOps
-.boltf/available-skills/azdo-sync/scripts/bash/sync-aurora-to-devops.sh \
+.boltf/available-skills/azdo-sync/scripts/bash/sync-bolt-to-devops.sh \
   -f "specs/001-time-tracking"
 
 # Push specs (dry-run preview)
-.boltf/available-skills/azdo-sync/scripts/bash/sync-aurora-to-devops.sh \
+.boltf/available-skills/azdo-sync/scripts/bash/sync-bolt-to-devops.sh \
   -f "specs/001-time-tracking" -d
 
 # Push specs (full sync, skip confirmation)
-.boltf/available-skills/azdo-sync/scripts/bash/sync-aurora-to-devops.sh \
+.boltf/available-skills/azdo-sync/scripts/bash/sync-bolt-to-devops.sh \
   -f "specs/001-time-tracking" -m full --force
 
 # Pull status updates for one feature
@@ -116,12 +116,12 @@ All bash scripts auto-load `.env` from the project root via `_env-loader.sh`. Pa
 # Pull status for ALL features and auto-commit
 .boltf/available-skills/azdo-sync/scripts/bash/sync-devops-status.sh -c
 
-# Import existing DevOps Feature into AURORA format
-.boltf/available-skills/azdo-sync/scripts/bash/import-devops-to-aurora.sh \
+# Import existing DevOps Feature into Bolt Framework format
+.boltf/available-skills/azdo-sync/scripts/bash/import-devops-to-bolt.sh \
   -i 12345 -o "specs/002-imported"
 
 # Import without children (Feature only)
-.boltf/available-skills/azdo-sync/scripts/bash/import-devops-to-aurora.sh \
+.boltf/available-skills/azdo-sync/scripts/bash/import-devops-to-bolt.sh \
   -i 12345 -o "specs/002-imported" --no-children
 
 # Assign work items to Sprint 1
@@ -181,7 +181,7 @@ git commit -m "feat(AB#12345): Implement core feature logic"
 ## Sprints
 
 - All work items MUST be assigned to the correct sprint based on the current development phase and timeline. This ensures that the work is properly scheduled and can be tracked effectively within Azure DevOps, allowing for better planning and resource allocation throughout the project lifecycle.
-- The synchronization process MUST review first which Sprints are already available in Azure DevOps and create any missing ones based on the AURORA documentation. This ensures that all work items are assigned to the correct sprint and that the project timeline is accurately reflected in Azure DevOps, facilitating better project management and tracking.
+- The synchronization process MUST review first which Sprints are already available in Azure DevOps and create any missing ones based on the BOLT documentation. This ensures that all work items are assigned to the correct sprint and that the project timeline is accurately reflected in Azure DevOps, facilitating better project management and tracking.
 
 ### Iteration Path Format (CRITICAL)
 
@@ -226,9 +226,9 @@ All scripts load configuration from the project-root `.env` file via shared load
 | Script                         | Purpose                                                             |
 | ------------------------------ | ------------------------------------------------------------------- |
 | `_EnvLoader.ps1`               | Shared helper: loads `.env`, builds `$script:Config`, validates PAT |
-| `Sync-AuroraToDevOps.ps1`      | Push AURORA specs to Azure DevOps work items                        |
-| `Sync-DevOpsStatus.ps1`        | Pull task status from DevOps and update AURORA specs                |
-| `Import-DevOpsToAurora.ps1`    | Import existing DevOps work items into AURORA format                |
+| `Sync-BoltToDevOps.ps1`        | Push Bolt Framework specs to Azure DevOps work items                |
+| `Sync-DevOpsStatus.ps1`        | Pull task status from DevOps and update Bolt Framework specs        |
+| `Import-DevOpsToBolt.ps1`      | Import existing DevOps work items into Bolt Framework format        |
 | `Assign-WorkItemsToSprint.ps1` | Bulk assign work items to a sprint/iteration                        |
 | `Fix-DevOpsWorkItems.ps1`      | Fix tags ("Bolt Framework") and parent-child relationships          |
 | `Verify-ParentChildLinks.ps1`  | Verify parent-child link integrity for tasks                        |
@@ -237,15 +237,15 @@ Template versions of the core sync scripts are preserved as `*.template.ps1` for
 
 ### Bash (`scripts/bash/`)
 
-| Script                           | Purpose                                                    |
-| -------------------------------- | ---------------------------------------------------------- |
-| `_env-loader.sh`                 | Shared helper: loads `.env`, sets config vars, validates   |
-| `sync-aurora-to-devops.sh`       | Push AURORA specs to Azure DevOps work items               |
-| `sync-devops-status.sh`          | Pull task status from DevOps and update AURORA specs       |
-| `import-devops-to-aurora.sh`     | Import existing DevOps work items into AURORA format       |
-| `assign-work-items-to-sprint.sh` | Bulk assign work items to a sprint/iteration               |
-| `fix-devops-work-items.sh`       | Fix tags ("Bolt Framework") and parent-child relationships |
-| `verify-parent-child-links.sh`   | Verify parent-child link integrity for tasks               |
+| Script                           | Purpose                                                      |
+| -------------------------------- | ------------------------------------------------------------ |
+| `_env-loader.sh`                 | Shared helper: loads `.env`, sets config vars, validates     |
+| `sync-bolt-to-devops.sh`         | Push Bolt Framework specs to Azure DevOps work items         |
+| `sync-devops-status.sh`          | Pull task status from DevOps and update Bolt Framework specs |
+| `import-devops-to-bolt.sh`       | Import existing DevOps work items into Bolt Framework format |
+| `assign-work-items-to-sprint.sh` | Bulk assign work items to a sprint/iteration                 |
+| `fix-devops-work-items.sh`       | Fix tags ("Bolt Framework") and parent-child relationships   |
+| `verify-parent-child-links.sh`   | Verify parent-child link integrity for tasks                 |
 
 > See [`templates/template.env`](templates/template.env) for a documented list of all environment variables.
 

@@ -16,7 +16,7 @@ tools:
     memory,
     todo,
   ]
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: 📋 Back to Constitution
     agent: Bolt Constitution

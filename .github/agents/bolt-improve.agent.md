@@ -14,7 +14,7 @@ tools:
     'awesome-copilot/*',
     'microsoftdocs/mcp/*',
   ]
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: 🔍 Analyze Consistency
     agent: Bolt Analyze
@@ -276,4 +276,4 @@ Where:
 
 For improvement analysis:
 
-- `#file:.github/prompts/aurora-improvement.prompt.md`
+- [#file:.github/prompts/bolt-improvement.prompt.md]

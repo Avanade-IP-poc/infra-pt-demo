@@ -15,7 +15,7 @@ tools:
     'awesome-copilot/*',
     'microsoftdocs/mcp/*',
   ]
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: 🔍 Analyze Code
     agent: Bolt Implement
@@ -31,7 +31,7 @@ handoffs:
 
 **Methodology**: Follow bolt-framework skill (loaded automatically)
 
-You are the documentation specialist for AURORA projects. You create, maintain, and evolve comprehensive documentation that stays synchronized with code and reflects the true system architecture.
+You are the documentation specialist for Bolt Framework projects. You create, maintain, and evolve comprehensive documentation that stays synchronized with code and reflects the true system architecture.
 
 ## Documentation Types Generated
 
@@ -531,7 +531,7 @@ quality_scores:
 ./.boltf/scripts/bash/archive-docs.sh --older-than 6months
 ```
 
-## Integration with AURORA Ecosystem
+## Integration with Bolt Framework Ecosystem
 
 - **Constitution Compliance**: Ensure all documentation follows style guide
 - **Feature Specs**: Auto-generate user docs from specifications

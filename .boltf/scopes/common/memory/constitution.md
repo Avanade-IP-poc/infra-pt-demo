@@ -24,7 +24,7 @@ Tool Support:
 
 - Skill: `markdown-formatting` (auto-provisioned)
 - Linters: markdownlint, markdown-link-check
-- Conventions: AURORA-specific extensions documented in skill
+- Conventions: BOLT Framework-specific extensions documented in skill
 
 ## Article XXII: Test-Driven Development
 

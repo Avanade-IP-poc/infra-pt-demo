@@ -1,4 +1,4 @@
-# AURORA-IA Project Constitution — Scope: Cloud Platform
+# BOLT Framework Project Constitution — Scope: Cloud Platform
 
 > **Extracted from**: `.boltf/memory/constitution.md`
 > **Scope**: `cloud-platform` — Infrastructure scope, containers, orchestration, IaC, infra monitoring, infra testing, and landing zone templates.
@@ -274,7 +274,7 @@ Select ONE:
 
 ### Section 9.2: IaC Structure
 
-```
+```text
 infra/
 ├── bicep/                      # or terraform/
 │   ├── modules/
@@ -301,7 +301,7 @@ infra/
 
 Landing Zone Pattern: [ ] CAF Enterprise-Scale [ ] Start-Small (single subscription)
 
-#### If CAF Enterprise-Scale:
+#### If CAF Enterprise-Scale
 
 | Component                  | Enabled                       | Notes                                                |
 | -------------------------- | ----------------------------- | ---------------------------------------------------- |
@@ -311,7 +311,7 @@ Landing Zone Pattern: [ ] CAF Enterprise-Scale [ ] Start-Small (single subscript
 | Management                 | [ ] Yes                       | Azure Monitor, Log Analytics, Automation             |
 | Security                   | [ ] Yes                       | Microsoft Defender for Cloud, Sentinel (optional)    |
 
-#### Governance Components:
+#### Governance Components
 
 | Policy                   | Enabled        | Scope                             |
 | ------------------------ | -------------- | --------------------------------- |
@@ -321,9 +321,9 @@ Landing Zone Pattern: [ ] CAF Enterprise-Scale [ ] Start-Small (single subscript
 | Cost Management Budgets  | [ ] Yes        | Per subscription/resource group   |
 | Resource Tags            | [ ] Yes        | Required tags: \_\_\_             |
 
-#### Landing Zone Structure (Bicep):
+#### Landing Zone Structure (Bicep)
 
-```
+```text
 infra/
 ├── platform/
 │   ├── management-groups/
@@ -413,7 +413,7 @@ Select ONE:
 
 ### Section 11.2: Pipeline Stages
 
-#### For Infrastructure:
+#### For Infrastructure
 
 | Stage                | Enabled | Threshold           |
 | -------------------- | ------- | ------------------- |
@@ -423,7 +423,7 @@ Select ONE:
 | **Cost Estimation**  | [ ] Yes | Infracost           |
 | **Compliance Check** | [ ] Yes | Azure Policy        |
 
-#### Deployment Stages:
+#### Deployment Stages
 
 | Stage           | Enabled | Trigger            |
 | --------------- | ------- | ------------------ |
@@ -465,7 +465,7 @@ Select ONE:
 
 ### Section 12.2: Health Checks
 
-```
+```text
 /health       - Full health check
 /health/ready - Readiness probe
 /health/live  - Liveness probe
@@ -501,7 +501,7 @@ Select ONE:
 
 ### Template E: Infrastructure Only - Landing Zone
 
-```
+```text
 project-root/
 ├── platform/
 │   ├── management-groups/
@@ -558,7 +558,7 @@ project-root/
 
 ### Template F: Infrastructure Only - Workload
 
-```
+```text
 project-root/
 ├── infra/
 │   ├── bicep/                    # or terraform/
@@ -640,7 +640,7 @@ Select ONE:
 
 **Recommended Structure (Mono-Repo with Flux)**:
 
-```
+```text
 gitops-repo/
 ├── clusters/
 │   ├── dev/
@@ -1147,7 +1147,7 @@ public static async Task Run([TimerTrigger("0 0 2 * * 0")] TimerInfo timer, ILog
 
 **SLO Formula**:
 
-```
+```text
 SLO = (Good Events / Total Events) × 100%
 
 Example:
@@ -1162,7 +1162,7 @@ Example:
 
 **Calculation**:
 
-```
+```text
 Error Budget = 100% - SLO
 
 Example (99.9% SLO over 30 days):
@@ -1379,7 +1379,7 @@ az chaos experiment create \
 
 **Cost vs Tolerance**:
 
-```
+```text
 Higher Availability = Higher Cost
 
 RPO 0, RTO < 5 min → Active-Active multi-region ($$$$)
@@ -1498,23 +1498,33 @@ az sql failover-group show --name sql-failover-group --resource-group rg-prod --
 
 **Active-Active Pattern** (Azure Front Door + multiple AKS clusters):
 
-```
-┌─────────────────────────────────────────────┐
-│ Azure Front Door (Global Load Balancer)     │
-│ - Priority-based routing                    │
-│ - Health probes every 30 seconds            │
-└──────────┬─────────────────────┬────────────┘
-           │                     │
-    ┌──────▼───────┐      ┌─────▼────────┐
-    │ Region: East US │      │ Region: West Europe │
-    │ AKS Cluster (Primary) │      │ AKS Cluster (DR)   │
-    │ Traffic: 80%  │      │ Traffic: 20%  │
-    └──────┬───────┘      └─────┬────────┘
-           │                     │
-    ┌──────▼───────┐      ┌─────▼────────┐
-    │ Azure SQL (Primary) │      │ Azure SQL (Secondary) │
-    │ Active geo-replication      │
-    └─────────────────────────────┘
+```mermaid
+graph TB
+    AFD["🌐 Azure Front Door (Global Load Balancer)<br/>- Priority-based routing<br/>- Health probes every 30 seconds"]
+
+    subgraph RegionEast["🌎 Region: East US"]
+        AKS1["☸️ AKS Cluster (Primary)<br/>Traffic: 80%"]
+        SQL1["🗄️ Azure SQL (Primary)"]
+        AKS1 --> SQL1
+    end
+
+    subgraph RegionWest["🌍 Region: West Europe"]
+        AKS2["☸️ AKS Cluster (DR)<br/>Traffic: 20%"]
+        SQL2["🗄️ Azure SQL (Secondary)"]
+        AKS2 --> SQL2
+    end
+
+    AFD --> AKS1
+    AFD --> AKS2
+    SQL1 -.->|"Active geo-replication"| SQL2
+
+    style AFD fill:#0078d4,stroke:#005a9e,stroke-width:3px,color:#fff
+    style RegionEast fill:#e1f5ff,stroke:#01579b,stroke-width:2px
+    style RegionWest fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style AKS1 fill:#4caf50,stroke:#2e7d32,color:#fff
+    style AKS2 fill:#ff9800,stroke:#e65100,color:#fff
+    style SQL1 fill:#2196f3,stroke:#1565c0,color:#fff
+    style SQL2 fill:#9c27b0,stroke:#6a1b9a,color:#fff
 ```
 
 **Failover Logic**:
@@ -1579,8 +1589,7 @@ curl https://api.example.com/health
 - Schedule postmortem within 3 business days
 - Update runbook with lessons learned
 
-```
-
+```markdown
 ---
 
 ## Article XVI: Security Policies 🔄
@@ -1664,10 +1673,10 @@ All AI agents operating in this project MUST:
 
 ## Revision History
 
-| Version | Date       | Author              | Changes                                                                                                                                                        |
-| ------- | ---------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Version | Date       | Author              | Changes                                                                                                                                                                                                    |
+| ------- | ---------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 3.0.0   | 2024-02-27 | Bolt Framework Team | Added Article XIV (GitOps), XIV-B (FinOps), XIV-C (SRE), XIV-D (Disaster Recovery) with comprehensive sections on deployment patterns, cost optimization, reliability engineering, and business continuity |
-| 2.1.0   | [DATE]     | [AUTHOR]            | Added Project Scope (App/Infra/Full Stack), Landing Zone templates, Infrastructure testing                                                                    |
-| 2.0.0   | [DATE]     | [AUTHOR]            | Complete rewrite with C#/Node.js options                                                                                                                       |
-| 1.0.0   | [DATE]     | [AUTHOR]            | Initial constitution                                                                                                                                           |
+| 2.1.0   | [DATE]     | [AUTHOR]            | Added Project Scope (App/Infra/Full Stack), Landing Zone templates, Infrastructure testing                                                                                                                 |
+| 2.0.0   | [DATE]     | [AUTHOR]            | Complete rewrite with C#/Node.js options                                                                                                                                                                   |
+| 1.0.0   | [DATE]     | [AUTHOR]            | Initial constitution                                                                                                                                                                                       |
 ```

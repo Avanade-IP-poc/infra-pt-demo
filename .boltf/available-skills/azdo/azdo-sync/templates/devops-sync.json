@@ -1,6 +1,6 @@
 {
     "version": "1.0.0",
-    "auroraFeatureId": "001-feature-name",
+    "boltFeatureId": "001-feature-name",
     "azureDevOps": {
         "organization": "https://dev.azure.com/jdmveira",
         "project": "Registro Horario",
@@ -8,7 +8,7 @@
         "userStories": [
             {
                 "workItemId": 12346,
-                "auroraStoryId": "US-001",
+                "boltStoryId": "US-001",
                 "title": "User story title",
                 "state": "Active"
             }
@@ -16,7 +16,7 @@
         "tasks": [
             {
                 "workItemId": 12347,
-                "auroraBoltId": "001-feature-name-001",
+                "boltTaskId": "001-feature-name-001",
                 "title": "Task title",
                 "state": "To Do"
             }
@@ -26,13 +26,13 @@
     "syncDirection": "bidirectional",
     "_comments": {
         "version": "Metadata schema version",
-        "auroraFeatureId": "Folder name from specs/XXX-feature-name/",
+        "boltFeatureId": "Folder name from specs/XXX-feature-name/",
         "azureDevOps.organization": "Azure DevOps organization URL",
         "azureDevOps.project": "Project name",
         "azureDevOps.featureWorkItemId": "Parent Feature work item ID",
         "azureDevOps.userStories": "Array of User Story mappings",
         "azureDevOps.tasks": "Array of Task mappings",
         "lastSync": "ISO 8601 timestamp of last synchronization",
-        "syncDirection": "bidirectional | aurora-to-devops | devops-to-aurora"
+        "syncDirection": "bidirectional | bolt-to-devops | devops-to-bolt"
     }
 }

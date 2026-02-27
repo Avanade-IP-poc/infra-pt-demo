@@ -1,4 +1,4 @@
-# AURORA-IA Project Constitution — Scope: Data (Analytics)
+# BOLT Framework Project Constitution — Scope: Data (Analytics)
 
 > **Extracted from**: `.boltf/memory/constitution.md`
 > **Scope**: `data` — Analytical data architectures, data platforms, ETL/ELT orchestration, and data governance.
@@ -61,7 +61,7 @@ Select primary architectural pattern:
 
 ### Section 5.3: Storage Format & Optimization
 
-#### Data Format:
+#### Data Format
 
 Select primary format for analytical tables:
 
@@ -73,12 +73,12 @@ Select primary format for analytical tables:
 
 **Format Justification**: Delta Lake recommended for ACID guarantees and ecosystem support
 
-#### Compression:
+#### Compression
 
 - [ ] **Zstandard (zstd)** - Better compression ratio for cold/archival data (~30-40% better than Snappy)
 - [ ] **Snappy** - Faster decompression for frequently accessed hot data
 
-#### Partitioning Strategy:
+#### Partitioning Strategy
 
 - [ ] **Date-based** - `/year=YYYY/month=MM/day=DD` (most common for time-series data)
 - [ ] **Tenant/Customer-based** - `/tenant_id=X/` (multi-tenant architectures)
@@ -273,7 +273,7 @@ Select primary pattern:
 
 ### Section 7.3: Data Ingestion Strategy
 
-#### Batch Ingestion:
+#### Batch Ingestion
 
 | Source System Type | Connector/Tool     | Frequency        | Incremental Load | Change Data Capture (CDC) |
 | ------------------ | ------------------ | ---------------- | ---------------- | ------------------------- |
@@ -289,7 +289,7 @@ Select primary pattern:
 - [ ] **Change Data Capture (CDC)** - Capture inserts/updates/deletes from source logs
 - [ ] **Delta/Incremental files** - Process only new/changed files
 
-#### Streaming Ingestion:
+#### Streaming Ingestion
 
 - [ ] **Azure Event Hubs** - High-throughput event streaming (millions events/sec)
 - [ ] **Azure IoT Hub** - IoT device telemetry and command/control
@@ -303,7 +303,7 @@ Select primary pattern:
 
 Select transformation approach based on workload:
 
-#### For Batch Transformations:
+#### For Batch Transformations
 
 - [ ] **Azure Data Factory Data Flows** - Visual, low-code transformations (GUI-based)
 - [ ] **Databricks Notebooks** - Code-first PySpark/Scala/SQL (full flexibility)
@@ -318,7 +318,7 @@ Select transformation approach based on workload:
 - Use **Databricks Notebooks** for complex logic, ML feature engineering
 - Use **SQL Scripts** for set-based operations close to data
 
-#### For Streaming Transformations:
+#### For Streaming Transformations
 
 - [ ] **Databricks Structured Streaming** - Micro-batch streaming, exactly-once semantics
 - [ ] **Fabric Real-Time Intelligence** - KQL-based streaming analytics
@@ -549,7 +549,7 @@ ANALYZE TABLE gold_sales_fact_sales COMPUTE STATISTICS FOR ALL COLUMNS;
 
 ### Section 9.2: Compute Optimization
 
-#### For Azure Databricks:
+#### For Azure Databricks
 
 - [ ] **Photon Engine** - Vectorized execution engine for SQL/DataFrame operations (2-3x faster)
 - [ ] **Adaptive Query Execution (AQE)** - Runtime query optimization (coalesce partitions, optimize joins)
@@ -563,13 +563,13 @@ ANALYZE TABLE gold_sales_fact_sales COMPUTE STATISTICS FOR ALL COLUMNS;
 - Interactive queries: [ ] Serverless SQL Warehouses (performance-optimized)
 - Streaming: [ ] Fixed-size clusters (predictable performance)
 
-#### For Microsoft Fabric:
+#### For Microsoft Fabric
 
 - [ ] **Serverless SQL Endpoint** - On-demand query execution (pay per query)
 - [ ] **Fabric Warehouse** - Managed SQL warehouse (autoscaling compute)
 - [ ] **Spark Autoscaling** - Dynamic node allocation for notebooks/pipelines
 
-#### For Azure Synapse:
+#### For Azure Synapse
 
 - [ ] **Serverless SQL Pools** - On-demand querying (pay per TB scanned)
 - [ ] **Dedicated SQL Pools** - Reserved capacity for predictable workloads (DWUs)
@@ -749,7 +749,7 @@ ANALYZE TABLE gold_sales_fact_sales COMPUTE STATISTICS FOR ALL COLUMNS;
 
 **Test Pyramid for Data**:
 
-```
+```text
      /\       End-to-End (few, slow)
     /  \
    /____\     Integration (some, medium)

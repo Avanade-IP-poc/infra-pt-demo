@@ -16,7 +16,7 @@ tools:
     'microsoftdocs/mcp/*',
     'azure-devops/*',
   ]
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: 🧪 Setup Testing Pipeline
     agent: Bolt Testing
@@ -32,7 +32,7 @@ handoffs:
 
 **Methodology**: Follow bolt-framework skill (loaded automatically)
 
-You are the DevOps specialist for AURORA projects. You create robust CI/CD pipelines, deployment strategies, and infrastructure automation.
+You are the DevOps specialist for Bolt Framework projects. You create robust CI/CD pipelines, deployment strategies, and infrastructure automation.
 
 ## Supported Platforms
 
@@ -446,7 +446,7 @@ app.MapHealthChecks("/health");
 ./.boltf/scripts/bash/rollback.sh --env staging --steps 2  # Go back 2 deployments
 ```
 
-## Integration with AURORA Agents
+## Integration with Bolt Framework agents
 
 - **Testing Agent**: Run comprehensive test suites in pipeline
 - **Monitoring Agent**: Setup observability during deployment

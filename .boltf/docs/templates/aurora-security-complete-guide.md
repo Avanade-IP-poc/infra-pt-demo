@@ -1,6 +1,6 @@
-# 🔒 Aurora Security Agent - Complete Guide
+# 🔒 Bolt Security Agent - Complete Guide
 
-> **AURORA-IA-DLC v2.2.0** - Comprehensive Security Integration Guide
+> **Bolt Framework v2.2.0** - Comprehensive Security Integration Guide
 
 ## Table of Contents
 
@@ -19,7 +19,7 @@
 
 ## Overview
 
-The Aurora Security Agent is a comprehensive security orchestration system designed to integrate security analysis throughout the AURORA-IA development lifecycle. It provides:
+The Bolt Security Agent is a comprehensive security orchestration system designed to integrate security analysis throughout the BOLT Framework development lifecycle. It provides:
 
 - **Stack-Agnostic Security Analysis**: Automatically detects technology stack and applies appropriate security tools
 - **OWASP Top 10 Compliance**: Built-in checks for all OWASP Top 10 vulnerabilities
@@ -30,9 +30,9 @@ The Aurora Security Agent is a comprehensive security orchestration system desig
 
 ### Architecture
 
-```
+```text
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   Constitution  │────│  Aurora Security │────│   CI/CD Pipeline│
+│   Constitution  │────│  Bolt Security │────│   CI/CD Pipeline│
 │   (Policies)    │    │     Agent        │    │   (Automation)  │
 └─────────────────┘    └──────────────────┘    └─────────────────┘
          │                       │                       │
@@ -53,52 +53,57 @@ The Aurora Security Agent is a comprehensive security orchestration system desig
 
 ### Basic Commands
 
-Invoke the Aurora Security Agent using the `@Aurora Security` handle:
+Invoke the Bolt Security Agent using the `@Bolt Security` handle:
 
-```
-@Aurora Security --analyze [OPTIONS]
-@Aurora Security --validate-constitution
-@Aurora Security --generate-report
-@Aurora Security --setup-ci
+```text
+@Bolt Security --analyze [OPTIONS]
+@Bolt Security --validate-constitution
+@Bolt Security --generate-report
+@Bolt Security --setup-ci
 ```
 
 ### Common Usage Patterns
 
 #### 1. Full Security Analysis
-```
-@Aurora Security --analyze --all --severity medium --compliance owasp
+
+```text
+@Bolt Security --analyze --all --severity medium --compliance owasp
 ```
 
 #### 2. Quick SAST Check
-```
-@Aurora Security --analyze --sast --stack nodejs
+
+```text
+@Bolt Security --analyze --sast --stack nodejs
 ```
 
 #### 3. Dependency Vulnerability Scan
-```
-@Aurora Security --analyze --sca --auto-fix
+
+```text
+@Bolt Security --analyze --sca --auto-fix
 ```
 
 #### 4. Infrastructure Security Review
-```
-@Aurora Security --analyze --infrastructure --include-iac
+
+```text
+@Bolt Security --analyze --infrastructure --include-iac
 ```
 
 #### 5. Constitution Validation
-```
-@Aurora Security --validate-constitution --enforce-policies
+
+```text
+@Bolt Security --validate-constitution --enforce-policies
 ```
 
 ### Advanced Options
 
-| Option | Description | Example |
-|--------|-------------|---------|
-| `--stack` | Override auto-detection | `--stack dotnet` |
-| `--severity` | Minimum severity threshold | `--severity high` |
-| `--compliance` | Compliance framework | `--compliance pci-dss` |
-| `--exclude` | Exclude patterns | `--exclude test/**` |
-| `--output` | Output format | `--output sarif` |
-| `--ci-mode` | CI/CD optimized mode | `--ci-mode` |
+| Option         | Description                | Example                |
+| -------------- | -------------------------- | ---------------------- |
+| `--stack`      | Override auto-detection    | `--stack dotnet`       |
+| `--severity`   | Minimum severity threshold | `--severity high`      |
+| `--compliance` | Compliance framework       | `--compliance pci-dss` |
+| `--exclude`    | Exclude patterns           | `--exclude test/**`    |
+| `--output`     | Output format              | `--output sarif`       |
+| `--ci-mode`    | CI/CD optimized mode       | `--ci-mode`            |
 
 ---
 
@@ -109,6 +114,7 @@ Invoke the Aurora Security Agent using the `@Aurora Security` handle:
 Two equivalent scripts are provided for cross-platform support:
 
 #### Bash Script (Linux/macOS/WSL)
+
 ```bash
 # Full analysis
 ./scripts/bash/security-analysis.sh --all --severity medium
@@ -121,11 +127,12 @@ Two equivalent scripts are provided for cross-platform support:
 ```
 
 #### PowerShell Script (Windows/Cross-platform)
+
 ```powershell
 # Full analysis
 .\scripts\powershell\Security-Analysis.ps1 -All -Severity medium
 
-# Stack-specific analysis  
+# Stack-specific analysis
 .\scripts\powershell\Security-Analysis.ps1 -Stack nodejs -Sast -Sca
 
 # Constitution-driven analysis
@@ -175,15 +182,17 @@ on:
 To customize the security workflow for your project:
 
 1. **Copy the workflow file**:
+
    ```bash
    cp .github/workflows/security-analysis.yml .github/workflows/security.yml
    ```
 
 2. **Customize configuration**:
+
    ```yaml
    env:
-     SEVERITY_THRESHOLD: 'high'        # Adjust threshold
-     COMPLIANCE_STANDARD: 'pci-dss'    # Set compliance framework
+     SEVERITY_THRESHOLD: 'high' # Adjust threshold
+     COMPLIANCE_STANDARD: 'pci-dss' # Set compliance framework
      CONSTITUTION_PATH: 'memory/constitution.md'
    ```
 
@@ -206,24 +215,24 @@ pool:
   vmImage: 'ubuntu-latest'
 
 stages:
-- stage: SecurityAnalysis
-  displayName: 'Security Analysis'
-  jobs:
-  - job: RunSecurityScan
-    displayName: 'Run Security Scan'
-    steps:
-    - checkout: self
-    
-    - script: |
-        chmod +x scripts/bash/security-analysis.sh
-        ./scripts/bash/security-analysis.sh --all --ci-mode
-      displayName: 'Run Aurora Security Analysis'
-    
-    - task: PublishTestResults@2
-      inputs:
-        testResultsFormat: 'JUnit'
-        testResultsFiles: 'reports/security/**/*.xml'
-        testRunTitle: 'Security Analysis Results'
+  - stage: SecurityAnalysis
+    displayName: 'Security Analysis'
+    jobs:
+      - job: RunSecurityScan
+        displayName: 'Run Security Scan'
+        steps:
+          - checkout: self
+
+          - script: |
+              chmod +x scripts/bash/security-analysis.sh
+              ./scripts/bash/security-analysis.sh --all --ci-mode
+            displayName: 'Run Bolt Security Analysis'
+
+          - task: PublishTestResults@2
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: 'reports/security/**/*.xml'
+              testRunTitle: 'Security Analysis Results'
 ```
 
 ---
@@ -238,22 +247,22 @@ Add security policies to your `memory/constitution.md`:
 security:
   policy:
     enabled: true
-    enforcement_level: "strict"
-    compliance_frameworks: ["owasp-top-10"]
-    
+    enforcement_level: 'strict'
+    compliance_frameworks: ['owasp-top-10']
+
   static_analysis:
     enabled: true
     tools:
-      nodejs: ["eslint-security", "semgrep"]
-      dotnet: ["microsoft-code-analysis", "sonaranalyzer"]
-    
+      nodejs: ['eslint-security', 'semgrep']
+      dotnet: ['microsoft-code-analysis', 'sonaranalyzer']
+
   dependency_scanning:
     enabled: true
-    auto_update: "security-only"
-    
+    auto_update: 'security-only'
+
   secrets_management:
     enabled: true
-    vault_provider: "azure-keyvault"
+    vault_provider: 'azure-keyvault'
 ```
 
 ### Template Usage
@@ -273,7 +282,7 @@ cat security-config.yml >> .boltf/memory/constitution.md
 Validate your constitution security configuration:
 
 ```bash
-@Aurora Security --validate-constitution --strict
+@Bolt Security --validate-constitution --strict
 ```
 
 ---
@@ -283,12 +292,14 @@ Validate your constitution security configuration:
 ### Node.js / JavaScript / TypeScript
 
 **Security Tools**:
+
 - **ESLint**: Security-focused linting rules
-- **npm audit**: Native dependency vulnerability scanning  
+- **npm audit**: Native dependency vulnerability scanning
 - **Semgrep**: Static analysis with JavaScript/TypeScript rules
 - **yarn audit**: Alternative dependency scanning for Yarn projects
 
 **Configuration**:
+
 ```json
 // .eslintrc.json
 {
@@ -302,6 +313,7 @@ Validate your constitution security configuration:
 ```
 
 **Key Security Considerations**:
+
 - Prototype pollution vulnerabilities
 - Command injection through user input
 - XSS in client-side code
@@ -310,19 +322,21 @@ Validate your constitution security configuration:
 ### .NET / C#
 
 **Security Tools**:
+
 - **Microsoft Code Analysis**: Built-in .NET security analyzers
 - **SonarAnalyzer**: Advanced static analysis
 - **Semgrep**: Cross-platform static analysis
 - **dotnet list package --vulnerable**: Native vulnerability scanning
 
 **Configuration**:
+
 ```xml
 <!-- Directory.Build.props -->
 <Project>
   <PropertyGroup>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -332,6 +346,7 @@ Validate your constitution security configuration:
 ```
 
 **Key Security Considerations**:
+
 - Deserialization vulnerabilities
 - SQL injection in Entity Framework
 - XSS in Razor views
@@ -340,12 +355,14 @@ Validate your constitution security configuration:
 ### Java / Spring
 
 **Security Tools**:
+
 - **SpotBugs**: Static analysis for Java
 - **PMD**: Source code analyzer
 - **OWASP Dependency Check**: Vulnerability scanning
 - **Semgrep**: Modern static analysis
 
 **Configuration**:
+
 ```xml
 <!-- pom.xml -->
 <plugin>
@@ -356,6 +373,7 @@ Validate your constitution security configuration:
 ```
 
 **Key Security Considerations**:
+
 - Deserialization attacks
 - SQL injection
 - Path traversal
@@ -364,12 +382,14 @@ Validate your constitution security configuration:
 ### Python
 
 **Security Tools**:
+
 - **Bandit**: Security-focused static analyzer for Python
 - **Safety**: Dependency vulnerability scanner
 - **pip-audit**: Official pip security scanner
 - **Semgrep**: Modern static analysis
 
 **Configuration**:
+
 ```toml
 # pyproject.toml
 [tool.bandit]
@@ -378,6 +398,7 @@ skips = ["B101", "B601"]
 ```
 
 **Key Security Considerations**:
+
 - Code injection vulnerabilities
 - Deserialization attacks
 - Server-side template injection (SSTI)
@@ -386,12 +407,14 @@ skips = ["B101", "B601"]
 ### Go / Golang
 
 **Security Tools**:
+
 - **gosec**: Security analyzer for Go
 - **go vet**: Built-in Go analyzer
 - **govulncheck**: Official vulnerability database
 - **Semgrep**: Cross-platform analysis
 
 **Configuration**:
+
 ```json
 // .gosec.json
 {
@@ -402,8 +425,9 @@ skips = ["B101", "B601"]
 ```
 
 **Key Security Considerations**:
+
 - Command injection
-- Path traversal  
+- Path traversal
 - Race conditions
 - Memory safety issues
 
@@ -413,41 +437,41 @@ skips = ["B101", "B601"]
 
 ### SAST (Static Application Security Testing)
 
-| Tool | Languages | Integration | Features |
-|------|-----------|-------------|----------|
-| **Semgrep** | Multi-language | GitHub Actions, CLI | Rule customization, SARIF output |
-| **ESLint Security** | JavaScript/TypeScript | npm, CI/CD | Real-time analysis, IDE integration |
-| **Bandit** | Python | pip, CI/CD | Security-focused, configurable |
-| **gosec** | Go | go install, CI/CD | Go-specific vulnerabilities |
-| **SonarCloud** | Multi-language | GitHub Actions | Quality gates, tech debt |
+| Tool                | Languages             | Integration         | Features                            |
+| ------------------- | --------------------- | ------------------- | ----------------------------------- |
+| **Semgrep**         | Multi-language        | GitHub Actions, CLI | Rule customization, SARIF output    |
+| **ESLint Security** | JavaScript/TypeScript | npm, CI/CD          | Real-time analysis, IDE integration |
+| **Bandit**          | Python                | pip, CI/CD          | Security-focused, configurable      |
+| **gosec**           | Go                    | go install, CI/CD   | Go-specific vulnerabilities         |
+| **SonarCloud**      | Multi-language        | GitHub Actions      | Quality gates, tech debt            |
 
 ### SCA (Software Composition Analysis)
 
-| Tool | Package Managers | Features |
-|------|------------------|----------|
-| **npm audit** | npm, yarn | Native Node.js integration |
-| **Safety** | pip, pipenv | Python vulnerability database |
-| **OWASP Dependency Check** | Maven, Gradle | Multi-language support |
-| **Snyk** | Multi-language | Commercial, advanced features |
-| **GitHub Dependabot** | Multi-language | Native GitHub integration |
+| Tool                       | Package Managers | Features                      |
+| -------------------------- | ---------------- | ----------------------------- |
+| **npm audit**              | npm, yarn        | Native Node.js integration    |
+| **Safety**                 | pip, pipenv      | Python vulnerability database |
+| **OWASP Dependency Check** | Maven, Gradle    | Multi-language support        |
+| **Snyk**                   | Multi-language   | Commercial, advanced features |
+| **GitHub Dependabot**      | Multi-language   | Native GitHub integration     |
 
 ### Secrets Detection
 
-| Tool | Features | Integration |
-|------|----------|-------------|
-| **TruffleHog** | Git history scanning | GitHub Actions |
-| **GitLeaks** | Real-time detection | Pre-commit hooks |
-| **Azure Key Vault** | Secrets management | Azure integration |
-| **HashiCorp Vault** | Enterprise secrets | Multi-cloud |
+| Tool                | Features             | Integration       |
+| ------------------- | -------------------- | ----------------- |
+| **TruffleHog**      | Git history scanning | GitHub Actions    |
+| **GitLeaks**        | Real-time detection  | Pre-commit hooks  |
+| **Azure Key Vault** | Secrets management   | Azure integration |
+| **HashiCorp Vault** | Enterprise secrets   | Multi-cloud       |
 
 ### Infrastructure Security
 
-| Tool | Target | Features |
-|------|--------|----------|
-| **tfsec** | Terraform | Static analysis for IaC |
-| **Checkov** | Multi-IaC | Policy as code |
-| **Docker Bench** | Docker | Container security |
-| **kube-bench** | Kubernetes | CIS benchmarks |
+| Tool             | Target     | Features                |
+| ---------------- | ---------- | ----------------------- |
+| **tfsec**        | Terraform  | Static analysis for IaC |
+| **Checkov**      | Multi-IaC  | Policy as code          |
+| **Docker Bench** | Docker     | Container security      |
+| **kube-bench**   | Kubernetes | CIS benchmarks          |
 
 ---
 
@@ -455,34 +479,37 @@ skips = ["B101", "B601"]
 
 ### OWASP Top 10 2021
 
-| Category | Coverage | Automation | Tools |
-|----------|----------|------------|-------|
-| **A01: Broken Access Control** | Partial | Manual review + SAST | Constitution policies |
-| **A02: Cryptographic Failures** | Good | SAST + Infrastructure | Pattern matching, IaC scan |
-| **A03: Injection** | Excellent | SAST tools | All language-specific SAST |
-| **A04: Insecure Design** | Manual | Architecture review | Constitution validation |
-| **A05: Security Misconfiguration** | Good | Infrastructure scan | IaC tools, container scan |
-| **A06: Vulnerable Components** | Excellent | SCA tools | All dependency scanners |
-| **A07: Authentication Failures** | Good | SAST + Manual | Code analysis + review |
-| **A08: Software/Data Integrity** | Manual | Design review | Constitution compliance |
-| **A09: Security Logging** | Partial | Pattern matching | Log analysis tools |
-| **A10: Server-Side Request Forgery** | Good | SAST tools | Code analysis |
+| Category                             | Coverage  | Automation            | Tools                      |
+| ------------------------------------ | --------- | --------------------- | -------------------------- |
+| **A01: Broken Access Control**       | Partial   | Manual review + SAST  | Constitution policies      |
+| **A02: Cryptographic Failures**      | Good      | SAST + Infrastructure | Pattern matching, IaC scan |
+| **A03: Injection**                   | Excellent | SAST tools            | All language-specific SAST |
+| **A04: Insecure Design**             | Manual    | Architecture review   | Constitution validation    |
+| **A05: Security Misconfiguration**   | Good      | Infrastructure scan   | IaC tools, container scan  |
+| **A06: Vulnerable Components**       | Excellent | SCA tools             | All dependency scanners    |
+| **A07: Authentication Failures**     | Good      | SAST + Manual         | Code analysis + review     |
+| **A08: Software/Data Integrity**     | Manual    | Design review         | Constitution compliance    |
+| **A09: Security Logging**            | Partial   | Pattern matching      | Log analysis tools         |
+| **A10: Server-Side Request Forgery** | Good      | SAST tools            | Code analysis              |
 
 ### Additional Compliance Frameworks
 
 #### PCI DSS (Payment Card Industry)
+
 - Encryption requirements validation
-- Access control verification  
+- Access control verification
 - Network security scanning
 - Audit logging compliance
 
 #### GDPR (General Data Protection Regulation)
+
 - Data classification validation
 - Privacy by design checks
 - Consent management verification
 - Right to be forgotten compliance
 
 #### HIPAA (Healthcare)
+
 - PHI data handling verification
 - Encryption compliance
 - Access audit trails
@@ -499,27 +526,29 @@ skips = ["B101", "B601"]
 **Problem**: "Unable to detect technology stack"
 
 **Solutions**:
+
 ```bash
 # Explicitly specify stack
 ./scripts/bash/security-analysis.sh --stack nodejs
 
 # Check constitution.md format
-@Aurora Security --validate-constitution
+@Bolt Security --validate-constitution
 
 # Verify project structure
 ls -la package.json *.csproj go.mod requirements.txt
 ```
 
-#### 2. Tool Installation Failures  
+#### 2. Tool Installation Failures
 
 **Problem**: Security tools not found
 
 **Solutions**:
+
 ```bash
 # Node.js tools
 npm install -g @semgrep/semgrep eslint
 
-# Python tools  
+# Python tools
 pip install bandit safety pip-audit
 
 # Go tools
@@ -533,6 +562,7 @@ go install github.com/securecodewarrior/gosec/v2/cmd/gosec@latest
 **Problem**: GitHub Actions workflow failing
 
 **Solutions**:
+
 1. Check GitHub Actions logs for specific errors
 2. Verify required secrets are configured
 3. Ensure setup-stack action has correct permissions
@@ -543,20 +573,21 @@ go install github.com/securecodewarrior/gosec/v2/cmd/gosec@latest
 **Problem**: Too many false positive security alerts
 
 **Solutions**:
+
 ```yaml
 # Add exclusions to constitution.md
 security:
   static_analysis:
     rules:
       exclude_patterns:
-        - "test/**"
-        - "**/*.test.*"
-      
+        - 'test/**'
+        - '**/*.test.*'
+
   dependency_scanning:
     exclusions:
-      - package: "lodash"
-        reason: "Dev dependency only"
-        expires: "2024-12-31"
+      - package: 'lodash'
+        reason: 'Dev dependency only'
+        expires: '2024-12-31'
 ```
 
 #### 5. Report Generation Issues
@@ -564,6 +595,7 @@ security:
 **Problem**: Security report not generated properly
 
 **Solutions**:
+
 1. Check write permissions to `reports/security/` directory
 2. Verify all analysis steps completed successfully
 3. Run report generation separately:
@@ -579,7 +611,7 @@ Enable debug mode for detailed troubleshooting:
 # Bash
 DEBUG=1 ./scripts/bash/security-analysis.sh --all
 
-# PowerShell  
+# PowerShell
 $env:DEBUG="1"; .\scripts\powershell\Security-Analysis.ps1 -All
 ```
 
@@ -590,17 +622,18 @@ $env:DEBUG="1"; .\scripts\powershell\Security-Analysis.ps1 -All
 ### Development Workflow
 
 1. **Pre-commit Security Checks**
+
    ```bash
    # Setup pre-commit hooks
    pip install pre-commit
    pre-commit install
-   
+
    # Add security checks to .pre-commit-config.yaml
    repos:
    - repo: local
      hooks:
-     - id: aurora-security-check
-       name: Aurora Security Check
+     - id: bolt-security-check
+       name: Bolt Security Check
        entry: ./scripts/bash/security-analysis.sh --sast --secrets
    ```
 
@@ -610,12 +643,13 @@ $env:DEBUG="1"; .\scripts\powershell\Security-Analysis.ps1 -All
    - Enable real-time vulnerability detection
 
 3. **Regular Security Reviews**
+
    ```bash
    # Weekly dependency updates
-   @Aurora Security --analyze --sca --auto-update
-   
-   # Monthly comprehensive analysis  
-   @Aurora Security --analyze --all --compliance owasp
+   @Bolt Security --analyze --sca --auto-update
+
+   # Monthly comprehensive analysis
+   @Bolt Security --analyze --all --compliance owasp
    ```
 
 ### Security Policy Management
@@ -626,13 +660,14 @@ $env:DEBUG="1"; .\scripts\powershell\Security-Analysis.ps1 -All
    - Regular policy reviews and updates
 
 2. **Risk-Based Approach**
+
    ```yaml
    # Prioritize based on risk
    security:
      thresholds:
-       critical_vulnerabilities: 0    # Zero tolerance
-       high_vulnerabilities: 2        # Limited acceptance  
-       medium_vulnerabilities: 10     # Managed risk
+       critical_vulnerabilities: 0 # Zero tolerance
+       high_vulnerabilities: 2 # Limited acceptance
+       medium_vulnerabilities: 10 # Managed risk
    ```
 
 3. **Continuous Improvement**
@@ -665,13 +700,14 @@ $env:DEBUG="1"; .\scripts\powershell\Security-Analysis.ps1 -All
    - Incremental scanning where possible
 
 2. **Smart Scheduling**
+
    ```yaml
    # Different scan frequencies
    schedule:
-     sast: "every-commit"
-     sca: "daily"  
-     infrastructure: "weekly"
-     penetration-testing: "quarterly"
+     sast: 'every-commit'
+     sca: 'daily'
+     infrastructure: 'weekly'
+     penetration-testing: 'quarterly'
    ```
 
 3. **Result Caching**
@@ -685,10 +721,10 @@ $env:DEBUG="1"; .\scripts\powershell\Security-Analysis.ps1 -All
 
 ### Getting Help
 
-1. **Aurora Security Agent Documentation**
-   - Agent usage: `.github/agents/aurora-security.agent.md`
+1. **Bolt Security Agent Documentation**
+   - Agent usage: `.github/agents/bolt-security.agent.md`
    - Constitution templates: `.boltf/docs/templates/`
-   - Security guide: `.boltf/docs/templates/aurora-security-complete-guide.md`
+   - Security guide: `.boltf/docs/templates/bolt-security-complete-guide.md`
 
 2. **Community Resources**
    - OWASP Top 10 Guide: https://owasp.org/Top10/
@@ -714,13 +750,13 @@ go install -a github.com/securecodewarrior/gosec/v2/cmd/gosec@latest
 # Check for updates to actions in .github/workflows/security-analysis.yml
 
 # Review and update constitution security policies
-@Aurora Security --validate-constitution --update-recommendations
+@Bolt Security --validate-constitution --update-recommendations
 ```
 
 ---
 
-*AURORA-IA Security Agent - Comprehensive security integration for modern development workflows*
+_BOLT Framework Security Agent - Comprehensive security integration for modern development workflows_
 
-**Version**: 2.2.0  
-**Last Updated**: December 2024  
-**Compatibility**: All AURORA-IA supported technology stacks
+**Version**: 2.2.0
+**Last Updated**: December 2024
+**Compatibility**: All BOLT Framework supported technology stacks

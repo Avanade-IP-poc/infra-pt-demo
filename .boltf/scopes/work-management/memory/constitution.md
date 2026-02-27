@@ -1,4 +1,4 @@
-# AURORA-IA Project Constitution — Scope: Work Management
+# BOLT Framework Project Constitution — Scope: Work Management
 
 > **Extracted from**: `.boltf/memory/constitution.md`
 > **Scope**: `work-management` — Synchronization of features, use cases, bolts, tasks, and dependencies with work management systems (Azure DevOps, GitHub Projects, Jira).
@@ -67,7 +67,7 @@ Feature Flag Provider:
 ## Article XI: CI/CD Pipeline 🔄 ⭐
 
 > **📋 Applies to**: ALL project types
-> **⭐ Especially relevant** for work-management: pipeline triggers, branch strategy, and deployment stages map directly to AURORA artefact lifecycle.
+> **⭐ Especially relevant** for work-management: pipeline triggers, branch strategy, and deployment stages map directly to BOLT Framework artefact lifecycle.
 
 ### Section 11.1: CI/CD Platform
 
@@ -78,7 +78,7 @@ Select ONE:
 
 ### Section 11.2: Pipeline Stages
 
-#### For Application Development:
+#### For Application Development
 
 | Stage                  | Enabled | Threshold                          |
 | ---------------------- | ------- | ---------------------------------- |
@@ -92,7 +92,7 @@ Select ONE:
 | **Container Build**    | [ ] Yes | -                                  |
 | **Container Scan**     | [ ] Yes | 0 Critical                         |
 
-#### For Infrastructure:
+#### For Infrastructure
 
 | Stage                | Enabled | Threshold           |
 | -------------------- | ------- | ------------------- |
@@ -102,7 +102,7 @@ Select ONE:
 | **Cost Estimation**  | [ ] Yes | Infracost           |
 | **Compliance Check** | [ ] Yes | Azure Policy        |
 
-#### Deployment Stages:
+#### Deployment Stages
 
 | Stage           | Enabled | Trigger            |
 | --------------- | ------- | ------------------ |
@@ -144,7 +144,7 @@ Select ONE:
 
 ### Section 12.2: Health Checks
 
-```
+```text
 /health       - Full health check
 /health/ready - Readiness probe
 /health/live  - Liveness probe
@@ -211,13 +211,13 @@ All AI agents operating in this project MUST:
 ## Proposed Additions — Work Management Gaps 🆕
 
 > The original constitution has **no work management or project tracking guidance**. The following
-> are recommended practices and Microsoft/Azure technologies for AURORA artefact synchronization.
+> are recommended practices and Microsoft/Azure technologies for BOLT Framework artefact synchronization.
 
-### AURORA Artefact-to-Work-Item Mapping
+### BOLT Framework Artefact-to-Work-Item Mapping
 
-Define the canonical mapping between AURORA methodology artefacts and work management system entities:
+Define the canonical mapping between BOLT Framework Methodology artefacts and work management system entities:
 
-| AURORA Artefact             | Azure DevOps                 | GitHub Projects               | Jira                              |
+| BOLT Artifact               | Azure DevOps                 | GitHub Projects               | Jira                              |
 | --------------------------- | ---------------------------- | ----------------------------- | --------------------------------- |
 | **Feature** (`specs/XXX-*`) | Epic                         | Tracked Issue (label: `epic`) | Epic                              |
 | **Use Case**                | User Story                   | Issue (label: `user-story`)   | Story                             |
@@ -241,7 +241,7 @@ Select ONE primary platform:
 
 #### Spec → Work Item (Push)
 
-When an AURORA agent creates or updates a feature spec (`specs/XXX-feature-name/`):
+When a BOLT Framework agent creates or updates a feature spec (`specs/XXX-feature-name/`):
 
 1. **Auto-create** Epic/Feature work item with title, description, and acceptance criteria from `feature.md`.
 2. **Auto-create** child User Stories from `requirements/` files.
@@ -265,19 +265,19 @@ When work items are updated externally (status changes, re-prioritization):
 
 ### Azure DevOps Boards Configuration
 
-- **Process Template**: Agile (recommended) or Scrum. Map AURORA phases to iteration paths.
-- **Custom Fields**: Add `aurora_feature_id` (text), `aurora_phase` (picklist: Inception/Discovery/Construction/Transition/Production/Retirement), `bolt_number` (integer).
+- **Process Template**: Agile (recommended) or Scrum. Map BOLT Framework phases to iteration paths.
+- **Custom Fields**: Add `bolt_feature_id` (text), `bolt_phase` (picklist: Inception/Discovery/Construction/Transition/Production/Retirement), `bolt_number` (integer).
 - **Work Item Queries**: Pre-built shared queries for:
   - "Current Bolt Tasks" — tasks in active iteration, grouped by feature.
   - "Feature Traceability" — Epic → Stories → Tasks → Commits → PRs → Deployments.
-  - "Phase Dashboard" — Work items by AURORA phase, showing progress and blockers.
+  - "Phase Dashboard" — Work items by BOLT Framework phase, showing progress and blockers.
 - **Dashboards**: Burndown per Bolt, velocity across Bolts, feature completion status, dependency heatmap.
 - **Area Paths**: Map to scope names (`backend`, `frontend`, `cloud-platform`, etc.) for cross-scope filtering.
 - **Iteration Paths**: Map to Bolts: `Bolt-001`, `Bolt-002`, etc. with start/end dates.
 
 ### GitHub Projects v2 Configuration
 
-- **Custom Fields**: `Aurora Feature ID` (text), `Aurora Phase` (single-select), `Bolt` (iteration), `Scope` (single-select), `Priority` (single-select).
+- **Custom Fields**: `Bolt Feature ID` (text), `Bolt Phase` (single-select), `Bolt` (iteration), `Scope` (single-select), `Priority` (single-select).
 - **Views**: Board view per Bolt, Table view for backlog, Roadmap view for feature timeline.
 - **Automations**: Auto-set status when PR is merged, auto-assign to Bolt when issue is labeled, auto-close when all sub-issues resolve.
 - **Labels**: `feature`, `user-story`, `task`, `bug`, `adr`, `scope:backend`, `scope:frontend`, etc.
@@ -286,7 +286,7 @@ When work items are updated externally (status changes, re-prioritization):
 
 End-to-end traceability chain:
 
-```
+```text
 Feature Spec (specs/XXX/)
   → Work Item (Epic/Story/Task)
     → Branch (feature/XXX-*)
@@ -297,7 +297,7 @@ Feature Spec (specs/XXX/)
 ```
 
 - All work item state transitions MUST be logged.
-- AURORA agents MUST reference work item IDs in commit messages and PR descriptions.
+- Bolt Framework agents MUST reference work item IDs in commit messages and PR descriptions.
 - Branch naming convention: `feature/XXX-short-desc` where `XXX` matches the feature spec number.
 
 ### Dependency Management

@@ -1,4 +1,4 @@
-# AURORA-IA / AI-DLC Contract Testing Pipeline
+# Bolt Framework Contract Testing Pipeline
 # This workflow validates BDD/Gherkin contracts against implementation
 
 name: Contract Tests

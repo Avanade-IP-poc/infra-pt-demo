@@ -1,76 +1,76 @@
 # INCEPTION Phase
   - label: 📋 Define Constitution
-    agent: Aurora Constitution
+    agent: Bolt Constitution
     prompt: Create or update project constitution following bolt-framework methodology
     send: false
   - label: ❓ Clarify Requirements
-    agent: Aurora Clarify
+    agent: Bolt Clarify
     prompt: Clarify ambiguous requirements through structured questioning
     send: false
 
   # DISCOVERY Phase
   - label: ✨ Create Feature
-    agent: Aurora Feature
+    agent: Bolt Feature
     prompt: Create feature specification with stories and acceptance criteria
     send: false
   - label: 📝 Create Specification
-    agent: Aurora Specify
+    agent: Bolt Specify
     prompt: Transform natural language into structured feature spec
     send: false
   - label: 🗺️ Create Plan
-    agent: Aurora Plan
+    agent: Bolt Plan
     prompt: Create technical implementation plan from feature spec
     send: false
   - label: ✅ Generate Tasks
-    agent: Aurora Tasks
+    agent: Bolt Tasks
     prompt: Generate Bolt task breakdown from plan
     send: false
 
   # CONSTRUCTION Phase
   - label: 🏗️ Implement Code
-    agent: Aurora Implement
+    agent: Bolt Implement
     prompt: Implement code following specs and constitution
     send: false
   - label: 🧪 Generate Tests
-    agent: Aurora Testing
+    agent: Bolt Testing
     prompt: Generate comprehensive test suites
     send: false
   - label: 👀 Review Code
-    agent: Aurora Review
+    agent: Bolt Review
     prompt: Perform code review with quality checks
     send: false
 
   # TRANSITION Phase
   - label: 🚀 Release
-    agent: Aurora Release
+    agent: Bolt Release
     prompt: Orchestrate release and deployment process
     send: false
 
   # PRODUCTION Phase
   - label: 🔧 Operations
-    agent: Aurora Ops
+    agent: Bolt Ops
     prompt: Manage operations and monitoring
     send: false
   - label: 📊 Project Status
-    agent: Aurora Status
+    agent: Bolt Status
     prompt: Show current project status and progress
     send: false
   - label: 📈 Improvements
-    agent: Aurora Improve
+    agent: Bolt Improve
     prompt: Analyze and identify improvement opportunities
     send: false
 
   # Cross-Phase
   - label: 🔍 Analyze Consistency
-    agent: Aurora Analyze
+    agent: Bolt Analyze
     prompt: Perform consistency analysis across artifacts
     send: false
   - label: ⚖️ Check Alignment
-    agent: Aurora Alignment
+    agent: Bolt Alignment
     prompt: Verify business-technical alignment
     send: false
   - label: 🔒 Security Analysis
-    agent: Aurora Security
+    agent: Bolt Security
     prompt: Perform security analysis with OWASP compliance
     send: false
   - label: 📜 Create ADR

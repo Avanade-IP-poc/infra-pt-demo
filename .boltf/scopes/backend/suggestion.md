@@ -3,8 +3,8 @@
 ## Evidencia encontrada en el proyecto
 
 - Soporte de inicialización backend en `init.sh` y `Init.ps1` (`--backend`, estructuras de `src/backend`).
-- Plantillas backend en `.github/agents/aurora-templates.agent.md`.
-- Convenciones arquitectónicas backend (capas, clean/hexagonal) en `.github/prompts/aurora-code-generation.prompt.md`.
+- Plantillas backend en `.github/agents/bolt-templates.agent.md`.
+- Convenciones arquitectónicas backend (capas, clean/hexagonal) en `.github/prompts/bolt-code-generation.prompt.md`.
 - Plantilla de documentación API en `.boltf/docs/templates/api-documentation-template.md`.
 
 ## Sugerencia de contenido para este scope
@@ -18,6 +18,6 @@
 
 - `init.sh`
 - `Init.ps1`
-- `.github/agents/aurora-templates.agent.md`
-- `.github/prompts/aurora-code-generation.prompt.md`
+- `.github/agents/bolt-templates.agent.md`
+- `.github/prompts/bolt-code-generation.prompt.md`
 - `.boltf/docs/templates/api-documentation-template.md`

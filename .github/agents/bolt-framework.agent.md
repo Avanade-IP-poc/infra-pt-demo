@@ -19,7 +19,7 @@ tools:
   ]
 agents: ['*']
 user-invokable: true
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: 📋 Define Constitution
     agent: Bolt Constitution

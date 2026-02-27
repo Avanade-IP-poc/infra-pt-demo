@@ -2,22 +2,19 @@
 name: Bolt Skill Creator
 description: 🎨 Create, modify, and optimize GitHub Copilot skills using AI-powered skill-creator workflow with iterative testing and benchmarking
 tools: [search, read, edit, web, memory, vscode, agent, 'github/*']
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: 📝 Specify Feature
     agent: Bolt Specify
-    prompt: |
-      Create a feature specification for this skill. The skill should be documented as a feature in the project.
+    prompt: 'Create a feature specification for this skill. The skill should be documented as a feature in the project.'
     send: false
   - label: 🧪 Test Skill
     agent: Bolt Testing
-    prompt: |
-      Create tests for this skill based on the test cases we've defined. Ensure comprehensive coverage.
+    prompt: "Create tests for this skill based on the test cases we've defined. Ensure comprehensive coverage."
     send: false
   - label: 📚 Document Skill
     agent: Bolt Documentation
-    prompt: |
-      Generate comprehensive documentation for this skill including usage examples, best practices, and troubleshooting.
+    prompt: 'Generate comprehensive documentation for this skill including usage examples, best practices, and troubleshooting.'
     send: false
 ---
 

@@ -82,7 +82,7 @@ _italic_ or _italic_ (prefer `*`)
 | Data     | Data     |
 ```
 
-## AURORA Conventions
+## Bolt Framework conventions
 
 - YAML frontmatter for agents/prompts:
   ```yaml

@@ -90,11 +90,11 @@ All outputs must meet these criteria:
 - [ ] [Quality criterion 1]
 - [ ] [Quality criterion 2]
 - [ ] [Quality criterion 3]
-- [ ] Follows AURORA methodology
+- [ ] Follows Bolt Framework Methodology
 - [ ] Passes validation checks
 - [ ] Includes proper documentation
 
-## Integration with AURORA
+## Integration with Bolt Framework
 
 ### DISCOVERY Phase
 

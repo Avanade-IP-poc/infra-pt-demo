@@ -1,4 +1,6 @@
 {
+  "name": "bolt-framework",
+  "private": true,
   "scripts": {
     "validate:scopes:ps": "pwsh -File ./.boltf/scripts/powershell/Validate-Scopes.ps1 -Check",
     "validate:scopes:sh": "bash ./.boltf/scripts/bash/validate-scopes.sh --check",

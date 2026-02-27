@@ -1,6 +1,6 @@
 # Bolt Framework — Toolset Definitions
 
-> Reference for VS Code built-in tools and MCP server tools used by AURORA agents.
+> Reference for VS Code built-in tools and MCP server tools used by Bolt Framework agents.
 >
 > Updated: 2026-02-13 | Based on greedy.agent.md tool inventory
 
@@ -35,7 +35,7 @@ Curated collections of agents, prompts, skills, and instructions.
 
 **Wildcard**: `'awesome-copilot/*'`
 **Use when**: Creating constitutions, initializing workspaces, finding templates, agent examples
-**Critical for**: Bolt Framework, Aurora Constitution, Aurora Templates
+**Critical for**: Bolt Framework, Bolt Constitution, Bolt Templates
 
 ---
 
@@ -361,7 +361,7 @@ Microsoft SQL Server operations.
 
 ---
 
-## Toolset Categories for AURORA Agents
+## Toolset Categories for Bolt Framework agents
 
 > **RECOMMENDED**: Use namespace shortcuts (`search`, `execute`, `read`, `edit`) instead of specific subtools for cleaner, future-proof definitions.
 
@@ -522,38 +522,38 @@ tools: [search, read, edit, vscode, agent, 'ms-mssql.mssql/*', 'context7/*']
 
 ## Agent-to-Toolset Mapping
 
-| Agent                 | Toolset              | MCP Servers                                            |
-| --------------------- | -------------------- | ------------------------------------------------------ |
-| **Bolt Framework**    | INIT_WORKSPACE       | context7, awesome-copilot, microsoftdocs               |
-| aurora-constitution   | CONSTITUTION_BUILDER | context7, awesome-copilot, microsoftdocs               |
-| aurora-templates      | INIT_WORKSPACE       | context7, awesome-copilot, microsoftdocs               |
-| aurora-plan           | FULL_PLANNING        | context7, awesome-copilot, microsoftdocs               |
-| aurora-implement      | FULL_IMPLEMENTATION  | context7, awesome-copilot, microsoftdocs               |
-| aurora-testing        | FULL_IMPLEMENTATION  | context7, awesome-copilot, microsoftdocs               |
-| aurora-review         | FULL_IMPLEMENTATION  | context7, awesome-copilot, microsoftdocs               |
-| aurora-micro-iterator | FULL_IMPLEMENTATION  | context7, awesome-copilot, microsoftdocs               |
-| aurora-feature        | SPEC_FOCUSED         | context7, awesome-copilot, microsoftdocs               |
-| aurora-specify        | SPEC_FOCUSED         | context7, awesome-copilot, microsoftdocs               |
-| aurora-clarify        | SPEC_FOCUSED         | context7, awesome-copilot, microsoftdocs               |
-| aurora-usecase        | SPEC_FOCUSED         | context7, awesome-copilot, microsoftdocs               |
-| aurora-gherkin        | SPEC_FOCUSED         | context7, awesome-copilot, microsoftdocs               |
-| aurora-ddd            | SPEC_FOCUSED         | context7, awesome-copilot, microsoftdocs               |
-| aurora-docs           | DOCS_FOCUSED         | context7, awesome-copilot, microsoftdocs               |
-| bolt-adr              | DOCS_FOCUSED         | context7, awesome-copilot, microsoftdocs               |
-| aurora-postmortem     | DOCS_FOCUSED         | context7, awesome-copilot, microsoftdocs               |
-| aurora-ops            | OPS_FOCUSED          | context7, microsoftdocs                                |
-| aurora-release        | OPS_FOCUSED          | context7, microsoftdocs                                |
-| aurora-monitoring     | OPS_FOCUSED          | context7, microsoftdocs                                |
-| aurora-cicd           | CICD_FOCUSED         | context7, awesome-copilot, microsoftdocs, azure-devops |
-| aurora-security       | SECURITY_FOCUSED     | context7, microsoftdocs                                |
-| aurora-analyze        | FULL_PLANNING        | context7, awesome-copilot, microsoftdocs               |
-| aurora-status         | FULL_PLANNING        | context7, awesome-copilot, microsoftdocs               |
-| aurora-alignment      | FULL_PLANNING        | context7, awesome-copilot, microsoftdocs               |
-| aurora-improve        | FULL_PLANNING        | context7, awesome-copilot, microsoftdocs               |
-| aurora-tasks          | FULL_PLANNING        | context7, awesome-copilot, microsoftdocs               |
-| aurora-architect      | FULL_PLANNING        | context7, awesome-copilot, microsoftdocs               |
-| aurora-retire         | FULL_PLANNING        | context7, awesome-copilot, microsoftdocs               |
-| aurora-deps           | FULL_PLANNING        | context7, awesome-copilot, microsoftdocs               |
+| Agent               | Toolset              | MCP Servers                                            |
+| ------------------- | -------------------- | ------------------------------------------------------ |
+| **Bolt Framework**  | INIT_WORKSPACE       | context7, awesome-copilot, microsoftdocs               |
+| bolt-constitution   | CONSTITUTION_BUILDER | context7, awesome-copilot, microsoftdocs               |
+| bolt-templates      | INIT_WORKSPACE       | context7, awesome-copilot, microsoftdocs               |
+| bolt-plan           | FULL_PLANNING        | context7, awesome-copilot, microsoftdocs               |
+| bolt-implement      | FULL_IMPLEMENTATION  | context7, awesome-copilot, microsoftdocs               |
+| bolt-testing        | FULL_IMPLEMENTATION  | context7, awesome-copilot, microsoftdocs               |
+| bolt-review         | FULL_IMPLEMENTATION  | context7, awesome-copilot, microsoftdocs               |
+| bolt-micro-iterator | FULL_IMPLEMENTATION  | context7, awesome-copilot, microsoftdocs               |
+| bolt-feature        | SPEC_FOCUSED         | context7, awesome-copilot, microsoftdocs               |
+| bolt-specify        | SPEC_FOCUSED         | context7, awesome-copilot, microsoftdocs               |
+| bolt-clarify        | SPEC_FOCUSED         | context7, awesome-copilot, microsoftdocs               |
+| bolt-usecase        | SPEC_FOCUSED         | context7, awesome-copilot, microsoftdocs               |
+| bolt-gherkin        | SPEC_FOCUSED         | context7, awesome-copilot, microsoftdocs               |
+| bolt-ddd            | SPEC_FOCUSED         | context7, awesome-copilot, microsoftdocs               |
+| bolt-docs           | DOCS_FOCUSED         | context7, awesome-copilot, microsoftdocs               |
+| bolt-adr            | DOCS_FOCUSED         | context7, awesome-copilot, microsoftdocs               |
+| bolt-postmortem     | DOCS_FOCUSED         | context7, awesome-copilot, microsoftdocs               |
+| bolt-ops            | OPS_FOCUSED          | context7, microsoftdocs                                |
+| bolt-release        | OPS_FOCUSED          | context7, microsoftdocs                                |
+| bolt-monitoring     | OPS_FOCUSED          | context7, microsoftdocs                                |
+| bolt-cicd           | CICD_FOCUSED         | context7, awesome-copilot, microsoftdocs, azure-devops |
+| bolt-security       | SECURITY_FOCUSED     | context7, microsoftdocs                                |
+| bolt-analyze        | FULL_PLANNING        | context7, awesome-copilot, microsoftdocs               |
+| bolt-status         | FULL_PLANNING        | context7, awesome-copilot, microsoftdocs               |
+| bolt-alignment      | FULL_PLANNING        | context7, awesome-copilot, microsoftdocs               |
+| bolt-improve        | FULL_PLANNING        | context7, awesome-copilot, microsoftdocs               |
+| bolt-tasks          | FULL_PLANNING        | context7, awesome-copilot, microsoftdocs               |
+| bolt-architect      | FULL_PLANNING        | context7, awesome-copilot, microsoftdocs               |
+| bolt-retire         | FULL_PLANNING        | context7, awesome-copilot, microsoftdocs               |
+| bolt-deps           | FULL_PLANNING        | context7, awesome-copilot, microsoftdocs               |
 
 ---
 

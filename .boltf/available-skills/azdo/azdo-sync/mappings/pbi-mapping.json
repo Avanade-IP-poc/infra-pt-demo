@@ -2,30 +2,36 @@
   "$schema": "./mapping-schema.json",
   "workItemType": "Product Backlog Item",
   "referenceName": "Microsoft.VSTS.WorkItemTypes.ProductBacklogItem",
-  "description": "Product Backlog Item - equivalent to User Story in AURORA",
+  "description": "Product Backlog Item - equivalent to User Story in BOLT",
   "color": "009CCC",
   "icon": "icon_book",
-  "auroraArtifact": "specs/XXX-feature-name/requirements/requirements.md (User Story section)",
+  "boltArtifact": "specs/XXX-feature-name/requirements/requirements.md (User Story section)",
   "mappings": {
     "core": {
       "System.Title": {
-        "auroraSource": "requirements.md#user-story.title",
+        "boltSource": "requirements.md#user-story.title",
         "description": "User story title in 'As a [role] I want [goal]' format",
         "required": true,
         "transformation": null,
         "example": "As an employee I want to log daily hours so I can track my time"
       },
       "System.Description": {
-        "auroraSource": "requirements.md#user-story.description",
+        "boltSource": "requirements.md#user-story.description",
         "description": "Detailed user story description",
         "required": false,
         "transformation": "markdown-to-html"
       },
       "System.State": {
-        "auroraSource": "computed:user-story-state",
+        "boltSource": "computed:user-story-state",
         "description": "State based on task completion",
         "required": true,
-        "allowedValues": ["New", "Approved", "Committed", "Done", "Removed"],
+        "allowedValues": [
+          "New",
+          "Approved",
+          "Committed",
+          "Done",
+          "Removed"
+        ],
         "mapping": {
           "not-started": "New",
           "planned": "Approved",
@@ -35,45 +41,53 @@
         "defaultValue": "New"
       },
       "System.AssignedTo": {
-        "auroraSource": "requirements.md#user-story.assignedTo",
+        "boltSource": "requirements.md#user-story.assignedTo",
         "description": "Developer assigned to user story",
         "required": false
       }
     },
     "planning": {
       "Microsoft.VSTS.Scheduling.Effort": {
-        "auroraSource": "requirements.md#user-story.effort",
+        "boltSource": "requirements.md#user-story.effort",
         "description": "Story points or effort estimate",
         "required": false,
         "type": "double",
         "example": 8
       },
       "Microsoft.VSTS.Common.Priority": {
-        "auroraSource": "requirements.md#user-story.priority",
+        "boltSource": "requirements.md#user-story.priority",
         "description": "User story priority",
         "required": false,
-        "allowedValues": [1, 2, 3, 4],
+        "allowedValues": [
+          1,
+          2,
+          3,
+          4
+        ],
         "defaultValue": 2
       }
     },
     "business": {
       "Microsoft.VSTS.Common.BusinessValue": {
-        "auroraSource": "requirements.md#user-story.businessValue",
+        "boltSource": "requirements.md#user-story.businessValue",
         "description": "Business value score",
         "required": false,
         "type": "integer"
       },
       "Microsoft.VSTS.Common.ValueArea": {
-        "auroraSource": "requirements.md#user-story.valueArea",
+        "boltSource": "requirements.md#user-story.valueArea",
         "description": "Value area classification",
         "required": false,
-        "allowedValues": ["Business", "Architectural"],
+        "allowedValues": [
+          "Business",
+          "Architectural"
+        ],
         "defaultValue": "Business"
       }
     },
     "criteria": {
       "Microsoft.VSTS.Common.AcceptanceCriteria": {
-        "auroraSource": "requirements.md#user-story.acceptance-criteria",
+        "boltSource": "requirements.md#user-story.acceptance-criteria",
         "description": "Acceptance criteria from user story",
         "required": false,
         "transformation": "markdown-to-html-list",
@@ -82,19 +96,19 @@
     },
     "classification": {
       "System.AreaPath": {
-        "auroraSource": "inherited:parent-feature",
+        "boltSource": "inherited:parent-feature",
         "description": "Area path inherited from parent Feature",
         "required": true,
         "transformation": "path"
       },
       "System.IterationPath": {
-        "auroraSource": "planning/tasks.md#iteration",
+        "boltSource": "planning/tasks.md#iteration",
         "description": "Sprint assignment for this user story",
         "required": false,
         "transformation": "path"
       },
       "System.Tags": {
-        "auroraSource": "computed:tags",
+        "boltSource": "computed:tags",
         "description": "Tags including feature ID and story ID",
         "required": false,
         "transformation": "semicolon-separated",
@@ -107,14 +121,14 @@
     "parent": {
       "linkType": "System.LinkTypes.Hierarchy-Reverse",
       "targetType": "Feature",
-      "auroraSource": "computed:parent-feature",
+      "boltSource": "computed:parent-feature",
       "description": "Parent Feature work item",
       "required": true
     },
     "children": {
       "linkType": "System.LinkTypes.Hierarchy-Forward",
       "targetType": "Task",
-      "auroraSource": "planning/tasks.md#bolt-tasks-for-story",
+      "boltSource": "planning/tasks.md#bolt-tasks-for-story",
       "description": "Bolt tasks implementing this user story"
     }
   },

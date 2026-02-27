@@ -1,4 +1,4 @@
-# AURORA-IA Project Constitution — Scope: Frontend
+# BOLT Framework Project Constitution — Scope: Frontend
 
 > **Extracted from**: `.boltf/memory/constitution.md`
 > **Scope**: `frontend` — Frontend framework, architecture, mobile, authentication flows, E2E testing, and code standards.
@@ -144,7 +144,7 @@ Select ONE:
 
 ### Section 11.2: Pipeline Stages
 
-#### For Application Development:
+#### For Application Development
 
 | Stage                  | Enabled | Threshold                          |
 | ---------------------- | ------- | ---------------------------------- |
@@ -158,7 +158,7 @@ Select ONE:
 | **Container Build**    | [ ] Yes | -                                  |
 | **Container Scan**     | [ ] Yes | 0 Critical                         |
 
-#### Deployment Stages:
+#### Deployment Stages
 
 | Stage           | Enabled | Trigger            |
 | --------------- | ------- | ------------------ |
@@ -200,7 +200,7 @@ Select ONE:
 
 ### Section 12.2: Health Checks
 
-```
+```text
 /health       - Full health check
 /health/ready - Readiness probe
 /health/live  - Liveness probe
@@ -241,7 +241,7 @@ Select ONE:
 
 ### Section 14.1: Naming Conventions
 
-#### For Node.js/TypeScript (Frontend):
+#### For Node.js/TypeScript (Frontend)
 
 | Element    | Convention       | Example            |
 | ---------- | ---------------- | ------------------ |

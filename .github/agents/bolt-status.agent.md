@@ -14,7 +14,7 @@ tools:
     'awesome-copilot/*',
     'microsoftdocs/mcp/*',
   ]
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: 🔍 Run Analysis
     agent: Bolt Analyze
@@ -295,4 +295,4 @@ Not yet in production.
 
 For status templates:
 
-- `#file:.github/prompts/aurora-status.prompt.md`
+- [#file:.github/prompts/bolt-status.prompt.md]

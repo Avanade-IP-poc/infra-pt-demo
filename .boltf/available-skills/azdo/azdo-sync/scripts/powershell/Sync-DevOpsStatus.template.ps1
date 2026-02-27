@@ -52,14 +52,14 @@ function Write-StatusMessage {
         [ValidateSet("Info", "Success", "Warning", "Error")]
         [string]$Type = "Info"
     )
-    
+
     $color = switch ($Type) {
         "Info"    { "Cyan" }
         "Success" { "Green" }
         "Warning" { "Yellow" }
         "Error"   { "Red" }
     }
-    
+
     Write-Host "[$Type] $Message" -ForegroundColor $color
 }
 
@@ -69,7 +69,7 @@ function Get-AllFeatures {
         Write-StatusMessage "No specs/ folder found" -Type Warning
         return @()
     }
-    
+
     return Get-ChildItem -Path $specsPath -Directory | Where-Object {
         Test-Path (Join-Path $_.FullName ".metadata\devops-sync.json")
     }
@@ -77,32 +77,32 @@ function Get-AllFeatures {
 
 function Sync-FeatureStatus {
     param([string]$Path)
-    
+
     $featureId = Split-Path $Path -Leaf
     Write-StatusMessage "Syncing $featureId..." -Type Info
-    
+
     # Load metadata
     $metadataPath = Join-Path $Path ".metadata\devops-sync.json"
     if (-not (Test-Path $metadataPath)) {
         Write-StatusMessage "No sync metadata found, skipping" -Type Warning
         return $false
     }
-    
+
     $metadata = Get-Content $metadataPath -Raw | ConvertFrom-Json
-    
+
     if (-not $metadata.azureDevOps.tasks -or $metadata.azureDevOps.tasks.Count -eq 0) {
         Write-StatusMessage "No tasks to sync" -Type Warning
         return $false
     }
-    
+
     # Query task states from DevOps
     $updates = @()
-    
+
     foreach ($task in $metadata.azureDevOps.tasks) {
         try {
             $workItem = az boards work-item show --id $task.workItemId --output json | ConvertFrom-Json
             $currentState = $workItem.fields.'System.State'
-            
+
             if ($currentState -ne $task.state) {
                 Write-StatusMessage "  Task #$($task.workItemId): $($task.state) → $currentState" -Type Info
                 $updates += @{
@@ -111,7 +111,7 @@ function Sync-FeatureStatus {
                     NewState = $currentState
                     Title    = $task.title
                 }
-                
+
                 # Update metadata
                 $task.state = $currentState
             }
@@ -120,62 +120,62 @@ function Sync-FeatureStatus {
             Write-StatusMessage "  Failed to query task #$($task.workItemId): $_" -Type Warning
         }
     }
-    
+
     if ($updates.Count -eq 0) {
         Write-StatusMessage "  No status changes detected" -Type Success
         return $false
     }
-    
+
     # Update tasks.md
     $tasksPath = Join-Path $Path "planning\tasks.md"
     if (-not (Test-Path $tasksPath)) {
         Write-StatusMessage "  No tasks.md found" -Type Warning
         return $false
     }
-    
+
     $content = Get-Content $tasksPath -Raw
     $modified = $false
-    
+
     foreach ($update in $updates) {
         # Update checkbox state based on Azure DevOps state
         $newCheckbox = if ($update.NewState -in @('Completed', 'Closed')) { '[x]' } else { '[ ]' }
-        
+
         # Pattern: - [x] or - [ ] followed by task title
         $escapedTitle = [regex]::Escape($update.Title)
         $pattern = "(?m)^- \[([ x])\] ($escapedTitle.*?)$"
-        
+
         if ($content -match $pattern) {
             $oldCheckbox = $matches[1]
             $fullLine = $matches[0]
-            
+
             # Only update if checkbox state changed
-            if (($oldCheckbox -eq ' ' -and $newCheckbox -eq '[x]') -or 
+            if (($oldCheckbox -eq ' ' -and $newCheckbox -eq '[x]') -or
                 ($oldCheckbox -eq 'x' -and $newCheckbox -eq '[ ]')) {
-                
+
                 $newLine = $fullLine -replace '- \[([ x])\]', "- $newCheckbox"
                 $content = $content -replace [regex]::Escape($fullLine), $newLine
                 $modified = $true
-                
+
                 Write-StatusMessage "    Updated: $($update.Title)" -Type Success
             }
         }
     }
-    
+
     if ($modified) {
         # Add sync timestamp comment
         $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
         $content += "`n`n<!-- Last synced with Azure DevOps: $timestamp -->`n"
-        
+
         $content | Set-Content $tasksPath -Encoding UTF8 -NoNewline
-        
+
         # Update metadata timestamp
         $metadata.lastSync = (Get-Date).ToUniversalTime().ToString("o")
         $metadata | ConvertTo-Json -Depth 10 | Set-Content $metadataPath -Encoding UTF8
-        
+
         Write-StatusMessage "  Updated $($updates.Count) task(s)" -Type Success
         return $true
     }
-    
+
     return $false
 }
 
@@ -184,9 +184,9 @@ function Sync-FeatureStatus {
 # =============================================================================
 
 Write-Host @"
-╔═══════════════════════════════════════════════════════════════════════════╗
-║             Azure DevOps Status → AURORA Sync                             ║
-╚═══════════════════════════════════════════════════════════════════════════╝
+╔══════════════════════════════════════════════════════════════════════╗
+║             Azure DevOps Status → BOLT Sync                          ║
+╚══════════════════════════════════════════════════════════════════════╝
 "@ -ForegroundColor Cyan
 
 $anyChanges = $false
@@ -197,21 +197,21 @@ if ($FeaturePath) {
         Write-StatusMessage "Feature path not found: $FeaturePath" -Type Error
         exit 1
     }
-    
+
     $changed = Sync-FeatureStatus -Path $FeaturePath
     $anyChanges = $changed
 }
 else {
     # Sync all features
     $features = Get-AllFeatures
-    
+
     if ($features.Count -eq 0) {
         Write-StatusMessage "No features with sync metadata found" -Type Warning
         exit 0
     }
-    
+
     Write-StatusMessage "Found $($features.Count) synced feature(s)" -Type Info
-    
+
     foreach ($feature in $features) {
         $changed = Sync-FeatureStatus -Path $feature.FullName
         $anyChanges = $anyChanges -or $changed
@@ -221,13 +221,13 @@ else {
 # Auto-commit if requested
 if ($anyChanges -and $AutoCommit) {
     Write-StatusMessage "`nCommitting changes..." -Type Info
-    
+
     git add specs/
     git commit -m "chore: Sync task statuses from Azure DevOps
 
 Automated sync at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')
 Updated task completion states from Azure DevOps Boards"
-    
+
     if ($LASTEXITCODE -eq 0) {
         Write-StatusMessage "Changes committed successfully" -Type Success
     }

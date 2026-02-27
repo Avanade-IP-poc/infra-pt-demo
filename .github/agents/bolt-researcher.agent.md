@@ -80,7 +80,7 @@ tools:
     github/update_pull_request_branch,
     memory,
   ]
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: 🏛️ Create Architecture
     agent: Bolt Architect

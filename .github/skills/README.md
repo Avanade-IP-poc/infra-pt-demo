@@ -1,4 +1,4 @@
-# AURORA Skills - Capacidades Especializadas para GitHub Copilot
+# Bolt Framework Skills - Capacidades Especializadas para GitHub Copilot
 
 Este directorio contiene **skills** personalizados que proporcionan conocimiento de dominio especializado y flujos de trabajo refinados para GitHub Copilot.
 
@@ -127,31 +127,31 @@ graph LR
     I -->|No| J[Deprecar]
 ```
 
-## Skills Sugeridos para AURORA
+## Skills Sugeridos para Bolt Framework
 
 ### Alta Prioridad
 
 1. ✅ **new-skill** - Creación de skills (IMPLEMENTADO)
-2. 🔲 **aurora-testing** - Testing strategies (TDD, BDD, mutation testing)
-3. 🔲 **aurora-api-design** - RESTful API design patterns
-4. 🔲 **aurora-ddd** - Domain-Driven Design implementation
-5. 🔲 **aurora-security** - Security best practices (OWASP)
+2. 🔲 **bolt-testing** - Testing strategies (TDD, BDD, mutation testing)
+3. 🔲 **bolt-api-design** - RESTful API design patterns
+4. 🔲 **bolt-ddd** - Domain-Driven Design implementation
+5. 🔲 **bolt-security** - Security best practices (OWASP)
 
 ### Media Prioridad
 
-6. 🔲 **aurora-performance** - Performance optimization
-7. 🔲 **aurora-documentation** - Documentation standards
-8. 🔲 **aurora-error-handling** - Error handling patterns
-9. 🔲 **aurora-database** - Database design and optimization
-10. 🔲 **aurora-ci-cd** - CI/CD pipeline best practices
+6. 🔲 **bolt-performance** - Performance optimization
+7. 🔲 **bolt-documentation** - Documentation standards
+8. 🔲 **bolt-error-handling** - Error handling patterns
+9. 🔲 **bolt-database** - Database design and optimization
+10. 🔲 **bolt-ci-cd** - CI/CD pipeline best practices
 
 ### Baja Prioridad
 
-11. 🔲 **aurora-monitoring** - Observability and logging
-12. {aurora-ux\*\* - UX/UI patterns
-13. 🔲 **aurora-accessibility** - Accessibility (WCAG)
-14. 🔲 **aurora-i18n** - Internationalization
-15. 🔲 **aurora-migration** - Legacy code migration
+11. 🔲 **bolt-monitoring** - Observability and logging
+12. 🔲 **bolt-ux** - UX/UI patterns
+13. 🔲 **bolt-accessibility** - Accessibility (WCAG)
+14. 🔲 **bolt-i18n** - Internationalization
+15. 🔲 **bolt-migration** - Legacy code migration
 
 ## Comandos Útiles
 
@@ -228,7 +228,7 @@ Un skill de alta calidad debe:
 **Respuesta**: Sí, usa:
 
 - Changelog en cada SKILL.md
-- Commits semánticos: `feat(skills): add aurora-testing skill`
+- Commits semánticos: `feat(skills): add bolt-testing skill`
 - Tags de versión en cambios mayores
 
 ## Contribuir
@@ -259,7 +259,7 @@ Un skill de alta calidad debe:
 
 - 📖 [Guía detallada de creación](./new-skill/SKILL.md)
 - 📝 [Plantilla base](./new-skill/templates/skill-template.md)
-- 🏛️ [AURORA Methodology](../copilot-instructions.md)
+- 🏛️ [Bolt Framework Methodology](../copilot-instructions.md)
 
 ### Herramientas
 
@@ -277,5 +277,5 @@ Un skill de alta calidad debe:
 ---
 
 **Última actualización**: 2026-02-12
-**Mantenido por**: AURORA Team
+**Mantenido por**: Bolt Framework Team
 **Licencia**: MIT

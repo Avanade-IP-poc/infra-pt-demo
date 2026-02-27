@@ -17,7 +17,7 @@ tools:
     'awesome-copilot/*',
     'microsoftdocs/mcp/*',
   ]
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: 🧪 Generate Tests
     agent: Bolt Testing
@@ -275,4 +275,4 @@ az boards work-item update \
 
 For detailed code generation:
 
-- `#file:.github/prompts/aurora-code-generation.prompt.md`
+- [#file:.github/prompts/bolt-code-generation.prompt.md]

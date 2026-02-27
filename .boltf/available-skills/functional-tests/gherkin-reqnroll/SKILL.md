@@ -238,7 +238,7 @@ dotnet test --filter Category=happy-path
 dotnet test && reqnroll-report
 ```
 
-## Integration with AURORA
+## Integration with Bolt Framework
 
 ### From User Story to Gherkin
 

@@ -1,4 +1,4 @@
-# AURORA-IA Project Constitution — Scope: Backend
+# BOLT Framework Project Constitution — Scope: Backend
 
 > **Extracted from**: `.boltf/memory/constitution.md`
 > **Scope**: `backend` — Backend language, runtime, architecture, data, caching, identity, containers, testing, and code standards.
@@ -207,13 +207,13 @@ Select ONE:
 
 ### Section 5.2: Data Access Pattern
 
-#### For C#/.NET:
+#### For C#/.NET
 
 - [ ] **Entity Framework Core** - Full ORM
 - [ ] **Dapper** - Micro-ORM, performance-focused
 - [ ] **EF Core + Dapper** - EF for writes, Dapper for reads (CQRS)
 
-#### For Node.js/TypeScript:
+#### For Node.js/TypeScript
 
 - [ ] **Prisma** - Type-safe ORM
 - [ ] **TypeORM** - Active Record / Data Mapper
@@ -225,13 +225,13 @@ Unit of Work Pattern: [ ] Yes [ ] No
 
 ### Section 5.3: Database Migrations
 
-#### For C#/.NET:
+#### For C#/.NET
 
 - [ ] **EF Core Migrations** - Code-first
 - [ ] **DbUp** - SQL scripts
 - [ ] **FluentMigrator** - Fluent API
 
-#### For Node.js/TypeScript:
+#### For Node.js/TypeScript
 
 - [ ] **Prisma Migrate** - Integrated with Prisma
 - [ ] **TypeORM Migrations** - Integrated with TypeORM
@@ -441,7 +441,7 @@ Select ONE:
 
 ### Section 11.2: Pipeline Stages
 
-#### For Application Development:
+#### For Application Development
 
 | Stage                  | Enabled | Threshold                          |
 | ---------------------- | ------- | ---------------------------------- |
@@ -455,7 +455,7 @@ Select ONE:
 | **Container Build**    | [ ] Yes | -                                  |
 | **Container Scan**     | [ ] Yes | 0 Critical                         |
 
-#### Deployment Stages:
+#### Deployment Stages
 
 | Stage           | Enabled | Trigger            |
 | --------------- | ------- | ------------------ |
@@ -497,7 +497,7 @@ Select ONE:
 
 ### Section 12.2: Health Checks
 
-```
+```text
 /health       - Full health check
 /health/ready - Readiness probe
 /health/live  - Liveness probe
@@ -522,7 +522,7 @@ Select ONE:
 
 ### Section 13.2: Testing Frameworks
 
-#### For C#/.NET:
+#### For C#/.NET
 
 | Type               | Framework              |
 | ------------------ | ---------------------- |
@@ -533,7 +533,7 @@ Select ONE:
 | E2E Tests          | Playwright             |
 | Performance Tests  | NBomber / k6           |
 
-#### For Node.js/TypeScript:
+#### For Node.js/TypeScript
 
 | Type               | Framework             |
 | ------------------ | --------------------- |
@@ -546,9 +546,9 @@ Select ONE:
 
 ### Section 13.3: Test Project Structure
 
-#### For C#/.NET:
+#### For C#/.NET
 
-```
+```text
 tests/
 ├── {Module}.UnitTests/
 ├── {Module}.IntegrationTests/
@@ -560,9 +560,9 @@ tests/
     └── Builders/
 ```
 
-#### For Node.js/TypeScript:
+#### For Node.js/TypeScript
 
-```
+```text
 src/
 ├── modules/
 │   └── {module}/
@@ -585,7 +585,7 @@ tests/
 
 ### Section 14.1: Naming Conventions
 
-#### For C#/.NET:
+#### For C#/.NET
 
 | Element        | Convention     | Example                      |
 | -------------- | -------------- | ---------------------------- |
@@ -597,7 +597,7 @@ tests/
 | Private fields | \_camelCase    | `_orderRepository`           |
 | Async methods  | Suffix Async   | `GetOrderByIdAsync`          |
 
-#### For Node.js/TypeScript:
+#### For Node.js/TypeScript
 
 | Element    | Convention       | Example            |
 | ---------- | ---------------- | ------------------ |
@@ -610,7 +610,7 @@ tests/
 
 ### Section 14.2: Code Formatting
 
-#### For C#/.NET:
+#### For C#/.NET
 
 | Setting                  | Value                         |
 | ------------------------ | ----------------------------- |
@@ -620,7 +620,7 @@ tests/
 | Nullable reference types | [ ] Enabled (recommended)     |
 | Tooling                  | .editorconfig + dotnet format |
 
-#### For Node.js/TypeScript:
+#### For Node.js/TypeScript
 
 | Setting     | Value                 |
 | ----------- | --------------------- |
@@ -636,11 +636,11 @@ tests/
 
 > **📋 Applies to**: Application Development, Full Stack
 > **Auto-generated based on selections above.**
-> Run `/aurora.scaffold` to generate the project structure.
+> Run `/bolt.scaffold` to generate the project structure.
 
 ### Template A: C# + Modular Monolith
 
-```
+```text
 project-root/
 ├── src/
 │   ├── Modules/
@@ -667,7 +667,7 @@ project-root/
 
 ### Template B: C# + Microservices
 
-```
+```text
 project-root/
 ├── src/
 │   ├── Services/
@@ -692,7 +692,7 @@ project-root/
 
 ### Template C: Node.js + Modular Monolith
 
-```
+```text
 project-root/
 ├── src/
 │   ├── modules/
@@ -718,7 +718,7 @@ project-root/
 
 ### Template D: Node.js + Microservices
 
-```
+```text
 project-root/
 ├── services/
 │   ├── orders/

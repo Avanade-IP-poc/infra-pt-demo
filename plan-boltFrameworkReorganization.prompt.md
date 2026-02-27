@@ -259,7 +259,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
 
 ✅ 5. Actualizar `.github/agents/bolt-framework.agent.md`: displayName, description
 📅 Completado: 2026-02-23
-✏️ Detalles: Actualizada descripción "AURORA methodology" a "Bolt Framework methodology"
+✏️ Detalles: Actualizada descripción "Bolt Framework Methodology" a "Bolt Framework methodology"
 ✅ 6. Renombrar todos los archivos de agentes en `.github/agents/`:
 📅 Completado: 2026-02-23
 ✏️ Detalles: Renombrados 28 archivos aurora-_.agent.md a bolt-_.agent.md exitosamente
@@ -278,7 +278,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
 
 ✅ 8. Actualizar `.github/skills/bolt-framework/SKILL.md`: título y frontmatter
 📅 Completado: 2026-02-23
-✏️ Detalles: Actualizado description, agentes (@Aurora → @Bolt), workflow examples, referencias
+✏️ Detalles: Actualizado description, agentes (@Bolt → @Bolt), workflow examples, referencias
 
 - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
@@ -2822,7 +2822,7 @@ Crear scope universal `common` con skills aplicables a TODOS los proyectos, inde
 
 1. **markdown-formatting** (document/):
    - CommonMark formatting rules
-   - AURORA conventions for .md files
+   - Bolt Framework conventions for .md files
    - Universally useful - todo proyecto tiene documentación
 
 2. **tdd-comprehensive** (tdd/):

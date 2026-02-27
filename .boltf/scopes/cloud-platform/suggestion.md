@@ -4,7 +4,7 @@
 
 - Restricción de proveedor cloud en constitución: Azure obligatorio (`.boltf/memory/constitution.md`).
 - Pipeline de validación de infraestructura en `.github/workflows/infra-validation.yml`.
-- Automatización de CI/CD e infraestructura en `.github/agents/aurora-cicd.agent.md`.
+- Automatización de CI/CD e infraestructura en `.github/agents/bolt-cicd.agent.md`.
 - Plantilla de guía de despliegue en `.boltf/docs/templates/deployment-guide-template.md`.
 
 ## Sugerencia de contenido para este scope
@@ -18,5 +18,5 @@
 
 - `.boltf/memory/constitution.md`
 - `.github/workflows/infra-validation.yml`
-- `.github/agents/aurora-cicd.agent.md`
+- `.github/agents/bolt-cicd.agent.md`
 - `.boltf/docs/templates/deployment-guide-template.md`

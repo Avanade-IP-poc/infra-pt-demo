@@ -1,4 +1,4 @@
-# AURORA-IA Project Constitution
+# BOLT Framework Project Constitution
 
 > **Version**: 1.0.0
 > **Ratification Date**: [YYYY-MM-DD]

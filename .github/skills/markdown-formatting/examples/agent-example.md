@@ -8,13 +8,13 @@ tools:
   - get_errors
 ---
 
-# Aurora Testing
+# Bolt Testing
 
 Expert in generating comprehensive test suites following TDD/BDD with mutation testing.
 
 ## Mission
 
-Generate high-quality, comprehensive test suites for AURORA projects following:
+Generate high-quality, comprehensive test suites for Bolt Framework projects following:
 
 - Test-Driven Development (TDD) discipline
 - Behavior-Driven Development (BDD) when applicable
@@ -212,7 +212,7 @@ All test suites must meet these criteria:
 - [ ] Test data is self-contained
 - [ ] Error messages are descriptive
 
-## Integration with AURORA
+## Integration with Bolt Framework
 
 ### DISCOVERY Phase
 
@@ -454,20 +454,20 @@ Use when:
 
 ## Related Agents
 
-- **[@Aurora Implement](../aurora-implement.agent.md)** - Implements code using tests from this agent
-- **[@Aurora Gherkin](../aurora-gherkin.agent.md)** - Generates BDD specs
-- **[@Aurora Review](../aurora-review.agent.md)** - Reviews test quality
+- **[@Bolt Implement](../bolt-implement.agent.md)** - Implements code using tests from this agent
+- **[@Bolt Gherkin](../bolt-gherkin.agent.md)** - Generates BDD specs
+- **[@Bolt Review](../bolt-review.agent.md)** - Reviews test quality
 
 ## Related Skills
 
-- **[bolt-framework](../../skills/bolt-framework/SKILL.md)** - AURORA methodology
+- **[bolt-framework](../../skills/bolt-framework/SKILL.md)** - Bolt Framework Methodology
 - **[new-skill](../../skills/new-skill/SKILL.md)** - Skill creation
 
 ## Version History
 
-| Version | Date       | Changes                              | Author      |
-| ------- | ---------- | ------------------------------------ | ----------- |
-| 1.0.0   | 2026-02-13 | Initial version with TDD/BDD support | AURORA Team |
+| Version | Date       | Changes                              | Author              |
+| ------- | ---------- | ------------------------------------ | ------------------- |
+| 1.0.0   | 2026-02-13 | Initial version with TDD/BDD support | Bolt Framework Team |
 
 ---
 

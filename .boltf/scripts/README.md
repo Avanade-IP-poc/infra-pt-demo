@@ -1,12 +1,12 @@
-# AURORA-IA Automation Scripts
+# BOLT Framework Automation Scripts
 
-This directory contains automation scripts that support the AURORA-IA / AI-DLC methodology.
+This directory contains automation scripts that support the BOLT Framework methodology.
 
 ## How Scripts Relate to Agents
 
 Scripts provide **automation capabilities** that agents can execute using the `execute` tool:
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                    AGENTS → SCRIPTS RELATIONSHIP                         │
 ├─────────────────────────────────────────────────────────────────────────┤
@@ -14,17 +14,17 @@ Scripts provide **automation capabilities** that agents can execute using the `e
 │   🤖 AGENT                         ⚙️ SCRIPT                             │
 │   (Conversational)                 (Automation)                          │
 │                                                                          │
-│   @AURORA             ──executes──> init.sh, project-status.sh          │
-│   @Aurora Feature     ──executes──> create-new-feature.sh               │
-│   @Aurora Testing     ──executes──> generate-tests.sh                   │
-│   @Aurora Release     ──executes──> create-release.sh                   │
-│   @Aurora Gherkin     ──executes──> generate-gherkin.sh                 │
+│   @Bolt ──executes──> init.sh, project-status.sh          │
+│   @Bolt Feature     ──executes──> create-new-feature.sh               │
+│   @Bolt Testing     ──executes──> generate-tests.sh                   │
+│   @Bolt Release     ──executes──> create-release.sh                   │
+│   @Bolt Gherkin     ──executes──> generate-gherkin.sh                 │
 │   @Bolt ADR           ──executes──> create-adr.sh                       │
-│   @Aurora Status      ──executes──> project-status.sh                   │
-│   @Aurora Ops         ──executes──> ops-status.sh, deploy.sh            │
-│   @Aurora Postmortem  ──executes──> generate-postmortem.sh              │
-│   @Aurora Improve     ──executes──> analyze-improvements.sh             │
-│   @Aurora Retire      ──executes──> plan-retirement.sh                  │
+│   @Bolt Status      ──executes──> project-status.sh                   │
+│   @Bolt Ops         ──executes──> ops-status.sh, deploy.sh            │
+│   @Bolt Postmortem  ──executes──> generate-postmortem.sh              │
+│   @Bolt Improve     ──executes──> analyze-improvements.sh             │
+│   @Bolt Retire      ──executes──> plan-retirement.sh                  │
 │                                                                          │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
@@ -35,11 +35,11 @@ Scripts provide **automation capabilities** that agents can execute using the `e
 
 Let the agent execute scripts automatically:
 
-```
-@Aurora Status show project status
+```text
+@Bolt Status show project status
 # Agent internally runs: ./scripts/bash/project-status.sh
 
-@Aurora Feature create user-authentication feature
+@Bolt Feature create user-authentication feature
 # Agent internally runs: ./scripts/bash/create-new-feature.sh
 ```
 
@@ -57,7 +57,7 @@ Run scripts directly from terminal:
 
 ## Directory Structure
 
-```
+```text
 scripts/
 ├── bash/                        # Bash scripts (Linux/macOS/WSL)
 │   ├── bootstrap-python.sh      # 🐍 Python environment setup
@@ -102,28 +102,28 @@ scripts/
 
 ## Script Reference by Agent
 
-| Agent             | Bash Script                                        | PowerShell Script                                        |
-| ----------------- | -------------------------------------------------- | -------------------------------------------------------- |
-| AURORA            | `init.sh`, `project-status.sh`, `quality-gates.sh` | `Init.ps1`, `Get-ProjectStatus.ps1`, `Quality-Gates.ps1` |
-| Aurora Feature    | `create-new-feature.sh`                            | `Create-NewFeature.ps1`                                  |
-| Aurora Specify    | `create-new-feature.sh`                            | `Create-NewFeature.ps1`                                  |
-| Aurora Use Case   | `generate-usecases.sh`                             | `Generate-UseCases.ps1`                                  |
-| Aurora Gherkin    | `generate-gherkin.sh`                              | `Generate-Gherkin.ps1`                                   |
-| Aurora Plan       | `setup-plan.sh`                                    | `Setup-Plan.ps1`                                         |
-| Aurora Tasks      | `check-prerequisites.sh`                           | `Check-Prerequisites.ps1`                                |
-| Aurora Implement  | `quality-gates.sh`, `architecture-gates.sh`        | `Quality-Gates.ps1`, `Architecture-Gates.ps1`            |
-| Aurora Architect  | `architecture-gates.sh`                            | `Architecture-Gates.ps1`                                 |
-| Aurora Testing    | `generate-tests.sh`                                | `Generate-Tests.ps1`                                     |
-| Aurora Review     | `quality-gates.sh`, `architecture-gates.sh`        | `Quality-Gates.ps1`, `Architecture-Gates.ps1`            |
-| Aurora Analyze    | `alignment-analysis.sh`                            | `Get-AlignmentAnalysis.ps1`                              |
-| Aurora Alignment  | `alignment-analysis.sh`                            | `Get-AlignmentAnalysis.ps1`                              |
-| Bolt ADR          | `create-adr.sh`                                    | `Create-ADR.ps1`                                         |
-| Aurora Release    | `create-release.sh`                                | `Create-Release.ps1`                                     |
-| Aurora Ops        | `ops-status.sh`, `deploy.sh`                       | `Get-OpsStatus.ps1`                                      |
-| Aurora Status     | `project-status.sh`                                | `Get-ProjectStatus.ps1`                                  |
-| Aurora Postmortem | `generate-postmortem.sh`                           | `Generate-Postmortem.ps1`                                |
-| Aurora Improve    | `analyze-improvements.sh`                          | `Get-Improvements.ps1`                                   |
-| Aurora Retire     | `plan-retirement.sh`                               | `Plan-Retirement.ps1`                                    |
+| Agent           | Bash Script                                        | PowerShell Script                                        |
+| --------------- | -------------------------------------------------- | -------------------------------------------------------- |
+| BOLT Framework  | `init.sh`, `project-status.sh`, `quality-gates.sh` | `Init.ps1`, `Get-ProjectStatus.ps1`, `Quality-Gates.ps1` |
+| Bolt Feature    | `create-new-feature.sh`                            | `Create-NewFeature.ps1`                                  |
+| Bolt Specify    | `create-new-feature.sh`                            | `Create-NewFeature.ps1`                                  |
+| Bolt Use Case   | `generate-usecases.sh`                             | `Generate-UseCases.ps1`                                  |
+| Bolt Gherkin    | `generate-gherkin.sh`                              | `Generate-Gherkin.ps1`                                   |
+| Bolt Plan       | `setup-plan.sh`                                    | `Setup-Plan.ps1`                                         |
+| Bolt Tasks      | `check-prerequisites.sh`                           | `Check-Prerequisites.ps1`                                |
+| Bolt Implement  | `quality-gates.sh`, `architecture-gates.sh`        | `Quality-Gates.ps1`, `Architecture-Gates.ps1`            |
+| Bolt Architect  | `architecture-gates.sh`                            | `Architecture-Gates.ps1`                                 |
+| Bolt Testing    | `generate-tests.sh`                                | `Generate-Tests.ps1`                                     |
+| Bolt Review     | `quality-gates.sh`, `architecture-gates.sh`        | `Quality-Gates.ps1`, `Architecture-Gates.ps1`            |
+| Bolt Analyze    | `alignment-analysis.sh`                            | `Get-AlignmentAnalysis.ps1`                              |
+| Bolt Alignment  | `alignment-analysis.sh`                            | `Get-AlignmentAnalysis.ps1`                              |
+| Bolt ADR        | `create-adr.sh`                                    | `Create-ADR.ps1`                                         |
+| Bolt Release    | `create-release.sh`                                | `Create-Release.ps1`                                     |
+| Bolt Ops        | `ops-status.sh`, `deploy.sh`                       | `Get-OpsStatus.ps1`                                      |
+| Bolt Status     | `project-status.sh`                                | `Get-ProjectStatus.ps1`                                  |
+| Bolt Postmortem | `generate-postmortem.sh`                           | `Generate-Postmortem.ps1`                                |
+| Bolt Improve    | `analyze-improvements.sh`                          | `Get-Improvements.ps1`                                   |
+| Bolt Retire     | `plan-retirement.sh`                               | `Plan-Retirement.ps1`                                    |
 
 ## Available Scripts
 
@@ -199,9 +199,9 @@ Analyzes project state and generates a comprehensive status report for continuit
 
 #### Sample Output
 
-```
+```text
 ═══════════════════════════════════════════════════════════════
-  🚀 AURORA-IA Project Status
+  🚀 BOLT Framework Project Status
 ═══════════════════════════════════════════════════════════════
 
 Project:       MyProject
@@ -230,17 +230,17 @@ Next tasks to complete:
 
 ─── Recommended Actions ───
 
-🔴 HIGH: Resolve blocker B001 with /aurora.clarify
-🟡 MEDIUM: Continue with T015 using /aurora.implement
-🟡 MEDIUM: Improve test coverage with /aurora.test
+🔴 HIGH: Resolve blocker B001 with /bolt.clarify
+🟡 MEDIUM: Continue with T015 using /bolt.implement
+🟡 MEDIUM: Improve test coverage with /bolt.test
 ```
 
 #### Integration with AI Agents
 
-When starting a new Copilot session, always run `/aurora.status` first:
+When starting a new Copilot session, always run `/bolt.status` first:
 
-```
-@aurora /aurora.status
+```text
+@Bolt /bolt.status
 ```
 
 The agent will analyze the project and provide:
@@ -254,7 +254,7 @@ The agent will analyze the project and provide:
 
 ### 🆕 Alignment & Gap Analysis
 
-Analyzes the alignment between RFP requirements, legacy code, implementation, and AURORA methodology compliance. Detects gaps and generates actionable reports with coverage percentages.
+Analyzes the alignment between RFP requirements, legacy code, implementation, and Bolt Framework Methodology compliance. Detects gaps and generates actionable reports with coverage percentages.
 
 #### Usage
 
@@ -270,7 +270,7 @@ Analyzes the alignment between RFP requirements, legacy code, implementation, an
 # Specific analyses
 ./scripts/bash/alignment-analysis.sh --rfp          # RFP coverage only
 ./scripts/bash/alignment-analysis.sh --legacy       # Legacy migration only
-./scripts/bash/alignment-analysis.sh --methodology  # AURORA compliance
+./scripts/bash/alignment-analysis.sh --methodology  # BOLT Framework compliance
 ./scripts/bash/alignment-analysis.sh --gaps         # Gap summary
 
 # Baseline and comparison
@@ -312,14 +312,14 @@ Analyzes the alignment between RFP requirements, legacy code, implementation, an
 
 #### Analysis Dimensions
 
-| Dimension              | Description                                   | Relevance                        |
-| ---------------------- | --------------------------------------------- | -------------------------------- |
-| **RFP Coverage**       | Traceability from RFP items to specs/features | When `demo/from_rfp/` exists     |
-| **Legacy Migration**   | Functions/modules migrated vs pending         | When `demo/from_old_src/` exists |
-| **AURORA Methodology** | Compliance with AI-DLC phases                 | Always                           |
-| **Testing**            | Test coverage and mutation score              | Always                           |
-| **Documentation**      | README, ADRs, constitution completeness       | Always                           |
-| **Infrastructure**     | IaC, CI/CD, containers                        | Always                           |
+| Dimension                      | Description                                   | Relevance                        |
+| ------------------------------ | --------------------------------------------- | -------------------------------- |
+| **RFP Coverage**               | Traceability from RFP items to specs/features | When `demo/from_rfp/` exists     |
+| **Legacy Migration**           | Functions/modules migrated vs pending         | When `demo/from_old_src/` exists |
+| **Bolt Framework Methodology** | Compliance with AI-DLC phases                 | Always                           |
+| **Testing**                    | Test coverage and mutation score              | Always                           |
+| **Documentation**              | README, ADRs, constitution completeness       | Always                           |
+| **Infrastructure**             | IaC, CI/CD, containers                        | Always                           |
 
 #### Gap Severity Levels
 
@@ -332,9 +332,9 @@ Analyzes the alignment between RFP requirements, legacy code, implementation, an
 
 #### Sample Output
 
-```
+```text
 ═══════════════════════════════════════════════════════════════
-  🎯 AURORA-IA Alignment Analysis
+  🎯 BOLT Framework Alignment Analysis
 ═══════════════════════════════════════════════════════════════
 
 Project Type: Migration | Scope: Full Stack
@@ -349,7 +349,7 @@ Has RFP: true | Has Legacy: true
 |---------------------|------------------------------|--------|
 | RFP Coverage        | [███████████░░░░░░░░░] 55%  | ⚠️     |
 | Legacy Migration    | [████████░░░░░░░░░░░░] 40%  | ⚠️     |
-| AURORA Methodology  | [█████████████████░░░] 85%  | ✅     |
+| BOLT Framework Methodology  | [█████████████████░░░] 85%  | ✅     |
 | Testing             | [████████████████░░░░] 80%  | ✅     |
 | Documentation       | [████████████░░░░░░░░] 60%  | ⚠️     |
 | Infrastructure      | [█████████████████░░░] 80%  | ✅     |
@@ -377,16 +377,16 @@ Has RFP: true | Has Legacy: true
 
 | # | Priority | Action                                    | Command           |
 |---|----------|-------------------------------------------|-------------------|
-| 1 | High     | Analyze and migrate legacy functions      | `/aurora.analyze` |
-| 2 | High     | Create feature specs for uncovered RFP    | `/aurora.feature` |
-| 3 | High     | Improve test coverage                     | `/aurora.test`    |
+| 1 | High     | Analyze and migrate legacy functions      | `/bolt.analyze` |
+| 2 | High     | Create feature specs for uncovered RFP    | `/bolt.feature` |
+| 3 | High     | Improve test coverage                     | `/bolt.test`    |
 ```
 
 #### Baseline Comparison
 
 Track alignment progress over time:
 
-```
+```text
 ═══════════════════════════════════════════════════════════════
   📊 Alignment Comparison
 ═══════════════════════════════════════════════════════════════
@@ -406,8 +406,8 @@ Comparing with baseline: 2024-01-01
 
 Invoke alignment analysis from Copilot:
 
-```
-@aurora /aurora.alignment
+```text
+@Bolt /bolt.alignment
 ```
 
 The agent analyzes:
@@ -421,7 +421,7 @@ The agent analyzes:
 
 ### 🆕 Project Initialization (Init)
 
-Initializes a new AURORA-IA project workspace with an **interactive configuration wizard**. Supports both **Greenfield** (new projects) and **Brownfield** (migration from existing code) scenarios.
+Initializes a new BOLT Framework project workspace with an **interactive configuration wizard**. Supports both **Greenfield** (new projects) and **Brownfield** (migration from existing code) scenarios.
 
 #### Quick Start with Auto-Profiles
 
@@ -527,7 +527,7 @@ Without `--auto`, the scripts launch a 10-question interactive wizard:
 
 **Greenfield (Application - app-dotnet):**
 
-```
+```text
 my-project/
 ├── .github/
 │   ├── copilot/agents/       # AI Agents
@@ -549,7 +549,7 @@ my-project/
 │   ├── SampleModule.UnitTests/
 │   ├── SampleModule.IntegrationTests/
 │   └── Architecture.Tests/
-├── scripts/                  # AURORA-IA automation scripts
+├── scripts/                  # BOLT Framework automation scripts
 ├── infra/scripts/            # Infrastructure scripts
 ├── Directory.Build.props     # .NET build configuration
 ├── global.json               # .NET SDK version
@@ -560,7 +560,7 @@ my-project/
 
 **Greenfield (Infrastructure - infra-landing):**
 
-```
+```text
 my-landing-zone/
 ├── .github/workflows/        # Platform deploy pipelines
 ├── memory/constitution.md    # Pre-filled configuration
@@ -593,7 +593,7 @@ my-landing-zone/
 
 **Brownfield (Migration):**
 
-```
+```text
 my-migration/
 ├── legacy/
 │   ├── source/               # Copy of original code
@@ -634,7 +634,7 @@ The `constitution.md` file is automatically pre-filled with your wizard/auto-pro
 1. `cd <your-project-directory>`
 2. Review `memory/constitution.md` (already pre-filled!)
 3. Complete any remaining configuration sections
-4. Start your first feature: `/aurora.feature [your-first-feature]`
+4. Start your first feature: `/bolt.feature [your-first-feature]`
 
 ---
 
@@ -908,7 +908,7 @@ Creates Architectural Decision Records from template.
 
 ### Agent Context Validation
 
-Validates the relationships between Prompts, Agents, and Constitution ensuring consistency across AURORA-IA artifacts.
+Validates the relationships between Prompts, Agents, and Constitution ensuring consistency across BOLT Framework artifacts.
 
 **Bash:**
 
@@ -945,9 +945,9 @@ Validates the relationships between Prompts, Agents, and Constitution ensuring c
 
 **Report Output:**
 
-```
-AURORA-IA Context Validation Report
-====================================
+```text
+BOLT Framework Context Validation Report
+========================================
 
 Constitution: ✓ Found
 Agents: 18 total, 18 with Constitution Reference
@@ -1021,7 +1021,7 @@ This section provides complete walkthroughs using the demo files included in thi
 
 ### Demo Files Available
 
-```
+```text
 demo/
 ├── from_rfp/
 │   └── RFP-Calculator.md      # 📄 RFP document for a new Calculator app
@@ -1045,8 +1045,8 @@ demo/
 **Using WSL/Bash:**
 
 ```bash
-# Navigate to AURORA-IA template
-cd /path/to/aurora-ia-dlc-v1.0.0
+# Navigate to BOLT Framework template
+cd /path/to/Bolt Framework-v1.0.0
 
 # Create new project from RFP
 ./init.sh ./demo/to_rfp/calculator-app green --scope app-only --backend csharp
@@ -1055,8 +1055,8 @@ cd /path/to/aurora-ia-dlc-v1.0.0
 **Using PowerShell (Windows):**
 
 ```powershell
-# Navigate to AURORA-IA template
-cd C:\path\to\aurora-ia-dlc-v1.0.0
+# Navigate to BOLT Framework template
+cd C:\path\to\Bolt Framework-v1.0.0
 
 # Create new project from RFP
 .\scripts\powershell\Init.ps1 -OutputDirectory ".\demo\to_rfp\calculator-app" -ProjectType green
@@ -1101,49 +1101,49 @@ Edit `memory/constitution.md` and fill in your technology choices:
 
 **Or use Copilot Chat:**
 
-```
-/aurora.constitution
+```text
+/bolt.constitution
 ```
 
 #### Step 3: Attach the RFP and Create Feature
 
 In GitHub Copilot Chat:
 
-```
+```text
 #file:demo/from_rfp/RFP-Calculator.md
 
-/aurora.feature calculator-core
+/bolt.feature calculator-core
 ```
 
 #### Step 4: Generate Use Cases
 
-```
-/aurora.usecase
+```text
+/bolt.usecase
 ```
 
 #### Step 5: Plan Implementation
 
-```
-/aurora.plan
+```text
+/bolt.plan
 ```
 
 #### Step 6: Generate Tasks (Bolts)
 
-```
-/aurora.tasks
+```text
+/bolt.tasks
 ```
 
 #### Step 7: Start Implementation
 
-```
-#file:.github/prompts/aurora-code-generation.prompt.md
+```text
+#file:.github/prompts/bolt-code-generation.prompt.md
 
 Implement task T001: Create the Calculator domain entity
 ```
 
 #### Greenfield Project Structure Created
 
-```
+```text
 demo/to_rfp/calculator-app/
 ├── .github/
 │   ├── copilot/agents/       # 18 AI agents ready
@@ -1178,7 +1178,7 @@ demo/to_rfp/calculator-app/
 │   ├── unit/
 │   ├── integration/
 │   └── e2e/
-└── scripts/                  # Automation scripts
+└── scripts/                  # BOLT Framework automation scripts
 ```
 
 ---
@@ -1192,8 +1192,8 @@ demo/to_rfp/calculator-app/
 **Using WSL/Bash:**
 
 ```bash
-# Navigate to AURORA-IA template
-cd /path/to/aurora-ia-dlc-v1.0.0
+# Navigate to BOLT Framework template
+cd /path/to/Bolt Framework-v1.0.0
 
 # Create migration project pointing to legacy source
 ./init.sh ./demo/to_old_src/calculator-migration brown ./demo/from_old_src --backend csharp --architecture microservices
@@ -1202,8 +1202,8 @@ cd /path/to/aurora-ia-dlc-v1.0.0
 **Using PowerShell (Windows):**
 
 ```powershell
-# Navigate to AURORA-IA template
-cd C:\path\to\aurora-ia-dlc-v1.0.0
+# Navigate to BOLT Framework template
+cd C:\path\to\Bolt Framework-v1.0.0
 
 # Create migration project pointing to legacy source
 .\scripts\powershell\Init.ps1 `
@@ -1224,12 +1224,13 @@ cat ./demo/to_old_src/calculator-migration/legacy/source/CALCMAIN.cbl
 
 Use Copilot to analyze:
 
-```
+```markdown
 #file:legacy/source/CALCENGN.cbl
 #file:legacy/source/CALCMAIN.cbl
-#file:.github/prompts/aurora-legacy-analysis.prompt.md
+#file:.github/prompts/bolt-legacy-analysis.prompt.md
 
 Analyze these COBOL programs and document:
+
 1. Business logic and calculations
 2. Data structures
 3. Input/output operations
@@ -1338,45 +1339,47 @@ def add(num1: Decimal, num2: Decimal) -> Decimal:
     return result
 ```
 
-```
-
+```markdown
 #### Step 5: Define Migration Features
-
 ```
 
-/aurora.feature migrate-calculation-engine
-
-````
+```text
+/bolt.feature migrate-calculation-engine
+```
 
 This creates `specs/migrate-calculation-engine/spec.md`:
+
 ```markdown
 # Feature: Migrate Calculation Engine
 
 ## Migration Scope
+
 - Source: CALCENGN.cbl
 - Target: src/domain/services/calculation_engine.py
 
 ## Acceptance Criteria
+
 - [ ] All 4 operations (ADD, SUB, MUL, DIV) produce identical results
 - [ ] Precision maintained: 18 digits, 4 decimals
 - [ ] Error handling: Division by zero, overflow
 - [ ] 100% test coverage with legacy equivalence tests
-````
+```
 
 #### Step 6: Plan Migration
 
-```
-/aurora.plan
+```text
+/bolt.plan
 ```
 
 #### Step 7: Execute Migration with Legacy Equivalence
 
-```
-#file:.github/prompts/aurora-code-generation.prompt.md
+```markdown
+#file:.github/prompts/bolt-code-generation.prompt.md
 #file:legacy/source/CALCENGN.cbl
 #file:migration/mappings/code-mapping.md
 
 Migrate the COBOL calculation engine to Python, ensuring:
+
 1. Exact same precision (18,4)
 2. Same overflow handling
 3. Same division by zero behavior
@@ -1384,11 +1387,12 @@ Migrate the COBOL calculation engine to Python, ensuring:
 
 #### Step 8: Create Equivalence Tests
 
-```
-#file:.github/prompts/aurora-test-generation.prompt.md
+```markdown
+#file:.github/prompts/bolt-test-generation.prompt.md
 
 Create equivalence tests that verify the Python implementation
 produces identical results to the COBOL original for:
+
 - Edge cases (max values, zero, negative)
 - All operations
 - Error conditions
@@ -1396,7 +1400,7 @@ produces identical results to the COBOL original for:
 
 #### Brownfield Project Structure Created
 
-```
+```text
 demo/to_old_src/calculator-migration/
 ├── .github/
 │   ├── copilot/agents/       # 18 AI agents
@@ -1426,15 +1430,15 @@ demo/to_old_src/calculator-migration/
 
 ### 📊 Comparison: Greenfield vs Brownfield
 
-| Aspect                 | Greenfield 🌱            | Brownfield 🏗️            |
-| ---------------------- | ------------------------ | ------------------------ |
-| **Starting Point**     | RFP/Requirements doc     | Existing source code     |
-| **Constitution Focus** | Define new stack         | Define TARGET stack      |
-| **First Step**         | `/aurora.constitution`   | Analyze legacy code      |
-| **Key Folders**        | `src/` (new code)        | `legacy/` + `migration/` |
-| **Testing Strategy**   | TDD from scratch         | Equivalence tests        |
-| **Risk**               | Requirements gaps        | Logic translation errors |
-| **AI Prompts**         | `aurora-code-generation` | `aurora-legacy-analysis` |
+| Aspect                 | Greenfield 🌱          | Brownfield 🏗️            |
+| ---------------------- | ---------------------- | ------------------------ |
+| **Starting Point**     | RFP/Requirements doc   | Existing source code     |
+| **Constitution Focus** | Define new stack       | Define TARGET stack      |
+| **First Step**         | `/bolt.constitution`   | Analyze legacy code      |
+| **Key Folders**        | `src/` (new code)      | `legacy/` + `migration/` |
+| **Testing Strategy**   | TDD from scratch       | Equivalence tests        |
+| **Risk**               | Requirements gaps      | Logic translation errors |
+| **AI Prompts**         | `bolt-code-generation` | `bolt-legacy-analysis`   |
 
 ---
 

@@ -1,4 +1,4 @@
-# AURORA-IA Project Constitution — Scope: Integration
+# BOLT Framework Project Constitution — Scope: Integration
 
 > **Extracted from**: `.boltf/memory/constitution.md`
 > **Scope**: `integration` — Communication patterns, API management, legacy migration, and external system integration.
@@ -115,7 +115,7 @@ Select ONE:
 
 ### Section 11.2: Pipeline Stages
 
-#### For Application Development:
+#### For Application Development
 
 | Stage                  | Enabled | Threshold                          |
 | ---------------------- | ------- | ---------------------------------- |
@@ -129,7 +129,7 @@ Select ONE:
 | **Container Build**    | [ ] Yes | -                                  |
 | **Container Scan**     | [ ] Yes | 0 Critical                         |
 
-#### Deployment Stages:
+#### Deployment Stages
 
 | Stage           | Enabled | Trigger            |
 | --------------- | ------- | ------------------ |
@@ -171,7 +171,7 @@ Select ONE:
 
 ### Section 12.2: Health Checks
 
-```
+```text
 /health       - Full health check
 /health/ready - Readiness probe
 /health/live  - Liveness probe
@@ -518,7 +518,7 @@ await client.SendEventAsync(new EventGridEvent(
 
 ### Section 18B.2: Durable Functions Orchestration
 
-**Example: Order Processing Saga**
+#### Example: Order Processing Saga
 
 ```csharp
 [FunctionName("OrderSaga")]
@@ -574,13 +574,14 @@ public static async Task<OrderResult> RunOrchestrator(
    ```
 
 4. **Monitor** - Polling with exponential backoff
-   ```csharp
-   while (!jobComplete) {
-       var status = await context.CallActivityAsync<JobStatus>("CheckJobStatus", jobId);
-       if (status.IsComplete) break;
-       await context.CreateTimer(context.CurrentUtcDateTime.AddMinutes(5), CancellationToken.None);
-   }
-   ```
+
+```csharp
+  while (!jobComplete) {
+      var status = await context.CallActivityAsync<JobStatus>("CheckJobStatus", jobId);
+      if (status.IsComplete) break;
+      await context.CreateTimer(context.CurrentUtcDateTime.AddMinutes(5), CancellationToken.None);
+  }
+```
 
 ### Section 18B.3: Saga Pattern (Distributed Transaction)
 
@@ -628,7 +629,7 @@ public static async Task<BookingResult> RunSaga(
 
 **Events** coordinate services (no central orchestrator):
 
-```
+```text
 Order Service: Publishes "OrderCreated" event
   ↓
 Inventory Service: Subscribes → Reserves stock → Publishes "InventoryReserved"
@@ -656,7 +657,7 @@ Inventory Service: Subscribes → Releases stock → Publishes "InventoryRelease
 
 ### Section 18B.4: Logic Apps Standard Workflow
 
-**Example: Invoice Processing Workflow**
+#### Example: Invoice Processing Workflow
 
 ```json
 {
@@ -742,7 +743,7 @@ Inventory Service: Subscribes → Releases stock → Publishes "InventoryRelease
 | Rename field       | ❌ Breaking change     | Deploy new schema version                        |
 | Change field type  | ❌ Breaking change     | Deploy new schema version                        |
 
-**Example: Avro Schema Registration**
+**Example: Avro Schema Registration**:
 
 ```csharp
 // Register schema
@@ -1027,7 +1028,7 @@ az k8s-configuration flux create \
 
 **HTTP Headers** propagate trace context:
 
-```
+```text
 traceparent: 00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01
              ^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^  ^^
              ver trace-id (32 hex)                 span-id (16 hex)  flags
@@ -1081,7 +1082,7 @@ registerInstrumentations({
 
 **Automatically visualizes** service dependencies:
 
-```
+```text
    [Frontend]
        │
        ├─> [Order API] ──┐

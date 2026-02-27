@@ -30,12 +30,13 @@ Provide a clear and concise overview of the product, its purpose, and the proble
 ### Key Benefits
 
 - **Benefit 1:** Description of how this helps users
-- **Benefit 2:** Description of how this helps users  
+- **Benefit 2:** Description of how this helps users
 - **Benefit 3:** Description of how this helps users
 
 ### Who Should Use This Guide?
 
 This guide is designed for:
+
 - **Primary Users:** Role and responsibilities
 - **Secondary Users:** Role and responsibilities
 - **Administrators:** Role and responsibilities
@@ -43,6 +44,7 @@ This guide is designed for:
 ### Prerequisites
 
 Before you begin, ensure you have:
+
 - [ ] Requirement 1
 - [ ] Requirement 2
 - [ ] Requirement 3
@@ -54,6 +56,7 @@ Before you begin, ensure you have:
 ### System Requirements
 
 #### Minimum Requirements
+
 - **Operating System:** Windows 10, macOS 10.15, Ubuntu 18.04+
 - **Browser:** Chrome 90+, Firefox 88+, Safari 14+
 - **RAM:** 4GB minimum, 8GB recommended
@@ -61,6 +64,7 @@ Before you begin, ensure you have:
 - **Internet:** Broadband connection required
 
 #### Recommended Requirements
+
 - **RAM:** 16GB for optimal performance
 - **Storage:** SSD with 10GB available space
 - **Monitor:** 1920x1080 resolution or higher
@@ -68,7 +72,8 @@ Before you begin, ensure you have:
 ### Installation and Setup
 
 #### Step 1: Account Creation
-1. Navigate to [registration page](https://aurora.company.com/register)
+
+1. Navigate to [registration page](https://boltf.company.com/register)
 2. Fill in required information:
    - Full Name
    - Email Address
@@ -77,9 +82,11 @@ Before you begin, ensure you have:
 4. Complete your profile setup
 
 #### Step 2: Initial Configuration
+
 1. **Login to your account**
-   ```
-   URL: https://aurora.company.com/login
+
+   ```text
+   URL: https://boltf.company.com/login
    Use your registered email and password
    ```
 
@@ -104,7 +111,8 @@ Follow these steps to create your first {entity}:
    - Select "{Entity}" from the dropdown menu
 
 2. **Fill in basic information**
-   ```
+
+   ```text
    Name: My First {Entity}
    Description: Learning how to use the system
    Category: Getting Started
@@ -137,15 +145,18 @@ Complete these tasks to get up and running quickly:
 ### Feature 1: {FEATURE_NAME}
 
 #### Overview
+
 Brief description of what this feature does and why it's useful.
 
 #### How to Use
+
 1. **Access the feature**
    - Navigation path or button location
    - Required permissions or prerequisites
 
 2. **Basic operation**
-   ```
+
+   ```text
    Step-by-step instructions with specific details
    Include expected outcomes for each step
    ```
@@ -156,12 +167,14 @@ Brief description of what this feature does and why it's useful.
    - Use case 3: Best practices
 
 #### Visual Guide
-```
+
+```text
 [Screenshot or diagram would go here]
 Caption: Description of what users should see
 ```
 
 #### Tips and Best Practices
+
 - **Tip 1:** Specific advice for better results
 - **Tip 2:** Common mistake to avoid
 - **Tip 3:** Efficiency improvement
@@ -169,36 +182,41 @@ Caption: Description of what users should see
 ### Feature 2: {FEATURE_NAME}
 
 #### Overview
+
 Description of the feature and its benefits.
 
 #### Step-by-Step Instructions
 
 **Method 1: Basic Approach**
+
 1. Step one with detailed instructions
 2. Step two with expected results
 3. Step three with validation
 
 **Method 2: Alternative Approach**
+
 1. Alternative step one
 2. Alternative step two
 3. Alternative step three
 
 #### Configuration Options
 
-| Option | Default | Description | Recommended Use |
-|--------|---------|-------------|-----------------|
-| Option 1 | Value | What it controls | When to use |
-| Option 2 | Value | What it controls | When to use |
-| Option 3 | Value | What it controls | When to use |
+| Option   | Default | Description      | Recommended Use |
+| -------- | ------- | ---------------- | --------------- |
+| Option 1 | Value   | What it controls | When to use     |
+| Option 2 | Value   | What it controls | When to use     |
+| Option 3 | Value   | What it controls | When to use     |
 
 ### Feature 3: {FEATURE_NAME}
 
 #### When to Use This Feature
+
 - Scenario 1: Specific situation description
 - Scenario 2: Another common use case
 - Scenario 3: Advanced scenario
 
 #### Detailed Workflow
+
 ```mermaid
 flowchart TD
     A[Start] --> B[Action 1]
@@ -212,7 +230,8 @@ flowchart TD
 #### Examples
 
 **Example 1: Simple Use Case**
-```
+
+```text
 Scenario: User wants to accomplish X
 Steps:
 1. Do this first
@@ -222,7 +241,8 @@ Result: Expected outcome
 ```
 
 **Example 2: Complex Use Case**
-```
+
+```text
 Scenario: User needs to handle Y with constraints Z
 Steps:
 1. Preparation steps
@@ -238,7 +258,9 @@ Result: Expected outcome and side effects
 ### Advanced Feature 1: {FEATURE_NAME}
 
 #### Prerequisites
+
 Before using this feature, ensure you have:
+
 - [ ] Completed basic feature training
 - [ ] Appropriate permissions
 - [ ] Required data or resources
@@ -246,6 +268,7 @@ Before using this feature, ensure you have:
 #### Advanced Configuration
 
 **Custom Settings**
+
 ```json
 {
   "advanced_option_1": "value",
@@ -257,11 +280,13 @@ Before using this feature, ensure you have:
 ```
 
 **Integration Options**
+
 - **API Integration:** How to connect with external systems
 - **Webhook Configuration:** Setting up automated responses
 - **Custom Scripts:** Adding personalized automation
 
 #### Power User Tips
+
 - **Keyboard Shortcuts:** List of time-saving shortcuts
   - `Ctrl+N`: Create new {entity}
   - `Ctrl+S`: Save current work
@@ -275,12 +300,13 @@ Before using this feature, ensure you have:
 #### Complex Workflows
 
 **Workflow 1: Multi-step Process**
-```
+
+```text
 Phase 1: Preparation
 - Task 1.1: Specific action
 - Task 1.2: Specific action
 
-Phase 2: Execution  
+Phase 2: Execution
 - Task 2.1: Specific action
 - Task 2.2: Specific action
 
@@ -290,11 +316,13 @@ Phase 3: Validation
 ```
 
 **Workflow 2: Conditional Logic**
+
 - If condition A: Follow path X
 - If condition B: Follow path Y
 - If condition C: Follow path Z
 
 #### Performance Optimization
+
 - **Large Datasets:** How to handle efficiently
 - **Memory Management:** Best practices
 - **Speed Improvements:** Configuration tuning
@@ -308,23 +336,28 @@ Phase 3: Validation
 #### Issue 1: {COMMON_PROBLEM}
 
 **Symptoms:**
+
 - Symptom A: What the user observes
 - Symptom B: Additional indicators
 
 **Causes:**
+
 - Root cause 1: Technical explanation
 - Root cause 2: Configuration issue
 - Root cause 3: User error
 
 **Solutions:**
+
 1. **Quick Fix (5 minutes)**
-   ```
+
+   ```text
    Step-by-step resolution
    Include specific commands or actions
    ```
 
 2. **Comprehensive Fix (15 minutes)**
-   ```
+
+   ```text
    More thorough resolution
    Address underlying causes
    ```
@@ -338,11 +371,13 @@ Phase 3: Validation
 **Problem:** Brief description of the issue
 
 **Diagnosis Steps:**
+
 1. Check X to determine Y
 2. Verify Z configuration
 3. Test ABC functionality
 
 **Resolution:**
+
 ```bash
 # For technical users - command line fix
 command --option value
@@ -356,11 +391,13 @@ command --option value
 #### Issue 3: {PERFORMANCE_ISSUE}
 
 **When This Occurs:**
+
 - Scenario A: Heavy usage patterns
 - Scenario B: Large data volumes
 - Scenario C: System limitations
 
 **Optimization Steps:**
+
 1. **Immediate Relief:**
    - Action 1: Quick performance boost
    - Action 2: Temporary workaround
@@ -372,15 +409,16 @@ command --option value
 
 ### Error Messages and Meanings
 
-| Error Code | Message | Cause | Solution |
-|------------|---------|-------|----------|
-| ERR001 | "Connection failed" | Network issue | Check internet connection |
-| ERR002 | "Invalid credentials" | Authentication problem | Verify login details |
-| ERR003 | "Permission denied" | Authorization issue | Contact administrator |
+| Error Code | Message               | Cause                  | Solution                  |
+| ---------- | --------------------- | ---------------------- | ------------------------- |
+| ERR001     | "Connection failed"   | Network issue          | Check internet connection |
+| ERR002     | "Invalid credentials" | Authentication problem | Verify login details      |
+| ERR003     | "Permission denied"   | Authorization issue    | Contact administrator     |
 
 ### Getting Help
 
 #### Self-Service Options
+
 1. **Search the knowledge base**
    - URL: [https://help.boltf.company.com](https://help.boltf.company.com)
    - Use specific keywords
@@ -392,6 +430,7 @@ command --option value
    - Planned maintenance
 
 #### Contact Support
+
 1. **Create a support ticket**
    - Email: support@company.com
    - Include error details and screenshots
@@ -402,7 +441,7 @@ command --option value
    - Click chat icon in application
 
 3. **Phone support (Enterprise users)**
-   - Phone: +1-800-AURORA-1
+   - Phone: +1-800-BOLTF-1
    - Available 24/7 for critical issues
 
 ---
@@ -447,26 +486,30 @@ A: Instructions for user management and permissions.
 ## Support
 
 ### Documentation Resources
+
 - **Complete Documentation:** [https://docs.boltf.company.com](https://docs.boltf.company.com)
 - **API Reference:** [https://api.boltf.company.com/docs](https://api.boltf.company.com/docs)
-- **Video Tutorials:** [YouTube Channel](https://youtube.com/aurora-tutorials)
+- **Video Tutorials:** [YouTube Channel](https://youtube.com/boltf-tutorials)
 - **Community Forum:** [https://community.boltf.company.com](https://community.boltf.company.com)
 
 ### Training and Learning
+
 - **Interactive Tutorials:** Built into the application
 - **Webinar Schedule:** Monthly training sessions
 - **Certification Program:** Professional certification available
 - **Best Practices Guide:** Advanced usage patterns
 
 ### Contact Information
-- **General Support:** support@company.com
-- **Sales Inquiries:** sales@company.com  
-- **Technical Issues:** tech-support@company.com
-- **Billing Questions:** billing@company.com
+
+- **General Support:** support@boltf.company.com
+- **Sales Inquiries:** sales@boltf.company.com
+- **Technical Issues:** tech-support@boltf.company.com
+- **Billing Questions:** billing@boltf.company.com
 
 ### Community and Social
-- **Twitter:** [@AuroraSupport](https://twitter.com/aurorasupport)
-- **LinkedIn:** [Company Page](https://linkedin.com/company/aurora)
+
+- **Twitter:** [@BoltSupport](https://twitter.com/boltsupport)
+- **LinkedIn:** [Company Page](https://linkedin.com/company/bolt)
 - **Blog:** [https://blog.boltf.company.com](https://blog.boltf.company.com)
 
 ---
@@ -483,20 +526,22 @@ A: Instructions for user management and permissions.
 
 ### Keyboard Shortcuts Reference
 
-| Action | Windows/Linux | Mac | Description |
-|--------|---------------|-----|-------------|
-| New Item | Ctrl+N | Cmd+N | Create new item |
-| Save | Ctrl+S | Cmd+S | Save current work |
-| Search | Ctrl+F | Cmd+F | Find in current view |
+| Action   | Windows/Linux | Mac   | Description          |
+| -------- | ------------- | ----- | -------------------- |
+| New Item | Ctrl+N        | Cmd+N | Create new item      |
+| Save     | Ctrl+S        | Cmd+S | Save current work    |
+| Search   | Ctrl+F        | Cmd+F | Find in current view |
 
 ### Release Notes Summary
 
 #### Version 2.1.0
+
 - Feature additions
 - Bug fixes
 - Performance improvements
 
 #### Version 2.0.0
+
 - Major redesign
 - New capabilities
 - Breaking changes
@@ -504,12 +549,13 @@ A: Instructions for user management and permissions.
 ---
 
 **Document Information:**
+
 - **Template Version:** 2.1.0
-- **Created by:** AURORA-IA-DLC v2.1.0
+- **Created by:** Bolt Framework v2.1.0
 - **Last Updated:** {DATE}
 - **Next Review:** {REVIEW_DATE}
 - **Document Owner:** {OWNER_NAME}
 
 ---
 
-*This guide is a living document. Please provide feedback and suggestions to help us improve it for all users.*
+_This guide is a living document. Please provide feedback and suggestions to help us improve it for all users._

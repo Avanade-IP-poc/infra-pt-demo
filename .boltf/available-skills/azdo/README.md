@@ -6,9 +6,9 @@ Skills especializados para integración con Azure DevOps.
 
 ### azdo-sync
 
-**Sincronización bidireccional AURORA ↔ Azure DevOps**
+#### Sincronización bidireccional BOLT ↔ Azure DevOps
 
-- Exporta features AURORA a Azure DevOps (Epic/Features/PBIs/Tasks)
+- Exporta features BOLT a Azure DevOps (Epic/Features/PBIs/Tasks)
 - Importa work items existentes de Azure DevOps
 - Sincroniza estados y actualizaciones
 - Asigna work items a sprints
@@ -24,7 +24,7 @@ Skills especializados para integración con Azure DevOps.
 
 ### azdo-wiki
 
-**Publicación automática en Azure DevOps Wiki**
+#### Publicación automática en Azure DevOps Wiki
 
 - Sincroniza documentación Markdown a Wiki
 - Convierte diagramas Mermaid a SVG

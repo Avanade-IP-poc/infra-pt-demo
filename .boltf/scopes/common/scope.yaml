@@ -18,7 +18,7 @@ items:
       folder: .github/skills
       name: markdown-formatting
     description: >
-      CommonMark formatting rules and AURORA conventions for .md files.
+      CommonMark formatting rules and BOLT Framework conventions for .md files.
       Universally useful for any project with documentation.
 
   - id: common-tdd-comprehensive
@@ -68,7 +68,7 @@ items:
       folder: .github/skills
       name: git-branch-manager
     description: >
-      Git branch/commit/PR management with AURORA compliance and naming conventions.
+      Git branch/commit/PR management with BOLT Framework compliance and naming conventions.
       Universal for any project using Git version control.
 
   - id: common-issue-formatter

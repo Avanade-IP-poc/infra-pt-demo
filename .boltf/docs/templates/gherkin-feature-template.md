@@ -1,6 +1,6 @@
 # Gherkin Feature Template
 
-> **AURORA Stage:** DISCOVERY - BDD Scenarios
+> **BOLT Framework Stage:** DISCOVERY - BDD Scenarios
 > **Format:** Gherkin (Cucumber)
 
 ---
@@ -20,7 +20,7 @@ Feature: {Feature Name}
   # ============================================================
   # BACKGROUND - Common setup for all scenarios
   # ============================================================
-  
+
   Background:
     Given {common precondition 1}
     And {common precondition 2}
@@ -28,7 +28,7 @@ Feature: {Feature Name}
   # ============================================================
   # SCENARIO 1: Happy Path / Main Success Scenario
   # ============================================================
-  
+
   @happy-path @smoke
   Scenario: {Descriptive scenario name for happy path}
     Given {initial context}
@@ -41,7 +41,7 @@ Feature: {Feature Name}
   # ============================================================
   # SCENARIO 2: Alternative Path
   # ============================================================
-  
+
   @alternative
   Scenario: {Descriptive scenario name for alternative}
     Given {initial context}
@@ -51,7 +51,7 @@ Feature: {Feature Name}
   # ============================================================
   # SCENARIO 3: Error Handling
   # ============================================================
-  
+
   @error-handling @negative
   Scenario: {Descriptive scenario name for error case}
     Given {initial context}
@@ -62,7 +62,7 @@ Feature: {Feature Name}
   # ============================================================
   # SCENARIO 4: Boundary Conditions
   # ============================================================
-  
+
   @boundary
   Scenario: {Descriptive scenario for boundary condition}
     Given {context at boundary}
@@ -72,7 +72,7 @@ Feature: {Feature Name}
   # ============================================================
   # SCENARIO OUTLINE: Data-Driven Tests
   # ============================================================
-  
+
   @data-driven
   Scenario Outline: {Parameterized scenario description}
     Given {context with <parameter1>}
@@ -93,7 +93,7 @@ Feature: {Feature Name}
   # ============================================================
   # SCENARIO: Integration Point
   # ============================================================
-  
+
   @integration @external-service
   Scenario: {Scenario involving external system}
     Given {external system is available}
@@ -105,7 +105,7 @@ Feature: {Feature Name}
   # ============================================================
   # SCENARIO: Security
   # ============================================================
-  
+
   @security @authentication
   Scenario: {Security-related scenario}
     Given {user with specific permissions}
@@ -115,7 +115,7 @@ Feature: {Feature Name}
   # ============================================================
   # SCENARIO: Performance (for documentation, actual perf tests elsewhere)
   # ============================================================
-  
+
   @performance @non-functional
   Scenario: {Performance expectation scenario}
     Given {system under normal load}
@@ -128,6 +128,7 @@ Feature: {Feature Name}
 ## Step Definitions Template
 
 ### Given Steps (Context/Preconditions)
+
 ```
 Given {actor} is logged in as {role}
 Given the {entity} with {attribute} "{value}" exists
@@ -139,6 +140,7 @@ Given the following {entities} exist:
 ```
 
 ### When Steps (Actions)
+
 ```
 When {actor} navigates to {page/endpoint}
 When {actor} clicks the {element} button
@@ -151,6 +153,7 @@ When {time period} has passed
 ```
 
 ### Then Steps (Outcomes/Assertions)
+
 ```
 Then {actor} should see "{message}"
 Then the {entity} should be {state}
@@ -171,12 +174,14 @@ Then the audit log should contain "{action}"
 ## Tags Reference
 
 ### Priority Tags
+
 - `@critical` - Must pass for release
 - `@high` - Important functionality
 - `@medium` - Standard functionality
 - `@low` - Nice to have
 
 ### Type Tags
+
 - `@smoke` - Smoke tests
 - `@regression` - Regression suite
 - `@happy-path` - Main success scenarios
@@ -185,17 +190,20 @@ Then the audit log should contain "{action}"
 - `@data-driven` - Parameterized tests
 
 ### Layer Tags
+
 - `@ui` - User interface tests
 - `@api` - API tests
 - `@integration` - Integration tests
 - `@e2e` - End-to-end tests
 
 ### Non-Functional Tags
+
 - `@security` - Security tests
 - `@performance` - Performance expectations
 - `@accessibility` - Accessibility tests
 
 ### Execution Control
+
 - `@wip` - Work in progress (skip)
 - `@skip` - Temporarily disabled
 - `@manual` - Manual test only
@@ -206,6 +214,7 @@ Then the audit log should contain "{action}"
 ## Best Practices
 
 ### DO
+
 - Write scenarios from user's perspective
 - Use business language, not technical jargon
 - Keep scenarios independent (no dependencies)
@@ -214,6 +223,7 @@ Then the audit log should contain "{action}"
 - Use tags for filtering and organization
 
 ### DON'T
+
 - Don't include implementation details
 - Don't use "click button X, enter Y in field Z" (too UI-specific)
 - Don't create dependencies between scenarios
@@ -222,17 +232,17 @@ Then the audit log should contain "{action}"
 
 ---
 
-## Mapping to AURORA Artifacts
+## Mapping to BOLT Framework Artifacts
 
-| Gherkin | AURORA Artifact |
-|---------|-----------------|
-| Feature | Feature Specification |
-| Scenario | Use Case Flow |
-| Given | Preconditions |
-| When | Actor Actions |
-| Then | Postconditions |
-| Examples | Test Data |
+| Gherkin  | BOLT Framework Artifact |
+| -------- | ----------------------- |
+| Feature  | Feature Specification   |
+| Scenario | Use Case Flow           |
+| Given    | Preconditions           |
+| When     | Actor Actions           |
+| Then     | Postconditions          |
+| Examples | Test Data               |
 
 ---
 
-*Generated by Aurora Gherkin Agent*
+_Generated by Bolt Gherkin Agent_

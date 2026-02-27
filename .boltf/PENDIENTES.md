@@ -1,4 +1,4 @@
-# 🚧 AURORA-IA-DLC - Cosas Pendientes / Mejoras Propuestas
+# 🚧 Bolt Framework - Cosas Pendientes / Mejoras Propuestas
 
 > **Documento de análisis**: Identificación de gaps y mejoras potenciales  
 > **Fecha**: 2025-12-16  
@@ -52,7 +52,7 @@ El `init.sh` ahora genera archivos específicos SOLO después de leer constituti
 - ✅ PS1 ahora copia todos los agentes y prompts
 - ✅ PS1 es agnóstico hasta leer constitution.md
 - ✅ PS1 genera configuraciones específicas SOLO del stack detectado
-- ✅ PS1 tiene referencias actualizadas a @Aurora agentes
+- ✅ PS1 tiene referencias actualizadas a @Bolt agentes
 - ✅ PS1 tiene paridad 100% con init.sh
 
 #### 4. ✅ **Enfoque agnóstico por defecto**
@@ -65,9 +65,9 @@ Los scripts NO hardcodean tecnologías específicas:
 #### 5. ✅ **Referencias actualizadas a agentes**
 El README generado por ambos scripts ahora usa:
 ```
-@Aurora Constitution
-@Aurora Feature  
-@Aurora Implement
+@Bolt Constitution
+@Bolt Feature  
+@Bolt Implement
 ```
 En lugar de los comandos slash obsoletos.
 
@@ -76,7 +76,7 @@ En lugar de los comandos slash obsoletos.
 ## ✅ Acciones Inmediatas COMPLETADAS para `init.sh` / `Init.ps1`
 
 ### ✅ Prioridad 1: Actualizar README generado - RESUELTO
-**Completado:** Referencias cambiadas de `/aurora.xxx` a `@Aurora Xxx` (agentes).
+**Completado:** Referencias cambiadas de `/aurora.xxx` a `@Bolt Xxx` (agentes).
 
 ### ✅ Prioridad 2: Enfoque Agnóstico de Configuraciones - RESUELTO
 **Completado:** Scripts adaptados por stack detectado:
@@ -98,13 +98,13 @@ En lugar de los comandos slash obsoletos.
 - ✅ Generan SOLO configuraciones del stack detectado
 - ✅ Copia agentes, prompts, workflows, scripts  
 - ✅ Paridad 100% Bash ↔ PowerShell
-- ✅ Referencias actualizadas a @Aurora agentes
+- ✅ Referencias actualizadas a @Bolt agentes
 
 ---
 
 ## 📋 Resumen Ejecutivo Original
 
-AURORA-IA-DLC es un framework maduro con 29 agentes, 19 prompts, 36+ scripts y workflows de CI/CD. Sin embargo, hay áreas que podrían completarse o mejorarse.
+Bolt Framework es un framework maduro con 29 agentes, 19 prompts, 36+ scripts y workflows de CI/CD. Sin embargo, hay áreas que podrían completarse o mejorarse.
 
 ---
 
@@ -179,7 +179,7 @@ AURORA-IA-DLC es un framework maduro con 29 agentes, 19 prompts, 36+ scripts y w
 ## 🟢 Nice to Have / Futuro
 
 ### 11. **CLI de AURORA**
-- [ ] No hay CLI propio (`aurora init`, `aurora feature`, `aurora bolt`)
+- [ ] No hay CLI propio (`aurora init`, `Bolt Feature`, `aurora bolt`)
 - [ ] Los scripts bash/powershell son verbose
 - [ ] Sería útil: `npx aurora-cli init`
 
@@ -240,7 +240,7 @@ AURORA-IA-DLC es un framework maduro con 29 agentes, 19 prompts, 36+ scripts y w
 ## 🔧 Archivos/Carpetas que Faltan
 
 ```
-aurora-ia-dlc/
+Bolt Framework/
 ├── .editorconfig                    # ❌ No existe
 ├── .nvmrc                           # ❌ No existe (Node version)
 ├── aurora.json                      # ❌ Config del framework
@@ -339,7 +339,7 @@ aurora-ia-dlc/
 ### Fase 4: CLI (4-6 semanas)
 11. Diseñar CLI commands
 12. Implementar `aurora init`
-13. Implementar `aurora feature create`
+13. Implementar `Bolt Feature create`
 14. Implementar `aurora bolt run`
 
 ---
@@ -352,11 +352,11 @@ aurora-ia-dlc/
 
 ---
 
-## 🔒 Actualización: Aurora Security Agent COMPLETADO
+## 🔒 Actualización: Bolt Security Agent COMPLETADO
 
 **Fecha de finalización**: 2024-12-17  
 **Implementación completa**:
-- ✅ Aurora Security Agent (`.github/copilot/agents/aurora-security.agent.md`) - 500+ líneas
+- ✅ Bolt Security Agent (`.github/copilot/agents/aurora-security.agent.md`) - 500+ líneas
 - ✅ Scripts de seguridad multiplataforma:
   - `scripts/bash/security-analysis.sh` (3,287+ líneas)
   - `scripts/powershell/Security-Analysis.ps1` (equivalente completo)
@@ -377,4 +377,4 @@ aurora-ia-dlc/
 
 ---
 
-*Generado por análisis de AURORA-IA-DLC v2.2.0*
+*Generado por análisis de Bolt Framework v2.2.0*

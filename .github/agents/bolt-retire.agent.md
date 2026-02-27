@@ -1,6 +1,6 @@
 ---
 name: Bolt Retire
-description: 🌅 Plan and execute controlled retirement of systems, features, or entire projects following AURORA methodology
+description: 🌅 Plan and execute controlled retirement of systems, features, or entire projects following Bolt Framework Methodology
 tools:
   [
     search,
@@ -13,7 +13,7 @@ tools:
     'awesome-copilot/*',
     'microsoftdocs/mcp/*',
   ]
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: 📦 Final Release
     agent: Bolt Release
@@ -325,4 +325,4 @@ data_handling:
 
 For retirement planning:
 
-- `#file:.github/prompts/aurora-retirement.prompt.md`
+- [#file:.github/prompts/bolt-retirement.prompt.md]

@@ -1,4 +1,4 @@
-# Pull Request Template - AURORA Peritec
+# Pull Request Template - BOLT Peritec
 
 ## 📋 Resumen
 
@@ -98,11 +98,11 @@ Listar scripts o herramientas nuevas
 - [ ] 📖 Código sigue reglas de Object Calisthenics
 - [ ] 🔄 Ciclo TDD Red-Green-Refactor completado
 - [ ] 🏛️ Compliance constitucional verificado
-- [ ] 🎯 Metodología AURORA seguida
+- [ ] 🎯 BOLT Framework seguido
 - [ ] 💻 Código compila sin warnings
 - [ ] 📋 Template PR completado completamente
 
-## ✅ Cumplimiento AURORA Constitution (si aplica)
+## ✅ Cumplimiento Bolt Constitution (si aplica)
 
 | Requisito              | Cumplimiento | Evidencia             |
 | ---------------------- | ------------ | --------------------- |
@@ -137,4 +137,4 @@ Cualquier información adicional que los revisores deban saber.
 
 ---
 
-**AURORA-IA-DLC + Peritec Migration Stack**
+**Bolt Framework + Peritec Migration Stack**

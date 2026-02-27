@@ -1,6 +1,6 @@
 version: 1
 scope: integration
-description: Integraciones y sincronización entre artefactos AURORA y herramientas externas.
+description: Integraciones y sincronización entre artefactos BOLT Framework y herramientas externas.
 items:
   - id: integration-mcp-settings-local
     kind: templates

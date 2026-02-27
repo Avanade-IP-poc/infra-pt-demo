@@ -1,4 +1,4 @@
-# AURORA-IA Project Constitution — Scope: AI
+# BOLT Framework Project Constitution — Scope: AI
 
 > **Extracted from**: `.boltf/memory/constitution.md`
 > **Scope**: `ai` — AI/ML models, AI agents, prompt engineering, responsible AI, and model lifecycle.
@@ -77,7 +77,7 @@ Select ONE:
 
 ### Section 11.2: Pipeline Stages
 
-#### For Application Development:
+#### For Application Development
 
 | Stage                  | Enabled | Threshold                          |
 | ---------------------- | ------- | ---------------------------------- |
@@ -91,7 +91,7 @@ Select ONE:
 | **Container Build**    | [ ] Yes | -                                  |
 | **Container Scan**     | [ ] Yes | 0 Critical                         |
 
-#### Deployment Stages:
+#### Deployment Stages
 
 | Stage           | Enabled | Trigger            |
 | --------------- | ------- | ------------------ |
@@ -133,7 +133,7 @@ Select ONE:
 
 ### Section 12.2: Health Checks
 
-```
+```text
 /health       - Full health check
 /health/ready - Readiness probe
 /health/live  - Liveness probe

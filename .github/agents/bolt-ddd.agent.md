@@ -15,7 +15,7 @@ tools:
     'awesome-copilot/*',
     'microsoftdocs/mcp/*',
   ]
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: 🏛️ Architecture Design
     agent: Bolt Architect
@@ -222,4 +222,4 @@ public record OrderPlaced(
 
 For DDD templates:
 
-- `#file:.github/prompts/aurora-ddd.prompt.md`
+- [#file:.github/prompts/bolt-ddd.prompt.md]

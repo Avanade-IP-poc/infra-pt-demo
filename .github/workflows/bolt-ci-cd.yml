@@ -1,0 +1,542 @@
+name: Bolt Framework CI/CD Pipeline
+on:
+  push:
+    branches: [ main, develop, 'feature/*' ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  NODE_VERSION: '18'
+  DOTNET_VERSION: '8.0.x'
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  # Determine project structure and setup matrix
+  setup:
+    name: 🔍 Analyze Project Structure
+    runs-on: ubuntu-latest
+    outputs:
+      has-frontend: ${{ steps.check.outputs.has-frontend }}
+      has-backend: ${{ steps.check.outputs.has-backend }}
+      frontend-type: ${{ steps.check.outputs.frontend-type }}
+      backend-type: ${{ steps.check.outputs.backend-type }}
+      target-env: ${{ steps.env.outputs.target-env }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Analyze project structure
+        id: check
+        run: |
+          # Check for frontend
+          if [[ -d "src/frontend" ]]; then
+            echo "has-frontend=true" >> $GITHUB_OUTPUT
+            
+            if [[ -f "src/frontend/package.json" ]]; then
+              if grep -q "react" src/frontend/package.json; then
+                echo "frontend-type=react" >> $GITHUB_OUTPUT
+              elif grep -q "vue" src/frontend/package.json; then
+                echo "frontend-type=vue" >> $GITHUB_OUTPUT
+              elif grep -q "angular" src/frontend/package.json; then
+                echo "frontend-type=angular" >> $GITHUB_OUTPUT
+              else
+                echo "frontend-type=javascript" >> $GITHUB_OUTPUT
+              fi
+            fi
+          else
+            echo "has-frontend=false" >> $GITHUB_OUTPUT
+          fi
+          
+          # Check for backend
+          if [[ -d "src/backend" ]]; then
+            echo "has-backend=true" >> $GITHUB_OUTPUT
+            
+            if [[ -f src/backend/*.csproj || -f src/backend/*.sln ]]; then
+              echo "backend-type=dotnet" >> $GITHUB_OUTPUT
+            elif [[ -f "src/backend/package.json" ]]; then
+              echo "backend-type=nodejs" >> $GITHUB_OUTPUT
+            elif [[ -f "src/backend/requirements.txt" || -f "src/backend/pyproject.toml" ]]; then
+              echo "backend-type=python" >> $GITHUB_OUTPUT
+            else
+              echo "backend-type=unknown" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "has-backend=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Determine target environment
+        id: env
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "target-env=production" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
+            echo "target-env=staging" >> $GITHUB_OUTPUT
+          else
+            echo "target-env=development" >> $GITHUB_OUTPUT
+          fi
+
+  # Bolt Framework Quality Gates - Always run first
+  quality-gates:
+    name: 🚦 Bolt Framework Quality Gates
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        if: needs.setup.outputs.has-frontend == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: src/frontend/package-lock.json
+
+      - name: Setup .NET
+        if: needs.setup.outputs.backend-type == 'dotnet'
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Setup Python
+        if: needs.setup.outputs.backend-type == 'python'
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install frontend dependencies
+        if: needs.setup.outputs.has-frontend == 'true'
+        run: |
+          cd src/frontend
+          npm ci
+
+      - name: Install backend dependencies
+        run: |
+          if [[ -d "src/backend" ]]; then
+            cd src/backend
+            case "${{ needs.setup.outputs.backend-type }}" in
+              dotnet)
+                dotnet restore
+                ;;
+              nodejs)
+                npm ci
+                ;;
+              python)
+                pip install -r requirements.txt
+                ;;
+            esac
+          fi
+
+      - name: Run Bolt Framework Quality Gates
+        run: |
+          # Make script executable
+          chmod +x scripts/bash/quality-gates.sh
+          
+          # Run quality gates with CI mode
+          ./scripts/bash/quality-gates.sh --ci-mode
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
+        if: always()
+        with:
+          directory: ./coverage
+          fail_ci_if_error: false
+
+  # Security and vulnerability scanning
+  security-scan:
+    name: 🔒 Security Analysis
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: Dependency vulnerability scan
+        run: |
+          # Frontend security scan
+          if [[ -d "src/frontend" ]]; then
+            cd src/frontend
+            npm audit --audit-level high
+            cd ..
+          fi
+          
+          # Backend security scan
+          if [[ -d "src/backend" && "${{ needs.setup.outputs.backend-type }}" == "dotnet" ]]; then
+            cd src/backend
+            dotnet list package --vulnerable --include-transitive
+          fi
+
+  # Build frontend applications
+  build-frontend:
+    name: 📦 Build Frontend (${{ needs.setup.outputs.frontend-type }})
+    runs-on: ubuntu-latest
+    needs: [setup, quality-gates]
+    if: needs.setup.outputs.has-frontend == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: src/frontend/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd src/frontend
+          npm ci
+
+      - name: Build application
+        run: |
+          cd src/frontend
+          npm run build
+
+      - name: Run frontend tests
+        run: |
+          cd src/frontend
+          npm run test:ci || npm test
+
+      - name: Upload frontend artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: src/frontend/dist/
+          retention-days: 7
+
+  # Build backend applications
+  build-backend:
+    name: 🔧 Build Backend (${{ needs.setup.outputs.backend-type }})
+    runs-on: ubuntu-latest
+    needs: [setup, quality-gates]
+    if: needs.setup.outputs.has-backend == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup backend runtime
+        run: |
+          case "${{ needs.setup.outputs.backend-type }}" in
+            dotnet)
+              # Setup .NET
+              curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --version ${{ env.DOTNET_VERSION }}
+              ;;
+            python)
+              # Setup Python
+              sudo apt-get update
+              sudo apt-get install -y python${{ env.PYTHON_VERSION }}
+              ;;
+            nodejs)
+              # Setup Node.js
+              curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+              sudo apt-get install -y nodejs
+              ;;
+          esac
+
+      - name: Build and test backend
+        run: |
+          cd src/backend
+          
+          case "${{ needs.setup.outputs.backend-type }}" in
+            dotnet)
+              dotnet restore
+              dotnet build --configuration Release --no-restore
+              dotnet test --configuration Release --no-build --verbosity normal
+              dotnet publish --configuration Release --no-build --output ./publish
+              ;;
+            python)
+              pip install -r requirements.txt
+              python -m pytest tests/ || echo "No pytest found"
+              # Create deployment package
+              mkdir -p publish
+              cp -r . publish/
+              ;;
+            nodejs)
+              npm ci
+              npm run test || echo "No tests configured"
+              npm run build || echo "No build script"
+              ;;
+          esac
+
+      - name: Upload backend artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-publish
+          path: src/backend/publish/
+          retention-days: 7
+
+  # Build Docker images (if Dockerfiles exist)
+  build-docker:
+    name: 🐳 Build Docker Images
+    runs-on: ubuntu-latest
+    needs: [setup, quality-gates]
+    if: github.event_name == 'push'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.CONTAINER_REGISTRY }}
+          username: ${{ secrets.CONTAINER_USERNAME }}
+          password: ${{ secrets.CONTAINER_PASSWORD }}
+
+      - name: Build and push Docker images
+        run: |
+          # Frontend Docker image
+          if [[ -f "src/frontend/Dockerfile" ]]; then
+            docker buildx build \
+              --platform linux/amd64,linux/arm64 \
+              --tag ${{ secrets.CONTAINER_REGISTRY }}/bolt-frontend:${{ github.sha }} \
+              --tag ${{ secrets.CONTAINER_REGISTRY }}/bolt-frontend:latest \
+              --push \
+              src/frontend
+          fi
+          
+          # Backend Docker image
+          if [[ -f "src/backend/Dockerfile" ]]; then
+            docker buildx build \
+              --platform linux/amd64,linux/arm64 \
+              --tag ${{ secrets.CONTAINER_REGISTRY }}/bolt-backend:${{ github.sha }} \
+              --tag ${{ secrets.CONTAINER_REGISTRY }}/bolt-backend:latest \
+              --push \
+              src/backend
+          fi
+
+  # Performance testing
+  performance-test:
+    name: ⚡ Performance Testing
+    runs-on: ubuntu-latest
+    needs: [build-frontend, build-backend]
+    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Run performance tests
+        run: |
+          # Start applications
+          if [[ -d "backend-publish" ]]; then
+            cd backend-publish
+            # Start backend (example for .NET)
+            dotnet Bolt.Api.dll &
+            BACKEND_PID=$!
+            cd ..
+          fi
+          
+          if [[ -d "frontend-dist" ]]; then
+            # Serve frontend
+            npx serve -s frontend-dist -p 3000 &
+            FRONTEND_PID=$!
+          fi
+          
+          # Wait for services to start
+          sleep 30
+          
+          # Run performance tests
+          if [[ -f "scripts/bash/performance-tests.sh" ]]; then
+            ./scripts/bash/performance-tests.sh
+          fi
+          
+          # Cleanup
+          [[ -n "$BACKEND_PID" ]] && kill $BACKEND_PID
+          [[ -n "$FRONTEND_PID" ]] && kill $FRONTEND_PID
+
+  # Deploy to development (feature branches)
+  deploy-development:
+    name: 🛠️ Deploy to Development
+    runs-on: ubuntu-latest
+    needs: [setup, build-frontend, build-backend]
+    if: needs.setup.outputs.target-env == 'development' && github.event_name == 'push'
+    environment: development
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Deploy to development
+        run: |
+          chmod +x scripts/bash/deploy.sh
+          ./scripts/bash/deploy.sh --env development --validate-constitution
+
+      - name: Run smoke tests
+        run: |
+          if [[ -f "scripts/bash/smoke-tests.sh" ]]; then
+            ./scripts/bash/smoke-tests.sh --env development
+          fi
+
+  # Deploy to staging (develop branch)
+  deploy-staging:
+    name: 🧪 Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [setup, build-frontend, build-backend, security-scan]
+    if: needs.setup.outputs.target-env == 'staging'
+    environment: staging
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Deploy to staging
+        run: |
+          chmod +x scripts/bash/deploy.sh
+          ./scripts/bash/deploy.sh --env staging --validate-constitution
+
+      - name: Run integration tests
+        run: |
+          # Run comprehensive integration tests
+          if [[ -f "scripts/bash/integration-tests.sh" ]]; then
+            ./scripts/bash/integration-tests.sh --env staging
+          fi
+
+      - name: Run E2E tests
+        uses: playwright-community/action@v1
+        if: needs.setup.outputs.has-frontend == 'true'
+        with:
+          command: npx playwright test
+        env:
+          BASE_URL: ${{ secrets.STAGING_URL }}
+
+  # Deploy to production (main branch)
+  deploy-production:
+    name: 🏭 Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [setup, build-frontend, build-backend, security-scan, performance-test]
+    if: needs.setup.outputs.target-env == 'production'
+    environment: production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Deploy to production
+        run: |
+          chmod +x scripts/bash/deploy.sh
+          ./scripts/bash/deploy.sh --env production --strategy blue-green --validate-constitution
+
+      - name: Run production health checks
+        run: |
+          # Extended health checks for production
+          timeout=300
+          interval=10
+          elapsed=0
+          
+          while [[ $elapsed -lt $timeout ]]; do
+            if curl -f -s "${{ secrets.PRODUCTION_URL }}/health" > /dev/null; then
+              echo "✅ Production health check passed"
+              break
+            fi
+            
+            echo "⏳ Waiting for production deployment..."
+            sleep $interval
+            elapsed=$((elapsed + interval))
+          done
+          
+          if [[ $elapsed -ge $timeout ]]; then
+            echo "❌ Production health checks failed"
+            exit 1
+          fi
+
+  # Post-deployment monitoring and notifications
+  post-deploy:
+    name: 📊 Post-Deployment Tasks
+    runs-on: ubuntu-latest
+    needs: [deploy-development, deploy-staging, deploy-production]
+    if: always() && (needs.deploy-development.result == 'success' || needs.deploy-staging.result == 'success' || needs.deploy-production.result == 'success')
+    steps:
+      - name: Update monitoring dashboards
+        run: |
+          # Update Grafana dashboards with new version info
+          echo "Updating monitoring dashboards..."
+
+      - name: Notify team
+        uses: 8398a7/action-slack@v3
+        if: always()
+        with:
+          status: ${{ job.status }}
+          channel: '#bolt-deployments'
+          text: |
+            🚀 Bolt Framework Deployment completed
+            
+            Branch: ${{ github.ref }}
+            Environment: ${{ needs.setup.outputs.target-env }}
+            Status: ${{ job.status }}
+            
+            Frontend: ${{ needs.setup.outputs.has-frontend == 'true' && '✅' || '➖' }}
+            Backend: ${{ needs.setup.outputs.has-backend == 'true' && '✅' || '➖' }}
+            
+            Commit: ${{ github.sha }}
+            Author: ${{ github.actor }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Update deployment tracking
+        run: |
+          # Log deployment to tracking system
+          echo "$(date): Deployed ${{ github.sha }} to ${{ needs.setup.outputs.target-env }}" >> deployments.log
+
+  # Rollback job (manual trigger)
+  rollback:
+    name: 🔄 Emergency Rollback
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    environment: ${{ github.event.inputs.environment }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Rollback deployment
+        run: |
+          chmod +x scripts/bash/rollback.sh
+          ./scripts/bash/rollback.sh --env ${{ github.event.inputs.environment }}
+
+# Workflow dispatch for manual deployments
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - development
+        - staging
+        - production
+      action:
+        description: 'Action to perform'
+        required: true
+        default: 'deploy'
+        type: choice
+        options:
+        - deploy
+        - rollback

@@ -159,7 +159,7 @@ Invoke agents in VS Code Copilot Chat using the `@` prefix:
 
 ## 🚀 Quick Start by Scenario
 
-AURORA supports different starting points. Choose your scenario:
+BOLT FRAMEWORK supports different starting points. Choose your scenario:
 
 ### Scenario A: Greenfield (New Project from Scratch)
 
@@ -195,7 +195,7 @@ AURORA supports different starting points. Choose your scenario:
 with TypeScript, NestJS, PostgreSQL, following Clean Architecture
 
 # Step 3: Create your first feature
-@Aurora Feature create user-authentication feature
+@Bolt Feature create user-authentication feature
 
 # Or via script:
 ./.boltf/scripts/bash/create-new-feature.sh "user-authentication"
@@ -234,18 +234,18 @@ with TypeScript, NestJS, PostgreSQL, following Clean Architecture
 # Legacy code copied to: legacy/source/
 
 # Step 2: Define TARGET constitution
-@Aurora Constitution create constitution for modernizing COBOL system
+@Bolt Constitution create constitution for modernizing COBOL system
 to TypeScript microservices with event-driven architecture
 
 # Step 3: Analyze legacy code
-@Aurora Analyze analyze the COBOL code in legacy/ and extract
+@Bolt Analyze analyze the COBOL code in legacy/ and extract
 business rules and data structures
 
 # Step 4: Extract use cases
-@Aurora Use Case generate use cases from the legacy analysis
+@Bolt Use Case generate use cases from the legacy analysis
 
 # Step 5: Create modern feature specs
-@Aurora Feature create features based on extracted use cases
+@Bolt Feature create features based on extracted use cases
 ```
 
 ---
@@ -279,14 +279,14 @@ business rules and data structures
 # RFP copied from: demo/from_rfp/
 
 # Step 2: Analyze RFP
-@Aurora Analyze analyze the RFP in demo/from_rfp/ and identify
+@Bolt Analyze analyze the RFP in demo/from_rfp/ and identify
 functional requirements, non-functional requirements, and risks
 
 # Step 3: Generate use cases
-@Aurora Use Case create use cases from the RFP analysis
+@Bolt Use Case create use cases from the RFP analysis
 
 # Step 4: Estimate effort
-@Aurora Plan create estimation and high-level plan for the RFP
+@Bolt Plan create estimation and high-level plan for the RFP
 ```
 
 ---
@@ -320,14 +320,14 @@ functional requirements, non-functional requirements, and risks
 ./init.sh ../clarify-project green --scope app-only --backend csharp
 
 # Step 2: Start clarification session
-@Aurora Clarify I need to understand the requirements for
+@Bolt Clarify I need to understand the requirements for
 an e-commerce checkout system
 
 # Step 3: Generate use cases
 ./.boltf/scripts/bash/generate-usecases.sh "checkout"
 
 # Step 4: Model domain
-@Aurora DDD create domain model for checkout bounded context
+@Bolt DDD create domain model for checkout bounded context
 
 # Step 5: Write Gherkin scenarios
 ./.boltf/scripts/bash/generate-gherkin.sh "checkout"
@@ -340,7 +340,7 @@ an e-commerce checkout system
 
 ### Scenario E: Single Feature (Add to Existing Project)
 
-**You have:** An existing AURORA project with Constitution
+**You have:** An existing BOLT Framework project with Constitution
 **Goal:** Add a new feature following the methodology
 
 ```text
@@ -366,19 +366,19 @@ an e-commerce checkout system
 # Step 1: Create feature
 ./.boltf/scripts/bash/create-new-feature.sh "payment-processing"
 # Or:
-@Aurora Feature create payment-processing feature
+@Bolt Feature create payment-processing feature
 
 # Step 2: Specify requirements
-@Aurora Specify detail requirements for payment-processing
+@Bolt Specify detail requirements for payment-processing
 
 # Step 3: Generate Gherkin
 ./.boltf/scripts/bash/generate-gherkin.sh "payment-processing"
 
 # Step 4: Plan implementation
-@Aurora Plan create implementation plan for payment-processing
+@Bolt Plan create implementation plan for payment-processing
 
 # Step 5: Execute Bolt 1
-@Aurora Implement execute Bolt 1 for payment-processing
+@Bolt Implement execute Bolt 1 for payment-processing
 
 # Step 6: Test
 ./.boltf/scripts/bash/generate-tests.sh "payment-processing"

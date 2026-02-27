@@ -1,6 +1,6 @@
 # Bolt Framework Skills
 
-Specialized skills for the Bolt Framework methodology (AURORA-IA-DLC).
+Specialized skills for the Bolt Framework methodology (Bolt Framework).
 
 ## Overview
 
@@ -10,12 +10,12 @@ This folder contains skills specifically designed to support the Bolt Framework,
 
 | Skill                                       | Description                                                  | Use When                                      |
 | ------------------------------------------- | ------------------------------------------------------------ | --------------------------------------------- |
-| [bolt-framework](bolt-framework/SKILL.md)   | Core AURORA-IA-DLC methodology with 6 lifecycle phases       | Orchestrating projects, managing Bolt cycles  |
+| [bolt-framework](bolt-framework/SKILL.md)   | Core Bolt Framework methodology with 6 lifecycle phases       | Orchestrating projects, managing Bolt cycles  |
 | [bolt-adr](bolt-adr/SKILL.md)               | Architecture Decision Records using MADR format              | Documenting architectural decisions           |
 
 ## What is Bolt Framework?
 
-Bolt Framework (AURORA-IA-DLC) is an AI-powered software development methodology that organizes work into:
+Bolt Framework (Bolt Framework) is an AI-powered software development methodology that organizes work into:
 
 - **6 Lifecycle Phases**: INCEPTION → DISCOVERY → CONSTRUCTION → TRANSITION → PRODUCTION → RETIREMENT
 - **Micro-Iterations (Bolts)**: Small, deliverable increments (2-3 days max)
@@ -43,8 +43,8 @@ Specialized AI agents handle specific tasks:
 
 - `@Bolt Framework` - Main orchestrator
 - `@Bolt ADR` - Architecture decisions
-- `@Aurora Feature` - Feature specifications
-- `@Aurora Implement` - Code implementation
+- `@Bolt Feature` - Feature specifications
+- `@Bolt Implement` - Code implementation
 - And 26+ more specialized agents
 
 ## Activation
@@ -53,7 +53,7 @@ These skills are activated in projects via `.boltf/scopes/` configuration when:
 
 - Using Bolt Framework methodology
 - Need architecture decision documentation
-- Following AURORA-IA-DLC workflow
+- Following Bolt Framework workflow
 
 ## Integration
 
@@ -62,7 +62,7 @@ Bolt Framework skills work with:
 - **Constitution**: `memory/constitution.md` - Project constraints and standards
 - **Feature Specs**: `specs/XXX-feature-name/` - Detailed feature specifications
 - **Quality Gates**: Automated validation of code quality
-- **Agents**: 31+ AURORA agents in `.github/agents/`
+- **Agents**: 31+ Bolt Framework agents in `.github/agents/`
 
 ## Documentation
 
@@ -77,12 +77,12 @@ Each skill contains:
 ## References
 
 - **Main Documentation**: [bolt-framework/SKILL.md](bolt-framework/SKILL.md)
-- **Agents**: `.github/agents/` - All AURORA agents
+- **Agents**: `.github/agents/` - All Bolt Framework agents
 - **Skills**: `.github/skills/` - Currently active skills
 - **Scopes**: `.boltf/scopes/` - Skill activation rules
 
 ---
 
-**Part of**: AURORA-IA-DLC (AI-Driven Development Lifecycle)
+**Part of**: Bolt Framework (AI-Driven Development Lifecycle)
 **Version**: 1.0.0
 **Created**: 2026-02-23

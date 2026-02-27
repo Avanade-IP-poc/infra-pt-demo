@@ -1,10 +1,6 @@
 ---
 name: github-issues
-description:
-  'Create, update, and manage GitHub issues using MCP tools. Use this skill when users want to
-  create bug reports, feature requests, or task issues, update existing issues, add
-  labels/assignees/milestones, or manage issue workflows. Triggers on requests like "create an
-  issue", "file a bug", "request a feature", "update issue X", or any GitHub issue management task.'
+description: "Create, update, and manage GitHub issues using MCP tools. Use this skill when users want to create bug reports, feature requests, or task issues, update existing issues, add labels/assignees/milestones, or manage issue workflows. Triggers on requests like 'create an issue', 'file a bug', 'request a feature', 'update issue X', or any GitHub issue management task."
 ---
 
 # GitHub Issues
@@ -47,7 +43,7 @@ body: structured markdown content
 
 ```text
 Project custom fields: ["Status", "Priority", "Size", "Estimate", "Iteration"]
-labels: ["aurora:<phase>", "domain:<domain>", "<[feature|bolt|task|epic]>", "priority"]
+labels: ["bolt:<phase>", "domain:<domain>", "<[feature|bolt|task|epic]>", "priority"]
 sub-issues: [list of related issue numbers]
 milestone: milestone number (integer)
 ```

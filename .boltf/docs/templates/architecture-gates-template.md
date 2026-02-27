@@ -300,7 +300,7 @@ flowchart LR
     end
 ```
 
-## Integration with AURORA
+## Integration with Bolt Framework
 
 1. **BOLT Implementation**: Run architecture gates after each BOLT
 2. **Code Review**: Include architecture report in review
@@ -309,4 +309,4 @@ flowchart LR
 
 ---
 
-*AURORA Architecture Quality Gates Template v1.0.0*
+*Bolt Architecture Quality Gates Template v1.0.0*

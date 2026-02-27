@@ -17,7 +17,7 @@ tools:
     'awesome-copilot/*',
     'microsoftdocs/mcp/*',
   ]
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: 🏗️ Fix Issues
     agent: Bolt Implement
@@ -279,5 +279,5 @@ if (retryCount > MAX_RETRIES) { ... }
 ## Prompts Reference
 
 For detailed review guidance:
-- `#file:.github/prompts/aurora-code-review.prompt.md`
+- [#file:.github/prompts/bolt-code-review.prompt.md]
 ```

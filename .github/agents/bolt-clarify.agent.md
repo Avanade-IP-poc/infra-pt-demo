@@ -15,7 +15,7 @@ tools:
     'awesome-copilot/*',
     'microsoftdocs/mcp/*',
   ]
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: 📝 Update Specification
     agent: Bolt Specify
@@ -236,4 +236,4 @@ Files to update based on clarifications:
 
 For detailed guidance:
 
-- `#file:.github/prompts/aurora-business-analysis.prompt.md`
+- [#file:.github/prompts/bolt-business-analysis.prompt.md]

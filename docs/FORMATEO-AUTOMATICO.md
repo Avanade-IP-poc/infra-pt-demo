@@ -1,4 +1,4 @@
-# Configuración de Formateo Automático - AURORA
+# Configuración de Formateo Automático - Bolt Framework
 
 Configuración completada el 2026-02-13 para formateo automático de Markdown y otros archivos.
 
@@ -140,6 +140,6 @@ Verifica en `.vscode/settings.json`:
 
 ---
 
-**Configurado por**: AURORA AI Assistant
+**Configurado por**: Bolt Framework AI Assistant
 **Fecha**: 2026-02-13
 **Skill**: [markdown-formatting](.github/skills/markdown-formatting/)

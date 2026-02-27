@@ -14,7 +14,7 @@ tools:
     'awesome-copilot/*',
     'microsoftdocs/mcp/*',
   ]
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: 🔍 Run Consistency Analysis
     agent: Bolt Analyze
@@ -274,4 +274,4 @@ Where each factor is 0-1
 
 For alignment analysis:
 
-- `#file:.github/prompts/aurora-alignment.prompt.md`
+- [#file:.github/prompts/bolt-alignment.prompt.md]

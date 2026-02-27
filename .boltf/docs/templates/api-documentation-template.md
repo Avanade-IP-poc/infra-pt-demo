@@ -10,14 +10,17 @@
 ## Overview
 
 ### Description
-Provide a clear and concise description of what this API does and its purpose within the AURORA system.
+
+Provide a clear and concise description of what this API does and its purpose within the BOLT Framework system.
 
 ### Key Features
+
 - Feature 1
 - Feature 2
 - Feature 3
 
 ### Target Audience
+
 - Developers integrating with this service
 - Internal team members
 - External partners (if applicable)
@@ -27,6 +30,7 @@ Provide a clear and concise description of what this API does and its purpose wi
 ## Authentication and Authorization
 
 ### Authentication Method
+
 Describe the authentication method used (JWT, API Keys, OAuth, etc.)
 
 ```http
@@ -34,13 +38,15 @@ Authorization: Bearer {JWT_TOKEN}
 ```
 
 ### Required Permissions
+
 List the permissions or roles required to access this API:
 
-- `aurora.read`: Read access to resources
-- `aurora.write`: Write access to resources
-- `aurora.admin`: Administrative access
+- `bolt.read`: Read access to resources
+- `bolt.write`: Write access to resources
+- `bolt.admin`: Administrative access
 
 ### Authentication Flow
+
 1. Step 1: Obtain credentials
 2. Step 2: Request token
 3. Step 3: Include token in requests
@@ -50,20 +56,23 @@ List the permissions or roles required to access this API:
 ## Base Configuration
 
 ### Base URL
-```
+
+```text
 Production: https://api.boltf.company.com/v1
 Staging: https://staging-api.boltf.company.com/v1
 Development: https://dev-api.boltf.company.com/v1
 ```
 
 ### Content Types
+
 - **Request:** `application/json`
 - **Response:** `application/json`
 - **Error:** `application/problem+json`
 
 ### Rate Limiting
+
 - **Limit:** 1000 requests per hour
-- **Headers:** 
+- **Headers:**
   - `X-RateLimit-Limit`: Request limit
   - `X-RateLimit-Remaining`: Remaining requests
   - `X-RateLimit-Reset`: Reset timestamp
@@ -75,6 +84,7 @@ Development: https://dev-api.boltf.company.com/v1
 ### {RESOURCE_NAME} Operations
 
 #### Get All {RESOURCES}
+
 ```http
 GET /api/v1/{resources}
 ```
@@ -83,21 +93,23 @@ GET /api/v1/{resources}
 
 **Parameters:**
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `page` | integer | No | 1 | Page number |
-| `limit` | integer | No | 20 | Items per page (max 100) |
-| `sort` | string | No | `created_at` | Sort field |
-| `order` | string | No | `asc` | Sort order (`asc`, `desc`) |
-| `filter` | string | No | - | Filter expression |
+| Parameter | Type    | Required | Default      | Description                |
+| --------- | ------- | -------- | ------------ | -------------------------- |
+| `page`    | integer | No       | 1            | Page number                |
+| `limit`   | integer | No       | 20           | Items per page (max 100)   |
+| `sort`    | string  | No       | `created_at` | Sort field                 |
+| `order`   | string  | No       | `asc`        | Sort order (`asc`, `desc`) |
+| `filter`  | string  | No       | -            | Filter expression          |
 
 **Request Example:**
+
 ```http
 GET /api/v1/{resources}?page=1&limit=20&sort=name&order=asc
 Authorization: Bearer {JWT_TOKEN}
 ```
 
 **Response Example:**
+
 ```json
 {
   "data": [
@@ -125,6 +137,7 @@ Authorization: Bearer {JWT_TOKEN}
 ```
 
 **Response Codes:**
+
 - `200 OK`: Success
 - `400 Bad Request`: Invalid parameters
 - `401 Unauthorized`: Authentication required
@@ -132,6 +145,7 @@ Authorization: Bearer {JWT_TOKEN}
 - `500 Internal Server Error`: Server error
 
 #### Get {RESOURCE} by ID
+
 ```http
 GET /api/v1/{resources}/{id}
 ```
@@ -140,17 +154,19 @@ GET /api/v1/{resources}/{id}
 
 **Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `id` | UUID | Yes | Unique identifier of the {resource} |
+| Parameter | Type | Required | Description                         |
+| --------- | ---- | -------- | ----------------------------------- |
+| `id`      | UUID | Yes      | Unique identifier of the {resource} |
 
 **Request Example:**
+
 ```http
 GET /api/v1/{resources}/123e4567-e89b-12d3-a456-426614174000
 Authorization: Bearer {JWT_TOKEN}
 ```
 
 **Response Example:**
+
 ```json
 {
   "data": {
@@ -169,12 +185,14 @@ Authorization: Bearer {JWT_TOKEN}
 ```
 
 **Response Codes:**
+
 - `200 OK`: Success
 - `404 Not Found`: Resource not found
 - `401 Unauthorized`: Authentication required
 - `403 Forbidden`: Insufficient permissions
 
 #### Create New {RESOURCE}
+
 ```http
 POST /api/v1/{resources}
 ```
@@ -182,6 +200,7 @@ POST /api/v1/{resources}
 **Description:** Create a new {resource}.
 
 **Request Body:**
+
 ```json
 {
   "name": "New Resource Name",
@@ -195,6 +214,7 @@ POST /api/v1/{resources}
 ```
 
 **Request Example:**
+
 ```http
 POST /api/v1/{resources}
 Content-Type: application/json
@@ -208,6 +228,7 @@ Authorization: Bearer {JWT_TOKEN}
 ```
 
 **Response Example:**
+
 ```json
 {
   "data": {
@@ -222,17 +243,20 @@ Authorization: Bearer {JWT_TOKEN}
 ```
 
 **Validation Rules:**
+
 - `name`: Required, string, 1-100 characters
 - `description`: Optional, string, max 500 characters
 - `status`: Required, enum [`active`, `inactive`, `pending`]
 
 **Response Codes:**
+
 - `201 Created`: Resource created successfully
 - `400 Bad Request`: Validation error
 - `401 Unauthorized`: Authentication required
 - `409 Conflict`: Resource already exists
 
 #### Update {RESOURCE}
+
 ```http
 PUT /api/v1/{resources}/{id}
 ```
@@ -241,11 +265,12 @@ PUT /api/v1/{resources}/{id}
 
 **Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `id` | UUID | Yes | Unique identifier of the {resource} |
+| Parameter | Type | Required | Description                         |
+| --------- | ---- | -------- | ----------------------------------- |
+| `id`      | UUID | Yes      | Unique identifier of the {resource} |
 
 **Request Body:**
+
 ```json
 {
   "name": "Updated Resource Name",
@@ -255,12 +280,14 @@ PUT /api/v1/{resources}/{id}
 ```
 
 **Response Codes:**
+
 - `200 OK`: Resource updated successfully
 - `400 Bad Request`: Validation error
 - `404 Not Found`: Resource not found
 - `409 Conflict`: Version conflict
 
 #### Delete {RESOURCE}
+
 ```http
 DELETE /api/v1/{resources}/{id}
 ```
@@ -269,11 +296,12 @@ DELETE /api/v1/{resources}/{id}
 
 **Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `id` | UUID | Yes | Unique identifier of the {resource} |
+| Parameter | Type | Required | Description                         |
+| --------- | ---- | -------- | ----------------------------------- |
+| `id`      | UUID | Yes      | Unique identifier of the {resource} |
 
 **Response Codes:**
+
 - `204 No Content`: Resource deleted successfully
 - `404 Not Found`: Resource not found
 - `409 Conflict`: Cannot delete (dependencies exist)
@@ -301,21 +329,22 @@ DELETE /api/v1/{resources}/{id}
 
 **Field Descriptions:**
 
-| Field | Type | Required | Description | Constraints |
-|-------|------|----------|-------------|-------------|
-| `id` | UUID | Yes | Unique identifier | Auto-generated |
-| `name` | string | Yes | Resource name | 1-100 characters |
-| `description` | string | No | Resource description | Max 500 characters |
-| `status` | enum | Yes | Current status | `active`, `inactive`, `pending` |
-| `metadata` | object | No | Additional metadata | Free-form object |
-| `created_at` | datetime | Yes | Creation timestamp | ISO 8601 format |
-| `updated_at` | datetime | Yes | Last update timestamp | ISO 8601 format |
+| Field         | Type     | Required | Description           | Constraints                     |
+| ------------- | -------- | -------- | --------------------- | ------------------------------- |
+| `id`          | UUID     | Yes      | Unique identifier     | Auto-generated                  |
+| `name`        | string   | Yes      | Resource name         | 1-100 characters                |
+| `description` | string   | No       | Resource description  | Max 500 characters              |
+| `status`      | enum     | Yes      | Current status        | `active`, `inactive`, `pending` |
+| `metadata`    | object   | No       | Additional metadata   | Free-form object                |
+| `created_at`  | datetime | Yes      | Creation timestamp    | ISO 8601 format                 |
+| `updated_at`  | datetime | Yes      | Last update timestamp | ISO 8601 format                 |
 
 ---
 
 ## Error Handling
 
 ### Error Response Format
+
 All errors follow the [RFC 7807](https://tools.ietf.org/html/rfc7807) Problem Details standard.
 
 ```json
@@ -338,33 +367,40 @@ All errors follow the [RFC 7807](https://tools.ietf.org/html/rfc7807) Problem De
 ### Common Error Types
 
 #### 400 Bad Request
+
 - Invalid request syntax
 - Validation failures
 - Missing required fields
 
 #### 401 Unauthorized
+
 - Missing authentication
 - Invalid credentials
 - Expired tokens
 
 #### 403 Forbidden
+
 - Insufficient permissions
 - Resource access denied
 
 #### 404 Not Found
+
 - Resource not found
 - Endpoint not found
 
 #### 409 Conflict
+
 - Resource already exists
 - Version conflicts
 - Constraint violations
 
 #### 429 Too Many Requests
+
 - Rate limit exceeded
 - Quota exceeded
 
 #### 500 Internal Server Error
+
 - Server-side errors
 - Database connection issues
 - Unexpected exceptions
@@ -376,6 +412,7 @@ All errors follow the [RFC 7807](https://tools.ietf.org/html/rfc7807) Problem De
 ### Common Use Cases
 
 #### Use Case 1: Retrieve All Active Resources
+
 ```bash
 curl -X GET "https://api.boltf.company.com/v1/{resources}?status=active" \
   -H "Authorization: Bearer {JWT_TOKEN}" \
@@ -383,6 +420,7 @@ curl -X GET "https://api.boltf.company.com/v1/{resources}?status=active" \
 ```
 
 #### Use Case 2: Create and Update Workflow
+
 ```bash
 # Create resource
 curl -X POST "https://api.boltf.company.com/v1/{resources}" \
@@ -406,10 +444,11 @@ curl -X PUT "https://api.boltf.company.com/v1/{resources}/{id}" \
 ### SDK Examples
 
 #### JavaScript/Node.js
-```javascript
-const AuroraAPI = require('@aurora/api-client');
 
-const client = new AuroraAPI({
+```javascript
+const boltAPI = require('@bolt/api-client');
+
+const client = new boltAPI({
   baseUrl: 'https://api.boltf.company.com/v1',
   token: 'your-jwt-token'
 });
@@ -429,10 +468,11 @@ const newResource = await client.{resources}.create({
 ```
 
 #### C#
-```csharp
-using Aurora.ApiClient;
 
-var client = new AuroraApiClient("https://api.boltf.company.com/v1", "your-jwt-token");
+```csharp
+using Bolt.ApiClient;
+
+var client = new BoltApiClient("https://api.boltf.company.com/v1", "your-jwt-token");
 
 // Get all resources
 var resources = await client.{Resources}.GetAllAsync(new GetResourcesRequest
@@ -455,9 +495,11 @@ var newResource = await client.{Resources}.CreateAsync(new CreateResourceRequest
 ## Testing
 
 ### Postman Collection
-Download the complete Postman collection: [AURORA API Collection](link-to-postman-collection)
+
+Download the complete Postman collection: [BOLT API Collection](link-to-postman-collection)
 
 ### Test Environment Variables
+
 ```json
 {
   "base_url": "https://staging-api.boltf.company.com/v1",
@@ -467,6 +509,7 @@ Download the complete Postman collection: [AURORA API Collection](link-to-postma
 ```
 
 ### Sample Test Data
+
 ```json
 {
   "valid_resource": {
@@ -486,16 +529,19 @@ Download the complete Postman collection: [AURORA API Collection](link-to-postma
 ## Changelog
 
 ### Version 1.2.0 (2024-01-15)
+
 - Added filtering support
 - Improved error messages
 - New metadata field
 
 ### Version 1.1.0 (2024-01-01)
+
 - Added pagination
 - Enhanced authentication
 - Performance improvements
 
 ### Version 1.0.0 (2023-12-01)
+
 - Initial release
 - Basic CRUD operations
 - Authentication support
@@ -505,12 +551,14 @@ Download the complete Postman collection: [AURORA API Collection](link-to-postma
 ## Support and Contact
 
 ### Support Channels
+
 - **Documentation:** [https://docs.boltf.company.com](https://docs.boltf.company.com)
-- **Support Email:** api-support@company.com
-- **Slack Channel:** #aurora-api-support
-- **GitHub Issues:** [Repository Issues](https://github.com/company/aurora-api/issues)
+- **Support Email:** api-support@boltf.company.com
+- **Slack Channel:** #bolt-api-support
+- **GitHub Issues:** [Repository Issues](https://github.com/company/boltf-api/issues)
 
 ### SLA and Availability
+
 - **Uptime Target:** 99.9%
 - **Response Time Target:** < 200ms (95th percentile)
 - **Support Response:** < 4 hours (business days)
@@ -518,5 +566,5 @@ Download the complete Postman collection: [AURORA API Collection](link-to-postma
 ---
 
 **Template Version:** 2.1.0
-**Created by:** AURORA-IA-DLC v2.1.0
+**Created by:** Bolt Framework v2.1.0
 **Generated:** {DATE}

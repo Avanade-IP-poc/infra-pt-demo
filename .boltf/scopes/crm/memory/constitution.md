@@ -1,4 +1,4 @@
-# AURORA-IA Project Constitution — Scope: CRM
+# BOLT Framework Project Constitution — Scope: CRM
 
 > **Extracted from**: `.boltf/memory/constitution.md`
 > **Scope**: `crm` — Customer Relationship Management, Dynamics 365, Power Platform, Dataverse, and business process automation.
@@ -128,7 +128,7 @@ Select ONE:
 
 ### Section 11.2: Pipeline Stages
 
-#### For Application Development:
+#### For Application Development
 
 | Stage                  | Enabled | Threshold                          |
 | ---------------------- | ------- | ---------------------------------- |
@@ -142,7 +142,7 @@ Select ONE:
 | **Container Build**    | [ ] Yes | -                                  |
 | **Container Scan**     | [ ] Yes | 0 Critical                         |
 
-#### Deployment Stages:
+#### Deployment Stages
 
 | Stage           | Enabled | Trigger            |
 | --------------- | ------- | ------------------ |
@@ -184,7 +184,7 @@ Select ONE:
 
 ### Section 12.2: Health Checks
 
-```
+```text
 /health       - Full health check
 /health/ready - Readiness probe
 /health/live  - Liveness probe
@@ -261,7 +261,7 @@ All AI agents operating in this project MUST:
 
 ### Power Platform ALM
 
-- **Environments**: Map Power Platform environments to AURORA environment strategy (Dev → UAT → Pre → Prod). Use environment variables for cross-environment configuration.
+- **Environments**: Map Power Platform environments to BOLT Framework environment strategy (Dev → UAT → Pre → Prod). Use environment variables for cross-environment configuration.
 - **Solution Export/Import**: Automate solution promotion using Power Platform CLI (`pac solution`) or Azure DevOps Power Platform Build Tools.
 - **Source Control**: Export solutions as unpacked (XML) into Git repository. Include solution metadata in CI/CD pipeline validation.
 - **Environment Variables & Connection References**: Externalize all environment-specific settings. Never hardcode connection strings or environment URLs.

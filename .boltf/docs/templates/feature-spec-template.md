@@ -523,7 +523,7 @@ Before this feature can be released to production:
 
 **Document Information:**
 - **Template Version:** 2.1.0
-- **Created by:** AURORA-IA-DLC v2.1.0
+- **Created by:** Bolt Framework v2.1.0
 - **Document Owner:** {PRODUCT_MANAGER}
 - **Technical Lead:** {TECH_LEAD}
 - **Stakeholder Approval:** {STAKEHOLDER_LIST}

@@ -6,7 +6,7 @@ This directory contains GitHub Copilot Custom Agents that implement the AURORA-I
 
 Agents are conversational AI assistants specialized for specific tasks. Each agent has:
 
-- **Name**: Display name for invocation (e.g., `@Aurora Testing`)
+- **Name**: Display name for invocation (e.g., `@Bolt Testing`)
 - **Description**: Brief explanation of capabilities
 - **Tools**: Available VS Code built-in tools (see TOOLSETS.md)
 - **Model**: AI model used (Claude Sonnet 4.5)
@@ -24,42 +24,42 @@ Agents are conversational AI assistants specialized for specific tasks. Each age
 
 | Agent           | File                      | Purpose                                        |
 | --------------- | ------------------------- | ---------------------------------------------- |
-| Aurora Feature  | `aurora-feature.agent.md` | Create comprehensive feature specifications    |
-| Aurora Specify  | `aurora-specify.agent.md` | Transform natural language to structured specs |
-| Aurora Clarify  | `aurora-clarify.agent.md` | Clarify ambiguous requirements                 |
-| Aurora Use Case | `aurora-usecase.agent.md` | Generate UML/Cockburn style use cases          |
-| Aurora Gherkin  | `aurora-gherkin.agent.md` | Generate BDD scenarios in Gherkin syntax       |
+| Bolt Feature  | `aurora-feature.agent.md` | Create comprehensive feature specifications    |
+| Bolt Specify  | `aurora-specify.agent.md` | Transform natural language to structured specs |
+| Bolt Clarify  | `aurora-clarify.agent.md` | Clarify ambiguous requirements                 |
+| Bolt Use Case | `aurora-usecase.agent.md` | Generate UML/Cockburn style use cases          |
+| Bolt Gherkin  | `aurora-gherkin.agent.md` | Generate BDD scenarios in Gherkin syntax       |
 
 ### 🏛️ Architecture & Design
 
 | Agent               | File                           | Purpose                          |
 | ------------------- | ------------------------------ | -------------------------------- |
-| Aurora Architect    | `aurora-architect.agent.md`    | Solution architecture and ADRs   |
-| Aurora DDD          | `aurora-ddd.agent.md`          | Domain-Driven Design modeling    |
-| Aurora Constitution | `aurora-constitution.agent.md` | Project governance and standards |
+| Bolt Architect    | `aurora-architect.agent.md`    | Solution architecture and ADRs   |
+| Bolt DDD          | `aurora-ddd.agent.md`          | Domain-Driven Design modeling    |
+| Bolt Constitution | `aurora-constitution.agent.md` | Project governance and standards |
 
 ### 🗺️ Planning
 
 | Agent        | File                    | Purpose                               |
 | ------------ | ----------------------- | ------------------------------------- |
-| Aurora Plan  | `aurora-plan.agent.md`  | Create technical implementation plans |
-| Aurora Tasks | `aurora-tasks.agent.md` | Generate Bolt task lists              |
+| Bolt Plan  | `aurora-plan.agent.md`  | Create technical implementation plans |
+| Bolt Tasks | `aurora-tasks.agent.md` | Generate Bolt task lists              |
 
 ### 🏗️ Implementation
 
 | Agent                 | File                             | Purpose                                         |
 | --------------------- | -------------------------------- | ----------------------------------------------- |
-| Aurora Implement      | `aurora-implement.agent.md`      | Execute implementation with quality gates       |
-| Aurora Micro Iterator | `aurora-micro-iterator.agent.md` | Micro-iteration discipline                      |
-| Aurora Testing        | `aurora-testing.agent.md`        | Generate test suites (TDD/BDD)                  |
-| Aurora Review         | `aurora-review.agent.md`         | Code review, SOLID, and architecture validation |
+| Bolt Implement      | `aurora-implement.agent.md`      | Execute implementation with quality gates       |
+| Bolt Micro Iterator | `aurora-micro-iterator.agent.md` | Micro-iteration discipline                      |
+| Bolt Testing        | `aurora-testing.agent.md`        | Generate test suites (TDD/BDD)                  |
+| Bolt Review         | `aurora-review.agent.md`         | Code review, SOLID, and architecture validation |
 
 ### 🔍 Analysis & Quality
 
 | Agent            | File                        | Purpose                                                              |
 | ---------------- | --------------------------- | -------------------------------------------------------------------- |
-| Aurora Analyze   | `aurora-analyze.agent.md`   | Consistency analysis between artifacts                               |
-| Aurora Alignment | `aurora-alignment.agent.md` | Business-technical alignment                                         |
+| Bolt Analyze   | `aurora-analyze.agent.md`   | Consistency analysis between artifacts                               |
+| Bolt Alignment | `aurora-alignment.agent.md` | Business-technical alignment                                         |
 | Bolt ADR         | `bolt-adr.agent.md`         | Architecture Decision Records                                        |
 | Bolt Researcher  | `bolt-researcher.agent.md`  | Research and investigate using MCP servers and project documentation |
 
@@ -67,22 +67,22 @@ Agents are conversational AI assistants specialized for specific tasks. Each age
 
 | Agent           | File                       | Purpose                                              |
 | --------------- | -------------------------- | ---------------------------------------------------- |
-| Aurora Security | `aurora-security.agent.md` | Comprehensive security analysis and OWASP compliance |
+| Bolt Security | `aurora-security.agent.md` | Comprehensive security analysis and OWASP compliance |
 
 ### 📦 Release & Operations
 
 | Agent             | File                         | Purpose                          |
 | ----------------- | ---------------------------- | -------------------------------- |
-| Aurora Release    | `aurora-release.agent.md`    | Semantic versioning and releases |
-| Aurora Ops        | `aurora-ops.agent.md`        | Deployments and monitoring       |
-| Aurora Status     | `aurora-status.agent.md`     | Project status reports           |
-| Aurora Postmortem | `aurora-postmortem.agent.md` | Incident postmortems             |
+| Bolt Release    | `aurora-release.agent.md`    | Semantic versioning and releases |
+| Bolt Ops        | `aurora-ops.agent.md`        | Deployments and monitoring       |
+| Bolt Status     | `aurora-status.agent.md`     | Project status reports           |
+| Bolt Postmortem | `aurora-postmortem.agent.md` | Incident postmortems             |
 
 ### 📈 Evolution & Improvement
 
 | Agent          | File                      | Purpose                         |
 | -------------- | ------------------------- | ------------------------------- |
-| Aurora Improve | `aurora-improve.agent.md` | Continuous improvement analysis |
+| Bolt Improve | `aurora-improve.agent.md` | Continuous improvement analysis |
 | Aurora Retire  | `aurora-retire.agent.md`  | System decommissioning          |
 
 ### 🛠️ Infrastructure & DevOps
@@ -90,8 +90,8 @@ Agents are conversational AI assistants specialized for specific tasks. Each age
 | Agent                | File                          | Purpose                             |
 | -------------------- | ----------------------------- | ----------------------------------- |
 | Bolt Skill Creator   | `bolt-skill-creator.agent.md` | AI-powered skill creation & testing |
-| Aurora Templates     | `aurora-templates.agent.md`   | Project templates and scaffolding   |
-| Aurora CI/CD         | `aurora-cicd.agent.md`        | Pipeline configuration              |
+| Bolt Templates     | `aurora-templates.agent.md`   | Project templates and scaffolding   |
+| Bolt CI/CD         | `aurora-cicd.agent.md`        | Pipeline configuration              |
 | Aurora Dependencies  | `aurora-deps.agent.md`        | Dependency management               |
 | Aurora Documentation | `aurora-docs.agent.md`        | Documentation generation            |
 | Aurora Monitoring    | `aurora-monitoring.agent.md`  | Observability setup                 |
@@ -103,9 +103,9 @@ Agents are conversational AI assistants specialized for specific tasks. Each age
 In VS Code Copilot Chat, use the `@` prefix:
 
 ```
-@Aurora Testing generate unit tests for the UserService class
+@Bolt Testing generate unit tests for the UserService class
 
-@Aurora Implement implement the authentication feature
+@Bolt Implement implement the authentication feature
 
 @Bolt Framework help me start a new feature for user registration
 ```
@@ -123,7 +123,7 @@ Agents can delegate to each other. When you see handoff buttons:
 Agents can reference prompts for additional context:
 
 ```
-@Aurora Testing #file:.github/prompts/aurora-test-generation.prompt.md
+@Bolt Testing #file:.github/prompts/bolt-test-generation.prompt.md
 Generate comprehensive tests for the payment module
 ```
 
@@ -136,7 +136,7 @@ Agents can execute automation scripts when needed. Each agent documents its avai
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                         USER INTERACTION                                 │
-│                    @Bolt Framework, @Aurora Testing, etc.                 │
+│                    @Bolt Framework, @Bolt Testing, etc.                 │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
 │   ┌────────────────────────────────────────────────────────────┐    │
@@ -229,12 +229,12 @@ The previous `/aurora.*` slash commands have been replaced by agents:
 
 | Old Command            | New Agent              |
 | ---------------------- | ---------------------- |
-| `/aurora.feature`      | `@Aurora Feature`      |
-| `/aurora.implement`    | `@Aurora Implement`    |
-| `/aurora.test`         | `@Aurora Testing`      |
-| `/aurora.plan`         | `@Aurora Plan`         |
-| `/aurora.constitution` | `@Aurora Constitution` |
-| `/aurora.status`       | `@Aurora Status`       |
+| `/aurora.feature`      | `@Bolt Feature`      |
+| `/aurora.implement`    | `@Bolt Implement`    |
+| `/aurora.test`         | `@Bolt Testing`      |
+| `/aurora.plan`         | `@Bolt Plan`         |
+| `/aurora.constitution` | `@Bolt Constitution` |
+| `/aurora.status`       | `@Bolt Status`       |
 | `/aurora`              | `@Bolt Framework`      |
 
 ## Best Practices

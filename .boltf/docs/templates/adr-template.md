@@ -233,5 +233,5 @@ How will we know this decision was successful?
 ---
 
 **Template Version:** 2.1.0
-**Created by:** AURORA-IA-DLC v2.1.0
+**Created by:** Bolt Framework v2.1.0
 **Last Updated:** {DATE}

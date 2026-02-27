@@ -1,4 +1,4 @@
-# Commit Message Template - AURORA Peritec
+# Commit Message Template - BOLT Peritec
 
 ## 📝 Formato Estándar
 
@@ -96,7 +96,7 @@ Part of #24
 - `Relates to #123` - Relacionado con el issue (no cierra)
 - `Refs #123` - Referencia al issue (no cierra)
 
-## 📊 Formato AURORA (Tareas y BOLTs)
+## 📊 Formato BOLT Framework (Tareas y BOLTs)
 
 ### Para Tareas Específicas
 
@@ -248,4 +248,4 @@ git config --global commit.template ~/.gitmessage
 
 ---
 
-**Basado en**: Conventional Commits 1.0.0 + AURORA Methodology
+**Basado en**: Conventional Commits 1.0.0 + Bolt Framework Methodology

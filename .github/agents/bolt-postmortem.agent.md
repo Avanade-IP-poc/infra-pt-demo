@@ -1,6 +1,6 @@
 ---
 name: Bolt Postmortem
-description: 🔥 Generate blameless postmortems for incidents, outages, and project failures following AURORA methodology
+description: 🔥 Generate blameless postmortems for incidents, outages, and project failures following Bolt Framework Methodology
 tools:
   [
     search,
@@ -14,7 +14,7 @@ tools:
     'awesome-copilot/*',
     'microsoftdocs/mcp/*',
   ]
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: 📈 Improvement Actions
     agent: Bolt Improve
@@ -340,4 +340,4 @@ data_collection:
 
 For postmortem templates:
 
-- `#file:.github/prompts/aurora-postmortem.prompt.md`
+- [#file:.github/prompts/bolt-postmortem.prompt.md]

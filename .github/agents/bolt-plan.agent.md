@@ -14,7 +14,7 @@ tools:
     'awesome-copilot/*',
     'microsoftdocs/mcp/*',
   ]
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: ✅ Generate Bolt Tasks
     agent: Bolt Tasks
@@ -426,5 +426,5 @@ done
 
 For detailed architecture guidance:
 
-- `#file:.github/prompts/aurora-architecture.prompt.md`
-- `#file:.github/prompts/aurora-planning.prompt.md`
+- [#file:.github/prompts/bolt-architecture.prompt.md]
+- [#file:.github/prompts/bolt-planning.prompt.md]

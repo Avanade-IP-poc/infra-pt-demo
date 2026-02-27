@@ -194,7 +194,7 @@ cp .github/skills/markdown-formatting/templates/adr-template.md \
 code docs/adrs/015-my-decision.md
 ```
 
-## AURORA Document Types
+## Bolt Framework Document Types
 
 | Document Type    | Template                                                       | Example                                                     |
 | ---------------- | -------------------------------------------------------------- | ----------------------------------------------------------- |
@@ -236,7 +236,7 @@ jobs:
 
 ## Quick Reference
 
-### AURORA Markdown Conventions
+### Bolt Framework Markdown Conventions
 
 - ✅ ATX headings (`#`) not Setext (`===`)
 - ✅ Fenced code blocks (` ``` `) with language

@@ -1,6 +1,6 @@
 # Bolt Framework — Handoff Matrix
 
-> Defines valid and invalid handoff paths between AURORA agents.
+> Defines valid and invalid handoff paths between Bolt Framework agents.
 > Use this matrix to validate handoffs in agent frontmatter.
 
 ---
@@ -28,281 +28,281 @@
 
 ## INCEPTION Phase
 
-### FROM: Aurora Constitution
+### FROM: Bolt Constitution
 
-| Target Agent     | Valid | Reason                                     |
-| ---------------- | ----- | ------------------------------------------ |
-| Aurora Clarify   | ✅    | Resolve ambiguities before ratifying       |
-| Aurora Feature   | ✅    | Start defining features after constitution |
-| Aurora Templates | ✅    | Generate project templates                 |
+| Target Agent   | Valid | Reason                                     |
+| -------------- | ----- | ------------------------------------------ |
+| Bolt Clarify   | ✅    | Resolve ambiguities before ratifying       |
+| Bolt Feature   | ✅    | Start defining features after constitution |
+| Bolt Templates | ✅    | Generate project templates                 |
 
-### FROM: Aurora Clarify
+### FROM: Bolt Clarify
 
-| Target Agent        | Valid | Reason                                |
-| ------------------- | ----- | ------------------------------------- |
-| Aurora Constitution | ✅    | Apply clarifications to constitution  |
-| Aurora Feature      | ✅    | Clarified requirements → feature spec |
-| Aurora Specify      | ✅    | Clarified → detailed spec             |
+| Target Agent      | Valid | Reason                                |
+| ----------------- | ----- | ------------------------------------- |
+| Bolt Constitution | ✅    | Apply clarifications to constitution  |
+| Bolt Feature      | ✅    | Clarified requirements → feature spec |
+| Bolt Specify      | ✅    | Clarified → detailed spec             |
 
 ---
 
 ## DISCOVERY Phase
 
-### FROM: Aurora Feature
+### FROM: Bolt Feature
 
-| Target Agent     | Valid | Reason                                  |
-| ---------------- | ----- | --------------------------------------- |
-| Aurora Use Case  | ✅    | Detail use cases from stories           |
-| Aurora Gherkin   | ✅    | BDD scenarios from acceptance criteria  |
-| Aurora DDD       | ✅    | Domain model from feature context       |
-| Aurora Plan      | ✅    | Implementation plan from spec           |
-| Aurora Specify   | ✅    | Detailed specification                  |
-| Aurora Implement | ✅    | Direct implementation (simple features) |
-| Aurora Status    | ❌    | Not related to feature creation         |
-| Aurora Ops       | ❌    | Too early in lifecycle                  |
+| Target Agent   | Valid | Reason                                  |
+| -------------- | ----- | --------------------------------------- |
+| Bolt Use Case  | ✅    | Detail use cases from stories           |
+| Bolt Gherkin   | ✅    | BDD scenarios from acceptance criteria  |
+| Bolt DDD       | ✅    | Domain model from feature context       |
+| Bolt Plan      | ✅    | Implementation plan from spec           |
+| Bolt Specify   | ✅    | Detailed specification                  |
+| Bolt Implement | ✅    | Direct implementation (simple features) |
+| Bolt Status    | ❌    | Not related to feature creation         |
+| Bolt Ops       | ❌    | Too early in lifecycle                  |
 
-### FROM: Aurora Plan
+### FROM: Bolt Plan
 
-| Target Agent     | Valid | Reason                             |
-| ---------------- | ----- | ---------------------------------- |
-| Aurora Tasks     | ✅    | Breakdown plan into Bolt tasks     |
-| Aurora Analyze   | ✅    | Verify plan consistency with specs |
-| Aurora Architect | ✅    | Validate architecture decisions    |
-| Aurora Implement | ❌    | Must go through Tasks first        |
-| Aurora Release   | ❌    | Too early in lifecycle             |
+| Target Agent   | Valid | Reason                             |
+| -------------- | ----- | ---------------------------------- |
+| Bolt Tasks     | ✅    | Breakdown plan into Bolt tasks     |
+| Bolt Analyze   | ✅    | Verify plan consistency with specs |
+| Bolt Architect | ✅    | Validate architecture decisions    |
+| Bolt Implement | ❌    | Must go through Tasks first        |
+| Bolt Release   | ❌    | Too early in lifecycle             |
 
-### FROM: Aurora Tasks
+### FROM: Bolt Tasks
 
-| Target Agent          | Valid | Reason                         |
-| --------------------- | ----- | ------------------------------ |
-| Aurora Implement      | ✅    | Start implementing tasks       |
-| Aurora Micro Iterator | ✅    | Start Bolt iteration           |
-| Aurora Plan           | ❌    | Tasks come FROM plan, not back |
+| Target Agent        | Valid | Reason                         |
+| ------------------- | ----- | ------------------------------ |
+| Bolt Implement      | ✅    | Start implementing tasks       |
+| Bolt Micro Iterator | ✅    | Start Bolt iteration           |
+| Bolt Plan           | ❌    | Tasks come FROM plan, not back |
 
-### FROM: Aurora Specify
+### FROM: Bolt Specify
 
-| Target Agent   | Valid | Reason                   |
-| -------------- | ----- | ------------------------ |
-| Aurora Feature | ✅    | Refine feature from spec |
-| Aurora Gherkin | ✅    | BDD from spec            |
-| Aurora Plan    | ✅    | Plan from spec           |
+| Target Agent | Valid | Reason                   |
+| ------------ | ----- | ------------------------ |
+| Bolt Feature | ✅    | Refine feature from spec |
+| Bolt Gherkin | ✅    | BDD from spec            |
+| Bolt Plan    | ✅    | Plan from spec           |
 
-### FROM: Aurora Use Case
+### FROM: Bolt Use Case
 
-| Target Agent   | Valid | Reason              |
-| -------------- | ----- | ------------------- |
-| Aurora Gherkin | ✅    | BDD from use cases  |
-| Aurora Plan    | ✅    | Plan from use cases |
-| Aurora Feature | ✅    | Refine feature      |
+| Target Agent | Valid | Reason              |
+| ------------ | ----- | ------------------- |
+| Bolt Gherkin | ✅    | BDD from use cases  |
+| Bolt Plan    | ✅    | Plan from use cases |
+| Bolt Feature | ✅    | Refine feature      |
 
-### FROM: Aurora Gherkin
+### FROM: Bolt Gherkin
 
-| Target Agent   | Valid | Reason                          |
-| -------------- | ----- | ------------------------------- |
-| Aurora Testing | ✅    | Step definitions from scenarios |
-| Aurora Feature | ✅    | Refine feature from scenarios   |
-| Aurora Plan    | ✅    | Plan informed by BDD            |
+| Target Agent | Valid | Reason                          |
+| ------------ | ----- | ------------------------------- |
+| Bolt Testing | ✅    | Step definitions from scenarios |
+| Bolt Feature | ✅    | Refine feature from scenarios   |
+| Bolt Plan    | ✅    | Plan informed by BDD            |
 
-### FROM: Aurora DDD
+### FROM: Bolt DDD
 
-| Target Agent     | Valid | Reason                         |
-| ---------------- | ----- | ------------------------------ |
-| Aurora Architect | ✅    | Architecture from domain model |
-| Aurora Feature   | ✅    | Refine features from domain    |
-| Aurora Plan      | ✅    | Plan from domain model         |
+| Target Agent   | Valid | Reason                         |
+| -------------- | ----- | ------------------------------ |
+| Bolt Architect | ✅    | Architecture from domain model |
+| Bolt Feature   | ✅    | Refine features from domain    |
+| Bolt Plan      | ✅    | Plan from domain model         |
 
 ---
 
 ## CONSTRUCTION Phase
 
-### FROM: Aurora Implement
+### FROM: Bolt Implement
 
-| Target Agent   | Valid | Reason                                  |
-| -------------- | ----- | --------------------------------------- |
-| Aurora Testing | ✅    | Generate tests for implementation       |
-| Aurora Analyze | ✅    | Verify consistency with spec            |
-| Aurora Review  | ✅    | Code review                             |
-| Aurora Feature | ❌    | Circular — impl doesn't create features |
-| Aurora Plan    | ❌    | Already has plan                        |
-| Aurora Release | ❌    | Must pass review first                  |
+| Target Agent | Valid | Reason                                  |
+| ------------ | ----- | --------------------------------------- |
+| Bolt Testing | ✅    | Generate tests for implementation       |
+| Bolt Analyze | ✅    | Verify consistency with spec            |
+| Bolt Review  | ✅    | Code review                             |
+| Bolt Feature | ❌    | Circular — impl doesn't create features |
+| Bolt Plan    | ❌    | Already has plan                        |
+| Bolt Release | ❌    | Must pass review first                  |
 
-### FROM: Aurora Testing
+### FROM: Bolt Testing
 
-| Target Agent     | Valid | Reason                            |
-| ---------------- | ----- | --------------------------------- |
-| Aurora Implement | ✅    | TDD green phase — make tests pass |
-| Aurora Gherkin   | ✅    | Generate BDD scenarios            |
-| Aurora Review    | ✅    | Review test quality               |
-| Aurora Analyze   | ✅    | Coverage analysis                 |
-| Aurora Feature   | ❌    | Tests come from feature, not back |
+| Target Agent   | Valid | Reason                            |
+| -------------- | ----- | --------------------------------- |
+| Bolt Implement | ✅    | TDD green phase — make tests pass |
+| Bolt Gherkin   | ✅    | Generate BDD scenarios            |
+| Bolt Review    | ✅    | Review test quality               |
+| Bolt Analyze   | ✅    | Coverage analysis                 |
+| Bolt Feature   | ❌    | Tests come from feature, not back |
 
-### FROM: Aurora Review
+### FROM: Bolt Review
 
-| Target Agent     | Valid | Reason                           |
-| ---------------- | ----- | -------------------------------- |
-| Aurora Implement | ✅    | Fix issues found in review       |
-| Aurora Testing   | ✅    | Improve coverage                 |
-| Bolt ADR         | ✅    | Document architectural decision  |
-| Aurora Analyze   | ✅    | Deep analysis of findings        |
-| Aurora Feature   | ❌    | Review doesn't create features   |
-| Aurora Release   | ❌    | Should go through Bolt Framework |
+| Target Agent   | Valid | Reason                           |
+| -------------- | ----- | -------------------------------- |
+| Bolt Implement | ✅    | Fix issues found in review       |
+| Bolt Testing   | ✅    | Improve coverage                 |
+| Bolt ADR       | ✅    | Document architectural decision  |
+| Bolt Analyze   | ✅    | Deep analysis of findings        |
+| Bolt Feature   | ❌    | Review doesn't create features   |
+| Bolt Release   | ❌    | Should go through Bolt Framework |
 
-### FROM: Aurora Micro Iterator
+### FROM: Bolt Micro Iterator
 
-| Target Agent     | Valid | Reason                         |
-| ---------------- | ----- | ------------------------------ |
-| Aurora Tasks     | ✅    | Get task list for current Bolt |
-| Aurora Implement | ✅    | Execute implementation         |
-| Aurora Testing   | ✅    | Run tests for Bolt             |
-| Aurora Review    | ✅    | Review Bolt completion         |
+| Target Agent   | Valid | Reason                         |
+| -------------- | ----- | ------------------------------ |
+| Bolt Tasks     | ✅    | Get task list for current Bolt |
+| Bolt Implement | ✅    | Execute implementation         |
+| Bolt Testing   | ✅    | Run tests for Bolt             |
+| Bolt Review    | ✅    | Review Bolt completion         |
 
-### FROM: Aurora Analyze
+### FROM: Bolt Analyze
 
-| Target Agent     | Valid | Reason                |
-| ---------------- | ----- | --------------------- |
-| Aurora Implement | ✅    | Fix inconsistencies   |
-| Aurora Feature   | ✅    | Update spec if needed |
-| Aurora Review    | ✅    | Quality findings      |
+| Target Agent   | Valid | Reason                |
+| -------------- | ----- | --------------------- |
+| Bolt Implement | ✅    | Fix inconsistencies   |
+| Bolt Feature   | ✅    | Update spec if needed |
+| Bolt Review    | ✅    | Quality findings      |
 
 ### FROM: Bolt ADR
 
-| Target Agent     | Valid | Reason                    |
-| ---------------- | ----- | ------------------------- |
-| Aurora Architect | ✅    | Architecture implications |
-| Aurora Implement | ✅    | Apply decision            |
+| Target Agent   | Valid | Reason                    |
+| -------------- | ----- | ------------------------- |
+| Bolt Architect | ✅    | Architecture implications |
+| Bolt Implement | ✅    | Apply decision            |
 
-### FROM: Aurora Architect
+### FROM: Bolt Architect
 
-| Target Agent     | Valid | Reason                         |
-| ---------------- | ----- | ------------------------------ |
-| Bolt ADR         | ✅    | Document architecture decision |
-| Aurora Plan      | ✅    | Inform plan with architecture  |
-| Aurora DDD       | ✅    | Domain modeling                |
-| Aurora Implement | ✅    | Guide implementation           |
+| Target Agent   | Valid | Reason                         |
+| -------------- | ----- | ------------------------------ |
+| Bolt ADR       | ✅    | Document architecture decision |
+| Bolt Plan      | ✅    | Inform plan with architecture  |
+| Bolt DDD       | ✅    | Domain modeling                |
+| Bolt Implement | ✅    | Guide implementation           |
 
 ---
 
 ## TRANSITION Phase
 
-### FROM: Aurora Release
+### FROM: Bolt Release
 
-| Target Agent  | Valid | Reason                 |
-| ------------- | ----- | ---------------------- |
-| Aurora CI/CD  | ✅    | Pipeline configuration |
-| Aurora Ops    | ✅    | Deployment operations  |
-| Aurora Status | ✅    | Release status update  |
+| Target Agent | Valid | Reason                 |
+| ------------ | ----- | ---------------------- |
+| Bolt CI/CD   | ✅    | Pipeline configuration |
+| Bolt Ops     | ✅    | Deployment operations  |
+| Bolt Status  | ✅    | Release status update  |
 
-### FROM: Aurora CI/CD
+### FROM: Bolt CI/CD
 
-| Target Agent   | Valid | Reason                    |
-| -------------- | ----- | ------------------------- |
-| Aurora Release | ✅    | Release process           |
-| Aurora Ops     | ✅    | Deployment                |
-| Aurora Testing | ✅    | Pipeline test integration |
+| Target Agent | Valid | Reason                    |
+| ------------ | ----- | ------------------------- |
+| Bolt Release | ✅    | Release process           |
+| Bolt Ops     | ✅    | Deployment                |
+| Bolt Testing | ✅    | Pipeline test integration |
 
 ---
 
 ## PRODUCTION Phase
 
-### FROM: Aurora Ops
+### FROM: Bolt Ops
 
-| Target Agent      | Valid | Reason                              |
-| ----------------- | ----- | ----------------------------------- |
-| Aurora Improve    | ✅    | Identify improvements from ops data |
-| Aurora Postmortem | ✅    | Incident analysis                   |
-| Aurora Status     | ✅    | Operational status                  |
-| Aurora Release    | ✅    | New deployment needed               |
-| Aurora Monitoring | ✅    | Configure monitoring                |
-| Aurora Feature    | ❌    | Ops doesn't create features         |
+| Target Agent    | Valid | Reason                              |
+| --------------- | ----- | ----------------------------------- |
+| Bolt Improve    | ✅    | Identify improvements from ops data |
+| Bolt Postmortem | ✅    | Incident analysis                   |
+| Bolt Status     | ✅    | Operational status                  |
+| Bolt Release    | ✅    | New deployment needed               |
+| Bolt Monitoring | ✅    | Configure monitoring                |
+| Bolt Feature    | ❌    | Ops doesn't create features         |
 
-### FROM: Aurora Status
+### FROM: Bolt Status
 
-| Target Agent     | Valid | Reason                    |
-| ---------------- | ----- | ------------------------- |
-| Aurora Analyze   | ✅    | Deep analysis             |
-| Aurora Improve   | ✅    | Improvement opportunities |
-| Aurora Alignment | ✅    | Check alignment           |
-| Aurora Ops       | ✅    | Operational health        |
-| Aurora Implement | ❌    | Status is read-only       |
+| Target Agent   | Valid | Reason                    |
+| -------------- | ----- | ------------------------- |
+| Bolt Analyze   | ✅    | Deep analysis             |
+| Bolt Improve   | ✅    | Improvement opportunities |
+| Bolt Alignment | ✅    | Check alignment           |
+| Bolt Ops       | ✅    | Operational health        |
+| Bolt Implement | ❌    | Status is read-only       |
 
-### FROM: Aurora Improve
-
-| Target Agent     | Valid | Reason                     |
-| ---------------- | ----- | -------------------------- |
-| Aurora Feature   | ✅    | Improvement → new feature  |
-| Aurora Implement | ✅    | Apply improvement          |
-| Aurora Analyze   | ✅    | Analyze improvement impact |
-
-### FROM: Aurora Alignment
+### FROM: Bolt Improve
 
 | Target Agent   | Valid | Reason                     |
 | -------------- | ----- | -------------------------- |
-| Aurora Improve | ✅    | Misalignment → improvement |
-| Aurora Status  | ✅    | Alignment status           |
-| Aurora Analyze | ✅    | Deep alignment analysis    |
+| Bolt Feature   | ✅    | Improvement → new feature  |
+| Bolt Implement | ✅    | Apply improvement          |
+| Bolt Analyze   | ✅    | Analyze improvement impact |
 
-### FROM: Aurora Monitoring
+### FROM: Bolt Alignment
 
-| Target Agent   | Valid | Reason                |
-| -------------- | ----- | --------------------- |
-| Aurora Ops     | ✅    | Alert → operations    |
-| Aurora Improve | ✅    | Metrics → improvement |
+| Target Agent | Valid | Reason                     |
+| ------------ | ----- | -------------------------- |
+| Bolt Improve | ✅    | Misalignment → improvement |
+| Bolt Status  | ✅    | Alignment status           |
+| Bolt Analyze | ✅    | Deep alignment analysis    |
+
+### FROM: Bolt Monitoring
+
+| Target Agent | Valid | Reason                |
+| ------------ | ----- | --------------------- |
+| Bolt Ops     | ✅    | Alert → operations    |
+| Bolt Improve | ✅    | Metrics → improvement |
 
 ---
 
 ## RETIREMENT Phase
 
-### FROM: Aurora Retire
+### FROM: Bolt Retire
 
-| Target Agent      | Valid | Reason                     |
-| ----------------- | ----- | -------------------------- |
-| Aurora Ops        | ✅    | Decommissioning operations |
-| Aurora Status     | ✅    | Retirement status          |
-| Aurora Postmortem | ✅    | Lessons learned            |
+| Target Agent    | Valid | Reason                     |
+| --------------- | ----- | -------------------------- |
+| Bolt Ops        | ✅    | Decommissioning operations |
+| Bolt Status     | ✅    | Retirement status          |
+| Bolt Postmortem | ✅    | Lessons learned            |
 
-### FROM: Aurora Postmortem
+### FROM: Bolt Postmortem
 
-| Target Agent   | Valid | Reason                 |
-| -------------- | ----- | ---------------------- |
-| Aurora Improve | ✅    | Lessons → improvements |
-| Bolt ADR       | ✅    | Document decisions     |
+| Target Agent | Valid | Reason                 |
+| ------------ | ----- | ---------------------- |
+| Bolt Improve | ✅    | Lessons → improvements |
+| Bolt ADR     | ✅    | Document decisions     |
 
 ---
 
 ## Cross-Phase Agents
 
-### FROM: Aurora Security
+### FROM: Bolt Security
 
-| Target Agent        | Valid | Reason                     |
-| ------------------- | ----- | -------------------------- |
-| Aurora Constitution | ✅    | Update security standards  |
-| Aurora Implement    | ✅    | Fix vulnerabilities        |
-| Aurora Testing      | ✅    | Security test suites       |
-| Aurora Review       | ✅    | Security review findings   |
-| Aurora Security     | ❌    | **SELF-HANDOFF — INVALID** |
+| Target Agent      | Valid | Reason                     |
+| ----------------- | ----- | -------------------------- |
+| Bolt Constitution | ✅    | Update security standards  |
+| Bolt Implement    | ✅    | Fix vulnerabilities        |
+| Bolt Testing      | ✅    | Security test suites       |
+| Bolt Review       | ✅    | Security review findings   |
+| Bolt Security     | ❌    | **SELF-HANDOFF — INVALID** |
 
-### FROM: Aurora Dependencies
+### FROM: Bolt Dependencies
 
-| Target Agent        | Valid | Reason                      |
-| ------------------- | ----- | --------------------------- |
-| Aurora Implement    | ✅    | Install dependencies        |
-| Aurora Security     | ✅    | Check dependency security   |
-| Aurora Constitution | ✅    | Update allowed dependencies |
+| Target Agent      | Valid | Reason                      |
+| ----------------- | ----- | --------------------------- |
+| Bolt Implement    | ✅    | Install dependencies        |
+| Bolt Security     | ✅    | Check dependency security   |
+| Bolt Constitution | ✅    | Update allowed dependencies |
 
-### FROM: Aurora Docs
+### FROM: Bolt Docs
 
-| Target Agent   | Valid | Reason                     |
-| -------------- | ----- | -------------------------- |
-| Bolt ADR       | ✅    | Architecture documentation |
-| Aurora Feature | ✅    | Feature documentation      |
+| Target Agent | Valid | Reason                     |
+| ------------ | ----- | -------------------------- |
+| Bolt ADR     | ✅    | Architecture documentation |
+| Bolt Feature | ✅    | Feature documentation      |
 
-### FROM: Aurora Templates
+### FROM: Bolt Templates
 
-| Target Agent        | Valid | Reason                    |
-| ------------------- | ----- | ------------------------- |
-| Aurora Constitution | ✅    | Template for constitution |
-| Aurora Feature      | ✅    | Template for features     |
-| Aurora Implement    | ✅    | Code templates            |
+| Target Agent      | Valid | Reason                    |
+| ----------------- | ----- | ------------------------- |
+| Bolt Constitution | ✅    | Template for constitution |
+| Bolt Feature      | ✅    | Template for features     |
+| Bolt Implement    | ✅    | Code templates            |
 
 ---
 

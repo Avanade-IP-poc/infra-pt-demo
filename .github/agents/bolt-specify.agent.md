@@ -15,7 +15,7 @@ tools:
     'awesome-copilot/*',
     'microsoftdocs/mcp/*',
   ]
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: 🗺️ Create Technical Plan
     agent: Bolt Plan
@@ -205,5 +205,5 @@ docs(specs): add specification for [feature-name]
 
 For detailed guidance:
 
-- `#file:.github/prompts/aurora-business-analysis.prompt.md`
-- `#file:.github/prompts/aurora-technical-discovery.prompt.md`
+- [#file:.github/prompts/bolt-business-analysis.prompt.md]
+- [#file:.github/prompts/bolt-technical-discovery.prompt.md]

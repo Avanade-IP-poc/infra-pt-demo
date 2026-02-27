@@ -1,14 +1,14 @@
 # Azure DevOps Synchronization Scripts
 
-> Scripts para sincronizar AURORA Bolt Framework con Azure DevOps Boards
+> Scripts para sincronizar Bolt Framework con Azure DevOps Boards
 
 ## Scripts Disponibles
 
-| Script                      | Propósito                               | Dirección       |
-| --------------------------- | --------------------------------------- | --------------- |
-| `Sync-AuroraToDevOps.ps1`   | Crear work items desde specs AURORA     | AURORA → DevOps |
-| `Import-DevOpsToAurora.ps1` | Importar work items existentes a AURORA | DevOps → AURORA |
-| `Sync-DevOpsStatus.ps1`     | Actualizar estados de tareas            | DevOps → AURORA |
+| Script                    | Propósito                                       | Dirección               |
+| ------------------------- | ----------------------------------------------- | ----------------------- |
+| `Sync-BoltToDevOps.ps1`   | Crear work items desde specs Bolt Framework     | Bolt Framework → DevOps |
+| `Import-DevOpsToBolt.ps1` | Importar work items existentes a Bolt Framework | DevOps → Bolt Framework |
+| `Sync-DevOpsStatus.ps1`   | Actualizar estados de tareas                    | DevOps → Bolt Framework |
 
 ## Requisitos Previos
 
@@ -52,27 +52,27 @@ az devops project show --project "<your-project>"
 
 ## Uso
 
-### Sync-AuroraToDevOps.ps1
+### Sync-BoltToDevOps.ps1
 
-Crea work items en Azure DevOps desde una feature AURORA.
+Crea work items en Azure DevOps desde una feature Bolt Framework.
 
 **Sintaxis**:
 
 ```powershell
-.\Sync-AuroraToDevOps.ps1 -FeaturePath <ruta> [-Mode <Full|Incremental>] [-DryRun] [-Force]
+.\Sync-BoltToDevOps.ps1 -FeaturePath <ruta> [-Mode <Full|Incremental>] [-DryRun] [-Force]
 ```
 
 **Ejemplos**:
 
 ```powershell
 # Preview - ver qué se crearía sin ejecutar
-.\Sync-AuroraToDevOps.ps1 -FeaturePath "specs/001-time-tracking" -DryRun
+.\Sync-BoltToDevOps.ps1 -FeaturePath "specs/001-time-tracking" -DryRun
 
 # Sync incremental (solo nuevos items)
-.\Sync-AuroraToDevOps.ps1 -FeaturePath "specs/001-time-tracking" -Mode Incremental
+.\Sync-BoltToDevOps.ps1 -FeaturePath "specs/001-time-tracking" -Mode Incremental
 
 # Sync completo (recrear todo)
-.\Sync-AuroraToDevOps.ps1 -FeaturePath "specs/001-time-tracking" -Mode Full -Force
+.\Sync-BoltToDevOps.ps1 -FeaturePath "specs/001-time-tracking" -Mode Full -Force
 ```
 
 **Output**:
@@ -82,14 +82,14 @@ Crea work items en Azure DevOps desde una feature AURORA.
 - Crea Tasks como hijos de User Stories
 - Genera `.metadata/devops-sync.json` con IDs de trabajo
 
-### Import-DevOpsToAurora.ps1
+### Import-DevOpsToBolt.ps1
 
-Importa work items existentes de Azure DevOps a estructura AURORA.
+Importa work items existentes de Azure DevOps a estructura Bolt Framework.
 
 **Sintaxis**:
 
 ```powershell
-.\Import-DevOpsToAurora.ps1 -WorkItemId <id> -OutputPath <ruta> [-IncludeChildren] [-Force]
+.\Import-DevOpsToBolt.ps1 -WorkItemId <id> -OutputPath <ruta> [-IncludeChildren] [-Force]
 ```
 
 **Ejemplos**:
@@ -101,13 +101,13 @@ az boards work-item query `
   --output table
 
 # Importar Feature con User Stories y Tasks
-.\Import-DevOpsToAurora.ps1 `
+.\Import-DevOpsToBolt.ps1 `
   -WorkItemId 12345 `
   -OutputPath "specs/001-time-tracking" `
   -IncludeChildren
 
 # Importar solo Feature (sin hijos)
-.\Import-DevOpsToAurora.ps1 `
+.\Import-DevOpsToBolt.ps1 `
   -WorkItemId 12345 `
   -OutputPath "specs/001-time-tracking" `
   -IncludeChildren:$false
@@ -122,7 +122,7 @@ az boards work-item query `
 
 ### Sync-DevOpsStatus.ps1
 
-Actualiza estados de tareas desde Azure DevOps a AURORA.
+Actualiza estados de tareas desde Azure DevOps a Bolt Framework.
 
 **Sintaxis**:
 
@@ -151,17 +151,17 @@ Actualiza estados de tareas desde Azure DevOps a AURORA.
 
 ## Flujo de Trabajo Típico
 
-### Escenario 1: Nueva Feature AURORA → DevOps
+### Escenario 1: Nueva Feature Bolt Framework → DevOps
 
 ```powershell
-# 1. Crear feature con @Aurora Feature
-# @Aurora Feature create time tracking feature
+# 1. Crear feature con @Bolt Feature
+# @Bolt Feature create time tracking feature
 
 # 2. Preview sync
-.\Sync-AuroraToDevOps.ps1 -FeaturePath "specs/001-time-tracking" -DryRun
+.\Sync-BoltToDevOps.ps1 -FeaturePath "specs/001-time-tracking" -DryRun
 
 # 3. Ejecutar sync
-.\Sync-AuroraToDevOps.ps1 -FeaturePath "specs/001-time-tracking"
+.\Sync-BoltToDevOps.ps1 -FeaturePath "specs/001-time-tracking"
 
 # 4. Verificar en Azure DevOps
 # https://dev.azure.com/<your-org>/<your-project>/_backlogs
@@ -176,10 +176,10 @@ az boards work-item query `
   --output table
 
 # 2. Importar Feature #10025
-.\Import-DevOpsToAurora.ps1 -WorkItemId 10025 -OutputPath "specs/002-user-management"
+.\Import-DevOpsToBolt.ps1 -WorkItemId 10025 -OutputPath "specs/002-user-management"
 
-# 3. Refinar con AURORA agents
-# @Aurora Feature review specs/002-user-management
+# 3. Refinar con Bolt Framework agents
+# @Bolt Feature review specs/002-user-management
 ```
 
 ### Escenario 3: Sync Diario de Estados (CI/CD)
@@ -196,7 +196,7 @@ Cada feature sincronizada tiene `.metadata/devops-sync.json`:
 ```json
 {
   "version": "1.0.0",
-  "auroraFeatureId": "001-time-tracking",
+  "boltFeatureId": "001-time-tracking",
   "azureDevOps": {
     "organization": "https://dev.azure.com/<your-org>",
     "project": "<your-project>",
@@ -204,7 +204,7 @@ Cada feature sincronizada tiene `.metadata/devops-sync.json`:
     "userStories": [
       {
         "workItemId": 12346,
-        "auroraStoryId": "US-001",
+        "boltStoryId": "US-001",
         "title": "Log daily hours",
         "state": "Active"
       }
@@ -212,7 +212,7 @@ Cada feature sincronizada tiene `.metadata/devops-sync.json`:
     "tasks": [
       {
         "workItemId": 12347,
-        "auroraBoltId": "001-time-tracking-001",
+        "boltTaskId": "001-time-tracking-001",
         "title": "Implement TimeEntry aggregate",
         "state": "Completed"
       }
@@ -255,7 +255,7 @@ steps:
     displayName: 'Push New Features to DevOps'
     inputs:
       targetType: 'filePath'
-      filePath: '.github/skills/azure-devops-sync/scripts/powershell/Sync-AuroraToDevOps.ps1'
+      filePath: '.github/skills/azure-devops-sync/scripts/powershell/Sync-BoltToDevOps.ps1'
       arguments: '-Mode Incremental'
     env:
       AZURE_DEVOPS_EXT_PAT: $(DevOpsPAT)
@@ -267,7 +267,7 @@ steps:
 
 Todos los work items sincronizados tienen tags:
 
-- `AURORA` - Identifica items gestionados por AURORA
+- `BOLT` - Identifica items gestionados por Bolt Framework
 - `001-time-tracking` - Feature ID
 - `US-001` - User Story ID (para stories)
 - `bolt` - Identifica Bolt tasks

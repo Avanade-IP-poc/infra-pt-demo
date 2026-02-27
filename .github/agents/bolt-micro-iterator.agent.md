@@ -17,7 +17,7 @@ tools:
     'awesome-copilot/*',
     'microsoftdocs/mcp/*',
   ]
-model: Claude Sonnet 4.5
+model: Claude Sonnet 4.6 (copilot)
 handoffs:
   - label: ✅ Get Tasks
     agent: Bolt Tasks
@@ -238,4 +238,4 @@ gh issue close [BOLT_ISSUE] --comment "Merged via #[PR_NUM]"
 
 For micro-iteration guidance:
 
-- `#file:.github/prompts/aurora-micro-iteration.prompt.md`
+- [#file:.github/prompts/bolt-micro-iteration.prompt.md]

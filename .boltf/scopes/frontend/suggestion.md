@@ -3,7 +3,7 @@
 ## Evidencia encontrada en el proyecto
 
 - Soporte de inicialización frontend en `init.sh` y `Init.ps1` (`react`, `vue`, `angular`, `blazor`).
-- Referencias de estructura frontend en `README.md` y plantillas en `.github/agents/aurora-templates.agent.md`.
+- Referencias de estructura frontend en `README.md` y plantillas en `.github/agents/bolt-templates.agent.md`.
 
 ## Sugerencia de contenido para este scope
 
@@ -17,4 +17,4 @@
 - `init.sh`
 - `Init.ps1`
 - `README.md`
-- `.github/agents/aurora-templates.agent.md`
+- `.github/agents/bolt-templates.agent.md`

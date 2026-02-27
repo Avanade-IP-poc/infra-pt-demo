@@ -310,7 +310,7 @@ await mcp_azure_devops_wiki_create_or_update_page({
 
 ### Related Skills
 
-- [bolt-framework](.github/skills/bolt-framework/SKILL.md) - AURORA methodology
+- [bolt-framework](.github/skills/bolt-framework/SKILL.md) - Bolt Framework Methodology
 - [azure-devops-sync](.github/skills/azure-devops-sync/SKILL.md) - Work item sync
 - [markdown-formatting](.github/skills/markdown-formatting/SKILL.md) - Markdown standards
 
@@ -333,6 +333,6 @@ To improve this skill:
 
 ---
 
-**Skill**: azure-wiki-agent  
-**Domain**: Azure DevOps Wiki Integration  
-**AURORA**: 1.0.0+
+**Skill**: azure-wiki-agent
+**Domain**: Azure DevOps Wiki Integration
+**BOLT**: 1.0.0+

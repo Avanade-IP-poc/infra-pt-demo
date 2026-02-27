@@ -5,56 +5,66 @@
   "description": "A large body of work that can be broken down into smaller units of work. Relates to business objective or a major investment",
   "color": "FF7B00",
   "icon": "icon_crown",
-  "auroraArtifact": "None - Epics are not directly managed in AURORA",
+  "boltArtifact": "None - Epics are not directly managed in BOLT but can be used for high-level tracking in Azure DevOps",
   "mappings": {
     "core": {
       "System.Title": {
-        "auroraSource": null,
+        "boltSource": null,
         "description": "Epic title",
         "required": true,
         "transformation": null
       },
       "System.Description": {
-        "auroraSource": null,
+        "boltSource": null,
         "description": "Epic description",
         "required": false,
         "transformation": "html"
       },
       "System.State": {
-        "auroraSource": null,
+        "boltSource": null,
         "description": "Epic state",
         "required": true,
-        "allowedValues": ["New", "Active", "Resolved", "Closed"],
+        "allowedValues": [
+          "New",
+          "Active",
+          "Resolved",
+          "Closed"
+        ],
         "defaultValue": "New"
       },
       "System.AssignedTo": {
-        "auroraSource": null,
+        "boltSource": null,
         "description": "Assigned to",
         "required": false
       }
     },
     "planning": {
       "Microsoft.VSTS.Scheduling.StartDate": {
-        "auroraSource": null,
+        "boltSource": null,
         "description": "Start date",
         "required": false,
         "type": "datetime"
       },
       "Microsoft.VSTS.Scheduling.TargetDate": {
-        "auroraSource": null,
+        "boltSource": null,
         "description": "Target date",
         "required": false,
         "type": "datetime"
       },
       "Microsoft.VSTS.Common.Priority": {
-        "auroraSource": null,
+        "boltSource": null,
         "description": "Priority",
         "required": false,
-        "allowedValues": [1, 2, 3, 4],
+        "allowedValues": [
+          1,
+          2,
+          3,
+          4
+        ],
         "defaultValue": 2
       },
       "Microsoft.VSTS.Scheduling.Effort": {
-        "auroraSource": null,
+        "boltSource": null,
         "description": "Effort estimate",
         "required": false,
         "type": "double"
@@ -62,28 +72,31 @@
     },
     "business": {
       "Microsoft.VSTS.Common.BusinessValue": {
-        "auroraSource": null,
+        "boltSource": null,
         "description": "Business value",
         "required": false,
         "type": "integer"
       },
       "Microsoft.VSTS.Common.TimeCriticality": {
-        "auroraSource": null,
+        "boltSource": null,
         "description": "Time criticality",
         "required": false,
         "type": "double"
       },
       "Microsoft.VSTS.Common.ValueArea": {
-        "auroraSource": null,
+        "boltSource": null,
         "description": "Value area",
         "required": false,
-        "allowedValues": ["Business", "Architectural"],
+        "allowedValues": [
+          "Business",
+          "Architectural"
+        ],
         "defaultValue": "Business"
       }
     },
     "criteria": {
       "Microsoft.VSTS.Common.AcceptanceCriteria": {
-        "auroraSource": null,
+        "boltSource": null,
         "description": "Acceptance criteria",
         "required": false,
         "transformation": "html"
@@ -91,19 +104,19 @@
     },
     "classification": {
       "System.AreaPath": {
-        "auroraSource": null,
+        "boltSource": null,
         "description": "Area path",
         "required": true,
         "transformation": "path"
       },
       "System.IterationPath": {
-        "auroraSource": null,
+        "boltSource": null,
         "description": "Iteration path",
         "required": false,
         "transformation": "path"
       },
       "System.Tags": {
-        "auroraSource": null,
+        "boltSource": null,
         "description": "Tags",
         "required": false,
         "transformation": "semicolon-separated",
@@ -112,8 +125,8 @@
     }
   },
   "notes": [
-    "Epics are typically not created from AURORA specs directly",
+    "Epics are typically not created from BOLT specs directly",
     "Epics represent higher-level business objectives that span multiple features",
-    "For AURORA methodology, Features in Azure DevOps map to AURORA feature specs"
+    "For BOLT methodology, Features in Azure DevOps map to BOLT feature specs"
   ]
 }

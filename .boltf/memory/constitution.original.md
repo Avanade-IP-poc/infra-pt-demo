@@ -1,8 +1,8 @@
-# AURORA-IA Project Constitution
+# BOLT Framework Project Constitution
 
-> **Version**: 1.0.0  
-> **Ratification Date**: [YYYY-MM-DD]  
-> **Last Amended**: [YYYY-MM-DD]  
+> **Version**: 1.0.0
+> **Ratification Date**: [YYYY-MM-DD]
+> **Last Amended**: [YYYY-MM-DD]
 > **Status**: Template
 
 ---
@@ -26,16 +26,16 @@ This Constitution establishes the governing principles, technology decisions, an
 Select ONE:
 
 - [ ] **🏗️ Infrastructure Only** - Landing Zone, Platform, IaC
-  - *Applies*: Articles VIII, IX, X (IaC, Environments, CI/CD for Infra)
-  - *Skip*: Application development articles (II-VII, XI-XIV)
+  - _Applies_: Articles VIII, IX, X (IaC, Environments, CI/CD for Infra)
+  - _Skip_: Application development articles (II-VII, XI-XIV)
 
 - [ ] **💻 Application Development Only** - App code on existing infrastructure
-  - *Applies*: Articles II-VII, X-XIV (Architecture, Code, Testing, etc.)
-  - *Skip*: Infrastructure articles, assumes infra exists
+  - _Applies_: Articles II-VII, X-XIV (Architecture, Code, Testing, etc.)
+  - _Skip_: Infrastructure articles, assumes infra exists
 
 - [ ] **🚀 Full Stack (App + Infrastructure)** - Complete project
-  - *Applies*: ALL articles
-  - *Recommended for*: Greenfield projects, complete solutions
+  - _Applies_: ALL articles
+  - _Recommended for_: Greenfield projects, complete solutions
 
 ### Section 1.0.1: Infrastructure Scope (if Infrastructure or Full Stack)
 
@@ -66,7 +66,7 @@ Select ONE:
 - [ ] **C# / .NET**
   - Version: [ ] .NET 8 (LTS) [ ] .NET 10
   - API Style: [ ] Minimal APIs [ ] Controllers (MVC) [ ] Azure Functions
-  
+
 - [ ] **Node.js / TypeScript**
   - Version: [ ] Node.js 20 LTS [ ] Node.js 22
   - Framework: [ ] Express [ ] Fastify [ ] NestJS [ ] Azure Functions
@@ -154,12 +154,12 @@ public interface IQueryHandler<in TQuery, TResult> where TQuery : IQuery<TResult
 // Dispatchers (DI-based, no reflection magic)
 public interface ICommandDispatcher
 {
-    Task DispatchAsync<TCommand>(TCommand command, CancellationToken ct = default) 
+    Task DispatchAsync<TCommand>(TCommand command, CancellationToken ct = default)
         where TCommand : ICommand;
 }
 public interface IQueryDispatcher
 {
-    Task<TResult> DispatchAsync<TQuery, TResult>(TQuery query, CancellationToken ct = default) 
+    Task<TResult> DispatchAsync<TQuery, TResult>(TQuery query, CancellationToken ct = default)
         where TQuery : IQuery<TResult>;
 }
 
@@ -314,11 +314,11 @@ Unit of Work Pattern: [ ] Yes [ ] No
 
 ### Section 6.1: Cache Levels
 
-| Level | Technology | Enabled | TTL Default |
-|-------|------------|---------|-------------|
-| **L1 - In-Memory** | IMemoryCache (.NET) / node-cache (Node.js) | [ ] Yes [ ] No | ___ minutes |
-| **L2 - Distributed** | (see below) | [ ] Yes [ ] No | ___ minutes |
-| **L3 - CDN** | (see below) | [ ] Yes [ ] No | ___ hours |
+| Level                | Technology                                 | Enabled        | TTL Default    |
+| -------------------- | ------------------------------------------ | -------------- | -------------- |
+| **L1 - In-Memory**   | IMemoryCache (.NET) / node-cache (Node.js) | [ ] Yes [ ] No | \_\_\_ minutes |
+| **L2 - Distributed** | (see below)                                | [ ] Yes [ ] No | \_\_\_ minutes |
+| **L3 - CDN**         | (see below)                                | [ ] Yes [ ] No | \_\_\_ hours   |
 
 ### Section 6.2: Distributed Cache (L2)
 
@@ -370,12 +370,12 @@ Select ONE:
 
 ### Section 7.3: Authentication Flows
 
-| Scenario | Flow | Enabled |
-|----------|------|---------|
-| SPA Frontend | Authorization Code + PKCE | [ ] Yes [ ] No |
-| Mobile App | Authorization Code + PKCE | [ ] Yes [ ] No |
-| Service-to-Service | Client Credentials | [ ] Yes [ ] No |
-| Backend API | JWT Bearer Validation | [ ] Yes [ ] No |
+| Scenario           | Flow                      | Enabled        |
+| ------------------ | ------------------------- | -------------- |
+| SPA Frontend       | Authorization Code + PKCE | [ ] Yes [ ] No |
+| Mobile App         | Authorization Code + PKCE | [ ] Yes [ ] No |
+| Service-to-Service | Client Credentials        | [ ] Yes [ ] No |
+| Backend API        | JWT Bearer Validation     | [ ] Yes [ ] No |
 
 ### Section 7.4: Authorization Model
 
@@ -440,12 +440,12 @@ Dapr Enabled: [ ] Yes [ ] No
 
 If Yes, select building blocks:
 
-| Building Block | Enabled | Azure Component |
-|----------------|---------|-----------------|
-| Service Invocation | [ ] Yes [ ] No | - |
-| State Management | [ ] Yes [ ] No | [ ] Azure Cosmos DB [ ] Redis |
-| Pub/Sub | [ ] Yes [ ] No | [ ] Azure Service Bus [ ] Event Hubs |
-| Secrets | [ ] Yes [ ] No | [ ] Azure Key Vault |
+| Building Block     | Enabled        | Azure Component                      |
+| ------------------ | -------------- | ------------------------------------ |
+| Service Invocation | [ ] Yes [ ] No | -                                    |
+| State Management   | [ ] Yes [ ] No | [ ] Azure Cosmos DB [ ] Redis        |
+| Pub/Sub            | [ ] Yes [ ] No | [ ] Azure Service Bus [ ] Event Hubs |
+| Secrets            | [ ] Yes [ ] No | [ ] Azure Key Vault                  |
 
 ---
 
@@ -494,23 +494,23 @@ Landing Zone Pattern: [ ] CAF Enterprise-Scale [ ] Start-Small (single subscript
 
 #### If CAF Enterprise-Scale:
 
-| Component | Enabled | Notes |
-|-----------|---------|-------|
-| Management Group Hierarchy | [ ] Yes | Platform, Landing Zones, Decommissioned, Sandboxes |
-| Connectivity | [ ] Hub-Spoke [ ] Virtual WAN | Central networking |
-| Identity | [ ] Yes | Entra ID integration, Privileged Identity Management |
-| Management | [ ] Yes | Azure Monitor, Log Analytics, Automation |
-| Security | [ ] Yes | Microsoft Defender for Cloud, Sentinel (optional) |
+| Component                  | Enabled                       | Notes                                                |
+| -------------------------- | ----------------------------- | ---------------------------------------------------- |
+| Management Group Hierarchy | [ ] Yes                       | Platform, Landing Zones, Decommissioned, Sandboxes   |
+| Connectivity               | [ ] Hub-Spoke [ ] Virtual WAN | Central networking                                   |
+| Identity                   | [ ] Yes                       | Entra ID integration, Privileged Identity Management |
+| Management                 | [ ] Yes                       | Azure Monitor, Log Analytics, Automation             |
+| Security                   | [ ] Yes                       | Microsoft Defender for Cloud, Sentinel (optional)    |
 
 #### Governance Components:
 
-| Policy | Enabled | Scope |
-|--------|---------|-------|
-| Azure Policy Initiatives | [ ] Yes | [ ] Built-in ALZ [ ] Custom |
-| Azure RBAC Custom Roles | [ ] Yes | - |
-| Azure Blueprints | [ ] Yes [ ] No | Deprecated, use Deployment Stacks |
-| Cost Management Budgets | [ ] Yes | Per subscription/resource group |
-| Resource Tags | [ ] Yes | Required tags: ___ |
+| Policy                   | Enabled        | Scope                             |
+| ------------------------ | -------------- | --------------------------------- |
+| Azure Policy Initiatives | [ ] Yes        | [ ] Built-in ALZ [ ] Custom       |
+| Azure RBAC Custom Roles  | [ ] Yes        | -                                 |
+| Azure Blueprints         | [ ] Yes [ ] No | Deprecated, use Deployment Stacks |
+| Cost Management Budgets  | [ ] Yes        | Per subscription/resource group   |
+| Resource Tags            | [ ] Yes        | Required tags: \_\_\_             |
 
 #### Landing Zone Structure (Bicep):
 
@@ -550,12 +550,12 @@ infra/
 
 ### Section 10.1: Environment Strategy
 
-| Environment | Purpose | Enabled | Auto-Deploy |
-|-------------|---------|---------|-------------|
-| **dev** | Development, rapid iteration | [ ] Yes | [ ] On commit to develop |
-| **uat** | User Acceptance Testing | [ ] Yes | [ ] On PR merge |
-| **pre** | Pre-production, staging | [ ] Yes | [ ] Manual trigger |
-| **prod** | Production | [ ] Yes | [ ] Manual approval |
+| Environment | Purpose                      | Enabled | Auto-Deploy              |
+| ----------- | ---------------------------- | ------- | ------------------------ |
+| **dev**     | Development, rapid iteration | [ ] Yes | [ ] On commit to develop |
+| **uat**     | User Acceptance Testing      | [ ] Yes | [ ] On PR merge          |
+| **pre**     | Pre-production, staging      | [ ] Yes | [ ] Manual trigger       |
+| **prod**    | Production                   | [ ] Yes | [ ] Manual approval      |
 
 ### Section 10.2: Configuration Management
 
@@ -568,11 +568,11 @@ Select strategy:
 
 ### Section 10.3: Secrets Management
 
-| Secret Type | Storage |
-|-------------|---------|
+| Secret Type        | Storage         |
+| ------------------ | --------------- |
 | Connection Strings | Azure Key Vault |
-| API Keys | Azure Key Vault |
-| Certificates | Azure Key Vault |
+| API Keys           | Azure Key Vault |
+| Certificates       | Azure Key Vault |
 
 Local Development Secrets:
 
@@ -606,36 +606,36 @@ Select ONE:
 
 #### For Application Development:
 
-| Stage | Enabled | Threshold |
-|-------|---------|-----------|
-| **Build** | [ ] Yes | Warnings as errors: [ ] Yes [ ] No |
-| **Lint/Format** | [ ] Yes | - |
-| **Unit Tests** | [ ] Yes | Coverage >= __% |
-| **Integration Tests** | [ ] Yes | - |
-| **Architecture Tests** | [ ] Yes | - |
-| **Mutation Tests** | [ ] Yes | Score >= __% |
-| **Security Scan** | [ ] Yes | 0 Critical |
-| **Container Build** | [ ] Yes | - |
-| **Container Scan** | [ ] Yes | 0 Critical |
+| Stage                  | Enabled | Threshold                          |
+| ---------------------- | ------- | ---------------------------------- |
+| **Build**              | [ ] Yes | Warnings as errors: [ ] Yes [ ] No |
+| **Lint/Format**        | [ ] Yes | -                                  |
+| **Unit Tests**         | [ ] Yes | Coverage >= \_\_%                  |
+| **Integration Tests**  | [ ] Yes | -                                  |
+| **Architecture Tests** | [ ] Yes | -                                  |
+| **Mutation Tests**     | [ ] Yes | Score >= \_\_%                     |
+| **Security Scan**      | [ ] Yes | 0 Critical                         |
+| **Container Build**    | [ ] Yes | -                                  |
+| **Container Scan**     | [ ] Yes | 0 Critical                         |
 
 #### For Infrastructure:
 
-| Stage | Enabled | Threshold |
-|-------|---------|-----------|
-| **IaC Lint** | [ ] Yes | Bicep lint / tflint |
-| **IaC Validation** | [ ] Yes | what-if / plan |
-| **Security Scan** | [ ] Yes | Checkov / tfsec |
-| **Cost Estimation** | [ ] Yes | Infracost |
-| **Compliance Check** | [ ] Yes | Azure Policy |
+| Stage                | Enabled | Threshold           |
+| -------------------- | ------- | ------------------- |
+| **IaC Lint**         | [ ] Yes | Bicep lint / tflint |
+| **IaC Validation**   | [ ] Yes | what-if / plan      |
+| **Security Scan**    | [ ] Yes | Checkov / tfsec     |
+| **Cost Estimation**  | [ ] Yes | Infracost           |
+| **Compliance Check** | [ ] Yes | Azure Policy        |
 
 #### Deployment Stages:
 
-| Stage | Enabled | Trigger |
-|-------|---------|---------|
-| **Deploy Dev** | [ ] Yes | Auto on develop |
-| **Deploy UAT** | [ ] Yes | Auto on release/* |
-| **Deploy Pre** | [ ] Yes | Manual trigger |
-| **Deploy Prod** | [ ] Yes | Manual approval |
+| Stage           | Enabled | Trigger            |
+| --------------- | ------- | ------------------ |
+| **Deploy Dev**  | [ ] Yes | Auto on develop    |
+| **Deploy UAT**  | [ ] Yes | Auto on release/\* |
+| **Deploy Pre**  | [ ] Yes | Manual trigger     |
+| **Deploy Prod** | [ ] Yes | Manual approval    |
 
 ### Section 11.3: Deployment Strategy
 
@@ -678,13 +678,13 @@ Select ONE:
 
 ### Section 12.3: Infrastructure Monitoring (if Infrastructure scope)
 
-| Component | Tool | Enabled |
-|-----------|------|---------|
-| Resource Health | Azure Resource Health | [ ] Yes |
-| Activity Logs | Azure Monitor | [ ] Yes |
-| Diagnostics | Log Analytics | [ ] Yes |
-| Alerts | Azure Monitor Alerts | [ ] Yes |
-| Dashboards | Azure Workbooks / Grafana | [ ] Yes |
+| Component       | Tool                      | Enabled |
+| --------------- | ------------------------- | ------- |
+| Resource Health | Azure Resource Health     | [ ] Yes |
+| Activity Logs   | Azure Monitor             | [ ] Yes |
+| Diagnostics     | Log Analytics             | [ ] Yes |
+| Alerts          | Azure Monitor Alerts      | [ ] Yes |
+| Dashboards      | Azure Workbooks / Grafana | [ ] Yes |
 
 ---
 
@@ -697,35 +697,35 @@ Select ONE:
 
 > **Coverage-First approach validated by Mutation Testing**
 
-| Metric | Minimum | Recommended | Tool |
-|--------|---------|-------------|------|
-| Line Coverage | >= 80% | >= 90% | coverlet (.NET) / istanbul (Node.js) |
-| Branch Coverage | >= 75% | >= 85% | coverlet (.NET) / istanbul (Node.js) |
-| Mutation Score | >= 70% | >= 80% | Stryker.NET / Stryker Mutator |
+| Metric          | Minimum | Recommended | Tool                                 |
+| --------------- | ------- | ----------- | ------------------------------------ |
+| Line Coverage   | >= 80%  | >= 90%      | coverlet (.NET) / istanbul (Node.js) |
+| Branch Coverage | >= 75%  | >= 85%      | coverlet (.NET) / istanbul (Node.js) |
+| Mutation Score  | >= 70%  | >= 80%      | Stryker.NET / Stryker Mutator        |
 
 ### Section 13.2: Testing Frameworks
 
 #### For C#/.NET:
 
-| Type | Framework |
-|------|-----------|
-| Unit Tests | xUnit |
-| Integration Tests | xUnit + Testcontainers |
-| Architecture Tests | NetArchTest |
-| BDD/Gherkin | SpecFlow / Reqnroll |
-| E2E Tests | Playwright |
-| Performance Tests | NBomber / k6 |
+| Type               | Framework              |
+| ------------------ | ---------------------- |
+| Unit Tests         | xUnit                  |
+| Integration Tests  | xUnit + Testcontainers |
+| Architecture Tests | NetArchTest            |
+| BDD/Gherkin        | SpecFlow / Reqnroll    |
+| E2E Tests          | Playwright             |
+| Performance Tests  | NBomber / k6           |
 
 #### For Node.js/TypeScript:
 
-| Type | Framework |
-|------|-----------|
-| Unit Tests | Jest / Vitest |
-| Integration Tests | Jest + Testcontainers |
-| Architecture Tests | dependency-cruiser |
-| BDD/Gherkin | Cucumber.js |
-| E2E Tests | Playwright / Cypress |
-| Performance Tests | k6 / Artillery |
+| Type               | Framework             |
+| ------------------ | --------------------- |
+| Unit Tests         | Jest / Vitest         |
+| Integration Tests  | Jest + Testcontainers |
+| Architecture Tests | dependency-cruiser    |
+| BDD/Gherkin        | Cucumber.js           |
+| E2E Tests          | Playwright / Cypress  |
+| Performance Tests  | k6 / Artillery        |
 
 ### Section 13.3: Test Project Structure
 
@@ -761,13 +761,13 @@ tests/
 
 ### Section 13.4: Infrastructure Testing (if Infrastructure scope)
 
-| Test Type | Tool | Purpose |
-|-----------|------|---------|
-| IaC Lint | Bicep linter / tflint | Syntax and best practices |
-| Security Scan | Checkov / tfsec | Security misconfigurations |
-| Policy Compliance | Azure Policy (what-if) | Governance validation |
-| Integration Test | Pester / Terratest | Post-deployment validation |
-| Cost Estimation | Infracost | Budget validation |
+| Test Type         | Tool                   | Purpose                    |
+| ----------------- | ---------------------- | -------------------------- |
+| IaC Lint          | Bicep linter / tflint  | Syntax and best practices  |
+| Security Scan     | Checkov / tfsec        | Security misconfigurations |
+| Policy Compliance | Azure Policy (what-if) | Governance validation      |
+| Integration Test  | Pester / Terratest     | Post-deployment validation |
+| Cost Estimation   | Infracost              | Budget validation          |
 
 ---
 
@@ -780,48 +780,48 @@ tests/
 
 #### For C#/.NET:
 
-| Element | Convention | Example |
-|---------|------------|---------|
-| Namespaces | PascalCase | `MyCompany.MyProject.Domain` |
-| Classes | PascalCase | `OrderService` |
-| Interfaces | I + PascalCase | `IOrderService` |
-| Methods | PascalCase | `GetOrderByIdAsync` |
-| Properties | PascalCase | `OrderId` |
-| Private fields | _camelCase | `_orderRepository` |
-| Async methods | Suffix Async | `GetOrderByIdAsync` |
+| Element        | Convention     | Example                      |
+| -------------- | -------------- | ---------------------------- |
+| Namespaces     | PascalCase     | `MyCompany.MyProject.Domain` |
+| Classes        | PascalCase     | `OrderService`               |
+| Interfaces     | I + PascalCase | `IOrderService`              |
+| Methods        | PascalCase     | `GetOrderByIdAsync`          |
+| Properties     | PascalCase     | `OrderId`                    |
+| Private fields | \_camelCase    | `_orderRepository`           |
+| Async methods  | Suffix Async   | `GetOrderByIdAsync`          |
 
 #### For Node.js/TypeScript:
 
-| Element | Convention | Example |
-|---------|------------|---------|
-| Files | kebab-case | `order-service.ts` |
-| Classes | PascalCase | `OrderService` |
-| Interfaces | I + PascalCase | `IOrderService` |
-| Functions | camelCase | `getOrderById` |
-| Variables | camelCase | `orderId` |
-| Constants | UPPER_SNAKE_CASE | `MAX_RETRIES` |
+| Element    | Convention       | Example            |
+| ---------- | ---------------- | ------------------ |
+| Files      | kebab-case       | `order-service.ts` |
+| Classes    | PascalCase       | `OrderService`     |
+| Interfaces | I + PascalCase   | `IOrderService`    |
+| Functions  | camelCase        | `getOrderById`     |
+| Variables  | camelCase        | `orderId`          |
+| Constants  | UPPER_SNAKE_CASE | `MAX_RETRIES`      |
 
 ### Section 14.2: Code Formatting
 
 #### For C#/.NET:
 
-| Setting | Value |
-|---------|-------|
-| Indentation | 4 spaces |
-| Line Length | 120 characters |
-| File-scoped namespaces | [ ] Yes [ ] No |
-| Nullable reference types | [ ] Enabled (recommended) |
-| Tooling | .editorconfig + dotnet format |
+| Setting                  | Value                         |
+| ------------------------ | ----------------------------- |
+| Indentation              | 4 spaces                      |
+| Line Length              | 120 characters                |
+| File-scoped namespaces   | [ ] Yes [ ] No                |
+| Nullable reference types | [ ] Enabled (recommended)     |
+| Tooling                  | .editorconfig + dotnet format |
 
 #### For Node.js/TypeScript:
 
-| Setting | Value |
-|---------|-------|
-| Indentation | 2 spaces |
-| Line Length | 100 characters |
-| Semicolons | [ ] Yes [ ] No |
-| Quotes | [ ] Single [ ] Double |
-| Tooling | ESLint + Prettier |
+| Setting     | Value                 |
+| ----------- | --------------------- |
+| Indentation | 2 spaces              |
+| Line Length | 100 characters        |
+| Semicolons  | [ ] Yes [ ] No        |
+| Quotes      | [ ] Single [ ] Double |
+| Tooling     | ESLint + Prettier     |
 
 ---
 
@@ -829,11 +829,11 @@ tests/
 
 > **📋 Applies to**: Application Development, Full Stack
 > **Auto-generated based on selections above.**
-> Run `/aurora.scaffold` to generate the project structure.
+> Run `/boltf.scaffold` to generate the project structure.
 
 ### Template A: C# + Modular Monolith
 
-```
+```text
 project-root/
 ├── src/
 │   ├── Modules/
@@ -860,7 +860,7 @@ project-root/
 
 ### Template B: C# + Microservices
 
-```
+```text
 project-root/
 ├── src/
 │   ├── Services/
@@ -885,7 +885,7 @@ project-root/
 
 ### Template C: Node.js + Modular Monolith
 
-```
+```text
 project-root/
 ├── src/
 │   ├── modules/
@@ -911,7 +911,7 @@ project-root/
 
 ### Template D: Node.js + Microservices
 
-```
+```text
 project-root/
 ├── services/
 │   ├── orders/
@@ -933,7 +933,7 @@ project-root/
 
 ### Template E: Infrastructure Only - Landing Zone
 
-```
+```text
 project-root/
 ├── platform/
 │   ├── management-groups/
@@ -990,7 +990,7 @@ project-root/
 
 ### Template F: Infrastructure Only - Workload
 
-```
+```text
 project-root/
 ├── infra/
 │   ├── bicep/                    # or terraform/
@@ -1035,28 +1035,28 @@ project-root/
 
 ### Section 16.1: Network Security
 
-| Component | Configuration |
-|-----------|---------------|
-| Virtual Network | [ ] Azure VNet [ ] None |
-| Private Endpoints | [ ] Enabled [ ] Disabled |
+| Component                | Configuration                     |
+| ------------------------ | --------------------------------- |
+| Virtual Network          | [ ] Azure VNet [ ] None           |
+| Private Endpoints        | [ ] Enabled [ ] Disabled          |
 | Web Application Firewall | [ ] Azure Front Door WAF [ ] None |
 
 ### Section 16.2: Data Protection
 
-| Policy | Value |
-|--------|-------|
-| Encryption at Rest | [ ] Azure-managed keys [ ] Customer-managed keys |
-| Encryption in Transit | TLS 1.2+ (mandatory) |
-| PII Handling | [ ] Anonymization [ ] Pseudonymization [ ] Encryption |
+| Policy                | Value                                                 |
+| --------------------- | ----------------------------------------------------- |
+| Encryption at Rest    | [ ] Azure-managed keys [ ] Customer-managed keys      |
+| Encryption in Transit | TLS 1.2+ (mandatory)                                  |
+| PII Handling          | [ ] Anonymization [ ] Pseudonymization [ ] Encryption |
 
 ### Section 16.3: Compliance Requirements
 
-| Standard | Required |
-|----------|----------|
-| GDPR | [ ] Yes [ ] No |
-| HIPAA | [ ] Yes [ ] No |
-| SOC 2 | [ ] Yes [ ] No |
-| PCI-DSS | [ ] Yes [ ] No |
+| Standard | Required       |
+| -------- | -------------- |
+| GDPR     | [ ] Yes [ ] No |
+| HIPAA    | [ ] Yes [ ] No |
+| SOC 2    | [ ] Yes [ ] No |
+| PCI-DSS  | [ ] Yes [ ] No |
 
 ---
 
@@ -1100,17 +1100,17 @@ Select ONE:
 
 ### Section 18.2: API Features
 
-| Feature | Enabled | Configuration |
-|---------|---------|---------------|
-| Rate Limiting | [ ] Yes [ ] No | ___ requests/minute |
+| Feature        | Enabled        | Configuration                |
+| -------------- | -------------- | ---------------------------- |
+| Rate Limiting  | [ ] Yes [ ] No | \_\_\_ requests/minute       |
 | API Versioning | [ ] Yes [ ] No | Strategy: [ ] URL [ ] Header |
 
 ### Section 18.3: API Documentation
 
-| Type | Tool | Enabled |
-|------|------|---------|
-| REST API | OpenAPI / Swagger | [ ] Yes |
-| Async Events | AsyncAPI | [ ] Yes [ ] No |
+| Type         | Tool              | Enabled        |
+| ------------ | ----------------- | -------------- |
+| REST API     | OpenAPI / Swagger | [ ] Yes        |
+| Async Events | AsyncAPI          | [ ] Yes [ ] No |
 
 ---
 
@@ -1174,18 +1174,18 @@ Before generating code or making changes:
 
 ## Signatories
 
-| Role | Name | Date | Signature |
-|------|------|------|-----------|
-| Project Lead | [NAME] | [DATE] | |
-| Tech Lead | [NAME] | [DATE] | |
-| Architect | [NAME] | [DATE] | |
+| Role         | Name   | Date   | Signature |
+| ------------ | ------ | ------ | --------- |
+| Project Lead | [NAME] | [DATE] |           |
+| Tech Lead    | [NAME] | [DATE] |           |
+| Architect    | [NAME] | [DATE] |           |
 
 ---
 
 ## Revision History
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 2.1.0 | [DATE] | [AUTHOR] | Added Project Scope (App/Infra/Full Stack), Landing Zone templates, Infrastructure testing |
-| 2.0.0 | [DATE] | [AUTHOR] | Complete rewrite with C#/Node.js options |
-| 1.0.0 | [DATE] | [AUTHOR] | Initial constitution |
+| Version | Date   | Author   | Changes                                                                                    |
+| ------- | ------ | -------- | ------------------------------------------------------------------------------------------ |
+| 2.1.0   | [DATE] | [AUTHOR] | Added Project Scope (App/Infra/Full Stack), Landing Zone templates, Infrastructure testing |
+| 2.0.0   | [DATE] | [AUTHOR] | Complete rewrite with C#/Node.js options                                                   |
+| 1.0.0   | [DATE] | [AUTHOR] | Initial constitution                                                                       |

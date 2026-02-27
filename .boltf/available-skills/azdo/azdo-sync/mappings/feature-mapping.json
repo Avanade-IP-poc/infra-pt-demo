@@ -5,28 +5,33 @@
   "description": "Tracks a feature that will be released with the product",
   "color": "773B93",
   "icon": "icon_trophy",
-  "auroraArtifact": "specs/XXX-feature-name/feature.md",
+  "boltArtifact": "specs/XXX-feature-name/feature.md",
   "mappings": {
     "core": {
       "System.Title": {
-        "auroraSource": "feature.md#title",
-        "description": "Feature title from AURORA feature.md front matter",
+        "boltSource": "feature.md#title",
+        "description": "Feature title from BOLT feature.md front matter",
         "required": true,
         "transformation": null,
         "example": "Time Tracking System"
       },
       "System.Description": {
-        "auroraSource": "feature.md#description",
-        "description": "Feature description from AURORA feature.md",
+        "boltSource": "feature.md#description",
+        "description": "Feature description from BOLT feature.md",
         "required": false,
         "transformation": "markdown-to-html",
         "example": "System for employees to log, review, and submit timesheets"
       },
       "System.State": {
-        "auroraSource": "computed:aurora-phase",
-        "description": "State mapped from AURORA lifecycle phase",
+        "boltSource": "computed:bolt-phase",
+        "description": "State mapped from BOLT lifecycle phase",
         "required": true,
-        "allowedValues": ["New", "Active", "Resolved", "Closed"],
+        "allowedValues": [
+          "New",
+          "Active",
+          "Resolved",
+          "Closed"
+        ],
         "mapping": {
           "DISCOVERY": "New",
           "PLANNING": "Active",
@@ -37,29 +42,34 @@
         "defaultValue": "New"
       },
       "System.AssignedTo": {
-        "auroraSource": "feature.md#assignedTo",
+        "boltSource": "feature.md#assignedTo",
         "description": "Team member assigned to feature",
         "required": false
       }
     },
     "planning": {
       "Microsoft.VSTS.Scheduling.StartDate": {
-        "auroraSource": "planning/plan.md#startDate",
+        "boltSource": "planning/plan.md#startDate",
         "description": "Planned start date",
         "required": false,
         "type": "datetime"
       },
       "Microsoft.VSTS.Scheduling.TargetDate": {
-        "auroraSource": "planning/plan.md#targetDate",
+        "boltSource": "planning/plan.md#targetDate",
         "description": "Target completion date",
         "required": false,
         "type": "datetime"
       },
       "Microsoft.VSTS.Common.Priority": {
-        "auroraSource": "feature.md#priority",
+        "boltSource": "feature.md#priority",
         "description": "Feature priority",
         "required": false,
-        "allowedValues": [1, 2, 3, 4],
+        "allowedValues": [
+          1,
+          2,
+          3,
+          4
+        ],
         "defaultValue": 2,
         "mapping": {
           "Critical": 1,
@@ -69,7 +79,7 @@
         }
       },
       "Microsoft.VSTS.Scheduling.Effort": {
-        "auroraSource": "computed:sum-user-story-effort",
+        "boltSource": "computed:sum-user-story-effort",
         "description": "Total effort from all user stories",
         "required": false,
         "type": "double",
@@ -78,28 +88,31 @@
     },
     "business": {
       "Microsoft.VSTS.Common.BusinessValue": {
-        "auroraSource": "feature.md#businessValue",
+        "boltSource": "feature.md#businessValue",
         "description": "Business value score",
         "required": false,
         "type": "integer"
       },
       "Microsoft.VSTS.Common.TimeCriticality": {
-        "auroraSource": "feature.md#timeCriticality",
+        "boltSource": "feature.md#timeCriticality",
         "description": "Time criticality score",
         "required": false,
         "type": "double"
       },
       "Microsoft.VSTS.Common.ValueArea": {
-        "auroraSource": "feature.md#valueArea",
+        "boltSource": "feature.md#valueArea",
         "description": "Value area classification",
         "required": false,
-        "allowedValues": ["Business", "Architectural"],
+        "allowedValues": [
+          "Business",
+          "Architectural"
+        ],
         "defaultValue": "Business"
       }
     },
     "criteria": {
       "Microsoft.VSTS.Common.AcceptanceCriteria": {
-        "auroraSource": "feature.md#acceptance-criteria",
+        "boltSource": "feature.md#acceptance-criteria",
         "description": "Acceptance criteria from feature specification",
         "required": false,
         "transformation": "markdown-to-html",
@@ -108,7 +121,7 @@
     },
     "classification": {
       "System.AreaPath": {
-        "auroraSource": "computed:area-path",
+        "boltSource": "computed:area-path",
         "description": "Area path from constitution structure",
         "required": true,
         "transformation": "path",
@@ -116,14 +129,14 @@
         "example": "Registro Horario\\Backend\\TimeTracking"
       },
       "System.IterationPath": {
-        "auroraSource": "planning/plan.md#iteration",
+        "boltSource": "planning/plan.md#iteration",
         "description": "Sprint/iteration assignment",
         "required": false,
         "transformation": "path",
         "example": "Registro Horario\\Sprint 1"
       },
       "System.Tags": {
-        "auroraSource": "computed:tags",
+        "boltSource": "computed:tags",
         "description": "Tags for tracking and filtering",
         "required": false,
         "transformation": "semicolon-separated",
@@ -133,17 +146,17 @@
     },
     "security": {
       "Custom.ADPT20DataClassification": {
-        "auroraSource": "feature.md#security.dataClassification",
+        "boltSource": "feature.md#security.dataClassification",
         "description": "Data classification level",
         "required": false
       },
       "Custom.ADPT20PersonalData": {
-        "auroraSource": "feature.md#security.personalData",
+        "boltSource": "feature.md#security.personalData",
         "description": "Contains personal data flag",
         "required": false
       },
       "Custom.ADPT20ThreatModeling": {
-        "auroraSource": "feature.md#security.threatModeling",
+        "boltSource": "feature.md#security.threatModeling",
         "description": "Threat modeling status",
         "required": false
       }
@@ -153,21 +166,21 @@
     "parent": {
       "linkType": "System.LinkTypes.Hierarchy-Reverse",
       "targetType": "Epic",
-      "auroraSource": null,
+      "boltSource": null,
       "description": "Optional parent Epic"
     },
     "children": {
       "linkType": "System.LinkTypes.Hierarchy-Forward",
       "targetType": "Product Backlog Item",
-      "auroraSource": "requirements/requirements.md#user-stories",
+      "boltSource": "requirements/requirements.md#user-stories",
       "description": "User stories under this feature"
     }
   },
   "notes": [
-    "Feature is the primary AURORA artifact that maps to Azure DevOps",
-    "Each AURORA feature spec (specs/XXX-feature-name/) creates one Feature work item",
+    "Feature is the primary BOLT artifact that maps to Azure DevOps",
+    "Each BOLT feature spec (specs/XXX-feature-name/) creates one Feature work item",
     "User stories in requirements.md become child Product Backlog Items",
-    "State transitions follow AURORA lifecycle phases automatically",
+    "State transitions follow BOLT lifecycle phases automatically",
     "Tags always include 'Bolt Framework' and feature ID for traceability"
   ]
 }

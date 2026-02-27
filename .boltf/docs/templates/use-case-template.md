@@ -1,6 +1,6 @@
 # Use Case Specification
 
-> **AURORA Stage:** DISCOVERY - Requirements Analysis
+> **BOLT Framework Stage:** DISCOVERY - Requirements Analysis
 > **Format:** UML/Cockburn Style
 
 **Use Case ID:** UC-{ID}
@@ -16,26 +16,30 @@
 ## 1. Overview
 
 ### Brief Description
+
 {One paragraph describing what this use case accomplishes}
 
 ### Scope
+
 - **System:** {system name}
 - **Level:** {User Goal | Subfunction | Summary}
 
 ### Primary Actor
+
 {The main actor who initiates this use case}
 
 ### Supporting Actors
-| Actor | Role |
-|-------|------|
+
+| Actor   | Role                    |
+| ------- | ----------------------- |
 | {actor} | {role in this use case} |
 
 ---
 
 ## 2. Stakeholders and Interests
 
-| Stakeholder | Interest |
-|-------------|----------|
+| Stakeholder   | Interest                            |
+| ------------- | ----------------------------------- |
 | {stakeholder} | {what they want from this use case} |
 
 ---
@@ -51,10 +55,12 @@
 ## 4. Postconditions
 
 ### Success Guarantee (Main Success Scenario)
+
 1. {postcondition 1}
 2. {postcondition 2}
 
 ### Minimal Guarantee (All Scenarios)
+
 1. {minimal postcondition - what always happens}
 
 ---
@@ -67,16 +73,17 @@
 
 ## 6. Main Success Scenario (Basic Flow)
 
-| Step | Actor | System |
-|------|-------|--------|
-| 1 | {actor action} | |
-| 2 | | {system response} |
-| 3 | {actor action} | |
-| 4 | | {system response} |
-| 5 | {actor action} | |
-| 6 | | {system response} |
+| Step | Actor          | System            |
+| ---- | -------------- | ----------------- |
+| 1    | {actor action} |                   |
+| 2    |                | {system response} |
+| 3    | {actor action} |                   |
+| 4    |                | {system response} |
+| 5    | {actor action} |                   |
+| 6    |                | {system response} |
 
 ### Narrative Format
+
 1. {Actor} {action}.
 2. System {response}.
 3. {Actor} {action}.
@@ -88,45 +95,52 @@
 ## 7. Extensions (Alternative Flows)
 
 ### 2a. {Extension Name}
+
 **Condition:** {when this extension applies}
 
-| Step | Actor | System |
-|------|-------|--------|
-| 2a.1 | | {system detects condition} |
-| 2a.2 | | {system response} |
-| 2a.3 | {actor action} | |
-| 2a.4 | | Return to step {n} |
+| Step | Actor          | System                     |
+| ---- | -------------- | -------------------------- |
+| 2a.1 |                | {system detects condition} |
+| 2a.2 |                | {system response}          |
+| 2a.3 | {actor action} |                            |
+| 2a.4 |                | Return to step {n}         |
 
 ### 3a. {Extension Name}
+
 **Condition:** {when this extension applies}
 
-| Step | Actor | System |
-|------|-------|--------|
-| 3a.1 | | {system response} |
-| 3a.2 | | Use case ends in failure |
+| Step | Actor | System                   |
+| ---- | ----- | ------------------------ |
+| 3a.1 |       | {system response}        |
+| 3a.2 |       | Use case ends in failure |
 
-### *a. {Global Extension - applies at any step}
+### \*a. {Global Extension - applies at any step}
+
 **Condition:** {when this extension applies}
 
-| Step | Actor | System |
-|------|-------|--------|
-| *a.1 | {actor action} | |
-| *a.2 | | {system response} |
+| Step  | Actor          | System            |
+| ----- | -------------- | ----------------- |
+| \*a.1 | {actor action} |                   |
+| \*a.2 |                | {system response} |
 
 ---
 
 ## 8. Special Requirements
 
 ### Performance
+
 - {requirement}: {target} (e.g., "Response time: < 2 seconds")
 
 ### Security
+
 - {requirement} (e.g., "User must be authenticated")
 
 ### Usability
+
 - {requirement} (e.g., "Must be accessible via screen reader")
 
 ### Compliance
+
 - {requirement} (e.g., "Must comply with GDPR")
 
 ---
@@ -134,16 +148,18 @@
 ## 9. Technology and Data Variations
 
 ### Input Variations
-| Step | Variation |
-|------|-----------|
+
+| Step   | Variation                            |
+| ------ | ------------------------------------ |
 | {step} | {alternative input method or format} |
 
 ### Platform Variations
-| Platform | Variation |
-|----------|-----------|
-| Web | {specific behavior} |
-| Mobile | {specific behavior} |
-| API | {specific behavior} |
+
+| Platform | Variation           |
+| -------- | ------------------- |
+| Web      | {specific behavior} |
+| Mobile   | {specific behavior} |
+| API      | {specific behavior} |
 
 ---
 
@@ -157,8 +173,8 @@
 
 ## 11. Open Issues
 
-| ID | Issue | Status | Resolution |
-|----|-------|--------|------------|
+| ID   | Issue               | Status        | Resolution   |
+| ---- | ------------------- | ------------- | ------------ |
 | {id} | {issue description} | Open/Resolved | {resolution} |
 
 ---
@@ -166,61 +182,54 @@
 ## 12. Related Artifacts
 
 ### Related Use Cases
-| Use Case | Relationship |
-|----------|--------------|
-| UC-{id} | {includes/extends/precedes/follows} |
+
+| Use Case | Relationship                        |
+| -------- | ----------------------------------- |
+| UC-{id}  | {includes/extends/precedes/follows} |
 
 ### User Stories
-| Story ID | Title |
-|----------|-------|
-| US-{id} | {title} |
+
+| Story ID | Title   |
+| -------- | ------- |
+| US-{id}  | {title} |
 
 ### Gherkin Scenarios
-| Scenario | File |
-|----------|------|
+
+| Scenario   | File           |
+| ---------- | -------------- |
 | {scenario} | {file.feature} |
 
 ---
 
 ## 13. Use Case Diagram
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                        {System Name}                         │
-│                                                              │
-│    ┌─────────────────────────────────────────────────┐      │
-│    │                                                  │      │
-│    │        ┌──────────────────────────┐             │      │
-│    │        │   {Use Case Name}        │             │      │
-│    │        │                          │             │      │
-│    │        └──────────────────────────┘             │      │
-│    │                    │                            │      │
-│    │                    │ <<include>>                │      │
-│    │                    ▼                            │      │
-│    │        ┌──────────────────────────┐             │      │
-│    │        │   {Included UC}          │             │      │
-│    │        └──────────────────────────┘             │      │
-│    │                                                  │      │
-│    └─────────────────────────────────────────────────┘      │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-        │
-        │
-   ┌────┴────┐
-   │         │
-   │  Actor  │
-   │         │
-   └─────────┘
+```mermaid
+graph TB
+Actor["👤 Actor"]
+
+    subgraph System["{System Name}"]
+        UC1["{Use Case Name}"]
+        UC2["{Included UC}"]
+
+        UC1 -.->|"<<include>>"| UC2
+    end
+
+    Actor --> UC1
+
+    style System fill:#f9f9f9,stroke:#333,stroke-width:2px
+    style UC1 fill:#e1f5ff,stroke:#01579b,stroke-width:2px,rx:20,ry:20
+    style UC2 fill:#e1f5ff,stroke:#01579b,stroke-width:2px,rx:20,ry:20
+
 ```
 
 ---
 
 ## 14. Revision History
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0 | {DATE} | {author} | Initial version |
+| Version | Date   | Author   | Changes         |
+| ------- | ------ | -------- | --------------- |
+| 1.0     | {DATE} | {author} | Initial version |
 
 ---
 
-*Generated by Aurora Use Case Agent*
+_Generated by Bolt Use Case Agent_

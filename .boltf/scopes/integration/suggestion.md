@@ -4,7 +4,7 @@
 
 - Validación de contratos en `.github/workflows/contract-tests.yml` (OpenAPI, AsyncAPI, GraphQL, Pact, Cucumber).
 - Interfaces externas y requisitos en `.boltf/docs/templates/requirements-template.md`.
-- Descubrimiento técnico de puntos de integración en `.github/prompts/aurora-technical-discovery.prompt.md`.
+- Descubrimiento técnico de puntos de integración en `.github/prompts/bolt-technical-discovery.prompt.md`.
 - Skills operativos de integración con Azure DevOps/Wiki en `.boltf/available-skills/azure-devops-sync` y `.boltf/available-skills/azure-wiki-agent`.
 
 ## Sugerencia de contenido para este scope
@@ -18,6 +18,6 @@
 
 - `.github/workflows/contract-tests.yml`
 - `.boltf/docs/templates/requirements-template.md`
-- `.github/prompts/aurora-technical-discovery.prompt.md`
+- `.github/prompts/bolt-technical-discovery.prompt.md`
 - `.boltf/available-skills/azure-devops-sync/SKILL.md`
 - `.boltf/available-skills/azure-wiki-agent/SKILL.md`

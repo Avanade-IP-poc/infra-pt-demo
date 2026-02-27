@@ -12,9 +12,9 @@
 [![License](https://img.shields.io/github/license/owner/repo)](LICENSE)
 [![Contributors](https://img.shields.io/github/contributors/owner/repo)](https://github.com/owner/repo/graphs/contributors)
 
-[**🚀 Quick Start**](#quick-start) • 
-[**📖 Documentation**](#documentation) • 
-[**💬 Community**](#community) • 
+[**🚀 Quick Start**](#quick-start) •
+[**📖 Documentation**](#documentation) •
+[**💬 Community**](#community) •
 [**🤝 Contributing**](#contributing)
 
 </div>
@@ -30,7 +30,7 @@
 ### ✨ Key Features
 
 - 🎯 **Feature 1:** Brief description of primary feature
-- 🚀 **Feature 2:** Brief description of performance feature  
+- 🚀 **Feature 2:** Brief description of performance feature
 - 🔒 **Feature 3:** Brief description of security feature
 - 🎨 **Feature 4:** Brief description of usability feature
 - 🔧 **Feature 5:** Brief description of developer experience feature
@@ -39,7 +39,7 @@
 
 ![Demo GIF or Screenshot](docs/images/demo.gif)
 
-*Caption: Brief description of what the demo shows*
+_Caption: Brief description of what the demo shows_
 
 ---
 
@@ -56,6 +56,7 @@ Before you begin, ensure you have the following installed:
 ### Installation
 
 #### Option 1: Using npm/yarn
+
 ```bash
 npm install {package-name}
 # or
@@ -63,6 +64,7 @@ yarn add {package-name}
 ```
 
 #### Option 2: Clone from source
+
 ```bash
 git clone https://github.com/owner/repo.git
 cd repo
@@ -73,17 +75,20 @@ npm run build
 ### Basic Usage
 
 #### 1. Initialize a new project
+
 ```bash
 npx {cli-tool} create my-project
 cd my-project
 ```
 
 #### 2. Start the development server
+
 ```bash
 npm run dev
 ```
 
 #### 3. Open your browser
+
 Navigate to `http://localhost:3000` to see your application running.
 
 ### Your First Example
@@ -91,28 +96,29 @@ Navigate to `http://localhost:3000` to see your application running.
 Here's a simple example to get you started:
 
 ```javascript
-import { Aurora } from '{package-name}';
+import { Bolt } from '{package-name}';
 
-// Initialize Aurora
-const aurora = new Aurora({
+// Initialize Bolt
+const bolt = new Bolt({
   apiKey: 'your-api-key',
-  environment: 'development'
+  environment: 'development',
 });
 
 // Create your first feature
-const result = await aurora.create({
+const result = await bolt.create({
   name: 'My First Feature',
   type: 'component',
   config: {
     // Configuration options
-  }
+  },
 });
 
 console.log('Feature created:', result.id);
 ```
 
 **Expected Output:**
-```
+
+```text
 Feature created: feat_abc123def456
 ```
 
@@ -123,19 +129,25 @@ Feature created: feat_abc123def456
 ### Core Concepts
 
 #### 🏗️ Architecture
+
 Learn about the overall system architecture and design principles.
+
 - [Architecture Overview](docs/architecture.md)
 - [Design Patterns](docs/patterns.md)
 - [Best Practices](docs/best-practices.md)
 
 #### 🛠️ API Reference
+
 Complete API documentation with examples.
+
 - [API Documentation](docs/api/README.md)
 - [Authentication](docs/api/auth.md)
 - [Rate Limiting](docs/api/rate-limits.md)
 
 #### 🎨 User Interface
+
 UI components and styling guidelines.
+
 - [Component Library](docs/ui/components.md)
 - [Theming Guide](docs/ui/theming.md)
 - [Accessibility](docs/ui/accessibility.md)
@@ -143,16 +155,19 @@ UI components and styling guidelines.
 ### Tutorials and Guides
 
 #### 🎓 Getting Started
+
 - [Installation Guide](docs/guides/installation.md)
 - [Configuration](docs/guides/configuration.md)
 - [Your First Project](docs/guides/first-project.md)
 
 #### 🔧 Advanced Usage
+
 - [Custom Plugins](docs/guides/plugins.md)
 - [Integration Patterns](docs/guides/integrations.md)
 - [Performance Optimization](docs/guides/performance.md)
 
 #### 🚀 Deployment
+
 - [Deployment Guide](docs/deployment/README.md)
 - [Docker Setup](docs/deployment/docker.md)
 - [CI/CD Pipeline](docs/deployment/cicd.md)
@@ -164,30 +179,34 @@ UI components and styling guidelines.
 ### Setting Up Development Environment
 
 1. **Fork the repository**
+
    ```bash
    git clone https://github.com/yourusername/repo.git
    cd repo
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Set up environment variables**
+
    ```bash
    cp .env.example .env.local
    # Edit .env.local with your configuration
    ```
 
 4. **Start development server**
-   ```bash
-   npm run dev
-   ```
+
+```bash
+  npm run dev
+```
 
 ### Project Structure
 
-```
+```text
 {project-name}/
 ├── 📁 src/                    # Source code
 │   ├── 📁 components/         # Reusable components
@@ -206,13 +225,13 @@ UI components and styling guidelines.
 
 ### Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run test` | Run test suite |
-| `npm run lint` | Run code linting |
-| `npm run format` | Format code with Prettier |
+| Command              | Description                  |
+| -------------------- | ---------------------------- |
+| `npm run dev`        | Start development server     |
+| `npm run build`      | Build for production         |
+| `npm run test`       | Run test suite               |
+| `npm run lint`       | Run code linting             |
+| `npm run format`     | Format code with Prettier    |
 | `npm run type-check` | Run TypeScript type checking |
 
 ### Code Quality
@@ -298,17 +317,20 @@ docker run -p 3000:3000 {project-name}
 #### Using Cloud Platforms
 
 **Vercel:**
+
 ```bash
 npm install -g vercel
 vercel --prod
 ```
 
 **Heroku:**
+
 ```bash
 git push heroku main
 ```
 
 **AWS:**
+
 ```bash
 npm run build
 aws s3 sync build/ s3://your-bucket-name
@@ -318,12 +340,12 @@ aws s3 sync build/ s3://your-bucket-name
 
 Required environment variables:
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `API_KEY` | Authentication key | Yes |
-| `DATABASE_URL` | Database connection string | Yes |
-| `NODE_ENV` | Environment (development/production) | Yes |
-| `PORT` | Server port | No (default: 3000) |
+| Variable       | Description                          | Required           |
+| -------------- | ------------------------------------ | ------------------ |
+| `API_KEY`      | Authentication key                   | Yes                |
+| `DATABASE_URL` | Database connection string           | Yes                |
+| `NODE_ENV`     | Environment (development/production) | Yes                |
+| `PORT`         | Server port                          | No (default: 3000) |
 
 ---
 
@@ -331,35 +353,35 @@ Required environment variables:
 
 ### Basic Configuration
 
-Create a `aurora.config.js` file in your project root:
+Create a `boltf.config.js` file in your project root:
 
 ```javascript
 module.exports = {
   // Core settings
   environment: process.env.NODE_ENV || 'development',
   port: process.env.PORT || 3000,
-  
+
   // Database configuration
   database: {
     url: process.env.DATABASE_URL,
-    ssl: process.env.NODE_ENV === 'production'
+    ssl: process.env.NODE_ENV === 'production',
   },
-  
+
   // Feature flags
   features: {
     newUI: true,
     analytics: true,
-    debugging: process.env.NODE_ENV === 'development'
+    debugging: process.env.NODE_ENV === 'development',
   },
-  
+
   // Security settings
   security: {
     corsOrigins: ['http://localhost:3000'],
     rateLimit: {
       windowMs: 15 * 60 * 1000, // 15 minutes
-      max: 100 // limit each IP to 100 requests per windowMs
-    }
-  }
+      max: 100, // limit each IP to 100 requests per windowMs
+    },
+  },
 };
 ```
 
@@ -374,26 +396,23 @@ For advanced configuration options, see [Configuration Guide](docs/configuration
 ### Basic Examples
 
 #### Example 1: Simple Component
+
 ```javascript
 import { Component } from '{package-name}';
 
 function MyComponent() {
-  return (
-    <Component
-      title="Hello World"
-      onAction={() => console.log('Action triggered')}
-    />
-  );
+  return <Component title="Hello World" onAction={() => console.log('Action triggered')} />;
 }
 ```
 
 #### Example 2: API Integration
+
 ```javascript
 import { ApiClient } from '{package-name}';
 
 const client = new ApiClient({
   baseURL: 'https://api.example.com',
-  apiKey: 'your-api-key'
+  apiKey: 'your-api-key',
 });
 
 const data = await client.fetchData('endpoint');
@@ -452,12 +471,12 @@ We welcome contributions from the community! Here's how you can help:
 
 ### Benchmarks
 
-| Metric | Value | Target |
-|--------|-------|--------|
-| Bundle Size | 45kb (gzipped) | < 50kb |
-| First Paint | < 1s | < 1.5s |
-| Time to Interactive | < 2s | < 3s |
-| Lighthouse Score | 95/100 | > 90 |
+| Metric              | Value          | Target |
+| ------------------- | -------------- | ------ |
+| Bundle Size         | 45kb (gzipped) | < 50kb |
+| First Paint         | < 1s           | < 1.5s |
+| Time to Interactive | < 2s           | < 3s   |
+| Lighthouse Score    | 95/100         | > 90   |
 
 ### Optimization Tips
 
@@ -490,11 +509,13 @@ If you discover a security vulnerability, please email us at security@company.co
 ### Upcoming Features
 
 #### v{NEXT_VERSION} (Q{QUARTER} {YEAR})
+
 - [ ] Feature A: Enhanced performance
 - [ ] Feature B: New integration options
 - [ ] Feature C: Improved user experience
 
 #### v{FUTURE_VERSION} (Q{QUARTER} {YEAR})
+
 - [ ] Feature D: Advanced analytics
 - [ ] Feature E: Mobile optimization
 - [ ] Feature F: Enterprise features
@@ -502,6 +523,7 @@ If you discover a security vulnerability, please email us at security@company.co
 ### Long-term Vision
 
 Our goal is to make {PROJECT_NAME} the go-to solution for {PROBLEM_DOMAIN} by focusing on:
+
 - **Developer Experience:** Making it easier and more enjoyable to use
 - **Performance:** Continuously optimizing for speed and efficiency
 - **Scalability:** Supporting projects of all sizes
@@ -600,9 +622,9 @@ For enterprise support and consulting services, contact us at enterprise@company
 
 **Made with ❤️ by the {PROJECT_NAME} team**
 
-[Website](https://project.com) • 
-[Documentation](https://docs.project.com) • 
-[Community](https://discord.gg/project) • 
+[Website](https://project.com) •
+[Documentation](https://docs.project.com) •
+[Community](https://discord.gg/project) •
 [Twitter](https://twitter.com/project)
 
 </div>
@@ -610,6 +632,7 @@ For enterprise support and consulting services, contact us at enterprise@company
 ---
 
 **Template Information:**
+
 - **Template Version:** 2.1.0
-- **Created by:** AURORA-IA-DLC v2.1.0
+- **Created by:** Bolt Framework v2.1.0
 - **Last Updated:** {DATE}
