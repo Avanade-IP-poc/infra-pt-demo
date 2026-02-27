@@ -1,6 +1,6 @@
 ---
 name: vue-jsx-best-practices
-description: JSX syntax in Vue (e.g., class vs className, JSX plugin config).
+description: JSX syntax in Vue including class (not className), JSX plugin configuration, render functions, and differences from React JSX. Use when writing Vue render functions with JSX, configuring @vitejs/plugin-vue-jsx, or converting React JSX to Vue. Triggers: "Vue JSX", "render function", "JSX in Vue", "class vs className", "Vue JSX plugin", "h() function", "TSX Vue", "JSX syntax Vue", "React JSX to Vue".
 version: 2.0.0
 license: MIT
 author: github.com/vuejs-ai

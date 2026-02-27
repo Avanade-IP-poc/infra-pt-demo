@@ -1,6 +1,6 @@
 ---
 name: vue-options-api-best-practices
-description: "Vue 3 Options API style (data(), methods, this context). Each reference shows Options API solution only."
+description: Vue 3 Options API style with data(), methods, computed, this context, and lifecycle hooks. Use ONLY when maintaining legacy Vue code or when project explicitly requires Options API. Triggers: "Options API", "data()", "methods:", "this.", "Vue 2 style", "legacy Vue", "computed properties Options", "mixins", "Options API Vue". DO NOT USE FOR new Vue 3 code - prefer Composition API (see vue-best-practices).
 version: 2.0.0
 license: MIT
 author: github.com/vuejs-ai

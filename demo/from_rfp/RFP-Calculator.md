@@ -1,4 +1,5 @@
 # Request for Proposal (RFP)
+
 ## Business Calculator Application
 
 **Project Code**: CALC-NEW-2025  
@@ -16,6 +17,7 @@ Our organization requires a **new web-based calculator application** to support 
 ### Business Need
 
 The Finance and Operations teams currently use disparate tools (Excel, physical calculators, third-party websites) for business calculations, leading to:
+
 - Inconsistent calculation methods
 - No audit trail of calculations
 - Security concerns (sensitive data on external sites)
@@ -56,6 +58,7 @@ The Finance and Operations teams currently use disparate tools (Excel, physical 
 ### 2.2 Current Situation
 
 **No existing system**. Teams use:
+
 - Excel spreadsheets (inconsistent formulas)
 - Physical calculators (no audit trail)
 - Public websites (security risk)
@@ -64,6 +67,7 @@ The Finance and Operations teams currently use disparate tools (Excel, physical 
 ### 2.3 Business Impact
 
 Without a centralized calculator:
+
 - ❌ 2-3 hours/week wasted per user finding right tool
 - ❌ ~10% error rate in manual calculations
 - ❌ No audit trail for compliance
@@ -79,6 +83,7 @@ Without a centralized calculator:
 ### 3.1 Basic Operations (MUST HAVE)
 
 #### FR-001: Arithmetic Operations
+
 - Addition (+)
 - Subtraction (-)
 - Multiplication (×)
@@ -87,12 +92,14 @@ Without a centralized calculator:
 - **Range**: Support numbers from -999,999,999,999.99 to 999,999,999,999.99
 
 #### FR-002: Business Operations
+
 - Percentage calculations (increase/decrease)
 - Markup/Margin calculations
 - Tax calculations (configurable tax rates)
 - Discount calculations
 
 #### FR-003: Financial Functions
+
 - Simple interest
 - Compound interest
 - Present value (PV)
@@ -102,6 +109,7 @@ Without a centralized calculator:
 ### 3.2 Collaboration Features (MUST HAVE)
 
 #### FR-004: Calculation History
+
 - Save calculations with descriptions
 - Tag calculations by project/category
 - Search calculation history
@@ -109,6 +117,7 @@ Without a centralized calculator:
 - Export to CSV/PDF/Excel
 
 #### FR-005: Audit Trail
+
 - Track who performed calculation
 - Track when calculation was performed
 - Track modifications to saved calculations
@@ -117,6 +126,7 @@ Without a centralized calculator:
 ### 3.3 User Experience (MUST HAVE)
 
 #### FR-006: Interface Requirements
+
 - Clean, intuitive web interface
 - Responsive design (desktop, tablet, mobile)
 - Keyboard shortcuts for power users
@@ -124,6 +134,7 @@ Without a centralized calculator:
 - Support for latest versions of Chrome, Firefox, Safari, Edge
 
 #### FR-007: Saved Calculations
+
 - Save frequently used calculations as templates
 - Create calculation workflows (multi-step)
 - Share templates with team
@@ -132,11 +143,13 @@ Without a centralized calculator:
 ### 3.4 Security & Compliance (MUST HAVE)
 
 #### FR-008: Authentication & Authorization
+
 - Single Sign-On (SSO) integration (SAML 2.0)
 - Role-based access control (RBAC)
 - Multi-factor authentication (MFA)
 
 #### FR-009: Data Security
+
 - End-to-end encryption for sensitive calculations
 - Data residency: US-based servers only
 - GDPR compliance
@@ -145,11 +158,13 @@ Without a centralized calculator:
 ### 3.5 Integration (SHOULD HAVE)
 
 #### FR-010: API Access
+
 - REST API for programmatic access
 - Webhook notifications for calculation events
 - API rate limiting: 1000 requests/hour/user
 
 #### FR-011: Third-Party Integration
+
 - Export to Excel (xlsx format)
 - Integration with Slack (notifications)
 - Integration with Microsoft Teams (optional)
@@ -157,12 +172,14 @@ Without a centralized calculator:
 ### 3.6 Advanced Features (NICE TO HAVE)
 
 #### FR-012: Reporting
+
 - Dashboard with calculation statistics
 - Team usage reports
 - Most-used calculation templates
 - Export reports to PDF/Excel
 
 #### FR-013: Collaboration
+
 - Real-time calculation sharing
 - Comments on saved calculations
 - @mentions for team members
@@ -174,16 +191,19 @@ Without a centralized calculator:
 ### 4.1 Performance (MUST HAVE)
 
 #### NFR-001: Response Time
+
 - Calculation execution: < 100ms
 - Page load time: < 2 seconds
 - API response time: < 200ms (95th percentile)
 
 #### NFR-002: Scalability
+
 - Support 120 concurrent users (current)
 - Scale to 500 users (3-year projection)
 - Handle 10,000 calculations per day
 
 #### NFR-003: Availability
+
 - 99.9% uptime SLA (43.2 minutes/month downtime)
 - Maintenance windows: Weekends only
 - Disaster recovery: RPO 1 hour, RTO 4 hours
@@ -191,12 +211,14 @@ Without a centralized calculator:
 ### 4.2 Usability (MUST HAVE)
 
 #### NFR-004: User Experience
+
 - Zero training required for basic operations
 - Complete user documentation
 - In-app help and tooltips
 - Video tutorials for advanced features
 
 #### NFR-005: Accessibility
+
 - WCAG 2.1 Level AA compliance
 - Screen reader support
 - Keyboard navigation
@@ -205,12 +227,14 @@ Without a centralized calculator:
 ### 4.3 Security (MUST HAVE)
 
 #### NFR-006: Security Standards
+
 - HTTPS/TLS 1.3 only
 - OWASP Top 10 compliance
 - Regular penetration testing (quarterly)
 - Vulnerability scanning (weekly)
 
 #### NFR-007: Data Protection
+
 - Data encryption at rest (AES-256)
 - Data encryption in transit (TLS 1.3)
 - Secure key management
@@ -219,12 +243,14 @@ Without a centralized calculator:
 ### 4.4 Maintainability (SHOULD HAVE)
 
 #### NFR-008: Code Quality
+
 - Clean Architecture / Hexagonal Architecture
 - Test coverage > 80%
 - Documentation for all APIs
 - Code review process
 
 #### NFR-009: Monitoring
+
 - Application performance monitoring (APM)
 - Error tracking and alerting
 - Usage analytics
@@ -237,12 +263,14 @@ Without a centralized calculator:
 ### 5.1 Backend Requirements
 
 **Must Support**:
+
 - RESTful API architecture
 - Microservices or modular monolith
 - Containerization (Docker)
 - Horizontal scaling capability
 
 **Preferred Technologies** (not mandatory):
+
 - Python 3.11+ or Node.js 20+
 - PostgreSQL 15+ or MongoDB 7+
 - Redis for caching
@@ -251,12 +279,14 @@ Without a centralized calculator:
 ### 5.2 Frontend Requirements
 
 **Must Support**:
+
 - Modern JavaScript framework
 - Progressive Web App (PWA) capability
 - Responsive design
 - Offline mode for basic calculations
 
 **Preferred Technologies** (not mandatory):
+
 - React 18+ or Vue 3+
 - TypeScript
 - TailwindCSS or Material UI
@@ -265,12 +295,14 @@ Without a centralized calculator:
 ### 5.3 Infrastructure Requirements
 
 **Must Support**:
+
 - Cloud-native deployment (AWS, Azure, or GCP)
 - Infrastructure as Code (Terraform, CloudFormation, or Pulumi)
 - CI/CD pipeline
 - Automated testing in pipeline
 
 **Preferred**:
+
 - Kubernetes or container orchestration
 - Blue-green or canary deployments
 - Auto-scaling based on load
@@ -312,12 +344,12 @@ Without a centralized calculator:
 
 ### 7.1 Key Milestones
 
-| Phase | Duration | Deliverable |
-|-------|----------|-------------|
-| **Inception** | Week 1-2 | Architecture, designs, plan |
-| **Sprint 1** | Week 3-4 | Core calculation engine + tests |
-| **Sprint 2** | Week 5-6 | User auth + history |
-| **Sprint 3** | Week 7-8 | Business operations + financial functions |
+| Phase            | Duration | Deliverable                              |
+| ---------------- | -------- | ---------------------------------------- |
+| **Inception**    | Week 1-2 | Architecture, designs, plan              |
+| **Sprint 1**     | Week 3-4 | Core calculation engine + tests          |
+| **Sprint 2**     | Week 5-6 | User auth + history                      |
+| **Sprint 3**     | Week 7-8 | Business operations + financial functions|
 | **Sprint 4** | Week 9-10 | API + integrations |
 | **Sprint 5** | Week 11-12 | UI polish + documentation |
 | **UAT** | Week 13 | User acceptance testing |
@@ -343,6 +375,7 @@ Without a centralized calculator:
 **Total Project Budget**: $75,000 - $120,000
 
 **Breakdown Guidance**:
+
 - Development: 60-70%
 - Infrastructure (1st year): 10-15%
 - Testing & QA: 10-15%
@@ -354,6 +387,7 @@ Without a centralized calculator:
 **Annual Budget**: $15,000 - $25,000
 
 **Includes**:
+
 - Cloud hosting
 - Maintenance and bug fixes
 - Minor enhancements
@@ -366,6 +400,7 @@ Without a centralized calculator:
 ### 9.1 Qualifications
 
 **Must Have**:
+
 - [ ] Proven experience with web application development
 - [ ] Experience with financial/calculation applications
 - [ ] Portfolio of similar projects
@@ -374,6 +409,7 @@ Without a centralized calculator:
 - [ ] DevOps/deployment expertise
 
 **Nice to Have**:
+
 - [ ] Experience with healthcare/finance regulatory compliance
 - [ ] AI-assisted development methodology (e.g., AURORA-IA)
 - [ ] Iterative development approach (Agile/Bolts)
@@ -383,6 +419,7 @@ Without a centralized calculator:
 ### 9.2 Team Requirements
 
 **Minimum Team**:
+
 - 1x Solution Architect
 - 2x Full-Stack Developers
 - 1x QA Engineer
@@ -390,6 +427,7 @@ Without a centralized calculator:
 - 1x Project Manager
 
 **Optional**:
+
 - 1x UX/UI Designer
 - 1x Security Specialist
 - 1x Technical Writer
@@ -440,12 +478,12 @@ Proposals must include:
 
 ### 10.2 Evaluation Criteria
 
-| Criteria | Weight | Description |
-|----------|--------|-------------|
-| **Technical Approach** | 35% | Architecture, stack, methodology |
-| **Team Qualifications** | 25% | Experience, expertise, references |
-| **Project Plan** | 20% | Timeline, milestones, risk management |
-| **Cost** | 15% | Value for money, transparency |
+| Criteria                 | Weight | Description                                |
+| ------------------------ | ------ | ------------------------------------------ |
+| **Technical Approach**   | 35%    | Architecture, stack, methodology           |
+| **Team Qualifications**  | 25%    | Experience, expertise, references          |
+| **Project Plan**         | 20%    | Timeline, milestones, risk management      |
+| **Cost**                 | 15%    | Value for money, transparency              |
 | **Company Stability** | 5% | Financial health, track record |
 
 **Minimum Score to Advance**: 70/100
@@ -474,7 +512,7 @@ Proposals must include:
 ### 11.3 Contract Terms
 
 - **Contract Type**: Fixed-price with milestones
-- **Payment Terms**: 
+- **Payment Terms**:
   - 20% upon contract signing
   - 20% upon Sprint 2 completion
   - 30% upon Sprint 4 completion
@@ -487,6 +525,7 @@ Proposals must include:
 ### 11.4 Compliance Requirements
 
 All vendors must:
+
 - [ ] Sign NDA before proposal submission
 - [ ] Provide proof of insurance ($2M liability)
 - [ ] Agree to background checks for team members
@@ -515,6 +554,7 @@ Project will be considered successful when:
 ### 12.2 Key Performance Indicators (KPIs)
 
 **Post-Launch (First 3 Months)**:
+
 - User adoption: > 80% of target users (96+ users)
 - Calculation accuracy: 99.99%
 - System uptime: > 99.9%
@@ -550,7 +590,7 @@ Project will be considered successful when:
 
 **Name**: Jane Smith  
 **Title**: Director of IT Procurement  
-**Email**: jane.smith@company.com  
+**Email**: <jane.smith@company.com>  
 **Phone**: +1 (555) 123-4567  
 **Office Hours**: Monday-Friday, 9:00 AM - 5:00 PM EST  
 
@@ -558,12 +598,12 @@ Project will be considered successful when:
 
 **Name**: John Doe  
 **Title**: Chief Technology Officer  
-**Email**: john.doe@company.com  
+**Email**: <john.doe@company.com>  
 **Phone**: +1 (555) 123-4568  
 
 ### 14.3 Questions
 
-All questions must be submitted via email to **rfp@company.com** by **December 18, 2025**.
+All questions must be submitted via email to **<rfp@company.com>** by **December 18, 2025**.
 
 Responses will be published to all bidders by **December 20, 2025**.
 
@@ -573,24 +613,27 @@ Responses will be published to all bidders by **December 20, 2025**.
 
 ### Appendix A: Sample Calculation Scenarios
 
-**Scenario 1: Pricing Calculation**
-```
+#### Scenario 1: Pricing Calculation
+
+```text
 Base Price: $1,000
 Markup: 35%
 Tax Rate: 8.5%
 Expected Result: $1,464.75
 ```
 
-**Scenario 2: Commission Calculation**
-```
+#### Scenario 2: Commission Calculation
+
+```text
 Sales Amount: $50,000
 Commission Rate: 3.5%
 Bonus Threshold: $40,000 → +0.5%
 Expected Result: $2,000 (4% total)
 ```
 
-**Scenario 3: Interest Calculation**
-```
+#### Scenario 3: Interest Calculation
+
+```text
 Principal: $10,000
 Rate: 5% annual
 Term: 3 years (compounded monthly)
@@ -599,19 +642,22 @@ Expected Result: $11,614.72
 
 ### Appendix B: User Personas
 
-**Persona 1: Finance Analyst (Emma)**
+#### Persona 1: Finance Analyst (Emma)
+
 - Age: 32
 - Tech-savvy
 - Needs: Complex financial calculations, audit trail
 - Usage: Daily, 20-30 calculations
 
-**Persona 2: Sales Rep (Mike)**
+#### Persona 2: Sales Rep (Mike)
+
 - Age: 45
 - Moderate tech skills
 - Needs: Quick pricing, discounts
 - Usage: Multiple times daily, 50-100 calculations
 
-**Persona 3: Operations Manager (Sarah)**
+#### Persona 3: Operations Manager (Sarah)
+
 - Age: 38
 - Tech-comfortable
 - Needs: Resource planning, cost estimates
@@ -632,7 +678,7 @@ Expected Result: $11,614.72
 
 ---
 
-**END OF RFP**
+#### END OF RFP
 
 **Document Version**: 1.0  
 **Last Updated**: December 9, 2025  

@@ -12,7 +12,7 @@
 
 ### Flow Diagram
 
-```
+```text
 ┌─────────────────────────────────┐
 │  aurora-ai (source repo)        │
 │  - Contains Python scripts      │
@@ -36,7 +36,7 @@
 
 ### New Files
 
-```
+```text
 ✅ .boltf/scripts/powershell/Bootstrap-Python.ps1
 ✅ .boltf/scripts/bash/bootstrap-python.sh
 ✅ .boltf/scripts/powershell/Test-PythonEnvironment.ps1
@@ -53,7 +53,7 @@
 
 ### Modified Files
 
-```
+```text
 ✅ Init.ps1 (added Python file copying - lines 492-518)
 ✅ .gitignore (added .bolt-venv/)
 ✅ README.md (added Python section)

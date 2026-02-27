@@ -12,7 +12,7 @@ Esta estrategia permite distribuir Bolt Framework con scripts Python **sin reque
 
 **CRÍTICO**: El entorno virtual Python (`.bolt-venv/`) se crea en el **proyecto destino**, NO en el repositorio aurora-ai.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │  REPO ORIGEN (aurora-ai)                                    │
 │  - Contiene scripts Python source                           │
@@ -47,7 +47,7 @@ Esta estrategia permite distribuir Bolt Framework con scripts Python **sin reque
 
 ### Componentes Implementados
 
-```
+```text
 aurora-ai/
 ├── 📁 .bolt-venv/                           # Virtual environment (gitignored)
 │   ├── Scripts/python.exe                   # Python isolado (Windows)
@@ -273,7 +273,7 @@ steps:
 
 Cada skill que requiere Python tiene su propio `requirements.txt`:
 
-```
+```text
 .github/skills/
 ├── skill-creator/
 │   └── requirements.txt     # anthropic, pyyaml

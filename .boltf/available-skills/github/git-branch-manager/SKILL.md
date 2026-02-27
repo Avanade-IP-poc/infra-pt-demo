@@ -1,7 +1,6 @@
 ---
 name: git-branch-manager
-description:
-  Toolkit for create, manage, and delete Git branches. Also to work with committs and pull requests.
+description: Manage Git and GitHub workflows using MCP tools. Create, delete, and manage branches following Bolt Framework naming conventions (feature/[name], feature/[name]/bolt-[N]). Handle commits, pull requests, labels, and merges. Use when creating branch, managing branches, git workflow, checkout, merge, rebase, push, pull, creating PR, merging PR, branch operations, Bolt branch pattern.
 ---
 
 # Git Branch Manager

@@ -1,6 +1,6 @@
 ---
 name: bolt-framework
-description: Bolt Framework methodology with 6 lifecycle phases and Bolt micro-iterations
+description: Bolt Framework methodology with 6 lifecycle phases (INCEPTION, DISCOVERY, CONSTRUCTION, TRANSITION, PRODUCTION, RETIREMENT) and Bolt micro-iterations. ALWAYS use when orchestrating Bolt projects, managing lifecycle phases, implementing features, or following Bolt methodology. Triggers: "Bolt Framework", "lifecycle phase", "micro-iteration", "constitution", "feature spec", "Bolt workflow", "inception", "discovery", "construction", "quality gates". This is the PRIMARY skill for Bolt Framework projects.
 ---
 
 # Bolt Framework
@@ -556,14 +556,14 @@ project/
 
 ## Core Principles
 
-| Principle                 | Description                                                     | Enforcement                     |
-| ------------------------- | --------------------------------------------------------------- | ------------------------------- |
+| Principle                 | Description                                                    | Enforcement                     |
+| ------------------------- | -------------------------------------------------------------- | ------------------------------- |
 | **Constitution is Law**   | All decisions must comply with `.boltf/memory/constitution.md` | Agent validation                |
-| **Specs Before Code**     | Features need specifications first                              | @Bolt Feature required          |
-| **Micro-Iterations**      | Work in small Bolts (1-3 days max)                              | Branch pattern enforced         |
-| **Quality Gates**         | Every Bolt must pass thresholds                                 | Automated checks (80% coverage) |
-| **Agent Specialization**  | One responsibility per agent                                    | YAML frontmatter contracts      |
-| **Continuous Validation** | Test during development, not after                              | TDD/BDD practices               |
+| **Specs Before Code**     | Features need specifications first                             | @Bolt Feature required          |
+| **Micro-Iterations**      | Work in small Bolts (1-3 days max)                             | Branch pattern enforced         |
+| **Quality Gates**         | Every Bolt must pass thresholds                                | Automated checks (80% coverage) |
+| **Agent Specialization**  | One responsibility per agent                                   | YAML frontmatter contracts      |
+| **Continuous Validation** | Test during development, not after                             | TDD/BDD practices               |
 
 ---
 

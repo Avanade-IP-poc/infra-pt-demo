@@ -3,12 +3,13 @@ name: vue-testing-best-practices
 version: 1.0.0
 license: MIT
 author: github.com/vuejs-ai
-description: Use for Vue.js testing. Covers Vitest, Vue Test Utils, component testing, mocking, testing patterns, and Playwright for E2E testing.
+description: Vue.js testing with Vitest, Vue Test Utils, component testing, mocking, testing patterns, and Playwright for E2E. ALWAYS use for Vue component tests, Vitest setup, mocking composables, testing emits/props, or E2E with Playwright. Triggers: "test Vue component", "Vitest", "Vue Test Utils", "@testing-library/vue", "mock composable", "test emits", "test props", "Vue E2E", "component testing Vue", "Vitest setup".
 ---
 
 Vue.js testing best practices, patterns, and common gotchas.
 
 ### Testing
+
 - Setting up test infrastructure for Vue 3 projects → See [testing-vitest-recommended-for-vue](reference/testing-vitest-recommended-for-vue.md)
 - Tests keep breaking when refactoring component internals → See [testing-component-blackbox-approach](reference/testing-component-blackbox-approach.md)
 - Tests fail intermittently with race conditions → See [testing-async-await-flushpromises](reference/testing-async-await-flushpromises.md)

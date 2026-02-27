@@ -1,6 +1,6 @@
 ---
 name: skill-aspire-opentelemetry-frontend
-description: OpenTelemetry instrumentation for frontend apps (Angular/React) with .NET Aspire dashboard integration
+description: OpenTelemetry instrumentation for frontend apps (Angular/React/Vue) with .NET Aspire dashboard integration for distributed tracing. Use when adding telemetry to frontend, instrumenting browser apps, or connecting frontend traces to Aspire dashboard. Triggers: "OpenTelemetry frontend", "Aspire dashboard frontend", "frontend tracing", "instrument Angular", "instrument React", "browser telemetry", "E2E observability", "distributed tracing frontend", "OTLP browser".
 ---
 
 # Aspire OpenTelemetry Frontend Instrumentation

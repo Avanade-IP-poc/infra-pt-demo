@@ -1,6 +1,6 @@
 ---
 name: markdown-formatting
-description: CommonMark formatting rules and AURORA conventions for .md files
+description: CommonMark formatting rules and Bolt Framework conventions for .md files including .agent.md and .prompt.md. ALWAYS use when creating or editing any Markdown file. Triggers: "format markdown", "markdown style", ".md file", "markdown conventions", "CommonMark", "markdown rules", "document formatting", "write readme", "edit markdown", "markdown syntax", "agent.md", "prompt.md". Applies to all Markdown in Bolt Framework projects.
 ---
 
 # Markdown Formatting

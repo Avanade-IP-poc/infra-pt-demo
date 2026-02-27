@@ -132,7 +132,7 @@ El framework actual "Aurora" tiene una arquitectura sólida (30 agentes, 8 scope
 
 ### Flujo Anterior (Monolítico)
 
-```
+```text
 Init.ps1 (837 líneas)
 ├── Select Practice
 ├── Select Scopes
@@ -147,7 +147,7 @@ Init.ps1 (837 líneas)
 
 ### Flujo Nuevo (Two-Step)
 
-```
+```text
 Step 1: Init.ps1 (≈300-400 líneas, simplificado)
 ├── Select Practice
 ├── Select Scopes
@@ -260,7 +260,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
 ✏️ Detalles: Actualizada descripción "AURORA methodology" a "Bolt Framework methodology"
 ✅ 6. Renombrar todos los archivos de agentes en `.github/agents/`:
 📅 Completado: 2026-02-23
-✏️ Detalles: Renombrados 28 archivos aurora-_.agent.md a bolt-_.agent.md exitosamente
+✏️ Detalles: Renombrados 28 archivos aurora-*.agent.md a bolt-*.agent.md exitosamente
 
 - `aurora-testing.agent.md` → `bolt-testing.agent.md`
 - `aurora-implement.agent.md` → `bolt-implement.agent.md`
@@ -286,10 +286,12 @@ No hay usuarios con workflows dependientes, por lo tanto:
 
 - Buscar en todos los `.agent.md` referencias tipo `handoff: aurora-testing` → cambiar a `handoff: bolt-testing`
 - Script de validación:
+
   ```powershell
   # Verificar que no quedan handoffs a nombres antiguos
   grep -r "aurora-" .github/agents/ --include="*.agent.md" | grep "handoff"
   ```
+
 - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 ✅ 10. Buscar con `grep -r "Aurora" --include="*.md" --include="*.ps1" --include="*.sh" --include="*.yaml"` y reemplazar referencias restantes
@@ -307,7 +309,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
 > - El skill provee: estructura, validaciones, límites de líneas, mejores prácticas
 > - NO es solo copiar un template, es usar el skill como herramienta de creación activa
 
-11. Crear `.github/skills/skill-branch-management/SKILL.md`:
+1. Crear `.github/skills/skill-branch-management/SKILL.md`:
     - **Usar skill**: Invocar `#file:new-skill` para guiar la creación
     - Copilot cargará new-skill skill y aplicará sus validaciones
     - Extraer bash script de verificación de branch (presente en `aurora-testing.agent.md`, `aurora-implement.agent.md`, `aurora-feature.agent.md`, `aurora-bugfix.agent.md`, `aurora-spike.agent.md`)
@@ -316,7 +318,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
     - **Estructura**: Aplicada automáticamente por new-skill skill
     - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
-12. Crear `.github/skills/skill-quality-gates/SKILL.md`:
+2. Crear `.github/skills/skill-quality-gates/SKILL.md`:
     - **Usar skill**: Invocar `#file:new-skill` para guiar la creación
     - Extraer comandos de validación (lint, unit tests, architecture compliance)
     - Consolidar workflows "AUTOMATIC EXECUTION" (duplicados en 4 agentes)
@@ -328,7 +330,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
     - **Estructura**: YAML frontmatter + secciones (aplicadas por new-skill)
     - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
-13. Crear `.github/skills/skill-testing-discipline/SKILL.md`:
+3. Crear `.github/skills/skill-testing-discipline/SKILL.md`:
     - **Usar skill**: Invocar `#file:new-skill` para guiar la creación
     - Extraer metodologías TDD/BDD de `aurora-testing.agent.md` (líneas ~180-380)
     - Incluir patterns: red-green-refactor, Given-When-Then, test pyramid
@@ -342,7 +344,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
     - Separar de agent instructions para reutilización
     - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
-14. Crear `.github/skills/skill-constitution-driven-development/SKILL.md`:
+4. Crear `.github/skills/skill-constitution-driven-development/SKILL.md`:
     - **Usar skill**: Invocar `#file:new-skill` para guiar la creación
     - Extraer tablas de compliance (presentes en 10+ agentes)
     - Procedimientos para validar contra `memory/constitution.md`
@@ -356,7 +358,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
 
 14.5. Crear `.github/skills/bolt-setup-constitution/SKILL.md` **[NUEVO]**: - **Usar skill**: Invocar `#file:new-skill` para guiar la creación - **Nota**: Este skill es **EXCEPCIÓN** al límite de 150 líneas (300-400 líneas necesarias) - **Razón de excepción**: Motor de provisión completo con múltiples responsabilidades - new-skill skill alertará sobre el límite, pero se justifica por complejidad - **Responsabilidad**: Provisión inteligente post-init basada en constitution y scopes activos - **Workflow**: 1. Leer `memory/constitution.md` (contiene Practice y scopes activos) 2. Leer `memory/scopes.yaml` (scopes seleccionados) 3. Para cada scope activo: - Leer `.boltf/scopes/{scope}/scope.yaml` - Copiar items (agents, prompts, skills) según `source_type` y `auto_provision: true` - Extraer articles específicos de `.boltf/scopes/{scope}/memory/constitution.md` 4. Merge constitution: Master + Scope-specific articles 5. Actualizar `memory/constitution.md` con constitution completo 6. Copiar skills específicos desde `.boltf/available-skills/` según mapeo Practice 7. **SIEMPRE** copiar `bolt-framework` (skill core, independiente del Practice) 8. Generar reporte de provisión: archivos copiados, articles añadidos - **Inputs**: - ConstitutionPath (default: `memory/constitution.md`) - ScopesConfigPath (default: `memory/scopes.yaml`) - DryRun (default: false) - preview de cambios sin ejecutar - **Output**: Reporte markdown con cambios realizados - **Invocación**: Puede ser llamado por agentes (`@Bolt Constitution`, `@Bolt Framework`) o manualmente después de init
 
-15. Expandir `.github/skills/bolt-framework/SKILL.md`:
+1. Expandir `.github/skills/bolt-framework/SKILL.md`:
     - **Usar skill**: Invocar `#file:new-skill` para guiar la expansión
     - **Nota**: Este skill es **EXCEPCIÓN** al límite de 150 líneas (300-400 líneas necesarias)
     - **Razón de excepción**: Skill metodológico core que documenta 6 fases completas del framework
@@ -372,7 +374,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
     - **Provisión**: SIEMPRE copiado desde `.boltf/available-skills/bolt-framework/` a `.github/skills/bolt-framework/`
     - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
-16. Actualizar agentes para referenciar skills:
+2. Actualizar agentes para referenciar skills:
     - Remover contenido duplicado de cada agent
     - Agregar en Instructions: "Use `skill-branch-management` for branch operations"
     - Agregar en YAML frontmatter si necesario (algunos agents pueden poner skills in `tools` section)
@@ -407,29 +409,31 @@ No hay usuarios con workflows dependientes, por lo tanto:
 
 ✅ 18. Generar constitution básico en Init.ps1:
 📅 Completado: 2026-02-23
-✏️ Detalles: Creada función New-BasicConstitution que genera template mínimo con metadata, Practice y scopes. Antigua Set-ConstitutionDecisions renombrada a \_DEPRECATED. Init.ps1 líneas: 837 → 964 (temporal, provisioning eliminará complejidad). - Crear `memory/constitution.md` con estructura mínima:
+✏️ Detalles: Creada función New-BasicConstitution que genera template mínimo con metadata, Practice y scopes. Antigua Set-ConstitutionDecisions renombrada a \_DEPRECATED. Init.ps1 líneas: 837 → 964 (temporal, provisioning eliminará complejidad).
 
-      ```markdown
-      # Project Constitution
+- Crear `memory/constitution.md` con estructura mínima:
 
-      ## Metadata
+```markdown
+# Project Constitution
 
-      - Practice: {practice_selected}
-      - Active Scopes: {scopes_list}
-      - Initialized: {date}
+## Metadata
 
-      # Article I: Active Scopes
+- Practice: {practice_selected}
+- Active Scopes: {scopes_list}
+- Initialized: {date}
 
-      {scopes_list}
+# Article I: Active Scopes
 
-      # Notes
+{scopes_list}
 
-      Run `@Bolt Constitution` or invoke `skill-bolt-setup-constitution` skill to provision files and complete constitution.
-      ```
+# Notes
 
-    - **NO provisionar archivos en Init.ps1** (se delega al skill)
-    - Mantener Init.ps1 < 500 líneas (actualmente 837)
-    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+Run `@Bolt Constitution` or invoke `skill-bolt-setup-constitution` skill to provision files and complete constitution.
+```
+
+- **NO provisionar archivos en Init.ps1** (se delega al skill)
+- Mantener Init.ps1 < 500 líneas (actualmente 837)
+- **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 ✅ 19. Generar `memory/scopes.yaml` en Init.ps1:
 📅 Completado: 2026-02-23
@@ -442,40 +446,46 @@ No hay usuarios con workflows dependientes, por lo tanto:
 ✅ 21. Actualizar `.boltf/scopes/README.md`:
 📅 Completado: 2026-02-23
 ✏️ Detalles: Añadida sección "Practice-Based Initialization (Two-Step Workflow)" con tabla de Practice → Scopes mapping, explicación de dos pasos, quick start examples. - Documentar Practice → Scopes mapping - Explicar two-step initialization: Init (config) + Skill (provision) - Añadir sección "## Practice-Based Initialization" - Documentar nuevo workflow:
-`       1. Run Init.ps1 → Select Practice → Generate basic constitution + scopes.yaml
-      2. Run @Bolt Constitution → Invoke bolt-setup-constitution skill → Provision files
-      3. Start development
-      ` - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+
+```text
+1. Run Init.ps1 → Select Practice → Generate basic constitution + scopes.yaml
+2. Run @Bolt Constitution → Invoke bolt-setup-constitution skill → Provision files
+3. Start development
+```
+
+- **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 ✅ 22. Implementar `source_type` y `auto_provision` en `scope.yaml`:
 📅 Completado: 2026-02-23
-✏️ Detalles: Añadido campo auto_provision: true a constitution items en 8 scope.yaml files (backend, frontend, cloud-platform, data, integration, ai, crm, work-management). Ready for bolt-setup-constitution skill implementation. - Actualizar cada `.boltf/scopes/*/scope.yaml` para permitir:
+✏️ Detalles: Añadido campo auto_provision: true a constitution items en 8 scope.yaml files (backend, frontend, cloud-platform, data, integration, ai, crm, work-management). Ready for bolt-setup-constitution skill implementation.
 
-      ```yaml
-      items:
+- Actualizar cada `.boltf/scopes/*/scope.yaml` para permitir:
+
+```yaml
+items:
         - kind: skill
           name: skill-quality-gates
           source_type: local_file # local_file | context7 | awesome_copilot | web | git_repo
-          source_path: .boltf/available-skills/skill-quality-gates
-          auto_provision: true # copiar automáticamente cuando scope activo
-          destination: .github/skills/skill-quality-gates
+  source_path: .boltf/available-skills/skill-quality-gates
+  auto_provision: true # copiar automáticamente cuando scope activo
+  destination: .github/skills/skill-quality-gates
 
-        - kind: agent
-          name: bolt-testing
-          source_type: local_file
-          source_path: .boltf/available-agents/bolt-testing.agent.md
-          auto_provision: true
-          destination: .github/agents/bolt-testing.agent.md
-      ```
+- kind: agent
+  name: bolt-testing
+  source_type: local_file
+  source_path: .boltf/available-agents/bolt-testing.agent.md
+  auto_provision: true
+  destination: .github/agents/bolt-testing.agent.md
+```
 
-    - El skill `skill-bolt-setup-constitution` leerá esta configuración
-    - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
+- El skill `skill-bolt-setup-constitution` leerá esta configuración
+- **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
 ### Phase 4: Implementar Skill bolt-setup-constitution (Provisión Inteligente)
 
 **Duración**: 1.5 días
 
-21. Crear implementación completa de `skill-bolt-setup-constitution` skill:
+1. Crear implementación completa de `skill-bolt-setup-constitution` skill:
 
     **21.1. Crear SKILL.md** (ya parcialmente definido en step 14.5):
     - Expandir con ejemplos de invocación
@@ -486,6 +496,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
     **21.2. Crear helper script** `.boltf/scripts/Invoke-BoltSetupConstitution.ps1`:
     - PowerShell script que implementa la lógica descrita en el skill
     - Parámetros:
+
       ```powershell
       param(
           [string]$ConstitutionPath = "memory/constitution.md",
@@ -494,6 +505,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
           [switch]$Verbose
       )
       ```
+
     - Funciones principales:
       - `Read-ConstitutionMetadata`: Extrae Practice y scopes de constitution básico
       - `Read-ScopeConfiguration`: Lee scope.yaml de cada scope activo
@@ -634,7 +646,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
     - Guardar reporte en `memory/provision-report.md`
     - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan (sub-tarea 21.5)
 
-22. Crear agente `@Bolt Constitution` que invoca el skill:
+2. Crear agente `@Bolt Constitution` que invoca el skill:
     - Crear `.github/agents/bolt-constitution.agent.md`:
 
       ```yaml
@@ -671,7 +683,7 @@ No hay usuarios con workflows dependientes, por lo tanto:
 
     - **📝 Actualizar progreso**: Marcar esta tarea como ✅ en la sección de tracking del plan
 
-23. Actualizar scope constitutions en `.boltf/scopes/*/memory/constitution.md`:
+3. Actualizar scope constitutions en `.boltf/scopes/*/memory/constitution.md`:
     - Verificar que cada scope tiene articles correctos
     - Ejemplo `backend`:
 
@@ -703,46 +715,72 @@ No hay usuarios con workflows dependientes, por lo tanto:
 
 **Duración**: 6-8 horas (aumentado por testing del skill)
 
-✅ **24. Crear test script `.boltf/scripts/Test-InitFlows.ps1`:** - Test 1: Init.ps1 con Practice "Apps & Infra": - Verificar `memory/constitution.md` creado (básico) - Verificar `memory/scopes.yaml` contiene: backend, frontend, cloud-platform - Verificar `.github/` NO tiene archivos (provisión aún no ejecutada)
+✅ **24. Crear test script `.boltf/scripts/Test-InitFlows.ps1`:**
 
-    - Test 2: Invocar `skill-bolt-setup-constitution` skill:
-      - Ejecutar: `& .boltf\scripts\Invoke-BoltSetupConstitution.ps1`
-      - Verificar constitution completo con articles de 3 scopes
-      - Verificar skills copiados: skill-branch-management, skill-quality-gates, etc.
-      - Verificar reporte generado: `memory/provision-report.md`
+- Test 1: Init.ps1 con Practice "Apps & Infra":
+  - Verificar `memory/constitution.md` creado (básico)
+  - Verificar `memory/scopes.yaml` contiene: backend, frontend, cloud-platform
+  - Verificar `.github/` NO tiene archivos (provisión aún no ejecutada)
+- Test 2: Invocar `skill-bolt-setup-constitution` skill:
+  - Ejecutar: `& .boltf\scripts\Invoke-BoltSetupConstitution.ps1`
+  - Verificar constitution completo con articles de 3 scopes
+  - Verificar skills copiados: skill-branch-management, skill-quality-gates, etc.
+  - Verificar reporte generado: `memory/provision-report.md`
+- Test 3: Practice "Data & AI":
+  - Init + Provision
+  - Verificar skills incluyen: bolt-framework, azure-devops-sync
+  - Verificar constitution tiene articles de data, ai, integration scopes
+- Test 4: Custom mode:
+  - Selección manual de scopes
+  - Provisión solo de scopes seleccionados
+- Test 5: Dry Run mode:
+  - Ejecutar: `& .boltf\scripts\Invoke-BoltSetupConstitution.ps1 -DryRun`
+  - Verificar preview de cambios sin modificar archivos
+- Test 6: Re-provisión (idempotencia):
+  - Ejecutar provisión 2 veces
+  - Verificar: archivos no duplicados, warnings sobre archivos existentes
+- **📝 Completado**: 2026-02-23 - Commit b65a969
 
-    - Test 3: Practice "Data & AI":
-      - Init + Provision
-      - Verificar skills incluyen: bolt-framework, azure-devops-sync
-      - Verificar constitution tiene articles de data, ai, integration scopes
+✅ **25. Ejecutar validación de scopes:**
 
-    - Test 4: Custom mode:
-      - Selección manual de scopes
-      - Provisión solo de scopes seleccionados
+- `npm run validate:scopes:ps` (ya existe, verificar pasa después de cambios)
+- **📝 Completado**: 2026-02-23 - 8/8 scopes OK, 0 errors
 
-    - Test 5: Dry Run mode:
-      - Ejecutar: `& .boltf\scripts\Invoke-BoltSetupConstitution.ps1 -DryRun`
-      - Verificar preview de cambios sin modificar archivos
+✅ **26. (ADICIONAL) Sincronización con herramientas de gestión del trabajo:**
 
-    - Test 6: Re-provisión (idempotencia):
-      - Ejecutar provisión 2 veces
-      - Verificar: archivos no duplicados, warnings sobre archivos existentes
-    - **📝 Completado**: 2026-02-23 - Commit b65a969
+- Actualizar @Bolt Feature: Sync al crear feature spec
+- Actualizar @Bolt Plan: Sync al crear implementation plan
+- Actualizar @Bolt Tasks: Sync al generar task list
+- Actualizar @Bolt Implement: Sync de progreso de tareas y Bolts
+- Actualizar @Bolt Micro Iterator: Sync de estado de iteraciones
+- Soporte: Azure DevOps, Jira, GitHub Projects
+- Detección automática desde constitution (work-management scope)
+- **📝 Completado**: 2026-02-23 - Commit c6b6f22
 
-✅ **25. Ejecutar validación de scopes:** - `npm run validate:scopes:ps` (ya existe, verificar pasa después de cambios) - **📝 Completado**: 2026-02-23 - 8/8 scopes OK, 0 errors
+⏭️ **27. Crear PR con checklist:** *(OMITIDO - Se creará después del testing manual)*
 
-✅ **26. (ADICIONAL) Sincronización con herramientas de gestión del trabajo:** - Actualizar @Bolt Feature: Sync al crear feature spec - Actualizar @Bolt Plan: Sync al crear implementation plan - Actualizar @Bolt Tasks: Sync al generar task list - Actualizar @Bolt Implement: Sync de progreso de tareas y Bolts - Actualizar @Bolt Micro Iterator: Sync de estado de iteraciones - Soporte: Azure DevOps, Jira, GitHub Projects - Detección automática desde constitution (work-management scope) - **📝 Completado**: 2026-02-23 - Commit c6b6f22
+- [ ] Renombrado completo (Aurora → Bolt Framework)
+- [ ] 5 skills extraídos y creados
+- [ ] Agentes actualizados (sin duplicación, referencian skills)
+- [ ] Init.ps1 con Practice selection
+- [ ] Auto-provisión de skills funciona
+- [ ] Constitution merge automatizado
+- [ ] Tests pasan
+- [ ] README y docs actualizados
+- **Razón para omitir**: El usuario prefiere completar el testing manual primero
 
-⏭️ **27. Crear PR con checklist:** _(OMITIDO - Se creará después del testing manual)_ - [ ] Renombrado completo (Aurora → Bolt Framework) - [ ] 5 skills extraídos y creados - [ ] Agentes actualizados (sin duplicación, referencian skills) - [ ] Init.ps1 con Practice selection - [ ] Auto-provisión de skills funciona - [ ] Constitution merge automatizado - [ ] Tests pasan - [ ] README y docs actualizados - **Razón para omitir**: El usuario prefiere completar el testing manual primero
+⬜ **28. Testing manual (two-step workflow):** *(PENDIENTE)*
 
-⬜ **28. Testing manual (two-step workflow):** _(PENDIENTE)_ - **Step 1: Initialization** - Ejecutar `Init.ps1` con Practice "Apps & Infra" - Verificar constitution básico en `memory/constitution.md` - Verificar mensaje: "Run '@Bolt Constitution' to provision files"
-
-    - **Step 2: Provisión**
-      - Invocar `@Bolt Constitution` en Copilot Chat
-      - Verificar ejecución de `skill-bolt-setup-constitution` skill
-      - Verificar provision report mostrado
-      - Verificar constitution completo con articles de backend, frontend, cloud-platform
-      - Verificar skills copiados a `.github/skills/`
+- **Step 1: Initialization**
+  - Ejecutar `Init.ps1` con Practice "Apps & Infra"
+  - Verificar constitution básico en `memory/constitution.md`
+  - Verificar mensaje: "Run '@Bolt Constitution' to provision files"
+- **Step 2: Provisión**
+  - Invocar `@Bolt Constitution` en Copilot Chat
+  - Verificar ejecución de `skill-bolt-setup-constitution` skill
+  - Verificar provision report mostrado
+  - Verificar constitution completo con articles de backend, frontend, cloud-platform
+  - Verificar skills copiados a `.github/skills/`
 
     - **Step 3: Desarrollo**
       - Invocar `@Bolt Framework` agent
@@ -899,7 +937,7 @@ ls .github/skills/bolt-setup-constitution  # NUEVO
 
 ### Testing Manual
 
-**Scenario 1: Two-Step Workflow Completo (Apps & Infra)**
+#### Scenario 1: Two-Step Workflow Completo (Apps & Infra)
 
 ```powershell
 # STEP 1: Initialization
@@ -970,7 +1008,7 @@ User: "@Bolt Framework help me create a REST API feature"
 # Verificar: workflow INCEPTION → DISCOVERY → CONSTRUCTION ejecutado
 ```
 
-**Scenario 2: Dry-Run Mode (Preview)**
+#### Scenario 2: Dry-Run Mode (Preview)
 
 ```powershell
 # Direct script invocation with DryRun
@@ -997,7 +1035,7 @@ PS> git status
 # nothing to commit, working tree clean
 ```
 
-**Scenario 3: Re-provisioning (Idempotencia)**
+#### Scenario 3: Re-provisioning (Idempotencia)
 
 ```powershell
 # Primera provisión
@@ -1023,7 +1061,7 @@ PS> cat memory/provision-report.md
 # ⚠ Skipped 25 files (already exist)
 ```
 
-**Scenario 4: Data & AI Practice**
+#### Scenario 4: Data & AI Practice
 
 ```powershell
 PS> .\Init.ps1
@@ -1044,7 +1082,7 @@ PS> cat memory/constitution.md | Select-String "Article.*Data"
 # Article VI: Data Modeling & Storage (from data scope)
 ```
 
-**Scenario 5: Agent Development Workflow**
+#### Scenario 5: Agent Development Workflow
 
 ```powershell
 # Después de provisión completa...
@@ -1093,7 +1131,7 @@ El skill `skill-bolt-setup-constitution` es el **motor de provisión inteligente
 
 ### Arquitectura del Skill
 
-```
+```text
 bolt-setup-constitution/
 ├── SKILL.md                              # Documentación del skill (instrucciones para Copilot)
 └── (Helper script referenciado)
@@ -1203,18 +1241,18 @@ Create `memory/provision-report.md` with:
 ## Invocation
 
 ### By Agent (@Bolt Constitution)
-```
 
+```text
 User: "Setup constitution"
 Agent: Invokes bolt-setup-constitution skill
 Agent: Shows provision report to user
-
-````
+```
 
 ### By Manual Script
+
 ```powershell
 & .boltf\scripts\Invoke-BoltSetupConstitution.ps1
-````
+```
 
 ### With Options
 
@@ -1357,21 +1395,21 @@ Agent: Shows provision report to user
 
 ### Missing Prerequisites
 
-```
+```text
 Error: memory/constitution.md not found
 → Run Init.ps1 first to initialize project
 ```
 
 ### Invalid Scope Configuration
 
-```
+```text
 Error: .boltf/scopes/{scope}/scope.yaml not found or invalid
 → Check scope configuration in .boltf/scopes/
 ```
 
 ### File Copy Failures
 
-```
+```text
 Warning: Failed to copy skill-xyz
 → Check source path exists: .boltf/available-skills/skill-xyz
 → Check write permissions on destination: .github/skills/
@@ -1390,8 +1428,6 @@ To force re-provisioning:
 1. Delete files in .github/ that need refresh
 2. Re-run skill
 3. Review provision report for changes
-
-````
 
 ### Helper Script Structure (.boltf/scripts/Invoke-BoltSetupConstitution.ps1)
 
@@ -1894,7 +1930,7 @@ version: 1.0.0
    - AppHost: Orchestration project (DistributedApplication)
    - Service Discovery: WithReference() pattern
    - ServiceDefaults: Shared telemetry, health checks, resilience
-   - Dashboard: http://localhost:15888
+   - Dashboard: <http://localhost:15888>
 5. **Workflows**:
    - Creating AppHost project
    - Adding services with WithReference()
@@ -2257,11 +2293,11 @@ PS> & .boltf\scripts\Invoke-BoltSetupConstitution.ps1
 
 **Creados** (5 archivos, 400+ líneas):
 
-3. **.boltf/available-skills/aspire/skill-bolt-aspire-orchestration/SKILL.md** (200+ lines)
-4. **.boltf/templates/aspire/AppHost.csproj** (20 lines)
-5. **.boltf/templates/aspire/ServiceDefaults.csproj** (15 lines)
-6. **.boltf/templates/aspire/Extensions.cs** (100+ lines)
-7. **.boltf/templates/aspire/Program.cs.template** (20 lines)
+1. **.boltf/available-skills/aspire/skill-bolt-aspire-orchestration/SKILL.md** (200+ lines)
+2. **.boltf/templates/aspire/AppHost.csproj** (20 lines)
+3. **.boltf/templates/aspire/ServiceDefaults.csproj** (15 lines)
+4. **.boltf/templates/aspire/Extensions.cs** (100+ lines)
+5. **.boltf/templates/aspire/Program.cs.template** (20 lines)
 
 **Total**:
 
@@ -2310,7 +2346,7 @@ PS> & .boltf\scripts\Invoke-BoltSetupConstitution.ps1
 **Para Desarrolladores**:
 
 - ✅ Automatic service discovery (no hardcoded URLs)
-- ✅ Built-in dashboard (http://localhost:15888)
+- ✅ Built-in dashboard (<http://localhost:15888>)
 - ✅ Consistent observability (OpenTelemetry out-of-the-box)
 - ✅ Simplified deployment (azd init → azd up)
 
@@ -2387,7 +2423,7 @@ PS> & .boltf\scripts\Invoke-BoltSetupConstitution.ps1
 
 ## Diagrama: Two-Step Workflow Completo
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                         STEP 1: INITIALIZATION                          │
 │                              (Init.ps1)                                  │
@@ -2783,7 +2819,7 @@ cat memory/constitution.md | Select-String "Article XXI|Article XXII"
 
 ---
 
-## Key Benefits of Two-Step Architecture
+## Benefits of Two-Step Architecture
 
 | Aspect                  | Monolithic (Old)     | Two-Step (New)                   |
 | ----------------------- | -------------------- | -------------------------------- |

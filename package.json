@@ -9,6 +9,7 @@
     "skill:validate-all": "pwsh -c \"Get-ChildItem .github/skills -Directory | ForEach-Object { Write-Host 'Validating:' $_.Name -ForegroundColor Cyan; ./Invoke-PythonScript.ps1 .github/skills/skill-creator/scripts/quick_validate.py $_.FullName }\""
   },
   "devDependencies": {
+    "markdownlint-cli": "^0.47.0",
     "prettier": "^3.8.1"
   }
 }

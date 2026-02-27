@@ -1,6 +1,6 @@
 ---
 name: architect-diagramer
-description: Create architecture, application, flow diagrams and any other diagram included in the different documentation markdowns.
+description: Create Mermaid diagrams for architecture documentation including architecture diagrams (C4 model preferred), application diagrams, and flow diagrams. Saves diagrams to docs/diagrams/. Use when creating architecture diagram, system design, application flow, C4 diagram, technical documentation diagrams, visualize architecture, draw diagram for docs. Consider mermaid-creator for comprehensive Mermaid features.
 ---
 
 # Architecture Diagramer

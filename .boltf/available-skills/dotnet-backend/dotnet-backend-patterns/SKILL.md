@@ -1,6 +1,6 @@
 ---
 name: dotnet-backend-patterns
-description: Master C# backend development with proven patterns for dependency injection, async programming, data access, and error handling
+description: Master C# backend development with Clean Architecture, dependency injection, async/await patterns, Entity Framework Core, Dapper, Result pattern, and SOLID principles. Use for .NET APIs, domain logic, data access layers, or service implementations. Triggers: "C# backend", ".NET backend", "dependency injection", "async programming", "EF Core", "Entity Framework", "clean architecture", "backend patterns .NET", "service layer", "repository pattern", "SOLID". ALWAYS use for .NET backend architecture questions.
 ---
 
 # .NET Backend Patterns - Clean Architecture & Best Practices
@@ -10,13 +10,13 @@ access, and error handling.
 
 ## When to Use This Skill
 
-✅ Developing .NET Web APIs, microservices, or backend services  
-✅ Implementing Clean Architecture / Vertical Slice Architecture  
-✅ Writing async/await code with proper CancellationToken handling  
-✅ Setting up dependency injection with correct service lifetimes  
-✅ Choosing between Entity Framework Core and Dapper  
-✅ Implementing Result<T> pattern for explicit error handling  
-✅ Optimizing database queries and avoiding N+1 problems  
+✅ Developing .NET Web APIs, microservices, or backend services
+✅ Implementing Clean Architecture / Vertical Slice Architecture
+✅ Writing async/await code with proper CancellationToken handling
+✅ Setting up dependency injection with correct service lifetimes
+✅ Choosing between Entity Framework Core and Dapper
+✅ Implementing Result<T> pattern for explicit error handling
+✅ Optimizing database queries and avoiding N+1 problems
 ✅ Configuring multi-layer caching (Memory + Redis)
 
 ## Project Structure
@@ -319,20 +319,20 @@ projections, split queries, N+1 prevention, Dapper multi-mapping, bulk operation
 
 ## References
 
-📖 **[Async/Await Patterns](references/async-patterns.md)**  
+📖 **[Async/Await Patterns](references/async-patterns.md)**
 Deep dive: CancellationToken usage, IAsyncEnumerable streaming, Task.WhenAll/WhenAny,
 ConfigureAwait, ValueTask, timeout patterns, error handling, common pitfalls.
 
-📖 **[Dependency Injection Patterns](references/dependency-injection.md)**  
+📖 **[Dependency Injection Patterns](references/dependency-injection.md)**
 Deep dive: Service lifetimes (Scoped/Singleton/Transient), Options pattern
 (IOptions/IOptionsSnapshot/IOptionsMonitor), keyed services (.NET 8+), factory patterns, decorators,
 captive dependencies.
 
-📖 **[Data Access Patterns](references/data-access.md)**  
+📖 **[Data Access Patterns](references/data-access.md)**
 Deep dive: EF Core (AsNoTracking, Include, projections, split queries, change tracking), Dapper
 (dynamic SQL, multi-mapping, bulk operations), when to use each, performance tips, N+1 prevention.
 
-📖 **[Result Pattern](references/result-pattern.md)**  
+📖 **[Result Pattern](references/result-pattern.md)**
 Deep dive: Result<T> implementation, railway-oriented programming, chaining with Bind/Map, error
 accumulation, complex business flows, converting to HTTP responses.
 
@@ -384,5 +384,5 @@ var orders = await _context.Orders
 
 ---
 
-**Last Updated**: 2026-01-26  
+**Last Updated**: 2026-01-26
 **Version**: 2.0 (Progressive Disclosure)

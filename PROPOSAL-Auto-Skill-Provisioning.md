@@ -713,21 +713,21 @@ items:
 
 ### Patrones Comunes
 
-**Patrón 1: Scope Único**
+#### Patrón 1: Scope Único
 
 ```yaml
 auto_provision_rule:
   in: ['backend', { 'var': 'activeScopes' }]
 ```
 
-**Patrón 2: Tech Stack Match**
+#### Patrón 2: Tech Stack Match
 
 ```yaml
 auto_provision_rule:
   '==': [{ 'var': 'techStack.backend' }, 'csharp']
 ```
 
-**Patrón 3: Scope + Tech Stack**
+#### Patrón 3: Scope + Tech Stack
 
 ```yaml
 auto_provision_rule:
@@ -736,7 +736,7 @@ auto_provision_rule:
     - { '==': [{ 'var': 'techStack.frontend' }, 'react'] }
 ```
 
-**Patrón 4: Múltiples Opciones (OR)**
+#### Patrón 4: Múltiples Opciones (OR)
 
 ```yaml
 auto_provision_rule:
@@ -745,7 +745,7 @@ auto_provision_rule:
     - { '==': [{ 'var': 'techStack.backend' }, 'fsharp'] }
 ```
 
-**Patrón 5: Exclusión (NOT)**
+#### Patrón 5: Exclusión (NOT)
 
 ```yaml
 auto_provision_rule:
@@ -758,7 +758,7 @@ auto_provision_rule:
 
 ### Modo Verbose
 
-```powershell
+```powershellpowershell
 # Ver todas las evaluaciones de reglas
 ./Invoke-BoltSetupConstitution.ps1 -Provision -Verbose
 ```
@@ -956,8 +956,6 @@ auto_provision_rule:
       }
 ```
 
-```
-
 ## 📚 Referencias
 
 ### JSONLogic
@@ -985,4 +983,8 @@ auto_provision_rule:
 **Fecha**: 2026-02-25
 **Próximo Paso**: Crear ADR formalizando esta decisión arquitectónica
 **Owner**: @Bolt Framework Team
-```
+
+```yaml
+---
+end-of-document: true
+---

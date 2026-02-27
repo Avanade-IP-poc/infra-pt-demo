@@ -1,9 +1,6 @@
 ---
 name: azure-usage
-description:
-  This skill should be used when user asks to "query Azure resources", "list storage accounts",
-  "manage Key Vault secrets", "work with Cosmos DB", "check AKS clusters", "use Azure MCP", or
-  interact with any Azure service.
+description: Query and manage Azure resources using Azure MCP tools. ALWAYS use when listing storage accounts, managing Key Vault secrets, working with Cosmos DB, checking AKS clusters, or interacting with any Azure service via MCP. Triggers: "query Azure", "list storage accounts", "Key Vault secret", "Cosmos DB", "AKS cluster", "Azure MCP", "Azure resource", "az cli alternative", "manage Azure", "Azure MCP tools", "query resources".
 ---
 
 # Azure MCP Best Practices

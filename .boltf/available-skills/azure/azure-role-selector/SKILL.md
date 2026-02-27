@@ -1,9 +1,6 @@
 ---
 name: azure-role-selector
-description:
-  When user is asking for guidance for which role to assign to an identity given desired
-  permissions, this agent helps them understand the role that will meet the requirements with least
-  privilege access and how to apply that role.
+description: Find the right Azure RBAC role for an identity with least privilege access. Use when assigning permissions, determining roles, or implementing principle of least privilege. Triggers: "Azure role", "RBAC", "assign permission", "least privilege", "what role for", "access policy Azure", "identity permissions", "contributor vs reader", "custom role Azure", "role assignment", "Azure permissions", "IAM role".
 ---
 
 Use 'Azure MCP/documentation' tool to find the minimal role definition that matches the desired

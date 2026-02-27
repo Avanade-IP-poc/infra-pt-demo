@@ -1,6 +1,6 @@
 ---
 name: skill-bolt-adr
-description: Create Architecture Decision Records using MADR format for documenting architectural decisions
+description: Create Architecture Decision Records (ADRs) using MADR (Markdown Any Decision Records) format for documenting architectural decisions. Use when choosing frameworks, databases, design patterns, or any significant technical decisions. Triggers: "ADR", "architecture decision", "decision record", "MADR", "document decision", "why did we choose", "technical decision", "architecture choice", "decision log", "document architecture", "design decision".
 ---
 
 # Architecture Decision Records

@@ -259,7 +259,7 @@ The `@Bolt Provisioner` agent automatically provisions resources from multiple s
 
 After running Init.ps1 (Step 1), invoke `@Bolt Constitution` which will offer to provision resources:
 
-```
+```text
 User: @Bolt Constitution setup constitution
 
 Agent Response:
@@ -384,7 +384,7 @@ python .github/skills/skill-creator/scripts/quick_validate.py my-skill/
 
 ### Requirements
 
-- **Python 3.9+** (download from https://python.org/downloads/)
+- **Python 3.9+** (download from <https://python.org/downloads/>)
 - Packages installed automatically: `anthropic`, `pyyaml`
 
 📚 **Full guide**: [docs/python-integration.md](docs/python-integration.md)

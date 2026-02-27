@@ -1,6 +1,6 @@
 ---
 name: azdo-sync
-description: Bidirectional sync between AURORA specs/ and Azure DevOps work items (Features, User Stories, Tasks)
+description: Bidirectional sync between Bolt Framework specs/ and Azure DevOps work items including Features, User Stories, and Tasks. Use when syncing specifications to Azure DevOps backlog, pushing features to AzDO, or pulling work items to local specs. Triggers: "sync Azure DevOps", "push to AzDO", "backlog sync", "work item sync", "feature to Azure DevOps", "specs to work items", "AzDO integration", "import from AzDO", "bidirectional sync".
 ---
 
 # Azure DevOps Sync

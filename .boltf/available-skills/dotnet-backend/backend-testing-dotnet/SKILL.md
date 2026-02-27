@@ -1,6 +1,6 @@
 ---
 name: backend-testing-dotnet
-description: Comprehensive backend testing with xUnit, Testcontainers, and NetArchTest for .NET
+description: Comprehensive backend testing for .NET with xUnit, Testcontainers, NetArchTest, and Respawn. Use when writing unit tests, integration tests, architecture tests, or test fixtures for .NET backends. Triggers: "test backend .NET", "xUnit tests", "Testcontainers", "architecture tests", "integration testing .NET", "NetArchTest", "Respawn", "mock database", "test fixtures", "backend test patterns", ".NET testing", "SQL Server tests".
 ---
 
 # Backend Testing for .NET

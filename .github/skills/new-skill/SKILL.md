@@ -1,6 +1,6 @@
 ---
 name: new-skill
-description: Guide for creating custom GitHub Copilot skills with YAML frontmatter and auto-discovery
+description: Guide for creating custom GitHub Copilot skills with YAML frontmatter, SKILL.md format, progressive disclosure, and auto-discovery. Use when creating domain-specific capabilities (testing patterns, API design, security workflows) or improving existing skills. Triggers: "create skill", "new skill", "skill template", "YAML frontmatter", "auto-discovery", "skill format", "make a skill", "build skill", "skill structure", "skill best practices", "progressive disclosure".
 ---
 
 # Creating New Skills

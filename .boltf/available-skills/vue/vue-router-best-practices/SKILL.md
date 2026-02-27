@@ -1,6 +1,6 @@
 ---
 name: vue-router-best-practices
-description: "Vue Router 4 patterns, navigation guards, route params, and route-component lifecycle interactions."
+description: Vue Router 4 patterns for routing, navigation guards (beforeEach, beforeEnter, beforeRouteEnter), route params, dynamic routes, and route-component lifecycle. Use when implementing navigation, protecting routes, handling route transitions, or configuring Vue Router. Triggers: "Vue Router", "navigation guard", "beforeEach", "route param", "router-link", "router-view", "dynamic routing Vue", "protect route", "route transition", "router lifecycle".
 version: 1.0.0
 license: MIT
 author: github.com/vuejs-ai

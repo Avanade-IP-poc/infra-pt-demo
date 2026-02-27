@@ -1,6 +1,6 @@
 ---
 name: angular-primeng-frontend
-description: Angular 20 + PrimeNG frontend development with best practices and MCP tools integration
+description: Angular 20 + PrimeNG 18 frontend development with standalone components, signals, typed forms, modern control flow (@if, @for), and inject() pattern. Use when developing Angular apps with PrimeNG, implementing Angular components, configuring PrimeNG themes, or building enterprise Angular UIs. Triggers: "Angular", "PrimeNG", "Angular 20", "p-button", "PrimeNG component", "Angular forms", "Angular routing", "standalone component", "ng generate", "signals Angular".
 ---
 
 # Angular 20 + PrimeNG Frontend Development
@@ -43,13 +43,13 @@ description: Angular 20 + PrimeNG frontend development with best practices and M
 ### Standalone Components (Default)
 
 ```typescript
-import { Component } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { ButtonModule } from "primeng/button";
-import { MyService } from "../services/my.service";
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ButtonModule } from 'primeng/button';
+import { MyService } from '../services/my.service';
 
 @Component({
-  selector: "p-app-my-component",
+  selector: 'p-app-my-component',
   standalone: true,
   imports: [CommonModule, ButtonModule],
   template: `
@@ -66,7 +66,7 @@ export class MyComponent {
   constructor() {}
 
   handleClick() {
-    console.log("Button clicked");
+    console.log('Button clicked');
   }
 }
 ```
@@ -100,7 +100,7 @@ export class MyComponent {
 ### Typed Forms
 
 ```typescript
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 interface UserForm {
   name: FormControl<string>;
@@ -109,8 +109,8 @@ interface UserForm {
 
 export class MyComponent {
   userForm = new FormGroup<UserForm>({
-    name: new FormControl("", { nonNullable: true, validators: [Validators.required] }),
-    email: new FormControl("", {
+    name: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    email: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required, Validators.email],
     }),
@@ -121,7 +121,7 @@ export class MyComponent {
 ### Signals (Reactive State)
 
 ```typescript
-import { signal, computed } from "@angular/core";
+import { signal, computed } from '@angular/core';
 
 export class MyComponent {
   count = signal(0);

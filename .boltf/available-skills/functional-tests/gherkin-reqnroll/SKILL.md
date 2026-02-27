@@ -1,6 +1,6 @@
 ---
 name: gherkin-reqnroll
-description: BDD with Gherkin syntax and Reqnroll for .NET acceptance testing
+description: Behavior-Driven Development (BDD) acceptance testing for .NET using Gherkin syntax and Reqnroll (SpecFlow successor). Write feature files with Given-When-Then scenarios and step definitions in C#. Use when writing acceptance tests, BDD scenarios, Gherkin features, user story validation. Triggers: "Gherkin", "Reqnroll", "BDD", "Given When Then", "acceptance tests", "feature files", "SpecFlow alternative", "behavior tests", "scenario testing .NET", ".NET BDD".
 ---
 
 # Gherkin & Reqnroll BDD Testing

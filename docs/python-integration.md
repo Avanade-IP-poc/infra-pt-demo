@@ -1,8 +1,4 @@
-# =============================================================================
-
 # Bolt Framework - Python Integration Guide
-
-# =============================================================================
 
 ## Overview
 
@@ -192,7 +188,7 @@ $env:ANTHROPIC_API_KEY = "sk-ant-..."
 
 ### "Python not found"
 
-- ✅ Install Python 3.9+ from https://python.org/downloads/
+- ✅ Install Python 3.9+ from <https://python.org/downloads/>
 - ✅ Windows: Check "Add Python to PATH" during installation
 - ✅ Restart terminal after installation
 
@@ -286,7 +282,7 @@ steps:
 
 ## Architecture
 
-```
+```text
 project-root/
 ├── .bolt-venv/                    # Python virtual environment (gitignored)
 │   ├── bin/                       # Executables (Linux/macOS)

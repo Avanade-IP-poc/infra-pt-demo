@@ -1,6 +1,6 @@
 ---
 name: skill-bolt-constitution-driven-development
-description: Constitution as project DNA, directive hierarchy, and AI agent governance
+description: Constitution-Driven Development where constitution serves as project DNA, directive hierarchy, and AI agent governance. Use when initializing Bolt projects, defining project constraints, establishing tech stack rules, or creating AI agent guidelines. Triggers: "constitution", "project DNA", "constraints", "tech stack rules", "directive hierarchy", "agent governance", "project standards", "constitution article", "define project rules", "project law".
 ---
 
 # Constitution-Driven Development

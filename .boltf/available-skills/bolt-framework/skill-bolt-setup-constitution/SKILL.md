@@ -1,6 +1,6 @@
 ---
 name: skill-bolt-setup-constitution
-description: Complete provisioning engine - merges scope constitutions and provisions files based on Practice configuration
+description: Step 2 of Bolt Framework initialization - scope-based provisioning engine. Reads scopes.yaml, merges scope constitutions, provisions files (skills, agents, templates) from active scopes, and generates provision report. Critical auto-discovery of ALL Bolt Framework core skills. Use when setting up constitution, initializing Bolt, provisioning files, merging constitutions, scope provisioning, second init step.
 ---
 
 # Bolt Setup Constitution
