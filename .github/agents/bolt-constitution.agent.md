@@ -37,6 +37,36 @@ handoffs:
     agent: Bolt Feature
     prompt: Now create a feature specification for the project.
     send: false
+  - label: 📝 Document Architecture
+    agent: Bolt ADR
+    prompt: |
+      Create ADR-001 documenting the initial architecture decisions made during Bolt Framework initialization.
+
+      **Context from Initialization**:
+      - Practice: [provide from scopes.yaml]
+      - Active Scopes: [provide list from scopes.yaml]
+      - Aspire Orchestration: [provide use-aspire value from scopes.yaml]
+      - Work Management Tool: [provide work-management-tool from scopes.yaml]
+      - Service Count: [provide if Aspire was detected]
+
+      **Constitution References**:
+      - Article I: Active Scopes
+      - Article III: Tech Stack (scope-specific)
+      - Article XX: Orchestration with .NET Aspire (if enabled)
+
+      **Rationale to Document**:
+      - WHY this Practice was chosen (business domain, team expertise)
+      - WHY these scopes were selected (application requirements)
+      - WHY Aspire orchestration was enabled/disabled (service architecture)
+      - Trade-offs accepted (from constitution articles)
+
+      **Output Format**: ADR-001 in `memory/adrs/` following MADR format
+
+      **References**:
+      - Constitution: .boltf/memory/constitution.md
+      - Scopes Config: .boltf/memory/scopes.yaml
+      - Provision Report: .boltf/memory/provision-report.md
+    send: false
 ---
 
 # 📋 Constitution Agent
@@ -835,6 +865,47 @@ cat .boltf/memory/provision-report.md
 ls .github/skills/
 ```
 ````
+
+---
+
+### 📝 Recommended: Document Architecture Decisions
+
+**Your initialization choices represent important architectural decisions:**
+
+- 🎯 **Practice Selected**: [Practice from scopes.yaml]
+- 📦 **Active Scopes**: [List of active scopes]
+- 🚀 **Aspire Orchestration**: [Yes/No from use-aspire]
+- 📋 **Work Management**: [Tool from scopes.yaml]
+
+**Why document this?**
+
+- ✅ Helps new team members understand the **WHY** behind decisions
+- ✅ Tracks accepted trade-offs (from constitution articles)
+- ✅ Provides audit trail for future architectural reviews
+- ✅ Creates baseline for evolutionary architecture
+
+**Pattern**: Constitution documents **WHAT** → ADR documents **WHY** → Complete traceability
+
+💡 **Suggestion**: I can handoff to **@Bolt ADR** to create **ADR-001** documenting these initialization decisions.
+
+This ADR will explain:
+
+- Rationale for Practice selection
+- Why these specific scopes were activated
+- Aspire orchestration decision reasoning (from Article XX if enabled)
+- Work management tool selection criteria
+
+**Would you like me to create this architectural documentation?**
+
+**Options**:
+
+- ✅ **Yes** - Handoff to @Bolt ADR now (uses "📝 Document Architecture" handoff)
+- ⏭️ **Skip** - I'll document manually later
+- 🚀 **Continue** - Proceed directly to development
+
+_(You can always trigger this later using the "📝 Document Architecture" handoff)_
+
+---
 
 ### Next Steps
 

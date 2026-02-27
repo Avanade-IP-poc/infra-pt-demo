@@ -537,6 +537,765 @@ Select ALL applicable practices (minimum 3 required for production):
 
 ---
 
+## Article XIV: Multi-Agent Architectures & Orchestration
+
+> **📋 Applies to**: AI projects requiring multi-agent coordination, complex workflows, cross-domain tasks
+> **⏭️ Skip if**: Single-agent solutions are sufficient for your use case
+> **References**: [AI agent orchestration patterns (Microsoft)](https://learn.microsoft.com/azure/architecture/ai-ml/guide/ai-agent-design-patterns)
+
+**Multi-Agent Systems** use multiple specialized AI agents to break down complex problems into units of work, each handled by dedicated agents with specific capabilities. This approach mirrors human teamwork and provides specialization, scalability, maintainability, and optimization advantages over monolithic single-agent solutions.
+
+### Section 14.1: When to Use Multi-Agent Architecture
+
+**Start with Single Agent** - Most scenarios benefit from one agent with tools/knowledge. Use multi-agent ONLY when:
+
+1. **Security & Compliance Boundaries** - Regulations mandate strict data isolation (e.g., different security classifications)
+2. **Multiple Teams Involved** - Distinct teams manage separate knowledge areas with independent development cycles
+3. **Future Growth Planned** - Roadmap includes diverse features spanning 3+ distinct functional domains
+4. **Cross-Functional Problems** - Tasks require distinct specializations that can't be combined (e.g., legal + technical + creative analysis)
+
+**Decision Tree**:
+
+```text
+Can single agent + tools solve it?
+├─ Yes → Use single agent (simpler, lower latency)
+└─ No → Are there security/compliance boundaries?
+    ├─ Yes → Use multi-agent (mandatory separation)
+    └─ No → Can single agent handle complexity?
+        ├─ Yes → Use single agent
+        └─ No → Use multi-agent (proven scalability limits)
+```
+
+### Section 14.2: Multi-Agent Orchestration Patterns
+
+Select ONE or COMBINE patterns based on workflow requirements:
+
+#### Pattern 1: Sequential Orchestration
+
+**Description**: Agents execute in a defined order, each building on the previous agent's output (pipeline pattern).
+
+**When to use**:
+
+- Tasks require cumulative context or specific order (document approval workflows)
+- Output of Agent N is input to Agent N+ 1
+- Deterministic, reproducible results required
+
+**Example**: Legal contract review → Financial analysis → Risk assessment → Executive summary
+
+**Implementation**:
+
+```python
+# Microsoft Agent Framework - Sequential
+from autogen_agentchat.agents import AssistantAgent
+from autogen_agentchat.teams import RoundRobinGroupChat
+
+agents = [legal_agent, finance_agent, risk_agent, summary_agent]
+team = RoundRobinGroupChat(agents, max_turns=4)
+result = await team.run(task="Review acquisition contract")
+```
+
+#### Pattern 2: Concurrent Orchestration (Fan-out/Fan-in)
+
+**Description**: Multiple agents work in parallel on the same task, results are aggregated.
+
+**When to use**:
+
+- Tasks benefit from multiple independent perspectives (ensemble reasoning)
+- Time-sensitive scenarios requiring parallel processing
+- Voting/consensus decisions (majority rule, quorum)
+
+**Example**: Stock analysis by Technical Analyst + Fundamental Analyst + Sentiment Analyst → Aggregated recommendation
+
+**Implementation**:
+
+```python
+# Concurrent execution
+agents = [technical_agent, fundamental_agent, sentiment_agent]
+results = await asyncio.gather(*[agent.run(task) for agent in agents])
+final_recommendation = aggregate_results(results, strategy="weighted_average")
+```
+
+#### Pattern 3: Group Chat (Collaborative)
+
+**Description**: Peer-to-peer agent communication, agents decide dynamically who speaks next.
+
+**When to use**:
+
+- Collaborative problem-solving requiring back-and-forth discussion
+- No predefined speaker order; agents "self-organize"
+- Brainstorm, debate, or multi-perspective analysis
+
+**Example**: Product design brainstorm with UX designer + Engineer + Marketing agents
+
+**Implementation**:
+
+```python
+# Microsoft Agent Framework - Group Chat
+from autogen_agentchat.teams import SelectorGroupChat
+
+team = SelectorGroupChat(
+    participants=[ux_agent, engineer_agent, marketing_agent],
+    model_client=selector_model  # LLM decides who speaks next
+)
+result = await team.run(task="Design new feature")
+```
+
+#### Pattern 4: Handoff (Escalation/Transfer)
+
+**Description**: Agent transfers conversation to another agent based on conditions (triage pattern).
+
+**When to use**:
+
+- Customer support escalation (tier 1 → tier 2 → human)
+- Task routing based on complexity or domain
+- Agent recognizes it can't handle request
+
+**Example**: Customer service bot → Technical support agent → Billing specialist
+
+**Implementation**:
+
+```python
+# Handoff pattern
+if user_intent == "billing_issue":
+    await chatbot_agent.handoff_to(billing_agent)
+elif complexity_score > THRESHOLD:
+    await chatbot_agent.handoff_to(specialist_agent)
+```
+
+#### Pattern 5: Magentic (Dynamic Planning)
+
+**Description**: Manager agent dynamically creates a plan and assigns tasks to worker agents.
+
+**When to use**:
+
+- Tasks are too complex or varied for fixed orchestration
+- Decomposition into sub-tasks benefits from LLM reasoning
+- Unknown task structure at design time
+
+**Example**: "Research market trends for Q1 2026" → Manager decomposes into: data collection, statistical analysis, report writing
+
+**Warning**: Most expensive pattern (manager iterates until viable plan), unpredictable cost.
+
+### Section 14.3: Agent Framework Selection
+
+Select ONE primary framework:
+
+#### Option 1: Microsoft Agent Framework (Recommended for Azure)
+
+- **Best for**: Azure-native multi-agent systems, enterprise support
+- **Languages**: Python, .NET (C#)
+- **Features**:
+  - Built-in orchestration patterns (Sequential, Concurrent, Group Chat, Handoff, Magentic)
+  - Human-in-the-loop support
+  - Native Azure OpenAI integration
+  - Workflow declarative YAML + code combinations
+- **Migration**: Successor to Semantic Kernel agents
+- **Repository**: [github.com/microsoft/agent-framework](https://github.com/microsoft/agent-framework)
+
+**Example**:
+
+```python
+from autogen_agentchat.agents import AssistantAgent
+from autogen_agentchat.teams import RoundRobinGroupChat
+from autogen_ext.models.openai import AzureOpenAIChatCompletionClient
+
+# Define agents
+researcher = AssistantAgent(
+    name="Researcher",
+    model_client=AzureOpenAIChatCompletionClient(...),
+    system_message="You research market trends.",
+    tools=[web_search_tool]
+)
+
+writer = AssistantAgent(
+    name="Writer",
+    model_client=AzureOpenAIChatCompletionClient(...),
+    system_message="You write executive summaries."
+)
+
+# Sequential orchestration
+team = RoundRobinGroupChat([researcher, writer])
+result = await team.run(task="Research AI trends and write summary")
+```
+
+#### Option 2: Semantic Kernel (Agents Module)
+
+- **Best for**: .NET-first teams, existing Semantic Kernel investments
+- **Languages**: C#, Python, Java
+- **Features**:
+  - Agent orchestration via `ChatCompletionAgent`, `OpenAIAssistantAgent`
+  - Function calling, plugins, planners
+  - Tight integration with Azure OpenAI Assistants API
+- **Status**: Continues to be supported for agent scenarios; Microsoft Agent Framework adds higher-level workflows
+
+**Example**:
+
+```csharp
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Agents;
+
+var kernel = Kernel.CreateBuilder()
+    .AddAzureOpenAIChatCompletion(...)
+    .Build();
+
+ChatCompletionAgent agent = new(kernel, "ResearchAgent") {
+    Instructions = "You research market trends."
+};
+
+await agent.InvokeAsync("What are AI trends in 2026?");
+```
+
+#### Option 3: LangChain / LangGraph
+
+- **Best for**: Multi-cloud, Python-native teams, complex agent graphs
+- **Languages**: Python, JavaScript
+- **Features**:
+  - 100+ integrations (Azure OpenAI, AWS Bedrock, Google Vertex)
+  - Advanced agent types (ReAct, Self-Ask, Plan-and-Execute)
+  - LangGraph for stateful multi-agent workflows
+- **Community**: Large open-source ecosystem
+
+**Trade-off**: Not Azure-native; requires custom connectors for Azure services.
+
+#### Option 4: Azure AI Foundry Agent Service (Low-Code)
+
+- **Best for**: No-code/low-code teams, simple workflows
+- **Languages**: UI-driven (REST APIs available)
+- **Features**:
+  - Managed service for connected agents
+  - Built-in monitoring, deployment pipelines
+  - Limited to nondeterministic orchestrations
+- **Limitation**: Cannot fully implement deterministic patterns (Sequential, Concurrent)
+
+**Recommendation**: Use Agent Framework (Python/.NET) for full orchestration control. Use Foundry Agent Service for simple managed scenarios.
+
+### Section 14.4: State Management Across Agents
+
+**Context Sharing Strategies**:
+
+- [ ] **Shared Memory (In-Memory)** - Fast, but lost on restart (dev only)
+- [ ] **Persistent State Store** - Azure Cosmos DB, Redis (recommended for production)
+- [ ] **Message Passing** - Agents communicate via messages (stateless agents)
+- [ ] **Checkpointing** - Persist state at workflow milestones (fault tolerance)
+
+**State Scope**: Minimize shared state to reduce token overhead and privacy risk.
+
+**Example** (Persistent state with Cosmos DB):
+
+```python
+from azure.cosmos import CosmosClient
+
+# Store conversation state
+conversation_state = {
+    "conversation_id": "conv-123",
+    "current_agent": "researcher",
+    "context": { "topic": "AI trends", "sources": [...] }
+}
+
+cosmos_client.upsert_item(conversation_state)
+```
+
+### Section 14.5: Human-in-the-Loop (HITL)
+
+**HITL Integration Points**:
+
+- [ ] **Approval gates** - Require human approval before agent proceeds (e.g., sending email, making purchase)
+- [ ] **Escalation** - Agent transfers to human when confidence is low
+- [ ] **Feedback loops** - Human provides feedback, agent refines output
+- [ ] **Observer mode** - Human monitors group chat (read-only)
+
+**Implementation**: Mandatory gates make orchestration synchronous. Persist state at checkpoints to allow resumption.
+
+**Example**:
+
+```python
+# Approval gate for high-stakes actions
+if action.type == "send_contract":
+    approval = await request_human_approval(action)
+    if not approval.approved:
+        return "Action declined by human reviewer"
+```
+
+### Section 14.6: Multi-Agent Testing & Validation
+
+**Testing Strategies**:
+
+- [ ] **Unit tests per agent** - Test individual agent logic in isolation
+- [ ] **Integration tests** - Test orchestration patterns end-to-end
+- [ ] **LLM-as-Judge evaluation** - Use GPT-4 to score multi-agent outputs (non-deterministic results)
+- [ ] **Replay tests** - Record agent interactions, replay for regression testing
+
+**Evaluation Metrics**:
+
+| Metric                   | Description                            | Tool                 |
+| ------------------------ | -------------------------------------- | -------------------- |
+| **Task completion rate** | % of workflows that succeed end-to-end | Custom logging       |
+| **Latency per agent**    | Time spent in each agent               | Azure Monitor        |
+| **Token consumption**    | Cost per orchestration pattern         | Application Insights |
+| **Handoff accuracy**     | % of correct agent transitions         | LLM-as-judge         |
+
+### Section 14.7: Cost Optimization for Multi-Agent Systems
+
+**Cost Drivers**:
+
+1. **Model invocations multiply** - Each agent calls a model (1 workflow = N agent calls)
+2. **Context accumulation** - Context windows grow as agents pass information
+3. **Concurrent patterns spike usage** - Parallel agents invoke models simultaneously
+
+**Optimization Strategies**:
+
+- [ ] **Use smaller models per agent** - Not every agent needs GPT-4 (e.g., classification agent can use GPT-3.5-Turbo)
+- [ ] **Context compaction** - Summarize previous agent outputs before passing to next agent
+- [ ] **Batching** - Group multiple user requests into single orchestration run
+- [ ] **Caching** - Cache agent responses for repeated queries (Redis, Azure AI Search)
+- [ ] **Monitor per-agent cost** - Identify expensive agents, optimize prompts/tools
+
+**Example** (Context compaction):
+
+```python
+# Instead of passing full 5,000-token context
+full_context = agent1.run(task)
+
+# Compress to summary
+summary = summarize(full_context, max_tokens=500)
+agent2.run(summary)  # Reduced token cost
+```
+
+### Section 14.8: Multi-Agent Observability
+
+**Instrumentation Requirements**:
+
+- [ ] **Trace agent interactions** - Log every agent invocation, tool call, handoff
+- [ ] **Visualize orchestration flow** - Diagram which agents executed, in what order
+- [ ] **Monitor performance per agent** - Latency, token usage, error rate
+- [ ] **Distributed tracing** - Use OpenTelemetry to trace requests across agents
+
+**Tools**:
+
+- **Application Insights** - Azure-native telemetry for agent monitoring
+- **Prompt Flow Tracing** - Visual trace of LLM calls, tool invocations
+- **LangSmith** (LangChain) - Debug agent chains, view conversation replay
+
+### Section 14.9: Common Multi-Agent Pitfalls
+
+Avoid these anti-patterns:
+
+1. ❌ **Unnecessary complexity** - Using multi-agent when single-agent + tools would suffice
+2. ❌ **No specialization** - Agents that don't provide meaningful domain separation
+3. ❌ **Ignoring latency** - Each handoff adds 1-3 seconds; 5 agents = 5-15s latency
+4. ❌ **Shared mutable state** - Concurrent agents modifying same data without locks
+5. ❌ **No fallback strategy** - If Agent 2 fails, entire workflow fails (no graceful degradation)
+6. ❌ **Infinite loops** - Group chat without turn limits (agents talk forever)
+
+### Section 14.10: References & Resources
+
+- [AI agent orchestration patterns (Azure Architecture Center)](https://learn.microsoft.com/azure/architecture/ai-ml/guide/ai-agent-design-patterns)
+- [Microsoft Agent Framework documentation](https://learn.microsoft.com/agent-framework/overview/agent-framework-overview)
+- [Microsoft Agent Framework GitHub](https://github.com/microsoft/agent-framework)
+- [Semantic Kernel agent orchestration](https://learn.microsoft.com/semantic-kernel/frameworks/agent/agent-orchestration/)
+- [Multiple-agent workflow automation (Azure)](https://learn.microsoft.com/azure/architecture/ai-ml/idea/multiple-agent-workflow-automation)
+- [Single vs multi-agent decision guide](https://learn.microsoft.com/azure/cloud-adoption-framework/ai-agents/single-agent-multiple-agents)
+
+---
+
+## Article XV: MLOps Lifecycle & Continuous Training
+
+> **📋 Applies to**: AI/ML projects with custom models requiring retraining, monitoring, and lifecycle management
+> **⏭️ Skip if**: Using only pre-built services (Azure Cognitive Services) or fine-tuned models without retraining
+> **References**: [MLOps v2 Architecture (Microsoft)](https://learn.microsoft.com/azure/architecture/ai-ml/guide/machine-learning-operations-v2)
+
+**MLOps** applies DevOps principles to machine learning: versioning models, automating training pipelines, continuous deployment, and monitoring for model drift. This article covers the end-to-end ML lifecycle from training to production to retraining.
+
+### Section 15.1: MLOps Maturity Levels
+
+Assess your current MLOps maturity and target level:
+
+| Level                             | Characteristics                                                      | When to use                     |
+| --------------------------------- | -------------------------------------------------------------------- | ------------------------------- |
+| **Level 0: Manual**               | Jupyter notebooks, manual training, no versioning                    | POCs, research projects         |
+| **Level 1: DevOps for ML**        | Automated training pipelines, model registry, CI/CD for code         | First production models         |
+| **Level 2: Automated Retraining** | Scheduled retraining, automated deployment on approval               | Models require periodic updates |
+| **Level 3: Full MLOps**           | Drift detection triggers retraining, A/B testing, canary deployments | Business-critical models        |
+
+**Target**: Achieve Level 2-3 for production models.
+
+### Section 15.2: ML Model Registry & Versioning
+
+**Model Registry** - Centralized repository for trained models with versioning, metadata, and lineage tracking.
+
+Select ONE:
+
+- [ ] **Azure ML Model Registry** (recommended) - RBAC, tags, deployment history, audit logs
+- [ ] **MLflow Model Registry** - Open-source, platform-agnostic
+- [ ] **Git LFS (NOT recommended for production)** - Large binary files in Git (no metadata, no audit trail)
+
+**Model Metadata to Track**:
+
+| Metadata                | Example                          | Why track              |
+| ----------------------- | -------------------------------- | ---------------------- |
+| **Model version**       | `v1.2.3`                         | Rollback capability    |
+| **Training dataset ID** | `dataset-2024-Q4`                | Reproducibility        |
+| **Hyperparameters**     | `{"learning_rate": 0.001}`       | Experiment tracking    |
+| **Evaluation metrics**  | `{"accuracy": 0.92, "f1": 0.89}` | Compare model versions |
+| **Training date**       | `2024-12-15`                     | Audit compliance       |
+| **Git commit SHA**      | `abc123`                         | Code-model linkage     |
+
+**Example** (Azure ML Model Registry):
+
+```python
+from azure.ai.ml import MLClient
+from azure.ai.ml.entities import Model
+
+ml_client = MLClient(...)
+
+# Register model
+model = Model(
+    path="./model/ files",
+    name="fraud-detection-model",
+    version="1.2.3",
+    description="XGBoost fraud detection trained on Q4 2024 data",
+    tags={"dataset": "fraud-2024-Q4", "accuracy": "0.92"}
+)
+
+ml_client.models.create_or_update(model)
+```
+
+### Section 15.3: Training Pipeline Automation
+
+**ML Training Pipeline Components**:
+
+1. **Data Ingestion** - Fetch training data from data lake/warehouse
+2. **Data Validation** - Check schema, distributions, missing values
+3. **Feature Engineering** - Transform raw data → features
+4. **Model Training** - Train model on processed data
+5. **Model Evaluation** - Validate on holdout set, compute metrics
+6. **Model Registration** - Store in model registry (if metrics pass threshold)
+7. **Model Deployment** - Deploy to staging/production (manual approval)
+
+**Pipeline Orchestration Tools**:
+
+- [ ] **Azure ML Pipelines** - YAML-defined pipelines, component reuse, parallel execution
+- [ ] **Azure Data Factory + Azure ML** - Hybrid data + ML pipelines
+- [ ] **Jupyter Notebooks + Papermill** - NOT recommended (manual, not reproducible)
+
+**Example** (Azure ML Pipeline YAML):
+
+```yaml
+$schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
+type: pipeline
+
+inputs:
+  training_data:
+    type: uri_folder
+    path: azureml://datastores/workspaceblobstore/paths/training-data/
+
+jobs:
+  data_prep:
+    type: command
+    component: azureml:data-prep-component:1
+    inputs:
+      raw_data: ${{parent.inputs.training_data}}
+    outputs:
+      prepared_data:
+        type: uri_folder
+
+  train_model:
+    type: command
+    component: azureml:xgboost-train:1
+    inputs:
+      training_data: ${{parent.jobs.data_prep.outputs.prepared_data}}
+    outputs:
+      model_output:
+        type: mlflow_model
+
+  evaluate_model:
+    type: command
+    component: azureml:model-evaluate:1
+    inputs:
+      model: ${{parent.jobs.train_model.outputs.model_output}}
+      test_data: azureml://datastores/workspaceblobstore/paths/test-data/
+```
+
+### Section 15.4: CI/CD for ML Models
+
+**CI Pipeline** (Triggered on code commit):
+
+- [ ] **Lint training scripts** - Flake8, Black (Python), ESLint (JS)
+- [ ] **Unit test feature engineering** - Test transforms in isolation
+- [ ] **Run training on sample data** - Smoke test (fast, small dataset)
+- [ ] **Validate model outputs** - Check model file format, required metadata
+
+**CD Pipeline** (Triggered after model training):
+
+- [ ] **Model evaluation gate** - Deploy ONLY if accuracy > baseline
+- [ ] **Deploy to staging endpoint** - Test with synthetic traffic
+- [ ] **Integration tests** - Validate inference latency, output format
+- [ ] **Deploy to production** - Manual approval required
+- [ ] **A/B testing** - Split traffic 90% old model / 10% new model
+- [ ] **Monitor for 7 days** - If metrics stable, promote to 100%
+
+**Example** (Azure DevOps Pipeline):
+
+```yaml
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - src/training/*
+
+stages:
+  - stage: CI
+    jobs:
+      - job: TrainModel
+        steps:
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: 'ml-service-connection'
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                az ml job create --file training-pipeline.yml --resource-group ml-rg --workspace-name ml-workspace
+
+  - stage: CD_Staging
+    dependsOn: CI
+    jobs:
+      - deployment: DeployStaging
+        environment: 'staging'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: AzureCLI@2
+                  inputs:
+                    inlineScript: |
+                      az ml online-endpoint create --name fraud-staging --file endpoint-staging.yml
+                      az ml online-deployment create --name blue --endpoint fraud-staging --file deployment.yml
+
+  - stage: CD_Production
+    dependsOn: CD_Staging
+    jobs:
+      - deployment: DeployProduction
+        environment: 'production' # Manual approval gate configured in Azure DevOps
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: AzureCLI@2
+                  inputs:
+                    inlineScript: |
+                      az ml online-deployment update --name green --endpoint fraud-prod --traffic 10
+                      # Monitor for 7 days, then update traffic to 100%
+```
+
+### Section 15.5: Model Monitoring & Drift Detection
+
+**Monitoring Metrics**:
+
+| Metric Type     | Metric                     | Alert Threshold     | Tool                  |
+| --------------- | -------------------------- | ------------------- | --------------------- |
+| **Performance** | Latency p95                | > 500ms             | Azure Monitor         |
+| **Performance** | Throughput (req/sec)       | < 100/sec           | Azure Monitor         |
+| **Data Drift**  | Feature distribution shift | KL divergence > 0.1 | Azure ML Data Drift   |
+| **Model Drift** | Accuracy degradation       | < 85% (was 92%)     | Custom metric         |
+| **Cost**        | Inference cost per request | > $0.05             | Azure Cost Management |
+
+**Drift Detection Strategies**:
+
+- [ ] **Statistical tests** - Kolmogorov-Smirnov, Chi-square for feature distributions
+- [ ] **Embedding drift** - Monitor embeddings of inputs (dimensionality reduction + clustering)
+- [ ] **Performance monitoring** - Track accuracy/precision/recall in production (requires labels)
+- [ ] **Business metric monitoring** - Track downstream business KPIs (conversion rate, revenue)
+
+**Example** (Azure ML Data Drift):
+
+```python
+from azure.ai.ml import MLClient
+from azure.ai.ml.entities import DataDriftMonitor
+
+ml_client = MLClient(...)
+
+# Create data drift monitor
+monitor = DataDriftMonitor(
+    name="fraud-data-drift",
+    compute="cpu-cluster",
+    monitoring_target=online_endpoint,
+    baseline_data_version="training-data-v1",
+    monitoring_signals={
+        "feature_drift": {
+            "type": "DataDrift",
+            "features": ["transaction_amount", "merchant_category", "time_of_day"],
+            "drift_threshold": 0.1
+        }
+    }
+)
+
+ml_client.schedules.create_or_update(monitor)
+```
+
+### Section 15.6: Automated Retraining Triggers
+
+**Retraining Triggers** - When should model automatically retrain?
+
+- [ ] **Scheduled** - Every 30/60/90 days (calendar-based)
+- [ ] **Data drift detected** - Feature distributions shift beyond threshold
+- [ ] **Model drift detected** - Performance degrades below SLA
+- [ ] **New data volume** - 10,000+ new labeled examples available
+- [ ] **Business event** - Major product change, new user segment
+
+**Retraining Pipeline**:
+
+1. Trigger detected (drift alert, schedule)
+2. Automated training pipeline runs
+3. New model registered in model registry
+4. Evaluation stage compares new model vs. current production model
+5. If new model wins (accuracy > current + 2%), deploy to staging
+6. Automated tests pass → Deploy to production with traffic split (10%)
+7. Monitor for 7 days → Promote to 100% if stable
+
+**Example** (Event Grid trigger):
+
+```python
+from azure.eventgrid import EventGridPublisherClient
+from azure.ai.ml import MLClient
+
+# Data drift event triggers retraining
+def on_drift_detected(event):
+    ml_client = MLClient(...)
+
+    # Submit training job
+    job = ml_client.jobs.create_or_update(
+        yaml_file="training-pipeline.yml"
+    )
+
+    print(f"Retraining triggered: {job.name}")
+```
+
+### Section 15.7: Model Deployment Strategies
+
+Select ONE deployment pattern:
+
+- [ ] **Blue-Green Deployment** - Two environments (blue = old, green = new), instant traffic switch
+  - **Pro**: Zero downtime, instant rollback
+  - **Con**: 2x infrastructure cost during transition
+
+- [ ] **Canary Deployment** - Gradual traffic shift (1% → 10% → 50% → 100%)
+  - **Pro**: Risk mitigation, early detection of issues
+  - **Con**: Requires traffic splitting, monitoring
+
+- [ ] **Rolling Update** - Replace instances gradually (Kubernetes rolling update)
+  - **Pro**: No extra infrastructure cost
+  - **Con**: Mixed versions during rollout
+
+- [ ] **Shadow Deployment** - New model runs in parallel, predictions logged (not served to users)
+  - **Pro**: Zero user risk, compare models in production
+  - **Con**: Double inference cost
+
+**Recommendation**: Canary deployment for business-critical models, rolling update for cost-sensitive models.
+
+### Section 15.8: A/B Testing for ML Models
+
+**A/B Testing** - Compare model versions by serving different models to different user segments.
+
+**Implementation**:
+
+- [ ] **Traffic split**: 90% model A (baseline) / 10% model B (new)
+- [ ] **Business metrics**: Track conversion rate, revenue per user
+- [ ] **Statistical significance**: Minimum 1,000 samples per variant
+- [ ] **Duration**: Run for 7-14 days (avoid weekly seasonality bias)
+
+**Success Criteria**:
+
+- Model B has ≥2% relative improvement in business metric
+- Model B latency ≤ Model A latency
+- No increase in user complaints
+
+**Example** (Azure ML Traffic Split):
+
+```bash
+# Deploy two models to same endpoint, split traffic
+az ml online-deployment create --name model-a --endpoint fraud-prod --model fraud-model:1 --traffic 90
+az ml online-deployment create --name model-b --endpoint fraud-prod --model fraud-model:2 --traffic 10
+
+# After 7 days, promote model-b if successful
+az ml online-deployment update --name model-b --endpoint fraud-prod --traffic 100
+az ml online-deployment delete --name model-a --endpoint fraud-prod
+```
+
+### Section 15.9: Model Explainability in Production
+
+**Why**: Regulatory compliance (GDPR Article 22), debugging, trust.
+
+**Explainability Tools**:
+
+- [ ] **SHAP (SHapley Additive exPlanations)** - Feature importance per prediction
+- [ ] **LIME (Local Interpretable Model-agnostic Explanations)** - Local approximation
+- [ ] **InterpretML (Microsoft)** - Glass-box models (Explainable Boosting Machines)
+
+**Integration**:
+
+- Generate explanations on-demand for high-stakes predictions (loan approval, fraud flagged)
+- Store explanations in database for audit trail
+- Surface explanations in user interface ("Your application was declined because: income too low")
+
+**Example**:
+
+```python
+import shap
+
+# Load production model
+model = mlflow.pyfunc.load_model("models:/fraud-detection/production")
+
+# Generate explanation for specific prediction
+explainer = shap.TreeExplainer(model)
+shap_values = explainer.shap_values(transaction_features)
+
+# Store in database for audit
+explanations_db.insert({
+    "transaction_id": "txn-123",
+    "prediction": "fraud",
+    "top_features": [
+        {"name": "transaction_amount", "impact": 0.45},
+        {"name": "merchant_risk_score", "impact": 0.32}
+    ]
+})
+```
+
+### Section 15.10: MLOps Cost Optimization
+
+**Cost Drivers**:
+
+1. **Training compute** - GPU/CPU clusters for training pipelines
+2. **Inference endpoints** - Always-on VMs for real-time predictions
+3. **Storage** - Model artifacts, training data, logs
+
+**Optimization Strategies**:
+
+- [ ] **Use spot instances for training** - 60-80% discount for interruptible workloads
+- [ ] **Batch inference instead of online endpoints** - Pay only for execution time
+- [ ] **Auto-scale endpoints** - Scale to zero when no traffic
+- [ ] **Model quantization** - Reduce model size (FP32 → INT8) for faster/cheaper inference
+- [ ] **Serverless inference** - Azure ML serverless endpoints (pay-per-request)
+- [ ] **Cache predictions** - Redis cache for repeated queries
+
+**Cost Monitoring**:
+
+- Track cost-per-inference (total cost / # predictions)
+- Set budgets and alerts in Azure Cost Management
+- Compare model versions by cost efficiency (accuracy / cost)
+
+### Section 15.11: References & Resources
+
+- [MLOps v2 Architecture (Azure Architecture Center)](https://learn.microsoft.com/azure/architecture/ai-ml/guide/machine-learning-operations-v2)
+- [Azure Machine Learning Pipelines](https://learn.microsoft.com/azure/machine-learning/concept-ml-pipelines)
+- [Model monitoring and data drift](https://learn.microsoft.com/azure/machine-learning/how-to-monitor-datasets)
+- [Deploy models with managed online endpoints](https://learn.microsoft.com/azure/machine-learning/concept-endpoints-online)
+- [A/B testing with traffic splitting](https://learn.microsoft.com/azure/machine-learning/how-to-deploy-model-custom-output)
+- [Responsible AI Dashboard](https://learn.microsoft.com/azure/machine-learning/concept-responsible-ai-dashboard)
+
+---
+
 ## Article XVI: Security Policies 🔄
 
 > **📋 Applies to**: ALL project types
@@ -647,9 +1406,10 @@ All AI agents operating in this project MUST:
 
 ## Revision History
 
-| Version | Date       | Author         | Changes                                                                                              |
-| ------- | ---------- | -------------- | ---------------------------------------------------------------------------------------------------- |
-| 2.2.0   | 2026-02-26 | GitHub Copilot | Added Article XIII: AI Architecture & Platform Strategy (396 lines) with Azure AI decision framework |
-| 2.1.0   | [DATE]     | [AUTHOR]       | Added Project Scope (App/Infra/Full Stack), Landing Zone templates, Infrastructure testing           |
-| 2.0.0   | [DATE]     | [AUTHOR]       | Complete rewrite with C#/Node.js options                                                             |
-| 1.0.0   | [DATE]     | [AUTHOR]       | Initial constitution                                                                                 |
+| Version | Date       | Author         | Changes                                                                                                                                                                                 |
+| ------- | ---------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 3.0.0   | 2026-02-27 | GitHub Copilot | Added Article XIV: Multi-Agent Architectures (orchestration patterns, Microsoft Agent Framework) + Article XV: MLOps Lifecycle (training pipelines, CI/CD, drift detection, retraining) |
+| 2.2.0   | 2026-02-26 | GitHub Copilot | Added Article XIII: AI Architecture & Platform Strategy (396 lines) with Azure AI decision framework                                                                                    |
+| 2.1.0   | [DATE]     | [AUTHOR]       | Added Project Scope (App/Infra/Full Stack), Landing Zone templates, Infrastructure testing                                                                                              |
+| 2.0.0   | [DATE]     | [AUTHOR]       | Complete rewrite with C#/Node.js options                                                                                                                                                |
+| 1.0.0   | [DATE]     | [AUTHOR]       | Initial constitution                                                                                                                                                                    |
