@@ -22,7 +22,9 @@ This Constitution establishes the governing principles, technology decisions, an
 > **📋 Applies to**: Application Development, Full Stack
 > **⏭️ Skip if**: Infrastructure Only
 
-### Section 4.1: Communication Style
+### Section 4.1: Communication Style 🔴 CRITICAL
+
+> **🔴 CRITICAL**: Communication pattern (Sync vs Async vs Hybrid) fundamentally affects architecture
 
 Select ONE:
 
@@ -30,13 +32,17 @@ Select ONE:
 - [ ] **Asynchronous only** - Messages, Events
 - [ ] **Hybrid** - Both sync and async
 
-### Section 4.2: Synchronous Communication
+### Section 4.2: Synchronous Communication 🟡 IMPORTANT
+
+> **🟡 IMPORTANT**: API style affects development patterns but can coexist
 
 - [ ] **REST API** - Enabled
 - [ ] **gRPC** - Enabled
 - [ ] **GraphQL** - [ ] None [ ] HotChocolate (.NET) [ ] Apollo (Node.js)
 
-### Section 4.3: Asynchronous Communication
+### Section 4.3: Asynchronous Communication 🔴 CRITICAL
+
+> **🔴 CRITICAL**: Message broker choice (Service Bus vs Event Hubs) = different messaging patterns
 
 Message Broker - Select ONE:
 

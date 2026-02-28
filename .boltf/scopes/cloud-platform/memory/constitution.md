@@ -22,12 +22,16 @@ This Constitution establishes the governing principles, technology decisions, an
 > **📋 Applies to**: Application Development, Full Stack (workload infra)
 > **⏭️ Skip if**: Infrastructure Only (platform level)
 
-### Section 8.1: Container Strategy
+### Section 8.1: Container Strategy 🔴 CRITICAL
+
+> **🔴 CRITICAL**: Docker vs PaaS = fundamentally different deployment models
 
 - [ ] **Docker** - Standard containers
 - [ ] **None** - PaaS only (Azure App Service)
 
-### Section 8.2: Orchestration Platform
+### Section 8.2: Orchestration Platform 🔴 CRITICAL
+
+> **🔴 CRITICAL**: AKS vs Container Apps vs App Service = different operational models
 
 Select ONE:
 
@@ -37,7 +41,7 @@ Select ONE:
 - [ ] **On-premises Kubernetes** - Self-managed K8s
 - [ ] **Docker Compose** - Development only
 
-### Section 8.3: Kubernetes Configuration (if AKS/K8s selected)
+### Section 8.3: Kubernetes Configuration (if AKS/K8s selected) 🟡 IMPORTANT
 
 Package Manager:
 
@@ -50,7 +54,7 @@ Ingress Controller:
 - [ ] **Azure Application Gateway Ingress (AGIC)** - Azure-native
 - [ ] **Traefik** - Cloud-native, auto-discovery
 
-### Section 8.4: Cloud-Native Extensions
+### Section 8.4: Cloud-Native Extensions 🟡 IMPORTANT
 
 #### KEDA (Kubernetes Event-Driven Autoscaling)
 
@@ -84,7 +88,9 @@ If Yes, select building blocks:
 > **⏭️ Skip if**: Application Development Only (assumes infra exists)
 > **Priority**: Must be decided BEFORE IaC tool selection
 
-### Section 8B.1: Infrastructure Scope
+### Section 8B.1: Infrastructure Scope 🔴 CRITICAL
+
+> **🔴 CRITICAL**: Landing Zone vs Workload infra = different project scope and complexity
 
 Select infrastructure provisioning scope:
 
@@ -92,7 +98,7 @@ Select infrastructure provisioning scope:
 - [ ] **Workload Infrastructure** - App-specific resources only (databases, storage, compute) on existing platform
 - [ ] **Both** - Landing Zone + Workload (greenfield deployment)
 
-### Section 8B.2: Landing Zone Components (if Landing Zone selected)
+### Section 8B.2: Landing Zone Components (if Landing Zone selected) 🟡 IMPORTANT
 
 **Core Components**:
 
@@ -117,7 +123,7 @@ Select infrastructure provisioning scope:
 - [ ] Virtual WAN (global transit architecture)
 - [ ] Mesh (peer-to-peer connectivity)
 
-### Section 8B.3: Workload Infrastructure Components (if Workload or Both selected)
+### Section 8B.3: Workload Infrastructure Components (if Workload or Both selected) 🟡 IMPORTANT
 
 **Compute Resources**:
 
@@ -186,7 +192,9 @@ Select infrastructure provisioning scope:
 > **📋 Applies to**: Multi-service .NET applications (2+ services)
 > **⏭️ Skip if**: Single-service architecture, non-.NET stack, or manual orchestration preferred
 
-### Section 8C.1: Aspire Adoption Decision
+### Section 8C.1: Aspire Adoption Decision 🟡 IMPORTANT
+
+> **🟡 IMPORTANT**: Aspire orchestration is .NET-specific and affects local dev experience
 
 **Choose ONE**:
 
@@ -263,7 +271,9 @@ When Aspire is enabled, the following components are provisioned:
 > **📋 Applies to**: Infrastructure Only, Full Stack
 > **⏭️ Skip if**: Application Development Only (assumes infra exists)
 
-### Section 9.1: IaC Tool
+### Section 9.1: IaC Tool 🔴 CRITICAL
+
+> **🔴 CRITICAL**: Bicep vs Terraform vs Pulumi = fundamentally different IaC approaches
 
 Select ONE:
 
@@ -272,7 +282,7 @@ Select ONE:
 - [ ] **Pulumi** - Programmatic (.NET/TypeScript)
 - [ ] **ARM Templates** - Azure legacy JSON
 
-### Section 9.2: IaC Structure
+### Section 9.2: IaC Structure 🟢 LOW-PRIO
 
 ```text
 infra/
@@ -295,7 +305,7 @@ infra/
     └── deploy.ps1
 ```
 
-### Section 9.3: Landing Zone Configuration
+### Section 9.3: Landing Zone Configuration 🟡 IMPORTANT
 
 > **📋 Applies to**: Infrastructure Only (Landing Zone scope), Full Stack (if deploying platform)
 

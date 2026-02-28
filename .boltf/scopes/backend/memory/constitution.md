@@ -21,17 +21,19 @@ This Constitution establishes the governing principles, technology decisions, an
 > **📋 Applies to**: Application Development, Full Stack
 > **⏭️ Skip if**: Infrastructure Only
 
-### Section 2.1: Backend Language & Runtime
+### Section 2.1: Backend Language & Runtime 🔴 CRITICAL
+
+> **🔴 CRITICAL**: Language choice affects entire codebase - extremely difficult to change later
 
 Select ONE:
 
 - [ ] **C# / .NET**
-  - Version: [ ] .NET 8 (LTS) [ ] .NET 10
-  - API Style: [ ] Minimal APIs [ ] Controllers (MVC) [ ] Azure Functions
+  - Version: [ ] .NET 8 (LTS) [ ] .NET 10 🟡 IMPORTANT
+  - API Style: [ ] Minimal APIs [ ] Controllers (MVC) [ ] Azure Functions 🟡 IMPORTANT
 
 - [ ] **Node.js / TypeScript**
-  - Version: [ ] Node.js 20 LTS [ ] Node.js 22
-  - Framework: [ ] Express [ ] Fastify [ ] NestJS [ ] Azure Functions
+  - Version: [ ] Node.js 20 LTS [ ] Node.js 22 🟢 LOW-PRIO
+  - Framework: [ ] Express [ ] Fastify [ ] NestJS [ ] Azure Functions 🟡 IMPORTANT
 
 ---
 
@@ -40,7 +42,9 @@ Select ONE:
 > **📋 Applies to**: Application Development, Full Stack
 > **⏭️ Skip if**: Infrastructure Only
 
-### Section 3.1: Backend Architecture Style
+### Section 3.1: Backend Architecture Style 🔴 CRITICAL
+
+> **🔴 CRITICAL**: Architecture style affects service boundaries, deployment strategy, and team organization
 
 Select ONE:
 
@@ -50,7 +54,9 @@ Select ONE:
 - [ ] **Serverless** - Azure Functions based
 - [ ] **Event-Driven / CQRS+ES** - Commands, queries, event sourcing
 
-### Section 3.3: CQRS Configuration
+### Section 3.3: CQRS Configuration 🟡 IMPORTANT
+
+> **🟡 IMPORTANT**: CQRS pattern affects code structure but can be added/removed with moderate effort
 
 CQRS Enabled: [ ] Yes [ ] No
 
@@ -140,7 +146,9 @@ interface IDomainEventHandler<TEvent extends IDomainEvent> {
 }
 ```
 
-### Section 3.4: Event Sourcing Configuration
+### Section 3.4: Event Sourcing Configuration 🔴 CRITICAL
+
+> **🔴 CRITICAL**: Once committed to Event Sourcing, very difficult to migrate away from
 
 Event Sourcing Enabled: [ ] Yes [ ] No
 
@@ -157,7 +165,9 @@ If Yes, select Event Store:
 > **📋 Applies to**: Application Development, Full Stack
 > **⏭️ Skip if**: Infrastructure Only
 
-### Section 4.1: Communication Style
+### Section 4.1: Communication Style 🔴 CRITICAL
+
+> **🔴 CRITICAL**: Sync vs Async vs Hybrid defines entire integration approach
 
 Select ONE:
 
@@ -165,7 +175,7 @@ Select ONE:
 - [ ] **Asynchronous only** - Messages, Events
 - [ ] **Hybrid** - Both sync and async
 
-### Section 4.2: Synchronous Communication
+### Section 4.2: Synchronous Communication 🟡 IMPORTANT
 
 - [ ] **REST API** - Enabled
 - [ ] **gRPC** - Enabled
@@ -173,7 +183,7 @@ Select ONE:
 
 ### Section 4.3: Asynchronous Communication
 
-Message Broker - Select ONE:
+Message Broker - Select ONE: 🔴 CRITICAL (if async)
 
 - [ ] **None**
 - [ ] **Azure Service Bus** - Cloud-native, enterprise
@@ -181,7 +191,7 @@ Message Broker - Select ONE:
 - [ ] **RabbitMQ** - On-premises, flexible
 - [ ] **Azure Storage Queues** - Simple, cost-effective
 
-Background Processing - Select ONE or more:
+Background Processing - Select ONE or more: 🟡 IMPORTANT
 
 - [ ] **None**
 - [ ] **.NET BackgroundService** / **Node.js Worker Threads**
@@ -195,7 +205,9 @@ Background Processing - Select ONE or more:
 > **📋 Applies to**: Application Development, Full Stack
 > **⏭️ Skip if**: Infrastructure Only
 
-### Section 5.1: Primary Database
+### Section 5.1: Primary Database 🔴 CRITICAL
+
+> **🔴 CRITICAL**: SQL vs NoSQL migration is extremely expensive - choose carefully
 
 Select ONE:
 
@@ -205,7 +217,7 @@ Select ONE:
 - [ ] **Azure Cosmos DB** - NoSQL, globally distributed
 - [ ] **MongoDB** - Document database
 
-### Section 5.2: Data Access Pattern
+### Section 5.2: Data Access Pattern 🟡 IMPORTANT
 
 #### For C#/.NET
 
@@ -220,10 +232,10 @@ Select ONE:
 - [ ] **Drizzle** - Lightweight, SQL-like
 - [ ] **Knex.js** - Query builder
 
-Repository Pattern: [ ] Yes [ ] No
-Unit of Work Pattern: [ ] Yes [ ] No
+Repository Pattern: [ ] Yes [ ] No 🟡 IMPORTANT
+Unit of Work Pattern: [ ] Yes [ ] No 🟡 IMPORTANT
 
-### Section 5.3: Database Migrations
+### Section 5.3: Database Migrations 🟢 LOW-PRIO
 
 #### For C#/.NET
 
@@ -244,7 +256,7 @@ Unit of Work Pattern: [ ] Yes [ ] No
 > **📋 Applies to**: Application Development, Full Stack
 > **⏭️ Skip if**: Infrastructure Only
 
-### Section 6.1: Cache Levels
+### Section 6.1: Cache Levels 🟡 IMPORTANT (Enabled) / 🟢 LOW-PRIO (TTL values)
 
 | Level                | Technology                                 | Enabled        | TTL Default    |
 | -------------------- | ------------------------------------------ | -------------- | -------------- |
@@ -252,7 +264,7 @@ Unit of Work Pattern: [ ] Yes [ ] No
 | **L2 - Distributed** | (see below)                                | [ ] Yes [ ] No | \_\_\_ minutes |
 | **L3 - CDN**         | (see below)                                | [ ] Yes [ ] No | \_\_\_ hours   |
 
-### Section 6.2: Distributed Cache (L2)
+### Section 6.2: Distributed Cache (L2) 🟡 IMPORTANT
 
 Select ONE:
 
@@ -260,7 +272,7 @@ Select ONE:
 - [ ] **Azure Cache for Redis** - Managed Redis
 - [ ] **Redis** - On-premises / Self-hosted
 
-### Section 6.3: CDN (L3)
+### Section 6.3: CDN (L3) 🟡 IMPORTANT
 
 Select ONE:
 
@@ -268,7 +280,7 @@ Select ONE:
 - [ ] **Azure CDN** - Static content caching
 - [ ] **Azure Front Door** - Global load balancing + CDN
 
-### Section 6.4: Cache Patterns
+### Section 6.4: Cache Patterns 🟢 LOW-PRIO
 
 - [ ] **Cache-Aside** - Application manages cache
 - [ ] **Read-Through** - Cache loads on miss
@@ -282,7 +294,9 @@ Select ONE:
 > **📋 Applies to**: Application Development, Full Stack
 > **⏭️ Skip if**: Infrastructure Only
 
-### Section 7.1: Identity Provider (Production)
+### Section 7.1: Identity Provider (Production) 🔴 CRITICAL
+
+> **🔴 CRITICAL**: Identity provider choice affects entire auth stack and user management
 
 Select ONE:
 
@@ -292,7 +306,7 @@ Select ONE:
 - [ ] **Keycloak** - Open-source, self-hosted
 - [ ] **Auth0** - Managed identity service
 
-### Section 7.2: Identity Provider (Development/Testing)
+### Section 7.2: Identity Provider (Development/Testing) 🟢 LOW-PRIO
 
 Select ONE:
 
@@ -510,7 +524,9 @@ Select ONE:
 > **📋 Applies to**: Application Development, Full Stack
 > **⏭️ Skip if**: Infrastructure Only (see IaC testing below)
 
-### Section 13.1: Testing Philosophy
+### Section 13.1: Testing Philosophy 🟢 LOW-PRIO (thresholds are configurable)
+
+> **🟢 LOW-PRIO**: Coverage thresholds are runtime CI/CD configs - easily adjustable
 
 > **Coverage-First approach validated by Mutation Testing**
 
@@ -520,7 +536,9 @@ Select ONE:
 | Branch Coverage | >= 75%  | >= 85%      | coverlet (.NET) / istanbul (Node.js) |
 | Mutation Score  | >= 70%  | >= 80%      | Stryker.NET / Stryker Mutator        |
 
-### Section 13.2: Testing Frameworks
+### Section 13.2: Testing Frameworks 🟡 IMPORTANT
+
+> **🟡 IMPORTANT**: Framework choice affects project structure and test patterns
 
 #### For C#/.NET
 
@@ -578,8 +596,9 @@ tests/
 
 ---
 
-## Article XIV: Code Standards
+## Article XIV: Code Standards 🟢 LOW-PRIO
 
+> **🟢 LOW-PRIO**: Code formatting and naming conventions are enforced by linter - easy to change
 > **📋 Applies to**: Application Development, Full Stack
 > **⏭️ Skip if**: Infrastructure Only
 
@@ -612,13 +631,13 @@ tests/
 
 #### For C#/.NET
 
-| Setting                  | Value                         |
-| ------------------------ | ----------------------------- |
-| Indentation              | 4 spaces                      |
-| Line Length              | 120 characters                |
-| File-scoped namespaces   | [ ] Yes [ ] No                |
-| Nullable reference types | [ ] Enabled (recommended)     |
-| Tooling                  | .editorconfig + dotnet format |
+| Setting                  | Value                                  |
+| ------------------------ | -------------------------------------- |
+| Indentation              | 4 spaces                               |
+| Line Length              | 120 characters                         |
+| File-scoped namespaces   | [ ] Yes [ ] No                         |
+| Nullable reference types | [ ] Enabled (recommended) 🟡 IMPORTANT |
+| Tooling                  | .editorconfig + dotnet format          |
 
 #### For Node.js/TypeScript
 
@@ -740,8 +759,9 @@ project-root/
 
 ---
 
-## Article XVI: Security Policies 🔄
+## Article XVI: Security Policies 🔄 🟡 IMPORTANT
 
+> **🟡 IMPORTANT**: Security configuration affects compliance and data protection
 > **📋 Applies to**: ALL project types
 
 ### Section 16.1: Network Security
@@ -771,8 +791,9 @@ project-root/
 
 ---
 
-## Article XVII: Legacy & Migration
+## Article XVII: Legacy & Migration 🟡 IMPORTANT
 
+> **🟡 IMPORTANT**: Migration strategy affects implementation approach and timeline
 > **📋 Applies to**: Application Development, Full Stack (if migrating)
 > **⏭️ Skip if**: Greenfield Infrastructure Only
 

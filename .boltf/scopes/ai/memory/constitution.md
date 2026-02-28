@@ -147,7 +147,9 @@ Select ONE:
 > **⏭️ Skip if**: Pure infrastructure-only project with no AI/ML components
 > **Priority**: Must be decided BEFORE implementing AI features, model training, or RAG systems
 
-### Section 13.1: AI Architecture Pattern
+### Section 13.1: AI Architecture Pattern 🔴 CRITICAL
+
+> **🔴 CRITICAL**: AI architecture choice (MLOps vs RAG vs Pre-built) fundamentally determines project scope and complexity
 
 Select ONE primary pattern (or multiple for hybrid):
 
@@ -181,9 +183,10 @@ Select ONE primary pattern (or multiple for hybrid):
   - **Includes**: Prompt Flow, LangChain, Semantic Kernel, multi-step reasoning
   - **Use cases**: Research assistant, data analysis agent, workflow automation
 
-### Section 13.2: ML Training Strategy
+### Section 13.2: ML Training Strategy 🟡 IMPORTANT
 
 > **📋 Applies to**: Projects requiring custom ML models (skip if using only pre-built services or OpenAI)
+> **🟡 IMPORTANT**: Training approach affects timelines and expertise required but has reasonable defaults
 
 Select ONE:
 
@@ -211,9 +214,10 @@ Select ONE:
   - **Best for**: Standard AI capabilities, proof-of-concept projects
   - **Azure Services**: Azure OpenAI GPT-4o, Cognitive Services
 
-### Section 13.3: AI Service Selection
+### Section 13.3: AI Service Selection 🔴 CRITICAL
 
 > **📋 Applies to**: ALL AI projects
+> **🔴 CRITICAL**: Which Azure AI services to use determines architecture and cost structure
 
 Select ALL applicable services:
 
@@ -238,9 +242,10 @@ Select ALL applicable services:
   - **When**: Rapid prototyping, model comparison, prompt engineering
   - **Included**: Access to 1,600+ models from Microsoft, Meta, Mistral, Cohere
 
-### Section 13.4: Inference Deployment Pattern
+### Section 13.4: Inference Deployment Pattern 🟡 IMPORTANT
 
 > **📋 Applies to**: Projects deploying custom ML models (not applicable to API-only services)
+> **🟡 IMPORTANT**: Deployment pattern affects latency and cost but can be adjusted later
 
 Select ONE primary pattern:
 
@@ -274,10 +279,11 @@ Select ONE primary pattern:
   - **Features**: ONNX Runtime, model quantization, Azure IoT Edge integration
   - **Cost**: Device compute only (no cloud inference cost)
 
-### Section 13.5: Vector Store & Embeddings (RAG Enablement)
+### Section 13.5: Vector Store & Embeddings (RAG Enablement) 🔴 CRITICAL
 
 > **📋 Applies to**: RAG (Retrieval Augmented Generation) architectures ONLY
 > **⏭️ Skip if**: No RAG, no semantic search, no vector embeddings
+> **🔴 CRITICAL**: Vector store choice is hard to migrate later (data model and queries tightly coupled)
 
 Select ONE vector store:
 
@@ -315,9 +321,10 @@ Select ONE vector store:
 - [ ] **Azure AI Search Integrated Vectorization** - Built-in chunking + embeddings
 - [ ] **Custom embedding model** - E5, BGE, or domain-specific embeddings
 
-### Section 13.6: Prompt Engineering & Orchestration
+### Section 13.6: Prompt Engineering & Orchestration 🟡 IMPORTANT
 
 > **📋 Applies to**: Projects using Azure OpenAI, GPT models, or LLM chains
+> **🟡 IMPORTANT**: Orchestration framework affects development patterns but not architecture
 
 Select ONE orchestration framework:
 
@@ -346,9 +353,10 @@ Select ONE orchestration framework:
 - [ ] **Inline Prompts** - Hardcoded in application code
 - [ ] **Prompt Flow Studio** - Manage prompts in Azure AI Foundry UI
 
-### Section 13.7: Model Governance & MLOps
+### Section 13.7: Model Governance & MLOps 🟡 IMPORTANT
 
 > **📋 Applies to**: Projects with custom ML models or multiple model versions
+> **🟡 IMPORTANT**: Model governance is critical for production but tooling can evolve
 
 Select ONE model registry:
 
@@ -374,9 +382,10 @@ Select ONE model registry:
 - [ ] **GitHub Actions + Azure ML CLI v2** - Git-native automation
 - [ ] **Manual** - No automated retraining/deployment
 
-### Section 13.8: Responsible AI Practices
+### Section 13.8: Responsible AI Practices 🟡 IMPORTANT
 
 > **📋 Applies to**: ALL AI projects (mandatory for production deployments)
+> **🟡 IMPORTANT**: Responsible AI is critical for compliance but practices can be added incrementally
 
 Select ALL applicable practices (minimum 3 required for production):
 
@@ -545,7 +554,9 @@ Select ALL applicable practices (minimum 3 required for production):
 
 **Multi-Agent Systems** use multiple specialized AI agents to break down complex problems into units of work, each handled by dedicated agents with specific capabilities. This approach mirrors human teamwork and provides specialization, scalability, maintainability, and optimization advantages over monolithic single-agent solutions.
 
-### Section 14.1: When to Use Multi-Agent Architecture
+### Section 14.1: When to Use Multi-Agent Architecture 🟡 IMPORTANT
+
+> **🟡 IMPORTANT**: Multi-agent decision affects complexity but can start simple and evolve
 
 **Start with Single Agent** - Most scenarios benefit from one agent with tools/knowledge. Use multi-agent ONLY when:
 
@@ -566,7 +577,9 @@ Can single agent + tools solve it?
         └─ No → Use multi-agent (proven scalability limits)
 ```
 
-### Section 14.2: Multi-Agent Orchestration Patterns
+### Section 14.2: Multi-Agent Orchestration Patterns 🟢 LOW-PRIO
+
+> **🟢 LOW-PRIO**: Orchestration patterns can be adjusted as requirements evolve
 
 Select ONE or COMBINE patterns based on workflow requirements:
 

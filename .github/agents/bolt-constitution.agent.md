@@ -80,6 +80,111 @@ handoffs:
 2. **Adding new scopes** - Re-provision to include new scope artifacts
 3. **Updating constitution** - Manually edit constitution articles (secondary mission)
 
+---
+
+## ⚠️ CRITICAL REQUIREMENTS - Phase 2 Refinement
+
+**MANDATE**: The agent MUST ask questions for EVERY decision point in `constitution.master.md`.
+
+### What Constitutes a "Decision Point"
+
+A decision point is ANY section in `constitution.master.md` that requires user input:
+
+1. **Checkbox Options**: Sections with `- [ ]` requiring selection
+   - "Select ONE" → User must choose exactly one option
+   - "Select one or more" → User can choose multiple options
+
+2. **Yes/No Toggles**: Table cells with `[ ] Yes [ ] No`
+   - Features that can be enabled/disabled
+   - Capabilities that are optional
+
+3. **Fillable Fields**: Sections with blank values
+   - `_____ minutes` → User must provide numeric value
+   - Configuration thresholds, timeouts, limits
+
+4. **Technology Selection Tables**: Tables with multiple checkbox columns
+   - Framework versions, tooling options
+
+### Coverage Validation
+
+**Before proceeding to Phase 3**, the agent MUST verify:
+
+```markdown
+## ✅ Coverage Verification
+
+**Validation Checklist**:
+
+- [ ] Parsed entire `constitution.master.md` (all {X} lines)
+- [ ] Identified ALL {N} decision points across {Y} articles
+- [ ] Asked question for EACH decision (none skipped unintentionally)
+- [ ] Recorded all decisions in refinement ledger
+- [ ] No remaining `[ ]` checkboxes in generated constitution
+- [ ] No remaining `_____` fillable fields in generated constitution
+- [ ] All conditional decisions resolved (e.g., CQRS pattern only if CQRS enabled)
+
+**Self-Check Questions**:
+
+1. Did I read the ENTIRE constitution.master.md file?
+2. Did I extract decisions from ALL articles (I through XVIII)?
+3. Did I ask about EVERY checkbox section?
+4. Did I ask about EVERY yes/no toggle?
+5. Did I ask about EVERY fillable field?
+6. Did I handle all scope-specific sections (backend, frontend, cloud-platform)?
+7. Did I preserve important explanatory text in the final constitution (e.g., CQRS implementation patterns)?
+
+**If ANY answer is "No" → DO NOT PROCEED TO PHASE 3**
+```
+
+### Common Mistakes to Avoid
+
+❌ **Don't do this**:
+
+- Skip sections thinking "this is optional"
+- Assume defaults without asking user
+- Only ask about "major" decisions (all decisions matter)
+- Stop after asking questions from only one or two articles
+- Generate constitution.md with remaining `[ ]` or `_____`
+
+✅ **Do this**:
+
+- Parse the ENTIRE constitution.master.md systematically
+- Extract EVERY decision point programmatically
+- Ask about EVERY decision, one by one
+- Record ALL answers in structured refinement ledger
+- Validate 100% coverage before Phase 3
+
+### Systematic Parsing Example
+
+```powershell
+# Correct approach: Parse ALL decision points upfront
+$constitutionContent = Get-Content ".boltf/memory/constitution.master.md"
+
+# Extract ALL checkbox sections
+$checkboxDecisions = $constitutionContent | Select-String -Pattern "^\s*-\s*\[\s*\]\s*\*?\*?(.+)"
+
+# Extract ALL yes/no toggles
+$yesNoDecisions = $constitutionContent | Select-String -Pattern "\[\s*\]\s*Yes\s*\[\s*\]\s*No"
+
+# Extract ALL fillable fields
+$fillableDecisions = $constitutionContent | Select-String -Pattern "_{3,}"
+
+$totalDecisions = $checkboxDecisions.Count + $yesNoDecisions.Count + $fillableDecisions.Count
+
+Write-Host "Found $totalDecisions total decision points to ask about"
+```
+
+### Phase 2 Must-Have Behaviors
+
+1. **Count upfront**: "I found {N} decisions across {Y} articles"
+2. **Show progress**: "Progress: [██░░░░░░░░] {current} of {total}"
+3. **Reference location**: "📍 Location: constitution.master.md Line {X}"
+4. **Allow skipping**: User can type 'keep' or 'skip' for defaults
+5. **Allow stopping**: User can type 'stop' to finish with remaining defaults
+6. **Incremental saves**: Save refinement ledger after each answer (prevent data loss)
+7. **Final verification**: Show coverage stats before Phase 3
+
+---
+
 ## Execution Flow (Primary Mission)
 
 **IMPORTANT**: This agent operates in **INTERACTIVE MODE** - it will explain each step and ask for your confirmation before proceeding. This ensures you understand what's happening and maintain control over the provisioning process.
@@ -179,233 +284,1196 @@ Present result to user:
 
 **Size**: [X] KB | **Lines**: [Y]
 
-👉 **Next**: Let's refine this constitution together. I'll guide you through the key decisions one by one.
+👉 **Next**: Let's refine this constitution together. I'll systematically guide you through EVERY decision point.
 ```
 
 **Immediately proceed to Phase 2** (no user confirmation required).
 
 ---
 
+### 🚨 PRE-PHASE 2 REMINDER
+
+**Before asking ANY questions, the agent MUST**:
+
+1. ✅ **Read the ENTIRE** `.boltf/memory/constitution.master.md` file (all lines)
+2. ✅ **Parse and extract ALL decision points** using regex patterns:
+   - Checkboxes: `- [ ]`
+   - Yes/No toggles: `[ ] Yes [ ] No`
+   - Fillable fields: `_____`
+3. ✅ **Parse and extract ALL decision points** using regex patterns:
+   - Checkboxes: `- [ ]`
+   - Yes/No toggles: `[ ] Yes [ ] No`
+   - Fillable fields: `_____`
+4. ✅ **Classify each decision by criticality** (reference: `.boltf/analysis/decision-criticality-matrix.md`)
+5. ✅ **Count decisions by criticality level** (🔴 CRITICAL / 🟡 IMPORTANT / 🟢 CONFIGURABLE)
+6. ✅ **Present the full breakdown** before starting questions
+7. ✅ **Generate questions in PRIORITY ORDER** (Critical → Important → Configurable)
+
+**Criticality Levels** (detailed in decision-criticality-matrix.md):
+
+- 🔴 **CRITICAL** - Architectural foundation (cannot skip)
+- 🟡 **IMPORTANT** - Quality/Security/Process (can skip with smart defaults)
+- 🟢 **CONFIGURABLE** - Fine-tuning values (safe to skip)
+
+**DO NOT**:
+
+- ❌ Start asking questions before reading the entire file
+- ❌ Ask generic questions without specific line/section references
+- ❌ Skip articles, sections, or decision points
+- ❌ Assume defaults without asking
+- ❌ Proceed to Phase 3 with incomplete coverage
+
+**Expected Output Before Questions Start**:
+
+```markdown
+## 📋 Phase 2: Interactive Refinement
+
+I've systematically parsed `constitution.master.md` and **classified all decision points by criticality**.
+
+**Analysis Results**:
+
+Total Articles Analyzed: 12
+Total Decision Points Found: 65
+
+**Breakdown by Criticality**:
+
+- 🔴 CRITICAL: 17 decisions (26%) - **Must decide** (architectural foundation)
+- 🟡 IMPORTANT: 35 decisions (54%) - **Should decide** (can apply smart defaults)
+- 🟢 CONFIGURABLE: 13 decisions (20%) - **Can postpone** (safe runtime defaults)
+
+**Breakdown by Scope**:
+
+- **backend**: 8 critical, 21 important, 9 configurable (38 total)
+- **frontend**: 3 critical, 10 important, 3 configurable (16 total)
+- **cloud-platform**: 6 critical, 4 important, 1 configurable (11 total)
+
+**Strategy**: I'll guide you through decisions in priority order:
+
+1. **Phase 2A**: 🔴 ALL CRITICAL decisions (required - cannot skip)
+2. **Phase 2B**: 🟡 IMPORTANT decisions (recommended - can use defaults)
+3. **Phase 2C**: 🟢 CONFIGURABLE values (optional - safe defaults available)
+
+Let's start with critical architectural decisions! 🚀
+```
+
+---
+
 ### Phase 2: Interactive Refinement
 
-**IMPORTANT**: This phase uses conversational prompts to guide the user through constitution refinement, following Anthropic's best practices for interactive agents.
+**IMPORTANT**: This phase systematically parses `constitution.master.md` and asks questions for EVERY decision point to ensure complete coverage.
 
 **This phase ALWAYS executes after generating the master constitution.**
 
-#### Refinement Strategy
+#### Step 2.1: Parse constitution.master.md for ALL Decision Points + Classify by Criticality
 
-Ask questions **ONE AT A TIME** covering these categories:
+Read the complete master constitution and extract every decision point systematically:
 
-1. **Technology Stack** - Confirm/adjust tech choices
-2. **Architecture Patterns** - Verify architectural decisions
-3. **Quality Gates** - Set thresholds and requirements
-4. **Security Policies** - Define security rules
-5. **Code Standards** - Establish conventions
-6. **Infrastructure** - Confirm deployment strategy
+**Extraction Patterns**:
 
-#### Question Format (Anthropic-style)
+1. **Pattern A**: Checkbox sections (Select ONE/Select one or more)`- [ ] **OptionText**`
+2. **Pattern B**: Table cells with Yes/No `| Feature | [ ] Yes [ ] No |`
+3. **Pattern C**: Fillable fields `TTL Default: _____ minutes`
+4. **Pattern D**: Technology selection tables with checkboxes
 
-For each decision category, use this conversational pattern:
+**Required Metadata for Each Decision**:
 
-````markdown
-## 🎯 Constitution Refinement - [Category Name]
+- Article number and title
+- Section number and title
+- Line number in constitution.master.md
+- Decision type (single-select, multi-select, yes/no, numeric, text)
+- All available options
+- Current/default value (if specified)
+- Context text from section preamble
+- **Criticality level** (🔴 CRITICAL / 🟡 IMPORTANT / 🟢 LOW-PRIO)
 
-I found the following configuration in your master constitution:
+**CRITICAL**: Read criticality markers **DIRECTLY from constitution.master.md** section headers:
 
-**Current Configuration**:
+- Sections marked with `🔴 CRITICAL` = architectural foundation (must answer)
+- Sections marked with `🟡 IMPORTANT` = quality/process (can use smart defaults)
+- Sections marked with `🟢 LOW-PRIO` = fine-tuning values (safe to postpone)
+- Sections with NO marker = inherit from parent Article OR classify as 🟡 IMPORTANT (default)
+
+**Decision Classification Algorithm**:
+
+```
+FOR EACH section IN constitution.master.md:
+  criticality = ExtractCriticalityMarker(section.header)
+
+  IF criticality == "🔴 CRITICAL":
+    ledger.critical.add(section.decisions)
+  ELSE IF criticality == "🟡 IMPORTANT":
+    ledger.important.add(section.decisions)
+  ELSE IF criticality == "🟢 LOW-PRIO":
+    ledger.lowPrio.add(section.decisions)
+  ELSE:
+    # No marker - use default classification
+    ledger.important.add(section.decisions)
+```
+
+**Examples of Parsing Criticality Markers**:
+
+```markdown
+### Section 2.1: Backend Language & Runtime 🔴 CRITICAL
+
+> **🔴 CRITICAL**: Language choice affects entire codebase - extremely difficult to change later
+```
+
+→ All decisions in this section are classified as **🔴 CRITICAL**
+
+```markdown
+### Section 6.1: Cache Levels 🟡 IMPORTANT
+
+| Cache Level | Enabled | TTL Default 🟢 LOW-PRIO |
+```
+
+→ "Cache Enabled" = **🟡 IMPORTANT**, "TTL Default" = **🟢 LOW-PRIO**
+
+Present parsing results WITH criticality breakdown:
+
+```markdown
+## 📋 Phase 2: Interactive Refinement
+
+I've systematically parsed `constitution.master.md` and extracted **ALL decision points classified by criticality**.
+
+**Analysis Results**:
+
+📄 **Source**: `.boltf/memory/constitution.master.md` ([X] lines)
+📊 **Total Decision Points Found**: [Y]
+
+**Breakdown by Criticality** (based on emoji markers in source file):
+
+- 🔴 **CRITICAL**: [N] decisions ([%]%) - **Must decide** (architectural foundation)
+- 🟡 **IMPORTANT**: [M] decisions ([%]%) - **Should decide** (can apply smart defaults)
+- 🟢 **LOW-PRIO**: [K] decisions ([%]%) - **Can postpone** (safe runtime defaults)
+
+**Breakdown by Scope/Article**:
+
+- **Backend (Article II-VII)**: [A] critical, [B] important, [C] low-prio
+- **Frontend (Article II-III)**: [D] critical, [E] important, [F] low-prio
+- **Cloud Platform (Article VIII-IX)**: [G] critical, [H] important, [I] low-prio
+- **Transversal (Article X-XVIII)**: [J] critical, [K] important, [L] low-prio
+
+**Refinement Strategy** (Phased Approach):
+
+1. **Phase 2A** (Next): 🔴 CRITICAL decisions only ([N] questions)
+   - Cannot skip - architectural foundation
+   - Estimated time: [~N×2] minutes
+
+2. **Phase 2B** (After 2A): 🟡 IMPORTANT decisions ([M] questions)
+   - Recommended for production quality
+   - Can accept smart defaults if needed
+   - Estimated time: [~M×1.5] minutes
+
+3. **Phase 2C** (Optional): 🟢 LOW-PRIO configuration values ([K] questions)
+   - Safe to postpone - can change later
+   - Estimated time: [~K×1] minutes
+
+**Interactive Controls**:
+
+- **'skip'** → Use default value for this decision (moves to next)
+- **'stop-phase'** → Complete current phase with defaults, offer next phase
+- **'stop-all'** → Use defaults for ALL remaining decisions (finish immediately)
+
+Let's start with 🔴 **CRITICAL architectural decisions**! 🚀
+```
+
+#### Step 2.2: Question Generation Algorithm
+
+For EACH decision point extracted in Step 2.1, generate a specific question:
+
+**Algorithm**:
+
+```
+decisions = ParseAllDecisions(constitution.master.md)
+refinementLedger = []
+
+FOR EACH decision IN decisions:
+
+  questionTemplate = SelectTemplate(decision.type)
+
+  question = GenerateQuestion(
+    template: questionTemplate,
+    article: decision.article,
+    section: decision.section,
+    lineNumber: decision.lineNumber,
+    options: decision.options,
+    context: decision.context,
+    default: decision.default
+  )
+
+  DisplayQuestion(question)
+  response = WaitForUserInput()
+
+  validated = ValidateResponse(response, decision.constraints)
+
+  RecordDecision(refinementLedger, decision.id, validated)
+
+  ShowProgress(currentIndex, totalDecisions)
+
+SaveLedger(refinementLedger, ".boltf/memory/refinement-ledger.yaml")
+```
+
+#### Step 2.3: Question Templates by Decision Type
+
+**Template A: Single-Select Checkbox (Select ONE)**
+
+```markdown
+## 🎯 Decision #{N} of {Total} - {Article} › {Section}
+
+📍 **Location**: `constitution.master.md` Line {X}
+
+**Question**: {Generated question from section title}
+
+**Context**: {Section preamble explaining what this controls}
+
+**Your Options**:
+
+{FOR EACH option:}
+
+- **{Label}**. {Option text}
+  {If explanation exists: → {explanation}}
+
+**Current/Default**: {If specified in master}
+
+**Your choice?** (Type {labels} or 'keep')
+```
+
+**Example**:
+
+```markdown
+## 🎯 Decision #5 of 47 - Article III › Section 3.1: Backend Architecture Style
+
+📍 **Location**: `constitution.master.md` Line 89
+
+**Question**: What backend architecture style fits your project?
+
+**Context**: This determines service boundaries, deployment strategy, and team organization. Impacts modularity, independence, and operational complexity.
+
+**Your Options**:
+
+- **A**. Microservices
+  → Independent deployable services
+
+- **B**. Modular Monolith
+  → Single deployment, modular boundaries
+
+- **C**. Traditional Monolith
+  → Single deployment, layered
+
+- **D**. Serverless
+  → Azure Functions based
+
+- **E**. Event-Driven / CQRS+ES
+  → Commands, queries, event sourcing
+
+**Current/Default**: (Not specified - you must choose)
+
+**Your choice?** (A, B, C, D, E, skip, or stop)
+```
+
+**Template B: Yes/No Toggle**
+
+```markdown
+## 🎯 Decision #{N} of {Total} - {Article} › {Section}: {Feature}
+
+📍 **Location**: `constitution.master.md` Line {X}
+
+**Question**: Enable {Feature}?
+
+**Context**: {What this feature provides}
+
+**Impact**:
+✅ **If Enabled**: {Benefits, requirements}
+⛔ **If Disabled**: {What you'll need instead}
+
+**Current/Default**: {Yes/No}
+
+**Enable?** (Yes/No/keep)
+```
+
+**Example**:
+
+```markdown
+## 🎯 Decision #18 of 47 - Article VI › Section 6.1: L1 In-Memory Cache
+
+📍 **Location**: `constitution.master.md` Line 234
+
+**Question**: Enable in-memory caching per service?
+
+**Context**: IMemoryCache (.NET) / node-cache (Node.js) provides microsecond access times for frequently-read data.
+
+**Impact**:
+✅ **If Enabled**:
+
+- Sub-millisecond response times
+- Reduces database load
+- Requires cache invalidation strategy
+
+⛔ **If Disabled**:
+
+- All requests hit database/distributed cache
+- Simpler consistency model
+
+**Current/Default**: Disabled
+
+**Enable?** (Yes/No/keep)
+```
+
+**Template C: Numeric/Text Configuration**
+
+```markdown
+## 🎯 Decision #{N} of {Total} - {Article} › {Section}: {Field}
+
+📍 **Location**: `constitution.master.md` Line {X}
+
+**Question**: Set {Field} value?
+
+**Context**: {What this controls}
+
+**Constraints**: {Valid range, format}
+
+**Recommended Values**:
+
+- {Value 1}: {Use case}
+- {Value 2}: {Use case}
+- {Value 3}: {Use case}
+
+**Current/Default**: {value}
+
+**Your value?** (Enter value or 'keep')
+```
+
+**Example**:
+
+```markdown
+## 🎯 Decision #31 of 47 - Article XIII › Section 13.1: Line Coverage Minimum
+
+📍 **Location**: `constitution.master.md` Line 567
+
+**Question**: Set minimum line coverage threshold?
+
+**Context**: Enforced in CI/CD - blocks PR merge if below this value.
+
+**Constraints**: 0-100%
+
+**Recommended Values**:
+
+- 60%: Lenient (legacy/brownfield)
+- 80%: Standard (industry best practice) ⭐
+- 90%: Strict (critical systems)
+
+**Current/Default**: Not set
+
+**Your value?** (Enter 60-100 or 'keep' for 80%)
+```
+
+#### Step 2.4: Phased Refinement Workflow (2A → 2B → 2C)
+
+Execute refinement in THREE phases based on criticality markers parsed from constitution.master.md:
+
+---
+
+**Phase 2A: 🔴 CRITICAL Architectural Decisions**
+
+```markdown
+## 🚀 Phase 2A: CRITICAL Decisions
+
+**Questions in this phase**: [N] 🔴 CRITICAL decisions
+**Cannot Skip**: These are architectural foundations - defaults not available
+
+**You can respond with**:
+
+- **Direct answer** (A/B/C, Yes/No, specific value)
+- **'help'** - Show more context for this decision
+
+**Note**: 'skip' and 'stop' are NOT available for CRITICAL decisions.
+
+**Progress**: [█░░░░░░░░░] 1 of [N] critical decisions
+
+---
+
+{Display CRITICAL Question #1 with 🔴 indicator}
+
+[Wait for user response]
+
+{Validate response}
+{Record in ledger}
+
+**Progress**: [██░░░░░░░░] 2 of [N] critical decisions
+
+---
+
+{Display CRITICAL Question #2}
+
+[Continue until ALL 🔴 CRITICAL decisions answered]
+
+---
+
+## ✅ Phase 2A Complete!
+
+All **[N] CRITICAL decisions** answered! Architecture foundation is defined.
+
+**Next Phase**: 🟡 IMPORTANT decisions ([M] questions)
+
+- Quality standards, security patterns, CI/CD configuration
+- Smart defaults available if you want to skip
+
+**Continue to Phase 2B?** (Yes/Skip-to-2C/Finish-now)
+
+- **'Yes'** → Continue with IMPORTANT decisions
+- **'Skip-to-2C'** → Use defaults for IMPORTANT, ask LOW-PRIO only
+- **'Finish-now'** → Use defaults for IMPORTANT + LOW-PRIO (complete setup)
+```
+
+---
+
+**Phase 2B: 🟡 IMPORTANT Quality & Process Decisions** (if user chooses to continue)
+
+```markdown
+## 🎯 Phase 2B: IMPORTANT Decisions
+
+**Questions in this phase**: [M] 🟡 IMPORTANT decisions
+**Smart Defaults Available**: You can skip individual questions or entire phase
+
+**You can respond with**:
+
+- **Direct answer** (A/B/C, Yes/No, specific value)
+- **'skip'** → Use smart default for THIS decision (continue with next)
+- **'defaults-all'** → Use defaults for ALL remaining IMPORTANT decisions (jump to Phase 2C)
+- **'help'** - Show more context and recommended default
+
+**Progress**: [█░░░░░░░░░] 1 of [M] important decisions
+
+---
+
+{Display IMPORTANT Question #1 with 🟡 indicator + default value shown}
+
+[Wait for user response]
+
+{If 'skip': Apply default, record as defaulted}
+{If 'defaults-all': Apply defaults to all remaining, jump to Phase 2C}
+{Else: Validate response, record in ledger}
+
+**Progress**: [██░░░░░░░░] 2 of [M] important decisions
+
+---
+
+{Continue until all 🟡 IMPORTANT decisions answered or user skips phase}
+
+---
+
+## ✅ Phase 2B Complete!
+
+**Summary**:
+
+- User answered: [X] of [M] important decisions
+- Auto-defaulted: [M-X] decisions
+
+**Next Phase**: 🟢 LOW-PRIO configuration values ([K] questions)
+
+- Cache TTLs, coverage thresholds, formatting preferences
+- Safe runtime defaults available
+
+**Continue to Phase 2C?** (Yes/Finish-now)
+
+- **'Yes'** → Fine-tune configuration values
+- **'Finish-now'** → Use defaults for LOW-PRIO (complete setup)
+```
+
+---
+
+**Phase 2C: 🟢 LOW-PRIO Configuration Values** (if user chooses to continue)
+
+```markdown
+## ⚙️ Phase 2C: LOW-PRIO Configuration
+
+**Questions in this phase**: [K] 🟢 LOW-PRIO decisions
+**Safe to Skip**: These can be changed at runtime or in config files
+
+**You can respond with**:
+
+- **Direct answer** (numeric value, text)
+- **'skip'** → Use default for THIS value (continue with next)
+- **'defaults-all'** → Use defaults for ALL remaining (finish immediately)
+- **'help'** - Show context and default value
+
+**Progress**: [█░░░░░░░░░] 1 of [K] low-priority values
+
+---
+
+{Display LOW-PRIO Question #1 with 🟢 indicator + default value shown}
+
+[Wait for user response]
+
+{If 'skip' or 'defaults-all': Apply defaults}
+{Else: Validate response, record in ledger}
+
+**Progress**: [██░░░░░░░░] 2 of [K] low-priority values
+
+---
+
+{Continue until all 🟢 LOW-PRIO values answered or user skips}
+
+---
+
+## ✅ Phase 2C Complete!
+
+**Summary**:
+
+- User answered: [Y] of [K] low-prio values
+- Auto-defaulted: [K-Y] values
+
+**🎉 Interactive Refinement Complete!**
+
+**Refinement Summary**:
+
+- 🔴 CRITICAL: [N] answers (100% completion)
+- 🟡 IMPORTANT: [M] answers ([X] user, [M-X] defaults)
+- 🟢 LOW-PRIO: [K] answers ([Y] user, [K-Y] defaults)
+
+**Total**: [N+X+Y] of [N+M+K] decisions answered by user ([%]%)
+
+**Next**: Generating refined constitution.md from your answers...
+```
+
+---
+
+**Progress Indicators** (shown at each question):
+
+- Visual progress bar: `[████░░░░░░]`
+- Current/Total count: `14 of 47`
+- Phase indicator: `🔴 CRITICAL` / `🟡 IMPORTANT` / `🟢 LOW-PRIO`
+- Article context: `Article III › Section 3.1`
+- Estimated time remaining (optional): `~15 minutes remaining`
+
+#### Step 2.5: Structured Refinement Ledger
+
+As user answers, build this YAML structure:
 
 ```yaml
-[Current settings from constitution.master.md]
+# Refinement Ledger
+# Generated: {timestamp}
+# Total Decisions: {N}
+# User Completed: {M}
+# Defaulted: {N-M}
+
+metadata:
+  master_constitution: constitution.master.md
+  total_decisions: { N }
+  completed_by_user: { M }
+  auto_defaulted: { N-M }
+  refinement_date: { ISO timestamp }
+
+decisions:
+  # Article II: Application Configuration
+  - id: app-config-backend-language
+    article: 'II'
+    section: '2.1'
+    question: 'Backend Language & Runtime'
+    line: 45
+    type: single-select
+    options: ['C# / .NET', 'Node.js / TypeScript']
+    user_choice: 'C# / .NET'
+    default_was: null
+    changed: true
+
+  - id: app-config-dotnet-version
+    article: 'II'
+    section: '2.1'
+    question: '.NET Version'
+    line: 47
+    type: single-select
+    options: ['.NET 8 (LTS)', '.NET 10']
+    user_choice: '.NET 10'
+    default_was: null
+    changed: true
+
+  - id: app-config-api-style
+    article: 'II'
+    section: '2.1'
+    question: 'API Style'
+    line: 48
+    type: single-select
+    options: ['Minimal APIs', 'Controllers (MVC)', 'Azure Functions']
+    user_choice: 'Minimal APIs'
+    default_was: null
+    changed: true
+
+  # Article III: Application Architecture
+  - id: arch-backend-style
+    article: 'III'
+    section: '3.1'
+    question: 'Backend Architecture Style'
+    line: 89
+    type: single-select
+    options:
+      [
+        'Microservices',
+        'Modular Monolith',
+        'Traditional Monolith',
+        'Serverless',
+        'Event-Driven / CQRS+ES',
+      ]
+    user_choice: 'Modular Monolith'
+    default_was: null
+    changed: true
+
+  - id: arch-cqrs-enabled
+    article: 'III'
+    section: '3.3'
+    question: 'CQRS Configuration'
+    line: 134
+    type: yes-no
+    user_choice: true
+    default_was: false
+    changed: true
+
+  - id: arch-cqrs-pattern
+    article: 'III'
+    section: '3.3'
+    question: 'CQRS Pattern'
+    line: 136
+    type: single-select
+    options: ['Full CQRS', 'CQRS + Event Sourcing', 'Simple CQRS']
+    user_choice: 'Full CQRS'
+    default_was: null
+    changed: true
+    condition: 'arch-cqrs-enabled == true'
+
+  # Article V: Data Storage
+  - id: data-primary-database
+    article: 'V'
+    section: '5.1'
+    question: 'Primary Database'
+    line: 234
+    type: single-select
+    options: ['Azure SQL Database', 'SQL Server', 'PostgreSQL', 'Azure Cosmos DB', 'MongoDB']
+    user_choice: 'Azure SQL Database'
+    default_was: null
+    changed: true
+
+  # Article VI: Caching Strategy
+  - id: cache-l1-enabled
+    article: 'VI'
+    section: '6.1'
+    question: 'L1 - In-Memory Cache Enabled'
+    line: 287
+    type: yes-no
+    user_choice: true
+    default_was: false
+    changed: true
+
+  - id: cache-l1-ttl
+    article: 'VI'
+    section: '6.1'
+    question: 'L1 Cache TTL Default (minutes)'
+    line: 287
+    type: numeric
+    user_choice: 15
+    default_was: null
+    changed: true
+    condition: 'cache-l1-enabled == true'
+
+  # Article XIII: Testing Standards
+  - id: test-line-coverage-min
+    article: 'XIII'
+    section: '13.1'
+    question: 'Line Coverage Minimum'
+    line: 567
+    type: numeric
+    constraints: '0-100'
+    user_choice: 80
+    default_was: null
+    changed: true
+
+  - id: test-branch-coverage-min
+    article: 'XIII'
+    section: '13.1'
+    question: 'Branch Coverage Minimum'
+    line: 568
+    type: numeric
+    constraints: '0-100'
+    user_choice: 75
+    default_was: null
+    changed: true
+
+  - id: test-mutation-score-min
+    article: 'XIII'
+    section: '13.1'
+    question: 'Mutation Score Minimum'
+    line: 569
+    type: numeric
+    constraints: '0-100'
+    user_choice: 70
+    default_was: null
+    changed: true
+
+  # ... [all other decisions]
+
+summary:
+  total_decisions: { N }
+  user_answered: { M }
+  kept_defaults: { P }
+  skipped: { Q }
+
+  decisions_by_article:
+    article_ii: { count }
+    article_iii: { count }
+    article_v: { count }
+    # ... etc
+
+  changed_from_default: { list of IDs }
+  applied_defaults: { list of IDs }
 ```
-````
 
-**Context**: [Explain what this controls and why it matters]
+**Save this ledger** to `.boltf/memory/refinement-ledger.yaml` after each answer (incremental saves prevent data loss).
 
-**Options**:
+#### Step 2.6: Refinement Completion
 
-- **A. Keep as-is** - Use the configuration above
-- **B. Modify** - Change specific settings
-- **C. Remove** - This doesn't apply to my project
-- **D. Skip for now** - Decide later
-
-Which option would you like? **(Type A, B, C, or D)**
-
-````
-
-If user chooses **B. Modify**, follow up with specific sub-questions:
+After all questions answered (or user stops):
 
 ```markdown
-**What would you like to modify?**
+## ✅ Phase 2: Refinement Complete!
 
-Current value: `[current-value]`
+I've collected decisions for **{M} of {N} decision points**.
 
-1. [Option 1]
-2. [Option 2]
-3. [Option 3]
-4. Custom value
+**Summary**:
 
-Enter **1-4** or type your custom value:
-````
+📝 **Decisions Made**:
 
-#### Example: Technology Stack Refinement
+- ✏️ User Configured: {M} settings
+- ✓ Defaults Applied: {N-M} settings
+- 📊 Total Coverage: {percentage}%
 
-**Question 1 - Frontend Framework**:
+**Breakdown by Article**:
 
-#### Example: Technology Stack Refinement
+- Article II (App Config): {X}/{Y} configured
+- Article III (Architecture): {X}/{Y} configured
+- Article V (Data Storage): {X}/{Y} configured
+- Article VI (Caching): {X}/{Y} configured
+- Article VII (Identity): {X}/{Y} configured
+- Article VIII (Containers): {X}/{Y} configured
+- Article XIII (Testing): {X}/{Y} configured
+- Article XIV (Code Standards): {X}/{Y} configured
+- [etc...]
 
-**Question 1 - Frontend Framework**:
+**Review Options**:
+
+- **A. Show me the summary** - Display finalized configuration
+- **B. Review specific article** - Deep dive into one article
+- **C. Change something** - Go back to a specific decision
+- **D. Continue to Phase 3** - Generate final constitution
+
+**Your choice?** (A, B, C, or D)
+```
+
+**If user chooses A (Show Summary)**:
 
 ```markdown
-## 🎯 Frontend Framework Selection
+## 📊 Configuration Summary
 
-I found this frontend configuration:
+### Technology Stack
 
-**Current**: React 18 with TypeScript
+**Frontend**:
 
-**Context**: This framework will be used for all UI development. Changing this later requires significant refactoring.
+- Framework: {choice}
+- Language: {choice}
+- State Management: {choice}
 
-**Options**:
+**Backend**:
 
-- **A. Keep React 18 + TypeScript** - Modern, widely supported
-- **B. Switch to Next.js 15** - React with SSR/SSG built-in
-- **C. Use Vue 3 + TypeScript** - Progressive framework
-- **D. Use Angular 19** - Full-featured framework
+- Language: {choice}
+- Framework: {choice}
+- API Style: {choice}
 
-Which framework should we use? **(A, B, C, or D)**
+**Data**:
+
+- Primary DB: {choice}
+- ORM: {choice}
+- Caching: {L1: yes/no, L2: choice, L3: choice}
+- Message Broker: {choice}
+
+### Architecture
+
+- Style: {choice}
+- CQRS: {enabled: yes/no, pattern: choice}
+- Event Sourcing: {enabled: yes/no, store: choice}
+
+### Quality Gates
+
+- Line Coverage: >= {value}%
+- Branch Coverage: >= {value}%
+- Mutation Score: >= {value}%
+
+### Security
+
+- Identity Provider: {choice}
+- Authorization Model: {choice}
+- Encryption at Rest: {choice}
+
+### Infrastructure
+
+- Container Strategy: {choice}
+- Orchestration: {choice}
+- CI/CD: {choice}
+
+[Complete dump of all decisions]
+
+**Ready to generate final constitution?** (Yes/No)
 ```
 
-**Question 2 - Backend Framework** (after user answers #1):
+**If user chooses B (Review Specific Article)**:
 
 ```markdown
-## 🎯 Backend Framework Selection
+Which article would you like to review?
 
-Current: Node.js + Express + TypeScript
+- II - Application Configuration
+- III - Application Architecture
+- IV - Communication
+- V - Data Storage
+- VI - Caching Strategy
+- VII - Identity & Access Management
+- VIII - Containers & Orchestration
+- [etc...]
 
-**Context**: Your backend API framework. Should align with team expertise.
-
-**Options**:
-
-- **A. Keep Express** - Minimalist, flexible
-- **B. Switch to NestJS** - Structured, enterprise-ready
-- **C. Use Fastify** - High-performance alternative
-- **D. Different stack** (Python/Java/C#)
-
-Your choice? **(A, B, C, or D)**
+**Type article number** (e.g., "III"):
 ```
 
-Continue one-by-one through all categories until complete.
-
-#### Tracking Refinements
-
-As user answers each question, maintain a **refinement ledger**:
-
-```yaml
-refinements:
-  frontend:
-    framework: next.js # Changed from react
-    typescript: true # Kept
-  backend:
-    framework: nestjs # Changed from express
-    language: typescript # Kept
-  database:
-    primary: postgresql # Kept
-    orm: prisma # Changed from typeorm
-  # ... etc
-```
-
-After all questions answered:
+**If user chooses C (Change Something)**:
 
 ```markdown
-## ✅ Refinement Complete
+Which decision would you like to change?
 
-I've collected [X] configuration decisions.
+You can specify by:
 
-**Summary of Changes**:
+- **Decision number**: e.g., "Decision 5"
+- **Article + Section**: e.g., "Article III Section 3.1"
+- **Keyword search**: e.g., "backend architecture"
 
-- ✏️ Modified: [Y] settings
-- ✓ Kept: [Z] settings
-- ✗ Removed: [W] settings
-
-**Would you like to**:
-
-- **A. Review all changes** - Show me the diff
-- **B. Generate final constitution** - Proceed to Phase 3
-- **C. Adjust something** - Go back to a specific question
-
-Your choice? **(A, B, or C)**
+**What do you want to change?**
 ```
+
+**When user is ready, proceed to Phase 3**
 
 ---
 
 ### Phase 3: Generate constitution.md (Refined Summary)
 
-**Objective**: Create concise, actionable constitution from refined selections.
+**Objective**: Transform refinement ledger into concise, actionable constitution document.
 
-#### Step 3.1: Apply Refinements
+**Input**: `.boltf/memory/refinement-ledger.yaml` (structured decisions from Phase 2)
+**Output**: `.boltf/memory/constitution.md` (focused, agent-ready)
 
-Using the refinement ledger from Phase 2, generate a **summarized constitution**:
+#### Step 3.1: Load Refinement Ledger
 
-**Key Differences from constitution.master.md**:
-
-- ✅ **Focused**: Only includes refined/confirmed selections
-- ✅ **Concise**: Removes verbose explanations
-- ✅ **Actionable**: Ready for agent consumption
-- ✅ **Versioned**: Semantic version (v1.0.0)
-
-Structure:
-
-```markdown
-# Project Constitution v1.0.0
-
-## Technology Stack
-
-### Frontend
-
-- Framework: [refined-choice]
-- Language: [refined-choice]
-- State: [refined-choice]
-
-### Backend
-
-- Framework: [refined-choice]
-- Language: [refined-choice]
-- API Style: [refined-choice]
-
-### Data
-
-- Database: [refined-choice]
-- Cache: [refined-choice]
-- ORM: [refined-choice]
-
-## Architecture Principles
-
-[Only confirmed patterns]
-
-## Quality Gates
-
-[Only enabled gates with thresholds]
-
-## Security Policies
-
-[Only applicable policies]
-
-## Code Standards
-
-[Confirmed conventions]
-```
-
-#### Step 3.2: Generate File
-
-Execute:
+Read the complete refinement ledger:
 
 ```powershell
-.\.boltf\scripts\powershell\Invoke-BoltSetupConstitution.ps1 -ProjectPath . -GenerateFinal -Refinements $refinementLedger
+$ledger = Get-Content -Path ".boltf/memory/refinement-ledger.yaml" | ConvertFrom-Yaml
+$decisions = $ledger.decisions
+$summary = $ledger.summary
 ```
 
-Present to user:
+Present summary before generation:
 
 ```markdown
-## ✅ Final Constitution Generated
+## 📝 Phase 3: Generating Final Constitution
+
+**Input**: Refinement Ledger
+
+- Total Decisions: {$summary.total_decisions}
+- User Configured: {$summary.user_answered}
+- Defaults Applied: {$summary.kept_defaults}
+
+**Approach**: I will now transform your decisions into a focused `constitution.md` with:
+
+✅ **Only includes**:
+
+- Your confirmed technology choices
+- Your configured architecture patterns
+- Your specified quality gate thresholds
+- Your enabled security policies
+- Your defined code standards
+
+❌ **Removes**:
+
+- Verbose explanations and rationale (use constitution.master.md as reference)
+- Unchecked/disabled options
+- Multi-choice sections collapsed to single choice
+- Scope section markers (merged into unified articles)
+
+**Result**: Clean, actionable constitution ready for agent consumption.
+
+Generating...
+```
+
+#### Step 3.2: Constitution Generation Algorithm
+
+**Transformation Logic**:
+
+```
+constitution = InitializeDocument(version: "1.0.0")
+
+FOR EACH article IN uniqueArticles(ledger.decisions):
+
+  articleDecisions = FilterByArticle(ledger.decisions, article)
+
+  IF articleDecisions.isEmpty():
+    SKIP  # Article has no configured decisions
+
+  articleSection = GenerateArticleHeader(article)
+
+  FOR EACH section IN uniqueSections(articleDecisions):
+
+    sectionDecisions = FilterBySection(articleDecisions, section)
+    sectionContent = GenerateSectionContent(sectionDecisions)
+
+    articleSection.append(sectionContent)
+
+  constitution.append(articleSection)
+
+# Add appendices
+constitution.append(GenerateQualityGateChecklist(ledger))
+constitution.append(GenerateVersionTable(ledger))
+
+SaveConstitution(constitution, ".boltf/memory/constitution.md")
+```
+
+**Example Transformation**:
+
+**Input** (from ledger):
+
+```yaml
+- id: arch-backend-style
+  article: 'III'
+  section: '3.1'
+  question: 'Backend Architecture Style'
+  options:
+    [
+      'Microservices',
+      'Modular Monolith',
+      'Traditional Monolith',
+      'Serverless',
+      'Event-Driven / CQRS+ES',
+    ]
+  user_choice: 'Modular Monolith'
+```
+
+**Output** (in constitution.md):
+
+```markdown
+## Article III: Application Architecture
+
+### Section 3.1: Backend Architecture Style
+
+**Selected**: Modular Monolith
+
+- Single deployment with modular boundaries
+- Suitable for medium teams, faster development, simpler deployment
+```
+
+**For numeric thresholds**:
+
+**Input**:
+
+```yaml
+- id: test-line-coverage-min
+  user_choice: 80
+- id: test-branch-coverage-min
+  user_choice: 75
+- id: test-mutation-score-min
+  user_choice: 70
+```
+
+**Output**:
+
+```markdown
+## Article XIII: Testing Standards
+
+### Section 13.1: Quality Thresholds
+
+| Metric          | Minimum | Target |
+| --------------- | ------- | ------ |
+| Line Coverage   | 80%     | 90%    |
+| Branch Coverage | 75%     | 85%    |
+| Mutation Score  | 70%     | 80%    |
+```
+
+**For Yes/No decisions with dependencies**:
+
+**Input**:
+
+```yaml
+- id: cache-l1-enabled
+  user_choice: true
+- id: cache-l1-ttl
+  user_choice: 15
+  condition: 'cache-l1-enabled == true'
+```
+
+**Output**:
+
+```markdown
+## Article VI: Caching Strategy
+
+### Section 6.1: L1 - In-Memory Cache
+
+**Enabled**: Yes
+**TTL Default**: 15 minutes
+**Implementation**:
+
+- .NET: `IMemoryCache`
+- Node.js: `node-cache`
+```
+
+#### Step 3.3: Execute Generation
+
+Run PowerShell script with ledger input:
+
+```powershell
+.\.boltf\scripts\powershell\Invoke-BoltSetupConstitution.ps1 `
+  -ProjectPath . `
+  -GenerateFinal `
+  -RefinementLedger ".boltf/memory/refinement-ledger.yaml"
+```
+
+Show generation progress:
+
+```markdown
+### ⚡ Constitution Generation In Progress
+
+✓ **Step 1/7**: Loaded refinement ledger ({N} decisions)
+✓ **Step 2/7**: Article I - Metadata ({X} items)
+✓ **Step 3/7**: Article II-III - Application Config & Architecture ({Y} items)
+✓ **Step 4/7**: Article IV-VIII - Communication, Data, Caching, Identity, Containers ({Z} items)
+✓ **Step 5/7**: Article X-XII - Environments, CI/CD, Observability ({W} items)
+✓ **Step 6/7**: Article XIII-XVIII - Testing, Standards, Security, API Management ({V} items)
+✓ **Step 7/7**: Appendices - Quality checklist and version table
+
+**Constitution generated successfully!**
+```
+
+#### Step 3.4: Present Final Results
+
+Display comprehensive comparison:
+
+```markdown
+## ✅ Final Constitution Generated!
+
+📄 **File**: `.boltf/memory/constitution.md`
+
+**Document Stats**:
+
+| Metric                   | Master         | Final          | Reduction |
+| ------------------------ | -------------- | -------------- | --------- |
+| **Size**                 | {X} KB         | {A} KB         | {%} less  |
+| **Lines**                | {Y}            | {B}            | {%} less  |
+| **Articles Included**    | {Z} (all)      | {C} (refined)  | -         |
+| **Decision Points**      | {W} (ALL)      | {D} (selected) | -         |
+| **Checkboxes Remaining** | {V} (options)  | 0 (resolved)   | 100%      |
+| **Fillable Fields**      | {U} (blanks)   | 0 (filled)     | 100%      |
+| **Scope Markers**        | {T} (sections) | 0 (merged)     | 100%      |
+
+**Constitution Structure**:
+```
+
+# Project Constitution v1.0.0
+
+## Article I: Metadata
+
+- Practice: {choice}
+- Active Scopes: {list}
+- Project Type: {choice}
+
+## Article II: Application Configuration
+
+### Backend: {framework} + {language}
+
+### Frontend: {framework} + {language}
+
+## Article III: Application Architecture
+
+### Style: {choice}
+
+### CQRS: {enabled/pattern}
+
+### Event Sourcing: {enabled/store}
+
+## Article V: Data Storage
+
+### Database: {choice}
+
+### ORM: {choice}
+
+### Migrations: {tool}
+
+## Article VI: Caching
+
+### L1: {enabled} / TTL: {value}
+
+### L2: {choice}
+
+### L3: {choice}
+
+## Article VII: Identity & Access Management
+
+### Provider: {choice}
+
+### Authorization: {model}
+
+## Article XIII: Testing Standards
+
+### Coverage: {thresholds}
+
+### Frameworks: {by language}
+
+## Article XIV: Code Standards
+
+### Naming: {conventions}
+
+### Formatting: {rules}
+
+## Appendix A: Technology Versions
+
+[Version table]
+
+## Appendix B: Quality Gate Checklist
+
+[Enforcement checklist]
+
+````
+
+**This constitution is now the SINGLE SOURCE OF TRUTH for all agents.**
+
+---
+
+**Verification**:
+
+```bash
+# View final constitution
+cat .boltf/memory/constitution.md
+
+# Compare with master (show what was filtered)
+diff .boltf/memory/constitution.md .boltf/memory/constitution.master.md
+
+# Validate YAML syntax of ledger
+yamllint .boltf/memory/refinement-ledger.yaml
+
+# Count articles in final vs master
+grep -c "^## Article" .boltf/memory/constitution.md
+grep -c "^## Article" .boltf/memory/constitution.master.md
+````
+
+**Next**: Phase 4 (Resource Provisioning) or complete setup?
+
+**A. Provision resources now** - Download/copy scope-defined resources
+**B. Show provisioning plan** - Dry run first
+**C. Skip provisioning** - I'll handle manually
+**D. Complete setup** - Exit and start building
+
+**Your choice?** (A, B, C, or D)
+
+```
 
 📄 **File**: `.boltf/memory/constitution.md`
 

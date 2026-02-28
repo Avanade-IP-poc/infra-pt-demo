@@ -22,7 +22,9 @@ This Constitution establishes the governing principles, technology decisions, an
 > **📋 Applies to**: Application Development, Full Stack
 > **⏭️ Skip if**: Infrastructure Only
 
-### Section 7.1: Authentication Provider
+### Section 7.1: Authentication Provider 🔴 CRITICAL
+
+> **🔴 CRITICAL**: Authentication provider choice (Entra ID vs Auth0 vs Keycloak) = different integration patterns
 
 Select ONE:
 
@@ -31,7 +33,9 @@ Select ONE:
 - [ ] **Auth0** - Multi-provider
 - [ ] **Keycloak** - Self-hosted
 
-### Section 7.2: Token Configuration
+### Section 7.2: Token Configuration 🟢 LOW-PRIO
+
+> **🟢 LOW-PRIO**: Token lifetimes can be adjusted at runtime via provider configuration
 
 | Setting                | Value                                              |
 | ---------------------- | -------------------------------------------------- |
@@ -40,7 +44,9 @@ Select ONE:
 | Token Storage          | [ ] HTTP-only Cookie [ ] Memory [ ] Secure Storage |
 | PKCE Required          | [ ] Yes [ ] No                                     |
 
-### Section 7.3: Authorization Model
+### Section 7.3: Authorization Model 🟡 IMPORTANT
+
+> **🟡 IMPORTANT**: Authorization model affects access control patterns but can be refactored
 
 Select ONE:
 

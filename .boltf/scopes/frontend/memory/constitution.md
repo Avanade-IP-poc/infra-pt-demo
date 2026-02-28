@@ -22,17 +22,21 @@ This Constitution establishes the governing principles, technology decisions, an
 > **📋 Applies to**: Application Development, Full Stack
 > **⏭️ Skip if**: Infrastructure Only
 
-### Section 2.2: Frontend Framework
+### Section 2.2: Frontend Framework 🔴 CRITICAL
+
+> **🔴 CRITICAL**: Frontend framework choice (React vs Angular vs Vue) = complete rewrite if changed
 
 Select ONE:
 
 - [ ] **Vue.js** - Version: [ ] 3.x
 - [ ] **React** - Version: [ ] 18.x [ ] 19.x
-- [ ] **Angular** - Version: [ ] 17.x [ ] 18.x [ ] 19.x
+- [ ] **Angular** - Version: [ ] 17.x [ ] 18.x [ ] 19.x [ ] 20.x 🟡 IMPORTANT
 - [ ] **Blazor** - Type: [ ] Server [ ] WebAssembly [ ] Hybrid
 - [ ] **None** - API only (headless)
 
-### Section 2.3: Mobile Application
+### Section 2.3: Mobile Application 🔴 CRITICAL
+
+> **🔴 CRITICAL**: Mobile platform choice (.NET MAUI vs React Native vs Flutter) = different codebase
 
 Select ONE:
 
@@ -49,7 +53,9 @@ Select ONE:
 > **📋 Applies to**: Application Development, Full Stack
 > **⏭️ Skip if**: Infrastructure Only
 
-### Section 3.2: Frontend Architecture Style
+### Section 3.2: Frontend Architecture Style 🔴 CRITICAL
+
+> **🔴 CRITICAL**: Micro-frontends vs SPA affects entire frontend structure and team organization
 
 Select ONE:
 
@@ -66,14 +72,14 @@ Select ONE:
 > **📋 Applies to**: Application Development, Full Stack
 > **⏭️ Skip if**: Infrastructure Only
 
-### Section 7.3: Authentication Flows
+### Section 7.3: Authentication Flows 🟡 IMPORTANT
 
 | Scenario     | Flow                      | Enabled        |
 | ------------ | ------------------------- | -------------- |
 | SPA Frontend | Authorization Code + PKCE | [ ] Yes [ ] No |
 | Mobile App   | Authorization Code + PKCE | [ ] Yes [ ] No |
 
-### Section 7.4: Authorization Model
+### Section 7.4: Authorization Model 🟡 IMPORTANT
 
 Select ONE:
 
@@ -84,7 +90,7 @@ Select ONE:
 
 ---
 
-## Article X: Environments & Configuration 🔄
+## Article X: Environments & Configuration 🔄 🟡 IMPORTANT
 
 > **📋 Applies to**: ALL project types
 
@@ -97,7 +103,7 @@ Select ONE:
 | **pre**     | Pre-production, staging      | [ ] Yes | [ ] Manual trigger       |
 | **prod**    | Production                   | [ ] Yes | [ ] Manual approval      |
 
-### Section 10.2: Configuration Management
+### Section 10.2: Configuration Management 🟡 IMPORTANT
 
 Select strategy:
 
@@ -106,7 +112,7 @@ Select strategy:
 - [ ] **appsettings.{Environment}.json** (.NET) / **.env files** (Node.js)
 - [ ] **Combination** - App Config + Key Vault (recommended)
 
-### Section 10.3: Secrets Management
+### Section 10.3: Secrets Management 🟡 IMPORTANT
 
 | Secret Type        | Storage         |
 | ------------------ | --------------- |
@@ -120,7 +126,7 @@ Local Development Secrets:
 - [ ] **.env files** (Node.js) - gitignored
 - [ ] **Local Key Vault** - Azure Key Vault dev instance
 
-### Section 10.4: Feature Flags
+### Section 10.4: Feature Flags 🟢 LOW-PRIO
 
 Feature Flag Provider:
 
@@ -131,7 +137,7 @@ Feature Flag Provider:
 
 ---
 
-## Article XI: CI/CD Pipeline 🔄
+## Article XI: CI/CD Pipeline 🔄 🟡 IMPORTANT
 
 > **📋 Applies to**: ALL project types
 
@@ -167,7 +173,7 @@ Select ONE:
 | **Deploy Pre**  | [ ] Yes | Manual trigger     |
 | **Deploy Prod** | [ ] Yes | Manual approval    |
 
-### Section 11.3: Deployment Strategy
+### Section 11.3: Deployment Strategy 🟡 IMPORTANT
 
 Select ONE:
 
@@ -176,7 +182,7 @@ Select ONE:
 - [ ] **Canary** - Gradual traffic shift
 - [ ] **Feature Flags** - Deploy dark, enable via flags
 
-### Section 11.4: Branch Strategy
+### Section 11.4: Branch Strategy 🟡 IMPORTANT
 
 Select ONE:
 
@@ -186,11 +192,11 @@ Select ONE:
 
 ---
 
-## Article XII: Observability 🔄
+## Article XII: Observability 🔄 🟡 IMPORTANT
 
 > **📋 Applies to**: ALL project types
 
-### Section 12.1: Observability Strategy
+### Section 12.1: Observability Strategy 🟡 IMPORTANT
 
 Select ONE:
 

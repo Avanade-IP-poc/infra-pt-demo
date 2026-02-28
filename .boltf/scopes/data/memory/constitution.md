@@ -23,7 +23,9 @@ This Constitution establishes the governing principles, technology decisions, an
 > **📋 Applies to**: Data & Analytics projects
 > **⏭️ Skip if**: Purely transactional apps (use `backend` scope)
 
-### Section 5.1: Primary Analytics Platform
+### Section 5.1: Primary Analytics Platform 🔴 CRITICAL
+
+> **🔴 CRITICAL**: Analytics platform (Fabric vs Databricks vs Synapse) = fundamentally different ecosystems
 
 Select ONE primary platform:
 
@@ -45,7 +47,9 @@ Select ONE primary platform:
 | Data Orchestration     | ✅ Pipelines        | ✅ Workflows            | ✅ Pipelines            |
 | Unified Governance     | ✅ Purview + Fabric | ✅ Unity Catalog        | ✅ Purview              |
 
-### Section 5.2: Data Storage Architecture Pattern
+### Section 5.2: Data Storage Architecture Pattern 🔴 CRITICAL
+
+> **🔴 CRITICAL**: Architecture pattern (Lakehouse vs Warehouse vs Medallion) = different data modeling approaches
 
 Select primary architectural pattern:
 
@@ -59,7 +63,9 @@ Select primary architectural pattern:
 
 **Recommended**: Medallion architecture within a Lakehouse for modern cloud-native analytics
 
-### Section 5.3: Storage Format & Optimization
+### Section 5.3: Storage Format & Optimization 🟡 IMPORTANT
+
+> **🟡 IMPORTANT**: Storage format affects performance and features but can be migrated
 
 #### Data Format
 
@@ -73,12 +79,16 @@ Select primary format for analytical tables:
 
 **Format Justification**: Delta Lake recommended for ACID guarantees and ecosystem support
 
-#### Compression
+#### Compression 🟢 LOW-PRIO
+
+> **🟢 LOW-PRIO**: Compression can be changed per table without architectural impact
 
 - [ ] **Zstandard (zstd)** - Better compression ratio for cold/archival data (~30-40% better than Snappy)
 - [ ] **Snappy** - Faster decompression for frequently accessed hot data
 
-#### Partitioning Strategy
+#### Partitioning Strategy 🟡 IMPORTANT
+
+> **🟡 IMPORTANT**: Partitioning affects query performance but can be re-organized
 
 - [ ] **Date-based** - `/year=YYYY/month=MM/day=DD` (most common for time-series data)
 - [ ] **Tenant/Customer-based** - `/tenant_id=X/` (multi-tenant architectures)
@@ -97,7 +107,9 @@ Select primary format for analytical tables:
 
 **Medallion Architecture Overview**: A multi-layered data architecture pattern that incrementally improves data quality and structure as data flows from raw ingestion (Bronze) → validated/enriched (Silver) →business-ready (Gold).
 
-### Section 6.1: Bronze Layer (Raw Zone)
+### Section 6.1: Bronze Layer (Raw Zone) 🟡 IMPORTANT
+
+> **🟡 IMPORTANT**: Bronze layer strategy affects data lineage and reprocessing capabilities
 
 **Purpose**: Preserve raw data in original format as single source of truth for data lineage and reprocessing
 
@@ -133,7 +145,9 @@ bronze_df.write.format("delta") \
     .save("/bronze/erp/sales/")
 ```
 
-### Section 6.2: Silver Layer (Validated & Enriched)
+### Section 6.2: Silver Layer (Validated & Enriched) 🟡 IMPORTANT
+
+> **🟡 IMPORTANT**: Silver transformations define data quality standards
 
 **Purpose**: Cleaned, validated, deduplicated, and enriched data optimized for analytics workloads
 
@@ -177,7 +191,9 @@ WHERE order_id IS NOT NULL  -- Data quality filter
 QUALIFY ROW_NUMBER() OVER (PARTITION BY order_id ORDER BY _ingestion_timestamp DESC) = 1; -- Deduplication
 ```
 
-### Section 6.3: Gold Layer (Business-Ready)
+### Section 6.3: Gold Layer (Business-Ready) 🟢 LOW-PRIO
+
+> **🟢 LOW-PRIO**: Gold layer design can evolve based on BI requirements
 
 **Purpose**: Highly curated, aggregated data optimized for business consumption and BI reporting
 
