@@ -120,9 +120,9 @@ public class UsersController : ControllerBase
 # docs/api/openapi.yml (auto-generated)
 openapi: 3.0.1
 info:
-  title: AURORA API
+  title: BOLT Framework API
   version: 1.0.0
-  description: Auto-generated API documentation for AURORA project
+  description: Auto-generated API documentation for BOLT Framework project
 
 paths:
   /api/users:

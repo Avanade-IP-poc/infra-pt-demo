@@ -95,7 +95,7 @@ on:
 env:
   NODE_VERSION: '18'
   DOTNET_VERSION: '8.0.x'
-  AZURE_WEBAPP_NAME: 'aurora-app'
+  AZURE_WEBAPP_NAME: 'boltf-app'
 
 jobs:
   setup:
@@ -143,7 +143,7 @@ jobs:
           cd src/backend
           dotnet restore
 
-      - name: Run AURORA Quality Gates
+      - name: Run BOLT Framework Quality Gates
         run: |
           chmod +x scripts/bash/quality-gates.sh
           ./.boltf/scripts/bash/quality-gates.sh --ci-mode
@@ -197,7 +197,7 @@ jobs:
     steps:
       - name: Deploy to ${{ needs.determine-environment.outputs.environment }}
         run: |
-          ./.boltf/scripts/bash/deploy.sh --env ${{ needs.determine-environment.outputs.environment }}
+          ./.boltf/scripts/bash/deploy.sh --env ${{ needs.determine-environment.outputs.environment }} --validate-constitution
 ```
 
 ## Azure DevOps Pipeline Templates
@@ -239,7 +239,7 @@ stages:
           - script: |
               chmod +x scripts/bash/quality-gates.sh
               ./.boltf/scripts/bash/quality-gates.sh --ci-mode
-            displayName: 'Run AURORA Quality Gates'
+            displayName: 'Run BOLT Framework Quality Gates'
 
   - stage: Deploy
     displayName: 'Deploy'
@@ -254,7 +254,7 @@ stages:
               steps:
                 - script: |
                     chmod +x scripts/bash/deploy.sh
-                    ./.boltf/scripts/bash/deploy.sh --env production
+                    ./.boltf/scripts/bash/deploy.sh --env production --validate-constitution
                   displayName: 'Deploy to Production'
 ```
 
@@ -294,7 +294,7 @@ fi
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: aurora-app
+  name: boltf-app
 spec:
   replicas: 5
   strategy:
@@ -307,15 +307,15 @@ spec:
         - setWeight: 100
   selector:
     matchLabels:
-      app: aurora-app
+      app: boltf-app
   template:
     metadata:
       labels:
-        app: aurora-app
+        app: boltf-app
     spec:
       containers:
         - name: app
-          image: aurora-app:latest
+          image: boltf-app:latest
 ```
 
 ## Infrastructure as Code
@@ -334,10 +334,10 @@ spec:
 
 ```hcl
 # Generated Terraform for multi-environment setup
-resource "azurerm_app_service_plan" "aurora" {
+resource "azurerm_app_service_plan" "boltf" {
   for_each = var.environments
 
-  name                = "aurora-plan-${each.key}"
+  name                = "bolt-plan-${each.key}"
   location            = azurerm_resource_group.boltf.location
   resource_group_name = azurerm_resource_group.boltf.name
 
@@ -369,10 +369,10 @@ resource "azurerm_app_service_plan" "aurora" {
 
 ```bash
 # Setup Azure Key Vault integration
-./.boltf/scripts/bash/setup-keyvault.sh --vault aurora-secrets-$ENV
+./.boltf/scripts/bash/setup-keyvault.sh --vault boltf-secrets-$ENV
 
 # Configure GitHub secrets
-./.boltf/scripts/bash/configure-github-secrets.sh --from-keyvault aurora-secrets-prod
+./.boltf/scripts/bash/configure-github-secrets.sh --from-keyvault boltf-secrets-prod
 ```
 
 ## Monitoring Integration
@@ -383,7 +383,7 @@ resource "azurerm_app_service_plan" "aurora" {
 - name: Setup Application Insights
   run: |
     # Configure telemetry
-    ./.boltf/scripts/bash/setup-app-insights.sh --app-name aurora-$ENV
+    ./.boltf/scripts/bash/setup-app-insights.sh --app-name boltf-$ENV
 ```
 
 ### Health Checks:

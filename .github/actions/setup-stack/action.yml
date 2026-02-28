@@ -1,42 +1,42 @@
 # =============================================================================
-# AURORA-IA Setup Stack Action
+# BOLT Framework Setup Stack Action
 # =============================================================================
-# Reusable action to setup technology stack for security analysis
+# Reusable action to setup technology stack for BOLT Framework security analysis
 # Supports: Node.js, .NET, Java, Python, Go
 # =============================================================================
 
-name: "Setup Technology Stack"
-description: "Setup technology stack for AURORA-IA security analysis"
+name: 'Setup Technology Stack'
+description: 'Setup technology stack for BOLT Framework security analysis'
 
 inputs:
   stack:
-    description: "Technology stack to setup (nodejs|dotnet|java|python|golang)"
+    description: 'Technology stack to setup (nodejs|dotnet|java|python|golang)'
     required: true
   node-version:
-    description: "Node.js version to setup"
+    description: 'Node.js version to setup'
     required: false
-    default: "20"
+    default: '20'
   dotnet-version:
-    description: ".NET version to setup"
+    description: '.NET version to setup'
     required: false
-    default: "8.0.x"
+    default: '8.0.x'
   java-version:
-    description: "Java version to setup"
+    description: 'Java version to setup'
     required: false
-    default: "17"
+    default: '17'
   python-version:
-    description: "Python version to setup"
+    description: 'Python version to setup'
     required: false
-    default: "3.11"
+    default: '3.11'
   go-version:
-    description: "Go version to setup"
+    description: 'Go version to setup'
     required: false
-    default: "1.21"
+    default: '1.21'
 
 runs:
   using: composite
   steps:
-    - name: "Setup Node.js"
+    - name: 'Setup Node.js'
       if: inputs.stack == 'nodejs'
       uses: actions/setup-node@v4
       with:
@@ -45,21 +45,21 @@ runs:
         cache-dependency-path: |
           package-lock.json
           yarn.lock
-    
-    - name: "Setup .NET"
+
+    - name: 'Setup .NET'
       if: inputs.stack == 'dotnet'
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
-    
-    - name: "Setup Java"
+
+    - name: 'Setup Java'
       if: inputs.stack == 'java'
       uses: actions/setup-java@v4
       with:
         java-version: ${{ inputs.java-version }}
         distribution: 'temurin'
-    
-    - name: "Setup Python"
+
+    - name: 'Setup Python'
       if: inputs.stack == 'python'
       uses: actions/setup-python@v5
       with:
@@ -69,15 +69,15 @@ runs:
           requirements.txt
           pyproject.toml
           setup.py
-    
-    - name: "Setup Go"
+
+    - name: 'Setup Go'
       if: inputs.stack == 'golang'
       uses: actions/setup-go@v5
       with:
         go-version: ${{ inputs.go-version }}
         cache: true
-    
-    - name: "Install dependencies - Node.js"
+
+    - name: 'Install dependencies - Node.js'
       if: inputs.stack == 'nodejs'
       shell: bash
       run: |
@@ -88,8 +88,8 @@ runs:
         elif [[ -f "package.json" ]]; then
           npm install
         fi
-    
-    - name: "Install dependencies - .NET"
+
+    - name: 'Install dependencies - .NET'
       if: inputs.stack == 'dotnet'
       shell: bash
       run: |
@@ -98,8 +98,8 @@ runs:
         elif ls *.csproj 1> /dev/null 2>&1; then
           dotnet restore
         fi
-    
-    - name: "Install dependencies - Java"
+
+    - name: 'Install dependencies - Java'
       if: inputs.stack == 'java'
       shell: bash
       run: |
@@ -108,8 +108,8 @@ runs:
         elif [[ -f "build.gradle" ]] || [[ -f "build.gradle.kts" ]]; then
           ./gradlew build --no-daemon
         fi
-    
-    - name: "Install dependencies - Python"
+
+    - name: 'Install dependencies - Python'
       if: inputs.stack == 'python'
       shell: bash
       run: |
@@ -121,8 +121,8 @@ runs:
         elif [[ -f "setup.py" ]]; then
           pip install -e .
         fi
-    
-    - name: "Install dependencies - Go"
+
+    - name: 'Install dependencies - Go'
       if: inputs.stack == 'golang'
       shell: bash
       run: |
@@ -130,12 +130,12 @@ runs:
           go mod download
           go mod verify
         fi
-    
-    - name: "Verify setup"
+
+    - name: 'Verify setup'
       shell: bash
       run: |
         echo "Technology stack setup completed: ${{ inputs.stack }}"
-        
+
         case "${{ inputs.stack }}" in
           "nodejs")
             echo "Node.js version: $(node --version)"

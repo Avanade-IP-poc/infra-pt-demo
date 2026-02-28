@@ -49,7 +49,7 @@ You are the monitoring specialist for Bolt Framework projects. You implement com
 ./.boltf/scripts/bash/setup-monitoring.sh --slo-file specs/slos.yml
 
 # Configure cloud monitoring
-./.boltf/scripts/bash/setup-cloud-monitoring.sh --provider azure --resource-group aurora-rg
+./.boltf/scripts/bash/setup-cloud-monitoring.sh --provider azure --resource-group boltf-rg
 ```
 
 ### Dashboard Generation:
