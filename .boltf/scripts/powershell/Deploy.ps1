@@ -6,14 +6,14 @@ param(
     [Parameter(Mandatory)]
     [ValidateSet("development", "staging", "production")]
     [string]$Environment,
-    
+
     [switch]$ValidateConstitution,
     [switch]$DryRun,
     [switch]$NoRollback,
-    
+
     [ValidateSet("rolling", "blue-green", "canary")]
     [string]$Strategy = "rolling",
-    
+
     [switch]$Verbose,
     [switch]$Help
 )
@@ -41,13 +41,13 @@ function Write-Log {
     $timestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
     $logMessage = "[$timestamp] $Message"
     Write-Host $logMessage -ForegroundColor Cyan
-    
+
     # Ensure directory exists
     $logDir = Split-Path $script:logFile -Parent
     if (-not (Test-Path $logDir)) {
         New-Item -ItemType Directory -Path $logDir -Force | Out-Null
     }
-    
+
     Add-Content -Path $script:logFile -Value $logMessage
 }
 
@@ -74,27 +74,27 @@ function Write-Warning {
 
 function Test-Prerequisites {
     Write-Log "Checking deployment prerequisites..."
-    
+
     $errors = @()
-    
+
     # Check required files
     $requiredFiles = @(
         "memory\constitution.md",
         "package.json"
     )
-    
+
     foreach ($file in $requiredFiles) {
         if (-not (Test-Path $file)) {
             $errors += "Missing required file: $file"
         }
     }
-    
+
     # Check environment configuration
     $envFile = ".env.$Environment"
     if (-not (Test-Path $envFile)) {
         Write-Warning "Environment file not found: $envFile"
     }
-    
+
     # Check if git repository is clean
     try {
         $gitStatus = git status --porcelain 2>$null
@@ -105,7 +105,7 @@ function Test-Prerequisites {
     catch {
         Write-Warning "Git not available - skipping repository check"
     }
-    
+
     # Check Node.js/npm if needed
     if (Test-Path "package.json") {
         try {
@@ -115,7 +115,7 @@ function Test-Prerequisites {
             $errors += "npm not found - required for Node.js projects"
         }
     }
-    
+
     # Check .NET if needed
     if (Get-ChildItem -Path . -Recurse -Filter "*.csproj" -ErrorAction SilentlyContinue) {
         try {
@@ -125,7 +125,7 @@ function Test-Prerequisites {
             $errors += "dotnet CLI not found - required for .NET projects"
         }
     }
-    
+
     if ($errors.Count -gt 0) {
         Write-Error "Prerequisites check failed:"
         foreach ($error in $errors) {
@@ -133,7 +133,7 @@ function Test-Prerequisites {
         }
         return $false
     }
-    
+
     Write-Success "All prerequisites met"
     return $true
 }
@@ -142,32 +142,32 @@ function Test-Constitution {
     if (-not $ValidateConstitution) {
         return $true
     }
-    
+
     Write-Log "Validating constitution..."
-    
+
     $constitutionFile = "memory\constitution.md"
     if (-not (Test-Path $constitutionFile)) {
         Write-Error "Constitution file not found: $constitutionFile"
         return $false
     }
-    
+
     $constitution = Get-Content $constitutionFile -Raw
-    
+
     # Basic validation checks
     $requiredSections = @(
         "## 🎯 Project Type",
-        "## 🛠️ Technology Stack", 
+        "## 🛠️ Technology Stack",
         "## 📋 Requirements",
         "## 🏗️ Architecture"
     )
-    
+
     $missingsections = @()
     foreach ($section in $requiredSections) {
         if ($constitution -notmatch [regex]::Escape($section)) {
             $missingSections += $section
         }
     }
-    
+
     if ($missingSections.Count -gt 0) {
         Write-Error "Constitution validation failed - missing sections:"
         foreach ($section in $missingSections) {
@@ -175,22 +175,22 @@ function Test-Constitution {
         }
         return $false
     }
-    
+
     Write-Success "Constitution validation passed"
     return $true
 }
 
 function Start-Build {
     Write-Log "Starting build process..."
-    
+
     $buildErrors = @()
-    
+
     # Frontend build
     if (Test-Path "src\frontend\package.json") {
         Write-Log "Building frontend..."
         try {
             Push-Location "src\frontend"
-            
+
             if ($DryRun) {
                 Write-Log "[DRY RUN] Would run: npm run build"
             } else {
@@ -206,7 +206,7 @@ function Start-Build {
             Pop-Location
         }
     }
-    
+
     # Backend build (.NET)
     $dotnetProjects = Get-ChildItem -Path . -Recurse -Filter "*.csproj" -ErrorAction SilentlyContinue
     if ($dotnetProjects) {
@@ -227,13 +227,13 @@ function Start-Build {
             $buildErrors += ".NET build error: $_"
         }
     }
-    
+
     # Backend build (Node.js)
     if (Test-Path "src\backend\package.json") {
         Write-Log "Building Node.js backend..."
         try {
             Push-Location "src\backend"
-            
+
             if ($DryRun) {
                 Write-Log "[DRY RUN] Would run: npm run build"
             } else {
@@ -249,7 +249,7 @@ function Start-Build {
             Pop-Location
         }
     }
-    
+
     if ($buildErrors.Count -gt 0) {
         Write-Error "Build process failed:"
         foreach ($error in $buildErrors) {
@@ -257,22 +257,22 @@ function Start-Build {
         }
         return $false
     }
-    
+
     Write-Success "Build process completed successfully"
     return $true
 }
 
 function Start-Tests {
     Write-Log "Running test suite..."
-    
+
     $testErrors = @()
-    
+
     # Frontend tests
     if (Test-Path "src\frontend\package.json") {
         Write-Log "Running frontend tests..."
         try {
             Push-Location "src\frontend"
-            
+
             if ($DryRun) {
                 Write-Log "[DRY RUN] Would run: npm test"
             } else {
@@ -288,7 +288,7 @@ function Start-Tests {
             Pop-Location
         }
     }
-    
+
     # Backend tests (.NET)
     if (Get-ChildItem -Path . -Recurse -Filter "*.Test*.csproj" -ErrorAction SilentlyContinue) {
         Write-Log "Running .NET tests..."
@@ -308,7 +308,7 @@ function Start-Tests {
             $testErrors += ".NET test error: $_"
         }
     }
-    
+
     if ($testErrors.Count -gt 0) {
         Write-Error "Test suite failed:"
         foreach ($error in $testErrors) {
@@ -316,14 +316,14 @@ function Start-Tests {
         }
         return $false
     }
-    
+
     Write-Success "All tests passed"
     return $true
 }
 
 function Start-SecurityScan {
     Write-Log "Running security scan..."
-    
+
     # npm audit for Node.js projects
     if (Test-Path "package.json") {
         Write-Log "Running npm security audit..."
@@ -343,7 +343,7 @@ function Start-SecurityScan {
             Write-Warning "npm audit failed: $_"
         }
     }
-    
+
     # TODO: Add more security scans as needed
     Write-Success "Security scan completed"
     return $true
@@ -351,7 +351,7 @@ function Start-SecurityScan {
 
 function Start-Deployment {
     Write-Log "Starting deployment with strategy: $Strategy"
-    
+
     switch ($Strategy) {
         "rolling" {
             return Start-RollingDeployment
@@ -371,7 +371,7 @@ function Start-Deployment {
 
 function Start-RollingDeployment {
     Write-Log "Executing rolling deployment..."
-    
+
     # Simulate rolling deployment steps
     $steps = @(
         "Updating configuration files",
@@ -381,10 +381,10 @@ function Start-RollingDeployment {
         "Updating load balancer configuration",
         "Restarting services"
     )
-    
+
     foreach ($step in $steps) {
         Write-Log "Rolling deployment: $step"
-        
+
         if ($DryRun) {
             Write-Log "[DRY RUN] Would execute: $step"
         } else {
@@ -392,14 +392,14 @@ function Start-RollingDeployment {
             Start-Sleep -Seconds 2
         }
     }
-    
+
     Write-Success "Rolling deployment completed"
     return $true
 }
 
 function Start-BlueGreenDeployment {
     Write-Log "Executing blue-green deployment..."
-    
+
     if ($DryRun) {
         Write-Log "[DRY RUN] Would execute blue-green deployment"
         Write-Log "[DRY RUN] - Deploy to green environment"
@@ -410,14 +410,14 @@ function Start-BlueGreenDeployment {
         # Implement blue-green deployment logic
         Write-Warning "Blue-green deployment implementation pending"
     }
-    
+
     Write-Success "Blue-green deployment completed"
     return $true
 }
 
 function Start-CanaryDeployment {
     Write-Log "Executing canary deployment..."
-    
+
     if ($DryRun) {
         Write-Log "[DRY RUN] Would execute canary deployment"
         Write-Log "[DRY RUN] - Deploy to 10% of instances"
@@ -428,17 +428,17 @@ function Start-CanaryDeployment {
         # Implement canary deployment logic
         Write-Warning "Canary deployment implementation pending"
     }
-    
+
     Write-Success "Canary deployment completed"
     return $true
 }
 
 function Test-HealthCheck {
     Write-Log "Running post-deployment health checks..."
-    
+
     # Define health check URLs based on environment
     $healthUrls = @()
-    
+
     switch ($Environment) {
         "development" {
             $healthUrls = @("http://localhost:5000/health", "http://localhost:3000")
@@ -450,17 +450,17 @@ function Test-HealthCheck {
             $healthUrls = @("https://api.company.com/health", "https://app.company.com")
         }
     }
-    
+
     $healthChecksPassed = $true
-    
+
     foreach ($url in $healthUrls) {
         Write-Log "Checking health endpoint: $url"
-        
+
         if ($DryRun) {
             Write-Log "[DRY RUN] Would check: $url"
             continue
         }
-        
+
         try {
             $response = Invoke-WebRequest -Uri $url -TimeoutSec 30 -UseBasicParsing
             if ($response.StatusCode -eq 200) {
@@ -474,16 +474,16 @@ function Test-HealthCheck {
             Write-Error "Health check error: $url - $_"
             $healthChecksPassed = $false
         }
-        
+
         Start-Sleep -Seconds 2
     }
-    
+
     if ($healthChecksPassed) {
         Write-Success "All health checks passed"
     } else {
         Write-Error "One or more health checks failed"
     }
-    
+
     return $healthChecksPassed
 }
 
@@ -492,14 +492,14 @@ function Start-Rollback {
         Write-Warning "Rollback disabled - manual intervention required"
         return
     }
-    
+
     Write-Warning "Initiating automatic rollback..."
-    
+
     if ($DryRun) {
         Write-Log "[DRY RUN] Would execute rollback procedures"
         return
     }
-    
+
     # Implement rollback logic based on deployment strategy
     switch ($Strategy) {
         "rolling" {
@@ -515,14 +515,14 @@ function Start-Rollback {
             # Implement canary rollback
         }
     }
-    
+
     Write-Success "Rollback completed"
 }
 
 function New-DeploymentReport {
     $endTime = Get-Date
     $duration = $endTime - $script:startTime
-    
+
     $report = @"
 # AURORA Deployment Report
 
@@ -553,9 +553,9 @@ function New-DeploymentReport {
 
 Full deployment log: $($script:logFile)
 
-Generated by AURORA-IA-DLC v2.2.0
+Generated by Bolt Framework v2.2.0
 "@
-    
+
     $reportPath = "reports\deployments\$($script:deploymentId)-report.md"
     Set-Content -Path $reportPath -Value $report
     Write-Success "Deployment report generated: $reportPath"
@@ -579,69 +579,69 @@ try {
         $deploymentSuccess = $false
         throw "Prerequisites check failed"
     }
-    
+
     # Constitution validation
     if (-not (Test-Constitution)) {
         $deploymentSuccess = $false
         throw "Constitution validation failed"
     }
-    
+
     # Build
     if (-not (Start-Build)) {
         $deploymentSuccess = $false
         throw "Build process failed"
     }
-    
+
     # Test
     if (-not (Start-Tests)) {
         $deploymentSuccess = $false
         throw "Test suite failed"
     }
-    
+
     # Security scan
     if (-not (Start-SecurityScan)) {
         Write-Warning "Security scan completed with warnings"
     }
-    
+
     # Deployment
     if (-not (Start-Deployment)) {
         $deploymentSuccess = $false
         throw "Deployment failed"
     }
-    
+
     # Health checks
     if (-not (Test-HealthCheck)) {
         $deploymentSuccess = $false
         throw "Health checks failed"
     }
-    
+
     Write-Success "Deployment completed successfully!"
-    
+
 }
 catch {
     Write-Error "Deployment failed: $_"
-    
+
     if (-not $NoRollback -and -not $DryRun) {
         Start-Rollback
     }
-    
+
     $deploymentSuccess = $false
 }
 finally {
     # Generate deployment report
     New-DeploymentReport
-    
+
     Write-Host ""
     if ($deploymentSuccess) {
         Write-Host "🎉 Deployment Summary: SUCCESS" -ForegroundColor Green
     } else {
         Write-Host "💥 Deployment Summary: FAILED" -ForegroundColor Red
     }
-    
+
     $duration = (Get-Date) - $script:startTime
     Write-Host "⏱️  Total Duration: $($duration.ToString('hh\:mm\:ss'))" -ForegroundColor Cyan
     Write-Host "📋 Full Log: $($script:logFile)" -ForegroundColor Cyan
-    
+
     if (-not $deploymentSuccess) {
         exit 1
     }

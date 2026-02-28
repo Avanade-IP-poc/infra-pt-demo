@@ -3,8 +3,8 @@
     Plans and manages system retirement/decommissioning.
 
 .DESCRIPTION
-    This script helps plan the retirement of systems or features following 
-    AI-DLC methodology. It identifies consumers, plans migrations, and 
+    This script helps plan the retirement of systems or features following
+    AI-DLC methodology. It identifies consumers, plans migrations, and
     generates decommissioning documentation.
 
 .PARAMETER SystemName
@@ -28,7 +28,7 @@
     .\Plan-Retirement.ps1 -Interactive
 
 .NOTES
-    Part of AURORA-IA / AI-DLC methodology
+    Part of Bolt Framework / AI-DLC methodology
     Phase: Block 8 - Retirement
 #>
 
@@ -36,16 +36,16 @@
 param(
     [Parameter(Mandatory = $false)]
     [string]$SystemName,
-    
+
     [Parameter(Mandatory = $false)]
     [string]$TargetDate,
-    
+
     [Parameter(Mandatory = $false)]
     [switch]$ListConsumers,
-    
+
     [Parameter(Mandatory = $false)]
     [switch]$GeneratePlan,
-    
+
     [Parameter(Mandatory = $false)]
     [switch]$Interactive
 )
@@ -84,11 +84,11 @@ function Read-UserInput {
         [string]$Prompt,
         [string]$Default = ""
     )
-    
+
     $defaultDisplay = if ($Default) { " [$Default]" } else { "" }
     Write-Host "$Prompt$defaultDisplay`: " -NoNewline -ForegroundColor Yellow
     $input = Read-Host
-    
+
     if ([string]::IsNullOrWhiteSpace($input)) {
         return $Default
     }
@@ -97,7 +97,7 @@ function Read-UserInput {
 
 function Read-MultiLineInput {
     param([string]$Prompt)
-    
+
     Write-Host "$Prompt (enter empty line to finish):" -ForegroundColor Yellow
     $lines = @()
     while ($true) {
@@ -116,20 +116,20 @@ function Read-MultiLineInput {
 
 function Get-PotentialConsumers {
     param([string]$SystemName)
-    
+
     Write-Step "Analyzing potential consumers of '$SystemName'..."
-    
+
     $consumers = @()
-    
+
     # Look for references in various file types
     $searchPattern = $SystemName.ToLower() -replace '\s+', '[-_\s]?'
-    
+
     $fileTypes = @("*.cs", "*.ts", "*.js", "*.json", "*.yaml", "*.yml", "*.xml", "*.md")
-    
+
     foreach ($type in $fileTypes) {
         $files = Get-ChildItem -Path . -Filter $type -Recurse -ErrorAction SilentlyContinue |
                  Where-Object { $_.FullName -notmatch "node_modules|bin|obj|dist|\.git" }
-        
+
         foreach ($file in $files) {
             $content = Get-Content $file.FullName -Raw -ErrorAction SilentlyContinue
             if ($content -match $searchPattern) {
@@ -141,7 +141,7 @@ function Get-PotentialConsumers {
             }
         }
     }
-    
+
     # Check for API routes or endpoints
     $apiPatterns = @("api/", "endpoint", "route", "controller")
     foreach ($pattern in $apiPatterns) {
@@ -155,7 +155,7 @@ function Get-PotentialConsumers {
             }
         }
     }
-    
+
     return $consumers | Sort-Object -Property Location -Unique
 }
 
@@ -167,24 +167,24 @@ function New-RetirementPlan {
     param(
         [hashtable]$PlanData
     )
-    
+
     $retirementDir = "docs/retirement"
     if (-not (Test-Path $retirementDir)) {
         New-Item -ItemType Directory -Path $retirementDir -Force | Out-Null
     }
-    
+
     $safeFileName = $PlanData.SystemName -replace '\s+', '-' -replace '[^\w\-]', ''
     $planPath = "$retirementDir/${safeFileName}-retirement-plan.md"
     $date = Get-Date -Format "yyyy-MM-dd"
-    
+
     # Calculate timeline
-    $targetDate = if ($PlanData.TargetDate) { 
-        [DateTime]::Parse($PlanData.TargetDate) 
-    } else { 
-        (Get-Date).AddMonths(6) 
+    $targetDate = if ($PlanData.TargetDate) {
+        [DateTime]::Parse($PlanData.TargetDate)
+    } else {
+        (Get-Date).AddMonths(6)
     }
     $daysRemaining = ($targetDate - (Get-Date)).Days
-    
+
     $content = @"
 # Retirement Plan: $($PlanData.SystemName)
 
@@ -280,22 +280,22 @@ $($PlanData.Replacement)
    - [ ] Complete consumer inventory
    - [ ] Document all integration points
    - [ ] Create migration runbooks
-   
+
 2. **Phase 2: Development** (Weeks 3-6)
    - [ ] Build/configure replacement system
    - [ ] Create migration scripts
    - [ ] Develop testing strategy
-   
+
 3. **Phase 3: Testing** (Weeks 7-8)
    - [ ] Integration testing
    - [ ] Performance testing
    - [ ] User acceptance testing
-   
+
 4. **Phase 4: Migration** (Weeks 9-10)
    - [ ] Execute migration per consumer
    - [ ] Validate each migration
    - [ ] Monitor for issues
-   
+
 5. **Phase 5: Retirement** (Weeks 11-12)
    - [ ] Final data backup
    - [ ] Decommission old system
@@ -324,7 +324,7 @@ Subject: [Action Required] $($PlanData.SystemName) Retirement Notice
 
 Dear Team,
 
-This is to inform you that $($PlanData.SystemName) is scheduled for retirement 
+This is to inform you that $($PlanData.SystemName) is scheduled for retirement
 on $($targetDate.ToString("yyyy-MM-dd")).
 
 **What this means for you:**
@@ -407,11 +407,11 @@ If retirement needs to be reversed:
 
 | Date | Changes | Author |
 |------|---------|--------|
-| $date | Initial plan created | AURORA-IA |
+| $date | Initial plan created | Bolt Framework |
 
 ---
 
-*Generated by AURORA-IA Retire Command*
+*Generated by Bolt Framework Retire Command*
 "@
 
     Set-Content -Path $planPath -Value $content
@@ -432,36 +432,36 @@ function Start-InteractiveRetirement {
         Replacement = ""
         Consumers = @()
     }
-    
+
     Write-Step "Interactive Retirement Planning"
-    
+
     $planData.SystemName = Read-UserInput "System/Feature name to retire"
     if ([string]::IsNullOrWhiteSpace($planData.SystemName)) {
         Write-Err "System name is required"
         return
     }
-    
+
     $planData.TargetDate = Read-UserInput "Target retirement date (YYYY-MM-DD)" (Get-Date (Get-Date).AddMonths(6) -Format "yyyy-MM-dd")
-    
+
     Write-Host "`n" -NoNewline
     $planData.Reason = Read-UserInput "Brief summary of why this is being retired" "System is being replaced with modern alternative"
-    
+
     Write-Host "`n" -NoNewline
     $planData.BusinessReason = Read-UserInput "Business reason for retirement" "Cost reduction and improved capabilities"
-    
+
     Write-Host "`n" -NoNewline
     $planData.TechnicalReason = Read-UserInput "Technical reason for retirement" "Legacy technology, maintenance burden, security concerns"
-    
+
     Write-Host "`n" -NoNewline
     $planData.Replacement = Read-UserInput "What replaces this system?" "New system/process TBD"
-    
+
     Write-Host "`n" -NoNewline
     $analyzeConsumers = Read-UserInput "Analyze codebase for potential consumers? (y/n)" "y"
     if ($analyzeConsumers -eq "y") {
         $planData.Consumers = Get-PotentialConsumers -SystemName $planData.SystemName
         Write-Info "Found $($planData.Consumers.Count) potential consumer references"
     }
-    
+
     return $planData
 }
 
@@ -469,7 +469,7 @@ function Start-InteractiveRetirement {
 # MAIN EXECUTION
 # ============================================================================
 
-Write-Host "`n🏚️ AURORA-IA Retirement Planner" -ForegroundColor Magenta
+Write-Host "\n\ud83c\udfda\ufe0f Bolt Framework Retirement Planner" -ForegroundColor Magenta
 Write-Host "==================================`n" -ForegroundColor Magenta
 
 $planData = $null
@@ -488,7 +488,7 @@ if ($Interactive) {
         Write-Host "  .\Plan-Retirement.ps1 -SystemName 'Old Module' -ListConsumers`n"
         exit 1
     }
-    
+
     $planData = @{
         SystemName = $SystemName
         TargetDate = if ($TargetDate) { $TargetDate } else { (Get-Date).AddMonths(6).ToString("yyyy-MM-dd") }
@@ -498,10 +498,10 @@ if ($Interactive) {
         Replacement = "To be determined"
         Consumers = @()
     }
-    
+
     if ($ListConsumers) {
         $planData.Consumers = Get-PotentialConsumers -SystemName $SystemName
-        
+
         Write-Step "Consumer Analysis Results"
         if ($planData.Consumers.Count -eq 0) {
             Write-Info "No direct code references found"
@@ -514,7 +514,7 @@ if ($Interactive) {
                 Write-Info "... and $($planData.Consumers.Count - 10) more"
             }
         }
-        
+
         if (-not $GeneratePlan) {
             Write-Host "`nUse -GeneratePlan to create a full retirement plan`n"
             exit 0
@@ -524,11 +524,11 @@ if ($Interactive) {
 
 if ($GeneratePlan -or $Interactive) {
     Write-Step "Generating retirement plan..."
-    
+
     if (-not $planData.Consumers -or $planData.Consumers.Count -eq 0) {
         $planData.Consumers = Get-PotentialConsumers -SystemName $planData.SystemName
     }
-    
+
     $planPath = New-RetirementPlan -PlanData $planData
     Write-Success "Retirement plan created: $planPath"
 }

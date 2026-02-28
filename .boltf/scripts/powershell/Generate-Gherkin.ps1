@@ -1,7 +1,7 @@
 
 <#
 .SYNOPSIS
-    AURORA-IA / AI-DLC - Generate Gherkin Script
+    Bolt Framework / AI-DLC - Generate Gherkin Script
 
 .DESCRIPTION
     Generates Gherkin feature file structure from specifications.
@@ -61,7 +61,7 @@ Feature: $FeatureTitle
   As a [role from user story]
   I want [capability]
   So that [benefit]
-  
+
   # Specification: $SpecDir/spec.md
   # Generated: $Date
 
@@ -92,7 +92,7 @@ Feature: $FeatureTitle
     Given the required preconditions are met
     When I perform the action with <input>
     Then the result should be <expected>
-    
+
     Examples:
       | input        | expected |
       | valid_min    | success  |
@@ -137,13 +137,13 @@ public class CommonSteps
     {
         // Setup code
     }
-    
+
     [When(@"I perform the main action")]
     public void WhenIPerformTheMainAction()
     {
         // Action code
     }
-    
+
     [Then(@"the action should be completed successfully")]
     public void ThenTheActionShouldBeCompletedSuccessfully()
     {

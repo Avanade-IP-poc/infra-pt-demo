@@ -30,16 +30,16 @@
 
 ### FROM: Bolt Constitution
 
-| Target Agent     | Valid | Reason                                     |
-| ---------------- | ----- | ------------------------------------------ |
+| Target Agent   | Valid | Reason                                     |
+| -------------- | ----- | ------------------------------------------ |
 | Bolt Clarify   | ✅    | Resolve ambiguities before ratifying       |
 | Bolt Feature   | ✅    | Start defining features after constitution |
 | Bolt Templates | ✅    | Generate project templates                 |
 
 ### FROM: Bolt Clarify
 
-| Target Agent        | Valid | Reason                                |
-| ------------------- | ----- | ------------------------------------- |
+| Target Agent      | Valid | Reason                                |
+| ----------------- | ----- | ------------------------------------- |
 | Bolt Constitution | ✅    | Apply clarifications to constitution  |
 | Bolt Feature      | ✅    | Clarified requirements → feature spec |
 | Bolt Specify      | ✅    | Clarified → detailed spec             |
@@ -50,8 +50,8 @@
 
 ### FROM: Bolt Feature
 
-| Target Agent     | Valid | Reason                                  |
-| ---------------- | ----- | --------------------------------------- |
+| Target Agent   | Valid | Reason                                  |
+| -------------- | ----- | --------------------------------------- |
 | Bolt Use Case  | ✅    | Detail use cases from stories           |
 | Bolt Gherkin   | ✅    | BDD scenarios from acceptance criteria  |
 | Bolt DDD       | ✅    | Domain model from feature context       |
@@ -63,8 +63,8 @@
 
 ### FROM: Bolt Plan
 
-| Target Agent     | Valid | Reason                             |
-| ---------------- | ----- | ---------------------------------- |
+| Target Agent   | Valid | Reason                             |
+| -------------- | ----- | ---------------------------------- |
 | Bolt Tasks     | ✅    | Breakdown plan into Bolt tasks     |
 | Bolt Analyze   | ✅    | Verify plan consistency with specs |
 | Bolt Architect | ✅    | Validate architecture decisions    |
@@ -73,40 +73,40 @@
 
 ### FROM: Bolt Tasks
 
-| Target Agent          | Valid | Reason                         |
-| --------------------- | ----- | ------------------------------ |
+| Target Agent        | Valid | Reason                         |
+| ------------------- | ----- | ------------------------------ |
 | Bolt Implement      | ✅    | Start implementing tasks       |
 | Bolt Micro Iterator | ✅    | Start Bolt iteration           |
 | Bolt Plan           | ❌    | Tasks come FROM plan, not back |
 
 ### FROM: Bolt Specify
 
-| Target Agent   | Valid | Reason                   |
-| -------------- | ----- | ------------------------ |
+| Target Agent | Valid | Reason                   |
+| ------------ | ----- | ------------------------ |
 | Bolt Feature | ✅    | Refine feature from spec |
 | Bolt Gherkin | ✅    | BDD from spec            |
 | Bolt Plan    | ✅    | Plan from spec           |
 
 ### FROM: Bolt Use Case
 
-| Target Agent   | Valid | Reason              |
-| -------------- | ----- | ------------------- |
+| Target Agent | Valid | Reason              |
+| ------------ | ----- | ------------------- |
 | Bolt Gherkin | ✅    | BDD from use cases  |
 | Bolt Plan    | ✅    | Plan from use cases |
 | Bolt Feature | ✅    | Refine feature      |
 
 ### FROM: Bolt Gherkin
 
-| Target Agent   | Valid | Reason                          |
-| -------------- | ----- | ------------------------------- |
+| Target Agent | Valid | Reason                          |
+| ------------ | ----- | ------------------------------- |
 | Bolt Testing | ✅    | Step definitions from scenarios |
 | Bolt Feature | ✅    | Refine feature from scenarios   |
 | Bolt Plan    | ✅    | Plan informed by BDD            |
 
 ### FROM: Bolt DDD
 
-| Target Agent     | Valid | Reason                         |
-| ---------------- | ----- | ------------------------------ |
+| Target Agent   | Valid | Reason                         |
+| -------------- | ----- | ------------------------------ |
 | Bolt Architect | ✅    | Architecture from domain model |
 | Bolt Feature   | ✅    | Refine features from domain    |
 | Bolt Plan      | ✅    | Plan from domain model         |
@@ -117,8 +117,8 @@
 
 ### FROM: Bolt Implement
 
-| Target Agent   | Valid | Reason                                  |
-| -------------- | ----- | --------------------------------------- |
+| Target Agent | Valid | Reason                                  |
+| ------------ | ----- | --------------------------------------- |
 | Bolt Testing | ✅    | Generate tests for implementation       |
 | Bolt Analyze | ✅    | Verify consistency with spec            |
 | Bolt Review  | ✅    | Code review                             |
@@ -128,8 +128,8 @@
 
 ### FROM: Bolt Testing
 
-| Target Agent     | Valid | Reason                            |
-| ---------------- | ----- | --------------------------------- |
+| Target Agent   | Valid | Reason                            |
+| -------------- | ----- | --------------------------------- |
 | Bolt Implement | ✅    | TDD green phase — make tests pass |
 | Bolt Gherkin   | ✅    | Generate BDD scenarios            |
 | Bolt Review    | ✅    | Review test quality               |
@@ -138,19 +138,19 @@
 
 ### FROM: Bolt Review
 
-| Target Agent     | Valid | Reason                           |
-| ---------------- | ----- | -------------------------------- |
+| Target Agent   | Valid | Reason                           |
+| -------------- | ----- | -------------------------------- |
 | Bolt Implement | ✅    | Fix issues found in review       |
 | Bolt Testing   | ✅    | Improve coverage                 |
-| Bolt ADR         | ✅    | Document architectural decision  |
+| Bolt ADR       | ✅    | Document architectural decision  |
 | Bolt Analyze   | ✅    | Deep analysis of findings        |
 | Bolt Feature   | ❌    | Review doesn't create features   |
 | Bolt Release   | ❌    | Should go through Bolt Framework |
 
 ### FROM: Bolt Micro Iterator
 
-| Target Agent     | Valid | Reason                         |
-| ---------------- | ----- | ------------------------------ |
+| Target Agent   | Valid | Reason                         |
+| -------------- | ----- | ------------------------------ |
 | Bolt Tasks     | ✅    | Get task list for current Bolt |
 | Bolt Implement | ✅    | Execute implementation         |
 | Bolt Testing   | ✅    | Run tests for Bolt             |
@@ -158,24 +158,24 @@
 
 ### FROM: Bolt Analyze
 
-| Target Agent     | Valid | Reason                |
-| ---------------- | ----- | --------------------- |
+| Target Agent   | Valid | Reason                |
+| -------------- | ----- | --------------------- |
 | Bolt Implement | ✅    | Fix inconsistencies   |
 | Bolt Feature   | ✅    | Update spec if needed |
 | Bolt Review    | ✅    | Quality findings      |
 
 ### FROM: Bolt ADR
 
-| Target Agent     | Valid | Reason                    |
-| ---------------- | ----- | ------------------------- |
+| Target Agent   | Valid | Reason                    |
+| -------------- | ----- | ------------------------- |
 | Bolt Architect | ✅    | Architecture implications |
 | Bolt Implement | ✅    | Apply decision            |
 
 ### FROM: Bolt Architect
 
-| Target Agent     | Valid | Reason                         |
-| ---------------- | ----- | ------------------------------ |
-| Bolt ADR         | ✅    | Document architecture decision |
+| Target Agent   | Valid | Reason                         |
+| -------------- | ----- | ------------------------------ |
+| Bolt ADR       | ✅    | Document architecture decision |
 | Bolt Plan      | ✅    | Inform plan with architecture  |
 | Bolt DDD       | ✅    | Domain modeling                |
 | Bolt Implement | ✅    | Guide implementation           |
@@ -186,16 +186,16 @@
 
 ### FROM: Bolt Release
 
-| Target Agent  | Valid | Reason                 |
-| ------------- | ----- | ---------------------- |
-| Bolt CI/CD  | ✅    | Pipeline configuration |
-| Bolt Ops    | ✅    | Deployment operations  |
-| Bolt Status | ✅    | Release status update  |
+| Target Agent | Valid | Reason                 |
+| ------------ | ----- | ---------------------- |
+| Bolt CI/CD   | ✅    | Pipeline configuration |
+| Bolt Ops     | ✅    | Deployment operations  |
+| Bolt Status  | ✅    | Release status update  |
 
 ### FROM: Bolt CI/CD
 
-| Target Agent   | Valid | Reason                    |
-| -------------- | ----- | ------------------------- |
+| Target Agent | Valid | Reason                    |
+| ------------ | ----- | ------------------------- |
 | Bolt Release | ✅    | Release process           |
 | Bolt Ops     | ✅    | Deployment                |
 | Bolt Testing | ✅    | Pipeline test integration |
@@ -206,19 +206,19 @@
 
 ### FROM: Bolt Ops
 
-| Target Agent      | Valid | Reason                              |
-| ----------------- | ----- | ----------------------------------- |
+| Target Agent    | Valid | Reason                              |
+| --------------- | ----- | ----------------------------------- |
 | Bolt Improve    | ✅    | Identify improvements from ops data |
 | Bolt Postmortem | ✅    | Incident analysis                   |
 | Bolt Status     | ✅    | Operational status                  |
 | Bolt Release    | ✅    | New deployment needed               |
-| Aurora Monitoring | ✅    | Configure monitoring                |
+| Bolt Monitoring | ✅    | Configure monitoring                |
 | Bolt Feature    | ❌    | Ops doesn't create features         |
 
 ### FROM: Bolt Status
 
-| Target Agent     | Valid | Reason                    |
-| ---------------- | ----- | ------------------------- |
+| Target Agent   | Valid | Reason                    |
+| -------------- | ----- | ------------------------- |
 | Bolt Analyze   | ✅    | Deep analysis             |
 | Bolt Improve   | ✅    | Improvement opportunities |
 | Bolt Alignment | ✅    | Check alignment           |
@@ -227,24 +227,24 @@
 
 ### FROM: Bolt Improve
 
-| Target Agent     | Valid | Reason                     |
-| ---------------- | ----- | -------------------------- |
+| Target Agent   | Valid | Reason                     |
+| -------------- | ----- | -------------------------- |
 | Bolt Feature   | ✅    | Improvement → new feature  |
 | Bolt Implement | ✅    | Apply improvement          |
 | Bolt Analyze   | ✅    | Analyze improvement impact |
 
 ### FROM: Bolt Alignment
 
-| Target Agent   | Valid | Reason                     |
-| -------------- | ----- | -------------------------- |
+| Target Agent | Valid | Reason                     |
+| ------------ | ----- | -------------------------- |
 | Bolt Improve | ✅    | Misalignment → improvement |
 | Bolt Status  | ✅    | Alignment status           |
 | Bolt Analyze | ✅    | Deep alignment analysis    |
 
-### FROM: Aurora Monitoring
+### FROM: Bolt Monitoring
 
-| Target Agent   | Valid | Reason                |
-| -------------- | ----- | --------------------- |
+| Target Agent | Valid | Reason                |
+| ------------ | ----- | --------------------- |
 | Bolt Ops     | ✅    | Alert → operations    |
 | Bolt Improve | ✅    | Metrics → improvement |
 
@@ -252,20 +252,20 @@
 
 ## RETIREMENT Phase
 
-### FROM: Aurora Retire
+### FROM: Bolt Retire
 
-| Target Agent      | Valid | Reason                     |
-| ----------------- | ----- | -------------------------- |
+| Target Agent    | Valid | Reason                     |
+| --------------- | ----- | -------------------------- |
 | Bolt Ops        | ✅    | Decommissioning operations |
 | Bolt Status     | ✅    | Retirement status          |
 | Bolt Postmortem | ✅    | Lessons learned            |
 
 ### FROM: Bolt Postmortem
 
-| Target Agent   | Valid | Reason                 |
-| -------------- | ----- | ---------------------- |
+| Target Agent | Valid | Reason                 |
+| ------------ | ----- | ---------------------- |
 | Bolt Improve | ✅    | Lessons → improvements |
-| Bolt ADR       | ✅    | Document decisions     |
+| Bolt ADR     | ✅    | Document decisions     |
 
 ---
 
@@ -273,33 +273,33 @@
 
 ### FROM: Bolt Security
 
-| Target Agent        | Valid | Reason                     |
-| ------------------- | ----- | -------------------------- |
+| Target Agent      | Valid | Reason                     |
+| ----------------- | ----- | -------------------------- |
 | Bolt Constitution | ✅    | Update security standards  |
 | Bolt Implement    | ✅    | Fix vulnerabilities        |
 | Bolt Testing      | ✅    | Security test suites       |
 | Bolt Review       | ✅    | Security review findings   |
 | Bolt Security     | ❌    | **SELF-HANDOFF — INVALID** |
 
-### FROM: Aurora Dependencies
+### FROM: Bolt Dependencies
 
-| Target Agent        | Valid | Reason                      |
-| ------------------- | ----- | --------------------------- |
+| Target Agent      | Valid | Reason                      |
+| ----------------- | ----- | --------------------------- |
 | Bolt Implement    | ✅    | Install dependencies        |
 | Bolt Security     | ✅    | Check dependency security   |
 | Bolt Constitution | ✅    | Update allowed dependencies |
 
-### FROM: Aurora Docs
+### FROM: Bolt Docs
 
-| Target Agent   | Valid | Reason                     |
-| -------------- | ----- | -------------------------- |
-| Bolt ADR       | ✅    | Architecture documentation |
+| Target Agent | Valid | Reason                     |
+| ------------ | ----- | -------------------------- |
+| Bolt ADR     | ✅    | Architecture documentation |
 | Bolt Feature | ✅    | Feature documentation      |
 
 ### FROM: Bolt Templates
 
-| Target Agent        | Valid | Reason                    |
-| ------------------- | ----- | ------------------------- |
+| Target Agent      | Valid | Reason                    |
+| ----------------- | ----- | ------------------------- |
 | Bolt Constitution | ✅    | Template for constitution |
 | Bolt Feature      | ✅    | Template for features     |
 | Bolt Implement    | ✅    | Code templates            |

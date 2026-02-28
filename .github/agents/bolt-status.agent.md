@@ -1,6 +1,6 @@
 ---
 name: Bolt Status
-description: 📊 Generate comprehensive project status reports across all AURORA lifecycle phases
+description: \ud83d\udcca Generate comprehensive project status reports across all Bolt lifecycle phases
 tools:
   [
     search,
@@ -45,7 +45,7 @@ When you need to get project status, execute these scripts:
 - **Bash**: `scripts/bash/project-status.sh`
 - **PowerShell**: `scripts/powershell/Get-ProjectStatus.ps1`
 
-Generate comprehensive project status reports across all AURORA lifecycle phases.
+Generate comprehensive project status reports across all Bolt lifecycle phases.
 
 **Bolt Framework Stage**: CROSS-PHASE (Status reporting)
 

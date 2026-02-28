@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    AURORA-IA / AI-DLC - Update Agent Context Script
+    Bolt Framework / AI-DLC - Update Agent Context Script
 
 .DESCRIPTION
     Validates and synchronizes relationships between:
@@ -81,12 +81,12 @@ function Write-Header {
 
 function Test-ConstitutionExists {
     Write-Header "Checking Constitution"
-    
+
     if (Test-Path $Constitution) {
         Write-Success "Constitution exists: $Constitution"
-        
+
         $content = Get-Content $Constitution -Raw -ErrorAction SilentlyContinue
-        
+
         # Check required sections
         $requiredSections = @("Tech Stack", "Architecture", "Standards", "Security")
         foreach ($section in $requiredSections) {
@@ -98,30 +98,30 @@ function Test-ConstitutionExists {
         }
     } else {
         Write-ErrorCustom "Constitution not found: $Constitution"
-        Write-Host "       Run: /aurora.constitution to create it" -ForegroundColor Gray
+        Write-Host "       Use: @Bolt Constitution to create it" -ForegroundColor Gray
     }
 }
 
 function Test-AgentsHaveConstitutionReference {
     Write-Header "Checking Agents → Constitution Reference"
-    
+
     if (-not (Test-Path $AgentsDir)) {
         Write-ErrorCustom "Agents directory not found: $AgentsDir"
         return
     }
-    
-    $agentFiles = Get-ChildItem -Path $AgentsDir -Filter "*.md" | 
+
+    $agentFiles = Get-ChildItem -Path $AgentsDir -Filter "*.md" |
                   Where-Object { $_.Name -ne "README.md" }
-    
+
     foreach ($agentFile in $agentFiles) {
         $content = Get-Content $agentFile.FullName -Raw -ErrorAction SilentlyContinue
-        
+
         if ($content -match "Constitution Reference") {
             Write-Success "Agent has Constitution Reference: $($agentFile.Name)"
         } else {
             Write-ErrorCustom "Agent missing Constitution Reference: $($agentFile.Name)"
         }
-        
+
         if ($content -match "memory/constitution\.md") {
             Write-Success "Agent references constitution path: $($agentFile.Name)"
         } else {
@@ -132,32 +132,32 @@ function Test-AgentsHaveConstitutionReference {
 
 function Test-PromptsHaveAgentReference {
     Write-Header "Checking Prompts → Agent Reference"
-    
+
     if (-not (Test-Path $PromptsDir)) {
         Write-ErrorCustom "Prompts directory not found: $PromptsDir"
         return
     }
-    
+
     $promptFiles = Get-ChildItem -Path $PromptsDir -Filter "*.prompt.md"
-    
+
     foreach ($promptFile in $promptFiles) {
         $content = Get-Content $promptFile.FullName -Raw -ErrorAction SilentlyContinue
-        
+
         if ($content -match "Agent Reference") {
             Write-Success "Prompt has Agent Reference: $($promptFile.Name)"
         } else {
             Write-ErrorCustom "Prompt missing Agent Reference: $($promptFile.Name)"
         }
-        
+
         # Check if prompt links to an agent file
         if ($content -match "\.\./(copilot/)?agents/") {
             Write-Success "Prompt links to agent: $($promptFile.Name)"
-            
+
             # Extract and verify agent links
-            $agentLinks = [regex]::Matches($content, '\.\./(copilot/)?agents/([a-z-]+)\.md') | 
-                          ForEach-Object { $_.Groups[2].Value } | 
+            $agentLinks = [regex]::Matches($content, '\.\./(copilot/)?agents/([a-z-]+)\.md') |
+                          ForEach-Object { $_.Groups[2].Value } |
                           Select-Object -Unique
-            
+
             foreach ($agentLink in $agentLinks) {
                 $agentPath = Join-Path $AgentsDir "$agentLink.md"
                 if (Test-Path $agentPath) {
@@ -169,7 +169,7 @@ function Test-PromptsHaveAgentReference {
         } else {
             Write-WarningCustom "Prompt doesn't link to any agent: $($promptFile.Name)"
         }
-        
+
         # Check if prompt references Constitution
         if ($content -match "constitution\.md|Constitution") {
             Write-Success "Prompt references Constitution: $($promptFile.Name)"
@@ -181,27 +181,27 @@ function Test-PromptsHaveAgentReference {
 
 function Test-AgentPromptCoverage {
     Write-Header "Checking Agent ↔ Prompt Coverage"
-    
+
     # Get list of agents (excluding README)
-    $agents = Get-ChildItem -Path $AgentsDir -Filter "*.md" | 
+    $agents = Get-ChildItem -Path $AgentsDir -Filter "*.md" |
               Where-Object { $_.Name -ne "README.md" } |
               ForEach-Object { $_.BaseName }
-    
+
     # Get list of prompts
     $prompts = Get-ChildItem -Path $PromptsDir -Filter "*.prompt.md" |
                ForEach-Object { $_.BaseName -replace '\.prompt$', '' }
-    
+
     Write-Info "Found $($agents.Count) agents and $($prompts.Count) prompts"
-    
+
     Write-Host ""
     Write-Info "Agent coverage analysis:"
-    
+
     $coveredAgents = @()
     $uncoveredAgents = @()
-    
+
     foreach ($agent in $agents) {
         $isCovered = $false
-        
+
         $promptFiles = Get-ChildItem -Path $PromptsDir -Filter "*.prompt.md"
         foreach ($promptFile in $promptFiles) {
             $content = Get-Content $promptFile.FullName -Raw -ErrorAction SilentlyContinue
@@ -210,7 +210,7 @@ function Test-AgentPromptCoverage {
                 break
             }
         }
-        
+
         if ($isCovered) {
             $coveredAgents += $agent
             Write-Success "Agent covered by prompt: $agent"
@@ -219,7 +219,7 @@ function Test-AgentPromptCoverage {
             Write-WarningCustom "Agent NOT covered by any prompt: $agent"
         }
     }
-    
+
     Write-Host ""
     $coverage = [math]::Round(($coveredAgents.Count / $agents.Count) * 100)
     Write-Info "Coverage: $($coveredAgents.Count)/$($agents.Count) agents ($coverage%)"
@@ -227,21 +227,21 @@ function Test-AgentPromptCoverage {
 
 function Get-MappingReport {
     Write-Header "Generating Prompt → Agent Mapping"
-    
+
     Write-Host ""
     Write-Host ("{0,-35} {1,-40}" -f "PROMPT", "AGENT(S)")
     Write-Host ("─" * 75)
-    
+
     $promptFiles = Get-ChildItem -Path $PromptsDir -Filter "*.prompt.md"
-    
+
     foreach ($promptFile in $promptFiles) {
         $content = Get-Content $promptFile.FullName -Raw -ErrorAction SilentlyContinue
         $promptName = $promptFile.BaseName -replace '\.prompt$', ''
-        
-        $agentLinks = [regex]::Matches($content, '\.\./(copilot/)?agents/([a-z-]+)\.md') | 
-                      ForEach-Object { $_.Groups[2].Value } | 
+
+        $agentLinks = [regex]::Matches($content, '\.\./(copilot/)?agents/([a-z-]+)\.md') |
+                      ForEach-Object { $_.Groups[2].Value } |
                       Select-Object -Unique
-        
+
         if ($agentLinks) {
             $agentsStr = $agentLinks -join ", "
             Write-Host ("{0,-35} " -f $promptName) -NoNewline
@@ -255,19 +255,19 @@ function Get-MappingReport {
 
 function Get-ConstitutionTechStack {
     Write-Header "Checking Constitution Tech Stack"
-    
+
     if (-not (Test-Path $Constitution)) {
         Write-WarningCustom "Cannot check tech stack - Constitution not found"
         return
     }
-    
+
     Write-Info "Tech stack defined in Constitution:"
-    
+
     $content = Get-Content $Constitution -Raw -ErrorAction SilentlyContinue
-    
+
     $techs = @("\.NET", "React", "Angular", "Vue", "Node", "Python", "Go", "Java", "TypeScript",
                "PostgreSQL", "MySQL", "MongoDB", "Redis", "Azure", "AWS", "GCP", "Kubernetes", "Docker")
-    
+
     foreach ($tech in $techs) {
         if ($content -match $tech) {
             $displayTech = $tech -replace '\\', ''
@@ -282,18 +282,18 @@ function Get-ConstitutionTechStack {
 
 function Repair-MissingConstitutionReference {
     Write-Header "Fixing Missing Constitution References"
-    
-    $agentFiles = Get-ChildItem -Path $AgentsDir -Filter "*.md" | 
+
+    $agentFiles = Get-ChildItem -Path $AgentsDir -Filter "*.md" |
                   Where-Object { $_.Name -ne "README.md" }
-    
+
     foreach ($agentFile in $agentFiles) {
         $content = Get-Content $agentFile.FullName -Raw -ErrorAction SilentlyContinue
-        
+
         if ($content -notmatch "Constitution Reference") {
             Write-WarningCustom "Would add Constitution Reference to: $($agentFile.Name)"
         }
     }
-    
+
     Write-Info "Fix mode shows what would be changed. Manual review recommended."
 }
 
@@ -303,7 +303,7 @@ function Repair-MissingConstitutionReference {
 
 function Write-Summary {
     Write-Header "Summary"
-    
+
     Write-Host ""
     Write-Host "  Passed:   " -NoNewline
     Write-Host $script:Passed -ForegroundColor Green
@@ -312,7 +312,7 @@ function Write-Summary {
     Write-Host "  Errors:   " -NoNewline
     Write-Host $script:Errors -ForegroundColor Red
     Write-Host ""
-    
+
     if ($script:Errors -gt 0) {
         Write-Host ("━" * 60) -ForegroundColor Red
         Write-Host "  VALIDATION FAILED - Please fix errors above" -ForegroundColor Red
@@ -338,10 +338,10 @@ function Write-Summary {
 function Main {
     Write-Host ""
     Write-Host ("╔" + ("═" * 62) + "╗") -ForegroundColor Cyan
-    Write-Host "║     AURORA-IA / AI-DLC - Agent Context Validator            ║" -ForegroundColor Cyan
+    Write-Host "║     Bolt Framework / AI-DLC - Agent Context Validator       ║" -ForegroundColor Cyan
     Write-Host ("║     Mode: $Mode" + (" " * (51 - $Mode.Length)) + "║") -ForegroundColor Cyan
     Write-Host ("╚" + ("═" * 62) + "╝") -ForegroundColor Cyan
-    
+
     switch ($Mode) {
         "Check" {
             Test-ConstitutionExists
@@ -364,7 +364,7 @@ function Main {
             Test-PromptsHaveAgentReference
         }
     }
-    
+
     Write-Summary
 }
 

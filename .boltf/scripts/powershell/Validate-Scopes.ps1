@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    AURORA-IA / AI-DLC - Validate Scopes Script
+    Bolt Framework / AI-DLC - Validate Scopes Script
 
 .DESCRIPTION
     Validates .boltf/scopes/*/scope.yaml files for structure, external source rules,
@@ -154,7 +154,7 @@ else:
     sys.exit(0)
 '@
 
-$tempPy = Join-Path $env:TEMP "aurora-validate-scopes.py"
+$tempPy = Join-Path $env:TEMP "bolt-validate-scopes.py"
 Set-Content -Path $tempPy -Value $pyScript -Encoding UTF8
 
 if ($python -eq 'python') {

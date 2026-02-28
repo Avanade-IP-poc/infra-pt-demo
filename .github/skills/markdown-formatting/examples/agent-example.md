@@ -471,5 +471,5 @@ Use when:
 
 ---
 
-**Maintained by:** AURORA AI Development Team
+**Maintained by:** Bolt Framework Development Team
 **Last Updated:** 2026-02-13

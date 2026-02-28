@@ -1,24 +1,24 @@
 #!/usr/bin/env bash
 # =============================================================================
-# sync-aurora-to-devops.sh
-# Synchronize AURORA feature specifications to Azure DevOps work items
+# sync-bolt-to-devops.sh
+# Synchronize Bolt feature specifications to Azure DevOps work items
 #
-# Reads AURORA specs from specs/ folder and creates/updates corresponding
+# Reads Bolt specs from specs/ folder and creates/updates corresponding
 # work items in Azure DevOps (Features, User Stories, Tasks).
 # Maintains traceability through .metadata/devops-sync.json
 #
 # Usage:
-#   ./sync-aurora-to-devops.sh -f "specs/001-time-tracking" [-m incremental] [-d] [--force]
+#   ./sync-bolt-to-devops.sh -f "specs/001-time-tracking" [-m incremental] [-d] [--force]
 #
 # Parameters:
-#   -f, --feature-path   Path to the AURORA feature folder (required)
+#   -f, --feature-path   Path to the Bolt feature folder (required)
 #   -m, --mode           Sync mode: full | incremental (default: incremental)
 #   -d, --dry-run        Preview changes without creating work items
 #   --force              Skip confirmation prompts
 #
 # Examples:
-#   ./sync-aurora-to-devops.sh -f "specs/001-time-tracking" -d
-#   ./sync-aurora-to-devops.sh -f "specs/001-time-tracking" -m full
+#   ./sync-bolt-to-devops.sh -f "specs/001-time-tracking" -d
+#   ./sync-bolt-to-devops.sh -f "specs/001-time-tracking" -m full
 #
 # Requires:
 #   - Azure DevOps CLI (az devops)

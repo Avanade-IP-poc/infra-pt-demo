@@ -558,10 +558,10 @@ function Copy-CoreSkills {
     $githubSkills = @('new-skill', 'markdown-formatting')
     # 2. From .boltf/available-skills/bolt-framework/ (ALL skills auto-discovered)
     $boltFrameworkPath = Join-Path $ProjectPath ".boltf\available-skills\bolt-framework"
-    $auroraSkills = @()
+    $boltSkills = @()
     if (Test-Path $boltFrameworkPath) {
-        $auroraSkills = Get-ChildItem -Path $boltFrameworkPath -Directory | Select-Object -ExpandProperty Name
-        Write-Verbose "Auto-discovered $(($auroraSkills).Count) Bolt Framework skills: $($auroraSkills -join ', ')"
+        $boltSkills = Get-ChildItem -Path $boltFrameworkPath -Directory | Select-Object -ExpandProperty Name
+        Write-Verbose "Auto-discovered $(($boltSkills).Count) Bolt Framework skills: $($boltSkills -join ', ')"
     } else {
         Write-Warn "Bolt Framework skills path not found: $boltFrameworkPath"
     }
@@ -580,7 +580,7 @@ function Copy-CoreSkills {
     }
 
     # Provision skills from .boltf/available-skills
-    foreach ($skillName in $auroraSkills) {
+    foreach ($skillName in $boltSkills) {
         $sourcePath = Join-Path $ProjectPath ".boltf\available-skills\bolt-framework\$skillName"
         $destPath = Join-Path $ProjectPath ".github\skills\$skillName"
 

@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    AURORA-IA / AI-DLC - Create ADR Script
+    Bolt Framework / AI-DLC - Create ADR Script
 
 .DESCRIPTION
     Creates a new Architectural Decision Record from template.

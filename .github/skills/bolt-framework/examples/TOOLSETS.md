@@ -553,7 +553,7 @@ tools: [search, read, edit, vscode, agent, 'ms-mssql.mssql/*', 'context7/*']
 | bolt-tasks          | FULL_PLANNING        | context7, awesome-copilot, microsoftdocs               |
 | bolt-architect      | FULL_PLANNING        | context7, awesome-copilot, microsoftdocs               |
 | bolt-retire         | FULL_PLANNING        | context7, awesome-copilot, microsoftdocs               |
-| aurora-deps         | FULL_PLANNING        | context7, awesome-copilot, microsoftdocs               |
+| bolt-deps           | FULL_PLANNING        | context7, awesome-copilot, microsoftdocs               |
 
 ---
 

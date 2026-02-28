@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Creates a release/deployment unit documentation for AURORA-IA projects.
+    Creates a release/deployment unit documentation for Bolt Framework projects.
 
 .DESCRIPTION
     This script generates deployment unit documentation, updates CHANGELOG,
@@ -21,7 +21,7 @@
     .\Create-Release.ps1 -Version "1.0.0" -DryRun
 
 .NOTES
-    Part of AURORA-IA / AI-DLC methodology
+    Part of Bolt Framework / AI-DLC methodology
     Phase: Block 5 - Release
 #>
 
@@ -29,11 +29,11 @@
 param(
     [Parameter(Mandatory = $false)]
     [string]$Version,
-    
+
     [Parameter(Mandatory = $false)]
     [ValidateSet("major", "minor", "patch")]
     [string]$ReleaseType = "patch",
-    
+
     [Parameter(Mandatory = $false)]
     [switch]$DryRun
 )
@@ -85,18 +85,18 @@ function Get-NextVersion {
         [string]$CurrentVersion,
         [string]$BumpType
     )
-    
+
     $parts = $CurrentVersion -split "\."
     $major = [int]$parts[0]
     $minor = [int]$parts[1]
     $patch = [int]$parts[2]
-    
+
     switch ($BumpType) {
         "major" { $major++; $minor = 0; $patch = 0 }
         "minor" { $minor++; $patch = 0 }
         "patch" { $patch++ }
     }
-    
+
     return "$major.$minor.$patch"
 }
 
@@ -106,26 +106,26 @@ function Get-NextVersion {
 
 function Test-QualityGates {
     Write-Step "Checking Quality Gates..."
-    
+
     $results = @{
         UnitTests = @{ Status = "⬜"; Details = "Not checked" }
         Integration = @{ Status = "⬜"; Details = "Not checked" }
         Security = @{ Status = "⬜"; Details = "Not checked" }
         Coverage = @{ Status = "⬜"; Details = "Not checked" }
     }
-    
+
     # Check for test results
     if (Test-Path "TestResults") {
         $results.UnitTests.Status = "✅"
         $results.UnitTests.Details = "Tests found"
     }
-    
+
     # Check for security scan results
     if (Test-Path "security-report.*") {
         $results.Security.Status = "✅"
         $results.Security.Details = "Scan completed"
     }
-    
+
     return $results
 }
 
@@ -140,7 +140,7 @@ function Get-CommitsSinceLastRelease {
     } else {
         $commits = git log --pretty=format:"%s|%h|%an" 2>$null
     }
-    
+
     $parsed = @{
         Added = @()
         Changed = @()
@@ -148,16 +148,16 @@ function Get-CommitsSinceLastRelease {
         Security = @()
         Other = @()
     }
-    
+
     foreach ($commit in ($commits -split "`n")) {
         if (-not $commit) { continue }
-        
+
         $parts = $commit -split "\|"
         $message = $parts[0]
         $hash = $parts[1]
-        
+
         $entry = "- $message ($hash)"
-        
+
         if ($message -match "^(feat|add|new)") {
             $parsed.Added += $entry
         }
@@ -174,7 +174,7 @@ function Get-CommitsSinceLastRelease {
             $parsed.Other += $entry
         }
     }
-    
+
     return $parsed
 }
 
@@ -183,36 +183,36 @@ function Update-Changelog {
         [string]$Version,
         [hashtable]$Changes
     )
-    
+
     $date = Get-Date -Format "yyyy-MM-dd"
     $changelogPath = "CHANGELOG.md"
-    
+
     $newEntry = @"
 
 ## [$Version] - $date
 
 "@
-    
+
     if ($Changes.Added.Count -gt 0) {
         $newEntry += "`n### Added`n"
         $newEntry += ($Changes.Added -join "`n") + "`n"
     }
-    
+
     if ($Changes.Changed.Count -gt 0) {
         $newEntry += "`n### Changed`n"
         $newEntry += ($Changes.Changed -join "`n") + "`n"
     }
-    
+
     if ($Changes.Fixed.Count -gt 0) {
         $newEntry += "`n### Fixed`n"
         $newEntry += ($Changes.Fixed -join "`n") + "`n"
     }
-    
+
     if ($Changes.Security.Count -gt 0) {
         $newEntry += "`n### Security`n"
         $newEntry += ($Changes.Security -join "`n") + "`n"
     }
-    
+
     if (Test-Path $changelogPath) {
         $content = Get-Content $changelogPath -Raw
         # Insert after the header
@@ -222,7 +222,7 @@ function Update-Changelog {
         $header = "# Changelog`n`nAll notable changes to this project will be documented in this file.`n"
         Set-Content -Path $changelogPath -Value ($header + $newEntry)
     }
-    
+
     return $newEntry
 }
 
@@ -236,27 +236,27 @@ function New-DeploymentUnit {
         [hashtable]$QualityGates,
         [hashtable]$Changes
     )
-    
+
     # Ensure directory exists
     $duDir = "docs/deployment_units"
     if (-not (Test-Path $duDir)) {
         New-Item -ItemType Directory -Path $duDir -Force | Out-Null
     }
-    
+
     # Get next DU number
     $existingDUs = Get-ChildItem -Path $duDir -Filter "deployment_unit_*.md" -ErrorAction SilentlyContinue
     $nextNum = 1
     if ($existingDUs) {
-        $nums = $existingDUs | ForEach-Object { 
+        $nums = $existingDUs | ForEach-Object {
             if ($_.Name -match "deployment_unit_(\d+)\.md") { [int]$matches[1] }
         }
         if ($nums) { $nextNum = ($nums | Measure-Object -Maximum).Maximum + 1 }
     }
-    
+
     $duNum = "{0:D3}" -f $nextNum
     $duPath = "$duDir/deployment_unit_$duNum.md"
     $date = Get-Date -Format "yyyy-MM-dd"
-    
+
     # Determine release type
     $lastVersion = Get-LastVersion
     $releaseType = "Patch"
@@ -266,12 +266,12 @@ function New-DeploymentUnit {
         if ($newParts[0] -gt $lastParts[0]) { $releaseType = "Major" }
         elseif ($newParts[1] -gt $lastParts[1]) { $releaseType = "Minor" }
     }
-    
+
     # Calculate totals
     $featuresCount = $Changes.Added.Count
     $fixesCount = $Changes.Fixed.Count
     $changesCount = $Changes.Changed.Count
-    
+
     $content = @"
 # Deployment Unit: DU-$duNum
 
@@ -355,7 +355,7 @@ docker-compose down && docker-compose up -d --build
 
 ---
 
-*Generated by AURORA-IA Release Command*
+*Generated by Bolt Framework Release Command*
 *Date: $date*
 "@
 
@@ -367,7 +367,7 @@ docker-compose down && docker-compose up -d --build
 # MAIN EXECUTION
 # ============================================================================
 
-Write-Host "`n🚀 AURORA-IA Release Generator" -ForegroundColor Magenta
+Write-Host "`n🚀 Bolt Framework Release Generator" -ForegroundColor Magenta
 Write-Host "================================`n" -ForegroundColor Magenta
 
 # Determine version
@@ -428,4 +428,4 @@ Write-Host "  2. Get required sign-offs"
 Write-Host "  3. Commit changes: git commit -m `"chore: prepare release v$Version`""
 Write-Host "  4. Create tag: git tag -a v$Version -m `"Release v$Version`""
 Write-Host "  5. Push: git push origin main --tags"
-Write-Host "  6. Run /aurora.ops after deployment`n"
+Write-Host "  6. Run @Bolt Ops after deployment`n"

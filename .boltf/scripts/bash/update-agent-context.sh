@@ -76,10 +76,10 @@ header() {
 
 check_constitution_exists() {
     header "Checking Constitution"
-    
+
     if [[ -f "$CONSTITUTION" ]]; then
         success "Constitution exists: $CONSTITUTION"
-        
+
         # Check required sections
         local required_sections=("Tech Stack" "Architecture" "Standards" "Security")
         for section in "${required_sections[@]}"; do
@@ -91,30 +91,30 @@ check_constitution_exists() {
         done
     else
         error "Constitution not found: $CONSTITUTION"
-        echo "       Run: /aurora.constitution to create it"
+        echo "       Run: @Bolt Constitution to create it"
     fi
 }
 
 check_agents_have_constitution_reference() {
     header "Checking Agents → Constitution Reference"
-    
+
     if [[ ! -d "$AGENTS_DIR" ]]; then
         error "Agents directory not found: $AGENTS_DIR"
         return
     fi
-    
+
     for agent_file in "$AGENTS_DIR"/*.md; do
         [[ -f "$agent_file" ]] || continue
         [[ "$(basename "$agent_file")" == "README.md" ]] && continue
-        
+
         local agent_name=$(basename "$agent_file")
-        
+
         if grep -q "Constitution Reference" "$agent_file" 2>/dev/null; then
             success "Agent has Constitution Reference: $agent_name"
         else
             error "Agent missing Constitution Reference: $agent_name"
         fi
-        
+
         # Check if agent references memory/constitution.md
         if grep -q "memory/constitution.md" "$agent_file" 2>/dev/null; then
             success "Agent references constitution path: $agent_name"
@@ -126,27 +126,27 @@ check_agents_have_constitution_reference() {
 
 check_prompts_have_agent_reference() {
     header "Checking Prompts → Agent Reference"
-    
+
     if [[ ! -d "$PROMPTS_DIR" ]]; then
         error "Prompts directory not found: $PROMPTS_DIR"
         return
     fi
-    
+
     for prompt_file in "$PROMPTS_DIR"/*.prompt.md; do
         [[ -f "$prompt_file" ]] || continue
-        
+
         local prompt_name=$(basename "$prompt_file")
-        
+
         if grep -q "Agent Reference" "$prompt_file" 2>/dev/null; then
             success "Prompt has Agent Reference: $prompt_name"
         else
             error "Prompt missing Agent Reference: $prompt_name"
         fi
-        
+
         # Check if prompt links to an agent file
         if grep -q "../copilot/agents/" "$prompt_file" 2>/dev/null; then
             success "Prompt links to agent: $prompt_name"
-            
+
             # Extract and verify agent links
             local agent_links=$(grep -oP '\.\./(copilot/)?agents/[a-z-]+\.md' "$prompt_file" 2>/dev/null | sort -u)
             for agent_link in $agent_links; do
@@ -160,7 +160,7 @@ check_prompts_have_agent_reference() {
         else
             warning "Prompt doesn't link to any agent: $prompt_name"
         fi
-        
+
         # Check if prompt references Constitution
         if grep -q "constitution.md\|Constitution" "$prompt_file" 2>/dev/null; then
             success "Prompt references Constitution: $prompt_name"
@@ -172,7 +172,7 @@ check_prompts_have_agent_reference() {
 
 check_agent_prompt_coverage() {
     header "Checking Agent ↔ Prompt Coverage"
-    
+
     # Get list of agents (excluding README)
     local agents=()
     for agent_file in "$AGENTS_DIR"/*.md; do
@@ -180,23 +180,23 @@ check_agent_prompt_coverage() {
         [[ "$(basename "$agent_file")" == "README.md" ]] && continue
         agents+=("$(basename "$agent_file" .md)")
     done
-    
+
     # Get list of prompts
     local prompts=()
     for prompt_file in "$PROMPTS_DIR"/*.prompt.md; do
         [[ -f "$prompt_file" ]] || continue
         prompts+=("$(basename "$prompt_file" .prompt.md)")
     done
-    
+
     info "Found ${#agents[@]} agents and ${#prompts[@]} prompts"
-    
+
     # Check which agents are referenced by prompts
     echo ""
     info "Agent coverage analysis:"
-    
+
     local covered_agents=()
     local uncovered_agents=()
-    
+
     for agent in "${agents[@]}"; do
         local is_covered=false
         for prompt_file in "$PROMPTS_DIR"/*.prompt.md; do
@@ -205,7 +205,7 @@ check_agent_prompt_coverage() {
                 break
             fi
         done
-        
+
         if $is_covered; then
             covered_agents+=("$agent")
             success "Agent covered by prompt: $agent"
@@ -214,49 +214,49 @@ check_agent_prompt_coverage() {
             warning "Agent NOT covered by any prompt: $agent"
         fi
     done
-    
+
     echo ""
     info "Coverage: ${#covered_agents[@]}/${#agents[@]} agents ($(( ${#covered_agents[@]} * 100 / ${#agents[@]} ))%)"
 }
 
 generate_mapping_report() {
     header "Generating Prompt → Agent Mapping"
-    
+
     echo ""
     printf "%-35s %-40s\n" "PROMPT" "AGENT(S)"
     echo "─────────────────────────────────────────────────────────────────────────"
-    
+
     for prompt_file in "$PROMPTS_DIR"/*.prompt.md; do
         [[ -f "$prompt_file" ]] || continue
-        
+
         local prompt_name=$(basename "$prompt_file" .prompt.md)
-        local agents=$(grep -oP '\.\./(copilot/)?agents/[a-z-]+\.md' "$prompt_file" 2>/dev/null | 
-                       sed 's|../copilot/agents/||g; s|../agents/||g; s|\.md||g' | 
+        local agents=$(grep -oP '\.\./(copilot/)?agents/[a-z-]+\.md' "$prompt_file" 2>/dev/null |
+                       sed 's|../copilot/agents/||g; s|../agents/||g; s|\.md||g' |
                        tr '\n' ', ' | sed 's/,$//')
-        
+
         if [[ -z "$agents" ]]; then
             agents="${YELLOW}(none)${NC}"
         fi
-        
+
         printf "%-35s ${GREEN}%s${NC}\n" "$prompt_name" "$agents"
     done
 }
 
 check_constitution_tech_stack() {
     header "Checking Constitution Tech Stack"
-    
+
     if [[ ! -f "$CONSTITUTION" ]]; then
         warning "Cannot check tech stack - Constitution not found"
         return
     fi
-    
+
     # Extract tech stack section
     info "Tech stack defined in Constitution:"
-    
+
     # Look for common technology patterns
     local techs=("\.NET" "React" "Angular" "Vue" "Node" "Python" "Go" "Java" "TypeScript" \
                  "PostgreSQL" "MySQL" "MongoDB" "Redis" "Azure" "AWS" "GCP" "Kubernetes" "Docker")
-    
+
     for tech in "${techs[@]}"; do
         if grep -qi "$tech" "$CONSTITUTION" 2>/dev/null; then
             echo -e "  ${GREEN}•${NC} $tech"
@@ -270,7 +270,7 @@ check_constitution_tech_stack() {
 
 fix_missing_constitution_reference() {
     header "Fixing Missing Constitution References"
-    
+
     local constitution_section='
 ## Constitution Reference
 
@@ -286,7 +286,7 @@ The Constitution is the **single source of truth**. Examples in this agent file 
     for agent_file in "$AGENTS_DIR"/*.md; do
         [[ -f "$agent_file" ]] || continue
         [[ "$(basename "$agent_file")" == "README.md" ]] && continue
-        
+
         if ! grep -q "Constitution Reference" "$agent_file" 2>/dev/null; then
             local agent_name=$(basename "$agent_file")
             warning "Would add Constitution Reference to: $agent_name"
@@ -294,7 +294,7 @@ The Constitution is the **single source of truth**. Examples in this agent file 
             # to insert at the right location
         fi
     done
-    
+
     info "Fix mode shows what would be changed. Manual review recommended."
 }
 
@@ -304,13 +304,13 @@ The Constitution is the **single source of truth**. Examples in this agent file 
 
 print_summary() {
     header "Summary"
-    
+
     echo ""
     echo -e "  ${GREEN}Passed:${NC}   $PASSED"
     echo -e "  ${YELLOW}Warnings:${NC} $WARNINGS"
     echo -e "  ${RED}Errors:${NC}   $ERRORS"
     echo ""
-    
+
     if [[ $ERRORS -gt 0 ]]; then
         echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
         echo -e "${RED}  VALIDATION FAILED - Please fix errors above${NC}"
@@ -336,10 +336,10 @@ print_summary() {
 main() {
     echo ""
     echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${CYAN}║     AURORA-IA / AI-DLC - Agent Context Validator            ║${NC}"
+    echo -e "${CYAN}║     Bolt Framework / AI-DLC - Agent Context Validator            ║${NC}"
     echo -e "${CYAN}║     Mode: $MODE                                              ${NC}"
     echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}"
-    
+
     case "$MODE" in
         --check)
             check_constitution_exists
@@ -371,7 +371,7 @@ main() {
             exit 1
             ;;
     esac
-    
+
     print_summary
 }
 

@@ -24,7 +24,7 @@
     .\Get-Improvements.ps1 -GenerateBacklogs
 
 .NOTES
-    Part of AURORA-IA / AI-DLC methodology
+    Part of Bolt Framework / AI-DLC methodology
     Phase: Block 7 - Evolution
 #>
 
@@ -32,13 +32,13 @@
 param(
     [Parameter(Mandatory = $false)]
     [switch]$AnalyzeCode,
-    
+
     [Parameter(Mandatory = $false)]
     [switch]$AnalyzeDependencies,
-    
+
     [Parameter(Mandatory = $false)]
     [switch]$GenerateBacklogs,
-    
+
     [Parameter(Mandatory = $false)]
     [switch]$All
 )
@@ -78,7 +78,7 @@ function Write-Err {
 
 function Get-CodeMetrics {
     Write-Step "Analyzing code metrics..."
-    
+
     $metrics = @{
         TotalFiles = 0
         TotalLines = 0
@@ -86,19 +86,19 @@ function Get-CodeMetrics {
         ComplexFiles = @()
         DuplicatePatterns = @()
     }
-    
+
     # Analyze different file types
     $extensions = @("*.cs", "*.ts", "*.js", "*.py", "*.go")
-    
+
     foreach ($ext in $extensions) {
-        $files = Get-ChildItem -Path . -Filter $ext -Recurse -ErrorAction SilentlyContinue | 
+        $files = Get-ChildItem -Path . -Filter $ext -Recurse -ErrorAction SilentlyContinue |
                  Where-Object { $_.FullName -notmatch "node_modules|bin|obj|dist|\.git" }
-        
+
         foreach ($file in $files) {
             $metrics.TotalFiles++
             $lines = (Get-Content $file.FullName -ErrorAction SilentlyContinue | Measure-Object -Line).Lines
             $metrics.TotalLines += $lines
-            
+
             # Flag large files
             if ($lines -gt 500) {
                 $metrics.LargeFiles += @{
@@ -109,30 +109,30 @@ function Get-CodeMetrics {
             }
         }
     }
-    
+
     return $metrics
 }
 
 function Get-TestCoverage {
     Write-Step "Checking test coverage..."
-    
+
     $coverage = @{
         HasTests = $false
         TestFiles = 0
         CoveragePercent = "Unknown"
     }
-    
+
     # Look for test files
     $testPatterns = @("*Test*.cs", "*test*.ts", "*test*.js", "*_test.py", "*_test.go", "*.spec.ts", "*.spec.js")
-    
+
     foreach ($pattern in $testPatterns) {
         $tests = Get-ChildItem -Path . -Filter $pattern -Recurse -ErrorAction SilentlyContinue |
                  Where-Object { $_.FullName -notmatch "node_modules|bin|obj" }
         $coverage.TestFiles += $tests.Count
     }
-    
+
     $coverage.HasTests = $coverage.TestFiles -gt 0
-    
+
     # Try to find coverage reports
     $coverageFiles = @("coverage.json", "coverage.xml", "coverage/lcov.info", "TestResults/*.xml")
     foreach ($cf in $coverageFiles) {
@@ -141,7 +141,7 @@ function Get-TestCoverage {
             break
         }
     }
-    
+
     return $coverage
 }
 
@@ -151,7 +151,7 @@ function Get-TestCoverage {
 
 function Get-DotNetDependencies {
     $deps = @()
-    
+
     $csproj = Get-ChildItem -Filter "*.csproj" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
     if ($csproj) {
         try {
@@ -168,17 +168,17 @@ function Get-DotNetDependencies {
             }
         } catch {}
     }
-    
+
     return $deps
 }
 
 function Get-NodeDependencies {
     $deps = @()
-    
+
     if (Test-Path "package.json") {
         try {
             $pkg = Get-Content "package.json" | ConvertFrom-Json
-            
+
             if ($pkg.dependencies) {
                 foreach ($dep in $pkg.dependencies.PSObject.Properties) {
                     $deps += @{
@@ -189,7 +189,7 @@ function Get-NodeDependencies {
                     }
                 }
             }
-            
+
             if ($pkg.devDependencies) {
                 foreach ($dep in $pkg.devDependencies.PSObject.Properties) {
                     $deps += @{
@@ -202,13 +202,13 @@ function Get-NodeDependencies {
             }
         } catch {}
     }
-    
+
     return $deps
 }
 
 function Get-AllDependencies {
     Write-Step "Analyzing dependencies..."
-    
+
     $allDeps = @{
         DotNet = Get-DotNetDependencies
         Node = Get-NodeDependencies
@@ -216,9 +216,9 @@ function Get-AllDependencies {
         OutdatedCount = 0
         VulnerableCount = 0
     }
-    
+
     $allDeps.TotalCount = $allDeps.DotNet.Count + $allDeps.Node.Count
-    
+
     return $allDeps
 }
 
@@ -231,19 +231,19 @@ function New-RefactorBacklog {
         [hashtable]$CodeMetrics,
         [hashtable]$Dependencies
     )
-    
+
     $backlogDir = "docs/improvement"
     if (-not (Test-Path $backlogDir)) {
         New-Item -ItemType Directory -Path $backlogDir -Force | Out-Null
     }
-    
+
     $backlogPath = "$backlogDir/refactor_backlog.md"
     $date = Get-Date -Format "yyyy-MM-dd"
-    
+
     # Generate backlog items from analysis
     $items = @()
     $itemId = 1
-    
+
     # Add items for large files
     foreach ($file in $CodeMetrics.LargeFiles) {
         $items += @{
@@ -258,13 +258,13 @@ function New-RefactorBacklog {
         }
         $itemId++
     }
-    
+
     # Count by priority
     $criticalCount = ($items | Where-Object { $_.Priority -eq "Critical" }).Count
     $highCount = ($items | Where-Object { $_.Priority -eq "High" }).Count
     $mediumCount = ($items | Where-Object { $_.Priority -eq "Medium" }).Count
     $lowCount = ($items | Where-Object { $_.Priority -eq "Low" }).Count
-    
+
     $content = @"
 # Refactoring Backlog
 
@@ -344,7 +344,7 @@ Consider running deeper analysis with:
 ---
 "@
     }
-    
+
     $content += @"
 
 ## Dependencies to Review
@@ -360,11 +360,11 @@ Consider running deeper analysis with:
 
 | Date | Changes | Author |
 |------|---------|--------|
-| $date | Initial analysis | AURORA-IA |
+| $date | Initial analysis | Bolt Framework |
 
 ---
 
-*Generated by AURORA-IA Improve Command*
+*Generated by Bolt Framework Improve Command*
 "@
 
     Set-Content -Path $backlogPath -Value $content
@@ -376,16 +376,16 @@ function New-IntentsBacklog {
     if (-not (Test-Path $backlogDir)) {
         New-Item -ItemType Directory -Path $backlogDir -Force | Out-Null
     }
-    
+
     $backlogPath = "$backlogDir/new_intents.md"
     $date = Get-Date -Format "yyyy-MM-dd"
-    
+
     # Check if file already exists
     if (Test-Path $backlogPath) {
         Write-Info "New intents backlog already exists, skipping creation"
         return $backlogPath
     }
-    
+
     $content = @"
 # New Feature Intents Backlog
 
@@ -465,7 +465,7 @@ Add it to this backlog in the **Ideation** section using this template:
 
 ## 📋 Ready for Specification
 
-*No items yet. Validated items ready for /aurora.feature move here.*
+*No items yet. Validated items ready for @Bolt Feature move here.*
 
 ---
 
@@ -477,7 +477,7 @@ Add it to this backlog in the **Ideation** section using this template:
 
 ---
 
-*Generated by AURORA-IA Improve Command*
+*Generated by Bolt Framework Improve Command*
 "@
 
     Set-Content -Path $backlogPath -Value $content
@@ -488,7 +488,7 @@ Add it to this backlog in the **Ideation** section using this template:
 # MAIN EXECUTION
 # ============================================================================
 
-Write-Host "`n📊 AURORA-IA Improvement Analyzer" -ForegroundColor Magenta
+Write-Host "`n📊 Bolt Framework Improvement Analyzer" -ForegroundColor Magenta
 Write-Host "===================================`n" -ForegroundColor Magenta
 
 if ($All) {
@@ -512,7 +512,7 @@ if ($AnalyzeCode) {
     $codeMetrics = Get-CodeMetrics
     Write-Info "Found $($codeMetrics.TotalFiles) code files, $($codeMetrics.TotalLines) total lines"
     Write-Info "Large files (>500 lines): $($codeMetrics.LargeFiles.Count)"
-    
+
     $coverage = Get-TestCoverage
     Write-Info "Test files found: $($coverage.TestFiles)"
 }
@@ -526,10 +526,10 @@ if ($AnalyzeDependencies) {
 
 if ($GenerateBacklogs) {
     Write-Step "Generating improvement backlogs..."
-    
+
     $refactorPath = New-RefactorBacklog -CodeMetrics $codeMetrics -Dependencies $dependencies
     Write-Success "Refactor backlog: $refactorPath"
-    
+
     $intentsPath = New-IntentsBacklog
     Write-Success "New intents backlog: $intentsPath"
 }
@@ -549,4 +549,4 @@ Write-Host "  1. Review refactor_backlog.md"
 Write-Host "  2. Prioritize items with team"
 Write-Host "  3. Add tech debt items to sprint"
 Write-Host "  4. Add new feature ideas to new_intents.md"
-Write-Host "  5. Run /aurora.plan for high-priority refactors`n"
+Write-Host "  5. Run @Bolt Plan for high-priority refactors`n"

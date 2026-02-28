@@ -1,35 +1,35 @@
 <#
 .SYNOPSIS
-    AURORA-IA Project Status Analyzer
-    
+    Bolt Framework Project Status Analyzer
+
 .DESCRIPTION
     Analyzes project state and generates status report for continuity.
     Helps developers and AI agents understand current progress and resume work.
-    
+
 .PARAMETER ReportType
     Type of report to generate: Summary, Full, Features, Tasks, Infra, Quality, Blockers
-    
+
 .PARAMETER Format
     Output format: Markdown (default) or Json
-    
+
 .PARAMETER Feature
     Analyze a specific feature by name
-    
+
 .PARAMETER Save
     Save the report to memory/context/ directory
-    
+
 .EXAMPLE
     .\Get-ProjectStatus.ps1
     # Generates executive summary
-    
+
 .EXAMPLE
     .\Get-ProjectStatus.ps1 -ReportType Full
     # Generates complete analysis
-    
+
 .EXAMPLE
     .\Get-ProjectStatus.ps1 -Format Json -Save
     # Generates JSON report and saves to memory/context/
-    
+
 .EXAMPLE
     .\Get-ProjectStatus.ps1 -Feature "001-user-auth"
     # Analyzes specific feature
@@ -40,14 +40,14 @@ param(
     [Parameter()]
     [ValidateSet('Summary', 'Full', 'Features', 'Tasks', 'Infra', 'Quality', 'Blockers')]
     [string]$ReportType = 'Summary',
-    
+
     [Parameter()]
     [ValidateSet('Markdown', 'Json')]
     [string]$Format = 'Markdown',
-    
+
     [Parameter()]
     [string]$Feature = '',
-    
+
     [Parameter()]
     [switch]$Save
 )
@@ -79,7 +79,7 @@ function Write-ColorOutput {
         [string]$Message,
         [string]$Type = 'Info'
     )
-    
+
     $colors = @{
         'Header'  = 'Cyan'
         'Success' = 'Green'
@@ -88,7 +88,7 @@ function Write-ColorOutput {
         'Info'    = 'White'
         'Section' = 'Blue'
     }
-    
+
     $symbols = @{
         'Header'  = '═══'
         'Success' = '✅'
@@ -97,10 +97,10 @@ function Write-ColorOutput {
         'Info'    = 'ℹ️'
         'Section' = '───'
     }
-    
+
     $color = $colors[$Type]
     $symbol = $symbols[$Type]
-    
+
     if ($Type -eq 'Header') {
         Write-Host ""
         Write-Host "$symbol $Message $symbol" -ForegroundColor $color
@@ -121,10 +121,10 @@ function Get-ProgressBar {
         [int]$Percentage,
         [int]$Width = 20
     )
-    
+
     $filled = [math]::Floor($Percentage * $Width / 100)
     $empty = $Width - $filled
-    
+
     $bar = '█' * $filled + '░' * $empty
     return "[$bar] $Percentage%"
 }
@@ -135,19 +135,19 @@ function Get-ProgressBar {
 
 function Get-ProjectInfo {
     $constitutionPath = Join-Path $ProjectRoot "memory\constitution.md"
-    
+
     $Script:ProjectInfo = @{
         Name = "[PROJECT_NAME]"
         Scope = "Not Configured"
         Type = "Not Specified"
         ConstitutionStatus = "❌ Missing"
     }
-    
+
     if (Test-Path $constitutionPath) {
         $content = Get-Content $constitutionPath -Raw
-        
+
         $Script:ProjectInfo.ConstitutionStatus = "✅ Present"
-        
+
         # Determine project scope
         if ($content -match '\[x\].*Infrastructure Only') {
             $Script:ProjectInfo.Scope = "Infrastructure Only"
@@ -158,7 +158,7 @@ function Get-ProjectInfo {
         elseif ($content -match '\[x\].*Full Stack') {
             $Script:ProjectInfo.Scope = "Full Stack"
         }
-        
+
         # Determine migration context
         if ($content -match '\[x\].*Greenfield') {
             $Script:ProjectInfo.Type = "Greenfield"
@@ -174,7 +174,7 @@ function Get-ProjectInfo {
 
 function Get-FeatureStatus {
     $specsDir = Join-Path $ProjectRoot "specs"
-    
+
     $Script:FeatureStats = @{
         Total = 0
         Complete = 0
@@ -182,35 +182,35 @@ function Get-FeatureStatus {
         Pending = 0
         Features = @()
     }
-    
+
     if (Test-Path $specsDir) {
         $featureDirs = Get-ChildItem -Path $specsDir -Directory
-        
+
         foreach ($featureDir in $featureDirs) {
             $Script:FeatureStats.Total++
-            
+
             $featureName = $featureDir.Name
             $reqFile = Join-Path $featureDir.FullName "requirements\requirements.md"
             $planFile = Join-Path $featureDir.FullName "planning\plan.md"
             $tasksFile = Join-Path $featureDir.FullName "planning\tasks.md"
-            
+
             $reqStatus = if (Test-Path $reqFile) { "✅" } else { "❌" }
             $planStatus = if (Test-Path $planFile) { "✅" } else { "❌" }
             $tasksStatus = if (Test-Path $tasksFile) { "✅" } else { "❌" }
-            
+
             $featureStatus = "⏳ Pending"
             $completion = 0
-            
+
             if ($reqStatus -eq "✅" -and $planStatus -eq "✅" -and $tasksStatus -eq "✅") {
                 # Check task completion
                 if (Test-Path $tasksFile) {
                     $tasksContent = Get-Content $tasksFile -Raw
                     $totalTasks = ([regex]::Matches($tasksContent, '^\- \[', 'Multiline')).Count
                     $doneTasks = ([regex]::Matches($tasksContent, '^\- \[x\]', 'Multiline')).Count
-                    
+
                     if ($totalTasks -gt 0) {
                         $completion = [math]::Round(($doneTasks / $totalTasks) * 100)
-                        
+
                         if ($doneTasks -eq $totalTasks) {
                             $featureStatus = "✅ Complete"
                             $Script:FeatureStats.Complete++
@@ -233,7 +233,7 @@ function Get-FeatureStatus {
             else {
                 $Script:FeatureStats.Pending++
             }
-            
+
             $Script:FeatureStats.Features += @{
                 Name = $featureName
                 Requirements = $reqStatus
@@ -248,7 +248,7 @@ function Get-FeatureStatus {
 
 function Get-TaskStatus {
     $specsDir = Join-Path $ProjectRoot "specs"
-    
+
     $Script:TaskStats = @{
         Total = 0
         Done = 0
@@ -260,43 +260,43 @@ function Get-TaskStatus {
         CurrentTasks = @()
         ByFeature = @()
     }
-    
+
     if (Test-Path $specsDir) {
         $tasksFiles = Get-ChildItem -Path $specsDir -Recurse -Filter "tasks.md"
-        
+
         foreach ($tasksFile in $tasksFiles) {
             $featureName = (Get-Item $tasksFile.DirectoryName).Parent.Name
             $content = Get-Content $tasksFile.FullName -Raw
-            
+
             $totalTasks = ([regex]::Matches($content, '^\- \[', 'Multiline')).Count
             $doneTasks = ([regex]::Matches($content, '^\- \[x\]', 'Multiline')).Count
             $pendingTasks = $totalTasks - $doneTasks
-            
+
             $Script:TaskStats.Total += $totalTasks
             $Script:TaskStats.Done += $doneTasks
             $Script:TaskStats.Pending += $pendingTasks
-            
+
             $Script:TaskStats.ByFeature += @{
                 Feature = $featureName
                 Total = $totalTasks
                 Done = $doneTasks
                 Pending = $pendingTasks
             }
-            
+
             # Find current bolt
             if (-not $Script:TaskStats.CurrentBolt) {
                 $boltMatch = [regex]::Match($content, '^## (Bolt \d+.*?)$', 'Multiline')
                 if ($boltMatch.Success) {
                     $Script:TaskStats.CurrentBolt = $boltMatch.Groups[1].Value
                 }
-                
+
                 # Get pending tasks
                 $pendingMatches = [regex]::Matches($content, '^\- \[ \] (.+)$', 'Multiline')
                 $Script:TaskStats.CurrentTasks = $pendingMatches | Select-Object -First 5 | ForEach-Object { $_.Groups[1].Value }
             }
         }
     }
-    
+
     if ($Script:TaskStats.Total -gt 0) {
         $Script:TaskStats.Percentage = [math]::Round(($Script:TaskStats.Done / $Script:TaskStats.Total) * 100)
     }
@@ -309,7 +309,7 @@ function Get-QualityStatus {
         MutationScore = "N/A"
         Status = "❓ Not Measured"
     }
-    
+
     # Check for coverage reports
     $coverageSummary = Join-Path $ProjectRoot "coverage\coverage-summary.json"
     if (Test-Path $coverageSummary) {
@@ -322,7 +322,7 @@ function Get-QualityStatus {
             # Silently ignore parsing errors
         }
     }
-    
+
     # Check for mutation reports
     $mutationReport = Join-Path $ProjectRoot "reports\mutation\mutation.json"
     if (Test-Path $mutationReport) {
@@ -334,7 +334,7 @@ function Get-QualityStatus {
             # Silently ignore parsing errors
         }
     }
-    
+
     # Determine overall status
     if ($Script:QualityStats.LineCoverage -ne "N/A") {
         if ([double]$Script:QualityStats.LineCoverage -ge 80) {
@@ -355,11 +355,11 @@ function Get-InfrastructureStatus {
         Tool = ""
         Modules = 0
     }
-    
+
     $bicepDir = Join-Path $ProjectRoot "infra\bicep"
     $terraformDir = Join-Path $ProjectRoot "infra\terraform"
     $platformDir = Join-Path $ProjectRoot "platform"
-    
+
     if (Test-Path $bicepDir) {
         $Script:InfraStats.Tool = "Bicep"
         $Script:InfraStats.Status = "✅ Present"
@@ -382,7 +382,7 @@ function Get-InfrastructureStatus {
 function Get-BlockersAndDecisions {
     $Script:Blockers = @()
     $Script:PendingDecisions = @()
-    
+
     # Search for blockers in task files
     $specsDir = Join-Path $ProjectRoot "specs"
     if (Test-Path $specsDir) {
@@ -395,7 +395,7 @@ function Get-BlockersAndDecisions {
             }
         }
     }
-    
+
     # Search for pending ADRs
     $adrDir = Join-Path $ProjectRoot "docs\architecture\decisions"
     if (Test-Path $adrDir) {
@@ -407,7 +407,7 @@ function Get-BlockersAndDecisions {
             }
         }
     }
-    
+
     # Check memory/decisions
     $decisionDir = Join-Path $ProjectRoot "memory\decisions"
     if (Test-Path $decisionDir) {
@@ -428,17 +428,17 @@ function Get-GitInfo {
         CurrentBranch = "N/A"
         UncommittedChanges = 0
     }
-    
+
     $gitDir = Join-Path $ProjectRoot ".git"
     if (Test-Path $gitDir) {
         try {
             Push-Location $ProjectRoot
-            
+
             $Script:GitInfo.LastCommit = git log -1 --format="%h - %s (%cr)" 2>$null
             $Script:GitInfo.LastCommitDate = git log -1 --format="%ci" 2>$null
             $Script:GitInfo.CurrentBranch = git branch --show-current 2>$null
             $Script:GitInfo.UncommittedChanges = (git status --porcelain 2>$null | Measure-Object).Count
-            
+
             Pop-Location
         }
         catch {
@@ -452,16 +452,16 @@ function Get-GitInfo {
 # ============================================================================
 
 function New-SummaryReport {
-    Write-ColorOutput "🚀 AURORA-IA Project Status" -Type 'Header'
-    
+    Write-ColorOutput "🚀 Bolt Framework Project Status" -Type 'Header'
+
     Write-Host "Project:       $($Script:ProjectInfo.Name)"
     Write-Host "Type:          $($Script:ProjectInfo.Type) | Scope: $($Script:ProjectInfo.Scope)"
     Write-Host "Branch:        $($Script:GitInfo.CurrentBranch)"
     Write-Host "Last Activity: $($Script:GitInfo.LastCommit)"
     Write-Host ""
-    
+
     Write-ColorOutput "Quick Stats" -Type 'Section'
-    
+
     Write-Host "| Metric        | Value |"
     Write-Host "|---------------|-------|"
     Write-Host "| Constitution  | $($Script:ProjectInfo.ConstitutionStatus) |"
@@ -470,9 +470,9 @@ function New-SummaryReport {
     Write-Host "| Quality       | $($Script:QualityStats.Status) |"
     Write-Host "| Uncommitted   | $($Script:GitInfo.UncommittedChanges) files |"
     Write-Host ""
-    
+
     Write-ColorOutput "🎯 Resume Work" -Type 'Section'
-    
+
     if ($Script:TaskStats.CurrentBolt) {
         Write-Host "Current Bolt: $($Script:TaskStats.CurrentBolt)" -ForegroundColor White
         Write-Host ""
@@ -482,51 +482,51 @@ function New-SummaryReport {
         }
     }
     else {
-        Write-Host "No active tasks found. Run /aurora.feature to start a new feature."
+        Write-Host "No active tasks found. Use @Bolt Feature to start a new feature."
     }
     Write-Host ""
-    
+
     if ($Script:Blockers.Count -gt 0) {
         Write-ColorOutput "⚠️ Blockers" -Type 'Section'
         foreach ($blocker in $Script:Blockers) {
             Write-Host "  - $blocker" -ForegroundColor Yellow
         }
     }
-    
+
     if ($Script:PendingDecisions.Count -gt 0) {
         Write-ColorOutput "❓ Pending Decisions" -Type 'Section'
         foreach ($decision in $Script:PendingDecisions) {
             Write-Host "  - $decision" -ForegroundColor Yellow
         }
     }
-    
+
     Write-ColorOutput "Recommended Actions" -Type 'Section'
-    
+
     if ($Script:ProjectInfo.ConstitutionStatus -eq "❌ Missing") {
-        Write-Host "🔴 HIGH: Create project constitution with /aurora.constitution" -ForegroundColor Red
+        Write-Host "\ud83d\udd34 HIGH: Create project constitution with @Bolt Constitution" -ForegroundColor Red
     }
-    
+
     if ($Script:Blockers.Count -gt 0) {
-        Write-Host "🔴 HIGH: Resolve blockers with /aurora.clarify" -ForegroundColor Red
+        Write-Host "\ud83d\udd34 HIGH: Resolve blockers with @Bolt Clarify" -ForegroundColor Red
     }
-    
+
     if ($Script:TaskStats.CurrentTasks.Count -gt 0) {
         $nextTask = $Script:TaskStats.CurrentTasks[0]
-        if ($nextTask -match 'T\d+') {
-            Write-Host "🟡 MEDIUM: Continue with $($Matches[0]) using /aurora.implement" -ForegroundColor Yellow
+        if ($nextTask -match 'T\\d+') {
+            Write-Host "\ud83d\udfe1 MEDIUM: Continue with $($Matches[0]) using @Bolt Implement" -ForegroundColor Yellow
         }
     }
-    
+
     if ($Script:QualityStats.Status -match "Below Target|Critical") {
-        Write-Host "🟡 MEDIUM: Improve test coverage with /aurora.test" -ForegroundColor Yellow
+        Write-Host "\ud83d\udfe1 MEDIUM: Improve test coverage with @Bolt Testing" -ForegroundColor Yellow
     }
 }
 
 function New-FullReport {
     New-SummaryReport
-    
+
     Write-ColorOutput "📋 Features Detail" -Type 'Section'
-    
+
     if ($Script:FeatureStats.Features.Count -gt 0) {
         Write-Host "| Feature | Requirements | Plan | Tasks | Status | Completion |"
         Write-Host "|---------|--------------|------|-------|--------|------------|"
@@ -537,9 +537,9 @@ function New-FullReport {
     else {
         Write-Host "No features found in specs/ directory."
     }
-    
+
     Write-ColorOutput "📊 Tasks Detail" -Type 'Section'
-    
+
     if ($Script:TaskStats.ByFeature.Count -gt 0) {
         Write-Host "| Feature | Total | Done | Pending |"
         Write-Host "|---------|-------|------|---------|"
@@ -547,25 +547,25 @@ function New-FullReport {
             Write-Host "| $($stat.Feature) | $($stat.Total) | $($stat.Done) | $($stat.Pending) |"
         }
     }
-    
+
     Write-Host ""
     Write-Host "Total Progress: $($Script:TaskStats.Done)/$($Script:TaskStats.Total) tasks complete ($($Script:TaskStats.Percentage)%)"
-    
+
     Write-ColorOutput "🧪 Quality Metrics" -Type 'Section'
-    
+
     $lineStatus = if ($Script:QualityStats.LineCoverage -ne "N/A" -and [double]$Script:QualityStats.LineCoverage -ge 80) { "✅" } else { "⚠️" }
     $branchStatus = if ($Script:QualityStats.BranchCoverage -ne "N/A" -and [double]$Script:QualityStats.BranchCoverage -ge 75) { "✅" } else { "⚠️" }
     $mutationStatus = if ($Script:QualityStats.MutationScore -ne "N/A" -and [double]$Script:QualityStats.MutationScore -ge 70) { "✅" } else { "⚠️" }
-    
+
     Write-Host "| Metric          | Target | Current | Status |"
     Write-Host "|-----------------|--------|---------|--------|"
     Write-Host "| Line Coverage   | ≥80%   | $($Script:QualityStats.LineCoverage)% | $lineStatus |"
     Write-Host "| Branch Coverage | ≥75%   | $($Script:QualityStats.BranchCoverage)% | $branchStatus |"
     Write-Host "| Mutation Score  | ≥70%   | $($Script:QualityStats.MutationScore)% | $mutationStatus |"
-    
+
     if ($Script:ProjectInfo.Scope -in @("Infrastructure Only", "Full Stack")) {
         Write-ColorOutput "🏗️ Infrastructure" -Type 'Section'
-        
+
         Write-Host "| Component | Status |"
         Write-Host "|-----------|--------|"
         Write-Host "| IaC Tool  | $($Script:InfraStats.Tool) |"
@@ -613,7 +613,7 @@ function New-JsonReport {
         }
         generatedAt = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")
     }
-    
+
     $report | ConvertTo-Json -Depth 10
 }
 
@@ -622,11 +622,11 @@ function Save-Report {
     if (-not (Test-Path $contextDir)) {
         New-Item -ItemType Directory -Path $contextDir -Force | Out-Null
     }
-    
+
     $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
     $reportFile = Join-Path $contextDir "status_$timestamp.md"
     $latestFile = Join-Path $contextDir "last-session.md"
-    
+
     # Capture and save report
     $reportContent = @"
 # Project Status Report
@@ -635,10 +635,10 @@ function Save-Report {
 
 $(New-FullReport | Out-String)
 "@
-    
+
     $reportContent | Out-File -FilePath $reportFile -Encoding UTF8
     Copy-Item -Path $reportFile -Destination $latestFile -Force
-    
+
     Write-ColorOutput "Report saved to: $reportFile" -Type 'Success'
     Write-ColorOutput "Latest session: $latestFile" -Type 'Info'
 }
@@ -656,7 +656,7 @@ function Main {
     Get-InfrastructureStatus
     Get-BlockersAndDecisions
     Get-GitInfo
-    
+
     # Generate output
     if ($Format -eq 'Json') {
         New-JsonReport
@@ -704,7 +704,7 @@ function Main {
             }
         }
     }
-    
+
     # Save if requested
     if ($Save) {
         Save-Report

@@ -503,7 +503,7 @@ quality_scores:
 
 ```bash
 # Generate static documentation site
-./.boltf/scripts/bash/build-docs-site.sh --generator docusaurus --theme aurora
+./.boltf/scripts/bash/build-docs-site.sh --generator docusaurus --theme default
 
 # Deploy documentation site
 ./.boltf/scripts/bash/deploy-docs.sh --target netlify --domain docs.boltf.com

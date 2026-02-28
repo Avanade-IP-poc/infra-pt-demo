@@ -157,9 +157,9 @@ services:
       - ./grafana/dashboards:/var/lib/grafana/dashboards
       - ./grafana/provisioning:/etc/grafana/provisioning
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=aurora2024
+      - GF_SECURITY_ADMIN_PASSWORD=myapp2024
       - GF_USERS_ALLOW_SIGN_UP=false
-      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/var/lib/grafana/dashboards/aurora-overview.json
+      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/var/lib/grafana/dashboards/myapp-overview.json
     restart: unless-stopped
 
   loki:
@@ -218,13 +218,13 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9090']
 
-  - job_name: 'aurora-api'
+  - job_name: 'myapp-api'
     static_configs:
       - targets: ['host.docker.internal:5000']
     metrics_path: /metrics
     scrape_interval: 10s
 
-  - job_name: 'aurora-frontend'
+  - job_name: 'myapp-frontend'
     static_configs:
       - targets: ['host.docker.internal:3000']
     metrics_path: /metrics
@@ -242,14 +242,14 @@ scrape_configs:
 ```yaml
 # monitoring/prometheus/alerts.yml
 groups:
-  - name: aurora-sla-alerts
+  - name: myapp-sla-alerts
     rules:
       - alert: HighErrorRate
         expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.05
         for: 2m
         labels:
           severity: critical
-          team: aurora
+          team: myapp
         annotations:
           summary: High error rate detected
           description: 'Error rate is {{ $value | humanizePercentage }} over the last 5 minutes'
@@ -282,13 +282,13 @@ groups:
           description: 'Constitution compliance score: {{ $value }}'
 
       - alert: DatabaseConnectionFailure
-        expr: up{job="aurora-api"} == 0
+        expr: up{job="myapp-api"} == 0
         for: 1m
         labels:
           severity: critical
         annotations:
           summary: Database connection lost
-          description: 'Aurora API cannot connect to database'
+          description: 'MyApp API cannot connect to database'
 ```
 
 ## Generated Dashboards
@@ -298,7 +298,7 @@ groups:
 ```json
 {
   "dashboard": {
-    "title": "AURORA Application Overview",
+    "title": "MyApp Application Overview",
     "panels": [
       {
         "title": "Request Rate",
@@ -332,7 +332,7 @@ groups:
         "type": "singlestat",
         "targets": [
           {
-            "expr": "aurora_active_users_total"
+            "expr": "myapp_active_users_total"
           }
         ]
       }
@@ -346,14 +346,14 @@ groups:
 ```json
 {
   "dashboard": {
-    "title": "AURORA Business Metrics",
+    "title": "MyApp Business Metrics",
     "panels": [
       {
         "title": "Feature Usage",
         "type": "table",
         "targets": [
           {
-            "expr": "topk(10, aurora_feature_usage_total)"
+            "expr": "topk(10, myapp_feature_usage_total)"
           }
         ]
       },
@@ -362,7 +362,7 @@ groups:
         "type": "graph",
         "targets": [
           {
-            "expr": "aurora_user_journey_completion_rate"
+            "expr": "myapp_user_journey_completion_rate"
           }
         ]
       },
@@ -371,7 +371,7 @@ groups:
         "type": "singlestat",
         "targets": [
           {
-            "expr": "aurora_revenue_generated_total"
+            "expr": "myapp_revenue_generated_total"
           }
         ]
       }
@@ -435,7 +435,7 @@ builder.Services.AddLogging(config =>
     config.AddApplicationInsights();
     config.AddSerilog(new LoggerConfiguration()
         .WriteTo.Console(new JsonFormatter())
-        .WriteTo.File("logs/aurora-.log", rollingInterval: RollingInterval.Day)
+        .WriteTo.File("logs/myapp-.log", rollingInterval: RollingInterval.Day)
         .CreateLogger());
 });
 ```

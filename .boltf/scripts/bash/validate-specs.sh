@@ -84,10 +84,10 @@ log_section "Constitution"
 
 if [ -f "memory/constitution.md" ]; then
     log_success "Constitution exists"
-    
+
     # Check for required sections
     REQUIRED_SECTIONS=("Tech Stack" "Architectural Principles" "Development Standards")
-    
+
     for section in "${REQUIRED_SECTIONS[@]}"; do
         if grep -qi "$section" "memory/constitution.md"; then
             log_success "Section found: ${section}"
@@ -97,7 +97,7 @@ if [ -f "memory/constitution.md" ]; then
     done
 else
     log_error "Constitution not found at memory/constitution.md"
-    log_info "Run /aurora.constitution to create it"
+    log_info "Run @Bolt Constitution to create it"
 fi
 
 # =============================================================================
@@ -107,14 +107,14 @@ for SPEC_DIR in "${SPEC_DIRS[@]}"; do
     if [ ! -d "$SPEC_DIR" ]; then
         continue
     fi
-    
+
     FEATURE_NAME=$(basename "$SPEC_DIR")
     log_section "Feature: ${FEATURE_NAME}"
-    
+
     # Check spec.md
     if [ -f "${SPEC_DIR}/spec.md" ]; then
         log_success "spec.md exists"
-        
+
         # Check for user stories
         US_COUNT=$(grep -c "^### US-" "${SPEC_DIR}/spec.md" 2>/dev/null || echo "0")
         if [ "$US_COUNT" -gt 0 ]; then
@@ -122,7 +122,7 @@ for SPEC_DIR in "${SPEC_DIRS[@]}"; do
         else
             log_warning "No user stories found (expected ### US-XXX format)"
         fi
-        
+
         # Check for acceptance criteria
         AC_COUNT=$(grep -c "AC[0-9]*:" "${SPEC_DIR}/spec.md" 2>/dev/null || echo "0")
         if [ "$AC_COUNT" -gt 0 ]; then
@@ -130,7 +130,7 @@ for SPEC_DIR in "${SPEC_DIRS[@]}"; do
         else
             log_warning "No acceptance criteria found"
         fi
-        
+
         # Check for unchecked open questions
         OPEN_QUESTIONS=$(grep -c "^\- \[ \]" "${SPEC_DIR}/spec.md" 2>/dev/null || echo "0")
         if [ "$OPEN_QUESTIONS" -gt 0 ]; then
@@ -139,11 +139,11 @@ for SPEC_DIR in "${SPEC_DIRS[@]}"; do
     else
         log_error "spec.md not found"
     fi
-    
+
     # Check plan.md
     if [ -f "${SPEC_DIR}/plan.md" ]; then
         log_success "plan.md exists"
-        
+
         # Check for bolts
         BOLT_COUNT=$(grep -c "^## Bolt" "${SPEC_DIR}/plan.md" 2>/dev/null || echo "0")
         if [ "$BOLT_COUNT" -gt 0 ]; then
@@ -152,33 +152,33 @@ for SPEC_DIR in "${SPEC_DIRS[@]}"; do
             log_warning "No bolts defined (expected ## Bolt X format)"
         fi
     else
-        log_warning "plan.md not found (run /aurora.plan)"
+        log_warning "plan.md not found (run @Bolt Plan)"
     fi
-    
+
     # Check tasks.md
     if [ -f "${SPEC_DIR}/tasks.md" ]; then
         log_success "tasks.md exists"
-        
+
         # Count tasks
         TOTAL_TASKS=$(grep -c "^\- \[" "${SPEC_DIR}/tasks.md" 2>/dev/null || echo "0")
         COMPLETED_TASKS=$(grep -c "^\- \[x\]" "${SPEC_DIR}/tasks.md" 2>/dev/null || echo "0")
-        
+
         log_info "Task progress: ${COMPLETED_TASKS}/${TOTAL_TASKS}"
     else
-        log_warning "tasks.md not found (run /aurora.tasks)"
+        log_warning "tasks.md not found (run @Bolt Tasks)"
     fi
-    
+
     # Check data-model.md
     if [ -f "${SPEC_DIR}/data-model.md" ]; then
         log_success "data-model.md exists"
-        
+
         # Check for entities
         ENTITY_COUNT=$(grep -c "^### " "${SPEC_DIR}/data-model.md" 2>/dev/null || echo "0")
         if [ "$ENTITY_COUNT" -gt 0 ]; then
             log_success "Entities defined: ${ENTITY_COUNT}"
         fi
     fi
-    
+
     # Check contracts directory
     if [ -d "${SPEC_DIR}/contracts" ]; then
         CONTRACT_COUNT=$(find "${SPEC_DIR}/contracts" -name "*.yaml" -o -name "*.yml" 2>/dev/null | wc -l)
@@ -200,11 +200,11 @@ for SPEC_DIR in "${SPEC_DIRS[@]}"; do
     if [ ! -d "$SPEC_DIR" ]; then
         continue
     fi
-    
+
     if [ -f "${SPEC_DIR}/spec.md" ] && [ -f "${SPEC_DIR}/tasks.md" ]; then
         # Extract user story IDs from spec
         US_IDS=$(grep -o "US-[0-9]*" "${SPEC_DIR}/spec.md" 2>/dev/null | sort -u)
-        
+
         for US_ID in $US_IDS; do
             if grep -q "\[${US_ID}\]\|\[${US_ID/US-/US}\]" "${SPEC_DIR}/tasks.md" 2>/dev/null; then
                 log_success "${US_ID} has corresponding tasks"

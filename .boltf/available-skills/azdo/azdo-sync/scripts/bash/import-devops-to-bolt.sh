@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # =============================================================================
-# import-devops-to-aurora.sh
-# Import Azure DevOps work items into AURORA specification format
+# import-devops-to-bolt.sh
+# Import Azure DevOps work items into Bolt specification format
 #
 # Retrieves an existing Azure DevOps Feature and its children (User Stories,
-# Tasks) and generates the corresponding AURORA spec structure in specs/.
+# Tasks) and generates the corresponding Bolt spec structure in specs/.
 #
 # Usage:
-#   ./import-devops-to-aurora.sh -i <work-item-id> -o <output-path> [--no-children] [--force]
+#   ./import-devops-to-bolt.sh -i <work-item-id> -o <output-path> [--no-children] [--force]
 #
 # Parameters:
 #   -i, --work-item-id   Feature work item ID to import (required)
@@ -16,8 +16,8 @@
 #   --force              Overwrite existing spec folder
 #
 # Examples:
-#   ./import-devops-to-aurora.sh -i 12345 -o "specs/001-time-tracking"
-#   ./import-devops-to-aurora.sh -i 12345 -o "specs/001-time-tracking" --no-children
+#   ./import-devops-to-bolt.sh -i 12345 -o "specs/001-time-tracking"
+#   ./import-devops-to-bolt.sh -i 12345 -o "specs/001-time-tracking" --no-children
 #
 # Requires:
 #   - Azure DevOps CLI (az devops)

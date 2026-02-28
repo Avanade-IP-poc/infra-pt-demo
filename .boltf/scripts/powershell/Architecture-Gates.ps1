@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    AURORA-IA / AI-DLC - Architecture Quality Gates Script
+    Bolt Framework / AI-DLC - Architecture Quality Gates Script
 
 .DESCRIPTION
     Validates architectural rules: dependency boundaries, contracts, complexity.
@@ -58,21 +58,21 @@ $Script:MaxFileLines = 400
 $Script:MaxFanOut = 10
 
 # Helper functions
-function Write-Info { 
-    Write-Host "[INFO] $args" -ForegroundColor Blue 
+function Write-Info {
+    Write-Host "[INFO] $args" -ForegroundColor Blue
 }
 
-function Write-Success { 
+function Write-Success {
     Write-Host "[✓] $args" -ForegroundColor Green
     $Script:Passed++
 }
 
-function Write-Warn { 
+function Write-Warn {
     Write-Host "[⚠] $args" -ForegroundColor Yellow
     $Script:Warnings++
 }
 
-function Write-Fail { 
+function Write-Fail {
     Write-Host "[✗] $args" -ForegroundColor Red
     $Script:Failed++
 }
@@ -120,9 +120,9 @@ function Invoke-Check {
         [scriptblock]$Command,
         [bool]$Critical = $true
     )
-    
+
     Write-Info "Running: $Name"
-    
+
     try {
         $result = & $Command
         if ($LASTEXITCODE -eq 0 -or $result -eq $true) {
@@ -133,7 +133,7 @@ function Invoke-Check {
     catch {
         # Command failed
     }
-    
+
     if ($Critical) {
         Write-Fail "$Name FAILED"
     }
@@ -151,7 +151,7 @@ function Get-ConstitutionThresholds {
     if (Test-Path $constitutionPath) {
         Write-Info "Loading thresholds from constitution..."
         $content = Get-Content $constitutionPath -Raw
-        
+
         if ($content -match "Cyclomatic Complexity.*≤\s*(\d+)") {
             $Script:MaxCyclomaticComplexity = [int]$Matches[1]
             Write-Info "  Cyclomatic Complexity threshold: $($Script:MaxCyclomaticComplexity)"
@@ -174,7 +174,7 @@ function Test-DependencyRulesNode {
         Write-Info "To install: npm install --save-dev dependency-cruiser"
         Write-Info "To init: npx depcruise --init"
     }
-    
+
     # Check eslint-plugin-boundaries
     if (Test-Path "package.json") {
         $pkg = Get-Content "package.json" -Raw
@@ -187,7 +187,7 @@ function Test-DependencyRulesNode {
 function Test-DependencyRulesDotNet {
     # Find architecture test files
     $archTests = Get-ChildItem -Path . -Recurse -Include "*ArchitectureTests*.cs","*ArchTests*.cs" -ErrorAction SilentlyContinue
-    
+
     if ($archTests) {
         Invoke-Check "Architecture Tests (.NET)" {
             dotnet test --filter "Category=Architecture|FullyQualifiedName~Architecture"
@@ -197,7 +197,7 @@ function Test-DependencyRulesDotNet {
         Write-Warn "No architecture tests found"
         Write-Info "Consider adding NetArchTest: dotnet add package NetArchTest.Rules"
         Write-Info "Create tests in: tests/Architecture/ArchitectureTests.cs"
-        
+
         # Provide sample code
         $sampleCode = @"
 // Example NetArchTest - tests/Architecture/LayerTests.cs
@@ -213,7 +213,7 @@ public class LayerTests
             .Should()
             .NotHaveDependencyOn("Infrastructure")
             .GetResult();
-        
+
         Assert.True(result.IsSuccessful);
     }
 }
@@ -224,7 +224,7 @@ public class LayerTests
 
 function Test-DependencyRulesJava {
     $archTests = Get-ChildItem -Path . -Recurse -Include "*ArchitectureTest*.java","*ArchTest*.java" -ErrorAction SilentlyContinue
-    
+
     if ($archTests) {
         if (Test-Path "pom.xml") {
             Invoke-Check "ArchUnit Tests (Maven)" { mvn test -Dtest="*ArchTest*" }
@@ -246,14 +246,14 @@ function Test-CircularDependenciesNode {
     if (Test-Command "npx") {
         # Check if madge is available
         $hasMadge = (npm ls madge 2>$null) -or (Test-Command "madge")
-        
+
         if ($hasMadge) {
             if ($Report) {
                 Write-Info "Generating dependency graph..."
                 New-Item -ItemType Directory -Force -Path "reports/architecture" | Out-Null
                 npx madge --image reports/architecture/dependency-graph.svg src 2>$null
             }
-            
+
             Invoke-Check "Circular Dependencies (madge)" {
                 $output = npx madge --circular src 2>&1
                 if ($output -match "No circular dependency") {
@@ -274,10 +274,10 @@ function Test-CircularDependenciesNode {
 # =============================================================================
 function Test-OpenAPIContracts {
     $openapiFiles = Get-ChildItem -Path "specs" -Recurse -Include "openapi.yaml","openapi.json" -ErrorAction SilentlyContinue
-    
+
     if ($openapiFiles) {
         Write-Info "Found OpenAPI specs: $($openapiFiles.FullName -join ', ')"
-        
+
         foreach ($spec in $openapiFiles) {
             Invoke-Check "OpenAPI Lint: $($spec.Name)" {
                 npx @stoplight/spectral-cli lint $spec.FullName
@@ -291,10 +291,10 @@ function Test-OpenAPIContracts {
 
 function Test-AsyncAPIContracts {
     $asyncapiFiles = Get-ChildItem -Path "specs" -Recurse -Include "asyncapi.yaml","asyncapi.json" -ErrorAction SilentlyContinue
-    
+
     if ($asyncapiFiles) {
         Write-Info "Found AsyncAPI specs: $($asyncapiFiles.FullName -join ', ')"
-        
+
         if (Test-Command "asyncapi") {
             foreach ($spec in $asyncapiFiles) {
                 Invoke-Check "AsyncAPI Validate: $($spec.Name)" {
@@ -311,10 +311,10 @@ function Test-AsyncAPIContracts {
 
 function Test-PactContracts {
     $pactFiles = Get-ChildItem -Path . -Recurse -Include "*.pact.json","*PactTest*" -ErrorAction SilentlyContinue
-    
+
     if ($pactFiles -or (Test-Path "pacts")) {
         Write-Info "Pact contracts detected"
-        
+
         $projectType = Get-ProjectType
         switch -Wildcard ($projectType) {
             "node*" {
@@ -342,13 +342,13 @@ function Test-PactContracts {
 # =============================================================================
 function Test-ComplexityNode {
     $hasEslint = (Test-Path "eslint.config.mjs") -or (Test-Path ".eslintrc.js") -or (Test-Path ".eslintrc.json")
-    
+
     if ($hasEslint) {
         Write-Info "Checking ESLint complexity rules..."
-        
-        $eslintConfig = Get-ChildItem -Path . -Include "eslint.config.mjs",".eslintrc.*" -ErrorAction SilentlyContinue | 
+
+        $eslintConfig = Get-ChildItem -Path . -Include "eslint.config.mjs",".eslintrc.*" -ErrorAction SilentlyContinue |
             Get-Content -Raw -ErrorAction SilentlyContinue
-        
+
         if ($eslintConfig -match "complexity") {
             Write-Success "ESLint complexity rules configured"
         }
@@ -358,16 +358,16 @@ function Test-ComplexityNode {
             Write-Info "  'max-lines-per-function': ['error', { max: $($Script:MaxFunctionLines) }]"
         }
     }
-    
+
     if (Test-Path "sonar-project.properties") {
         Write-Info "SonarQube configured - complexity metrics available in dashboard"
     }
 }
 
 function Test-ComplexityDotNet {
-    $csproj = Get-ChildItem -Path . -Include "*.csproj" -Recurse -ErrorAction SilentlyContinue | 
+    $csproj = Get-ChildItem -Path . -Include "*.csproj" -Recurse -ErrorAction SilentlyContinue |
         Get-Content -Raw -ErrorAction SilentlyContinue
-    
+
     if ($csproj -match "Microsoft.CodeAnalysis") {
         Write-Success "Roslyn analyzers configured"
     }
@@ -375,7 +375,7 @@ function Test-ComplexityDotNet {
         Write-Warn "Consider adding Roslyn analyzers for complexity metrics"
         Write-Info "  dotnet add package Microsoft.CodeAnalysis.NetAnalyzers"
     }
-    
+
     if ((Test-Path ".editorconfig") -and ((Get-Content ".editorconfig" -Raw) -match "dotnet_code_quality")) {
         Write-Success "Code quality rules in .editorconfig"
     }
@@ -389,18 +389,18 @@ function Test-BuildTime {
         Write-Info "Skipping build time check in CI mode"
         return
     }
-    
+
     Write-Info "Checking build time..."
     $startTime = Get-Date
-    
+
     $projectType = Get-ProjectType
     switch -Wildcard ($projectType) {
         "node*" { npm run build 2>&1 | Out-Null }
         "dotnet" { dotnet build --no-restore 2>&1 | Out-Null }
     }
-    
+
     $buildTime = ((Get-Date) - $startTime).TotalSeconds
-    
+
     if ($buildTime -lt 300) {
         Write-Success "Build time: $([math]::Round($buildTime, 1))s (< 5min threshold)"
     }
@@ -411,19 +411,19 @@ function Test-BuildTime {
 
 function Test-TestQuality {
     Write-Info "Analyzing test quality..."
-    
+
     $projectType = Get-ProjectType
     switch -Wildcard ($projectType) {
         "node*" {
             $testFiles = Get-ChildItem -Path "src" -Recurse -Include "*.spec.ts","*.test.ts" -ErrorAction SilentlyContinue
             $testCount = $testFiles.Count
-            
+
             if ($testCount -gt 0) {
                 $mockCount = ($testFiles | Get-Content -Raw | Select-String -Pattern "jest\.mock|vi\.mock|mock\(" -AllMatches).Matches.Count
                 $mockRatio = [math]::Round(($mockCount / $testCount) * 100, 1)
-                
+
                 Write-Info "Test files: $testCount, Mock usages: $mockCount"
-                
+
                 if ($mockRatio -gt 300) {
                     Write-Warn "High mock ratio ($mockRatio%) - consider improving architecture"
                 }
@@ -451,7 +451,7 @@ switch -Wildcard ($projectType) {
     "node*" { Test-DependencyRulesNode }
     "dotnet" { Test-DependencyRulesDotNet }
     "java*" { Test-DependencyRulesJava }
-    "python" { 
+    "python" {
         if (Test-Command "lint-imports") {
             Invoke-Check "Import Linter" { lint-imports }
         }
@@ -510,11 +510,11 @@ if ($Script:Failed -gt 0) {
     Write-Fail "Architecture gates FAILED"
     Write-Host ""
     Write-Host "Common fixes:" -ForegroundColor Yellow
-    Write-Host "  1. Review dependency rules in .dependency-cruiser.cjs" 
+    Write-Host "  1. Review dependency rules in .dependency-cruiser.cjs"
     Write-Host "  2. Check for circular imports with 'npx madge --circular src'"
     Write-Host "  3. Validate OpenAPI specs with 'npx spectral lint specs/*/contracts/openapi.yaml'"
     Write-Host ""
-    
+
     if ($CIMode) {
         exit 1
     }

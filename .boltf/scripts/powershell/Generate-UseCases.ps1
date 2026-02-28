@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    AURORA-IA / AI-DLC - Generate Use Cases Script
+    Bolt Framework / AI-DLC - Generate Use Cases Script
 
 .DESCRIPTION
     Generates use case document structure from a feature specification.
@@ -29,7 +29,7 @@ $UCDir = "$SpecDir/use-cases"
 # Check spec exists
 if (-not (Test-Path "$SpecDir/spec.md")) {
     Write-Error "Specification not found: $SpecDir/spec.md"
-    Write-Host "Run /aurora.feature first to create the feature specification"
+    Write-Host "Run @Bolt Feature first to create the feature specification"
     exit 1
 }
 
@@ -143,4 +143,4 @@ Write-Host ""
 Write-Host "Next steps:"
 Write-Host "  1. Edit UC-001-template.md with first use case"
 Write-Host "  2. Duplicate for additional use cases"
-Write-Host "  3. Run /aurora.gherkin to generate BDD scenarios"
+Write-Host "  3. Run @Bolt Gherkin to generate BDD scenarios"

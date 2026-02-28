@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    AURORA-IA / AI-DLC - Validate Specifications Script
+    Bolt Framework / AI-DLC - Validate Specifications Script
 
 .DESCRIPTION
     Validates specification files for completeness and consistency.
@@ -30,12 +30,12 @@ $Script:Warnings = 0
 # Helper functions
 function Write-Info { Write-Host "[INFO] $args" -ForegroundColor Blue }
 function Write-Success { Write-Host "[✓] $args" -ForegroundColor Green }
-function Write-Warn { 
-    Write-Host "[⚠] $args" -ForegroundColor Yellow 
+function Write-Warn {
+    Write-Host "[⚠] $args" -ForegroundColor Yellow
     $Script:Warnings++
 }
-function Write-Err { 
-    Write-Host "[✗] $args" -ForegroundColor Red 
+function Write-Err {
+    Write-Host "[✗] $args" -ForegroundColor Red
     $Script:Errors++
 }
 function Write-Section {
@@ -61,11 +61,11 @@ Write-Section "Constitution"
 
 if (Test-Path "memory/constitution.md") {
     Write-Success "Constitution exists"
-    
+
     $ConstitutionContent = Get-Content "memory/constitution.md" -Raw
-    
+
     $RequiredSections = @("Tech Stack", "Architectural Principles", "Development Standards")
-    
+
     foreach ($section in $RequiredSections) {
         if ($ConstitutionContent -match $section) {
             Write-Success "Section found: $section"
@@ -75,7 +75,7 @@ if (Test-Path "memory/constitution.md") {
     }
 } else {
     Write-Err "Constitution not found at memory/constitution.md"
-    Write-Info "Run /aurora.constitution to create it"
+    Write-Info "Use @Bolt Setup or @Bolt Constitution to create it"
 }
 
 # =============================================================================
@@ -85,17 +85,17 @@ foreach ($SpecDir in $SpecDirs) {
     if (-not (Test-Path $SpecDir)) {
         continue
     }
-    
+
     $FeatureName = Split-Path $SpecDir -Leaf
     Write-Section "Feature: $FeatureName"
-    
+
     # Check spec.md
     $SpecFile = Join-Path $SpecDir "spec.md"
     if (Test-Path $SpecFile) {
         Write-Success "spec.md exists"
-        
+
         $SpecContent = Get-Content $SpecFile -Raw
-        
+
         # Check for user stories
         $USMatches = [regex]::Matches($SpecContent, "^### US-", [System.Text.RegularExpressions.RegexOptions]::Multiline)
         $USCount = $USMatches.Count
@@ -104,7 +104,7 @@ foreach ($SpecDir in $SpecDirs) {
         } else {
             Write-Warn "No user stories found (expected ### US-XXX format)"
         }
-        
+
         # Check for acceptance criteria
         $ACMatches = [regex]::Matches($SpecContent, "AC\d+:")
         $ACCount = $ACMatches.Count
@@ -113,7 +113,7 @@ foreach ($SpecDir in $SpecDirs) {
         } else {
             Write-Warn "No acceptance criteria found"
         }
-        
+
         # Check for unchecked open questions
         $OpenQuestions = [regex]::Matches($SpecContent, "^- \[ \]", [System.Text.RegularExpressions.RegexOptions]::Multiline)
         if ($OpenQuestions.Count -gt 0) {
@@ -122,14 +122,14 @@ foreach ($SpecDir in $SpecDirs) {
     } else {
         Write-Err "spec.md not found"
     }
-    
+
     # Check plan.md
     $PlanFile = Join-Path $SpecDir "plan.md"
     if (Test-Path $PlanFile) {
         Write-Success "plan.md exists"
-        
+
         $PlanContent = Get-Content $PlanFile -Raw
-        
+
         # Check for bolts
         $BoltMatches = [regex]::Matches($PlanContent, "^## Bolt", [System.Text.RegularExpressions.RegexOptions]::Multiline)
         $BoltCount = $BoltMatches.Count
@@ -139,45 +139,45 @@ foreach ($SpecDir in $SpecDirs) {
             Write-Warn "No bolts defined (expected ## Bolt X format)"
         }
     } else {
-        Write-Warn "plan.md not found (run /aurora.plan)"
+        Write-Warn "plan.md not found (use @Bolt Plan)"
     }
-    
+
     # Check tasks.md
     $TasksFile = Join-Path $SpecDir "tasks.md"
     if (Test-Path $TasksFile) {
         Write-Success "tasks.md exists"
-        
+
         $TasksContent = Get-Content $TasksFile -Raw
-        
+
         # Count tasks
         $TotalTasks = [regex]::Matches($TasksContent, "^- \[", [System.Text.RegularExpressions.RegexOptions]::Multiline)
         $CompletedTasks = [regex]::Matches($TasksContent, "^- \[x\]", [System.Text.RegularExpressions.RegexOptions]::Multiline)
-        
+
         Write-Info "Task progress: $($CompletedTasks.Count)/$($TotalTasks.Count)"
     } else {
-        Write-Warn "tasks.md not found (run /aurora.tasks)"
+        Write-Warn "tasks.md not found (use @Bolt Tasks)"
     }
-    
+
     # Check data-model.md
     $DataModelFile = Join-Path $SpecDir "data-model.md"
     if (Test-Path $DataModelFile) {
         Write-Success "data-model.md exists"
-        
+
         $DataModelContent = Get-Content $DataModelFile -Raw
-        
+
         # Check for entities
         $EntityMatches = [regex]::Matches($DataModelContent, "^### ", [System.Text.RegularExpressions.RegexOptions]::Multiline)
         if ($EntityMatches.Count -gt 0) {
             Write-Success "Entities defined: $($EntityMatches.Count)"
         }
     }
-    
+
     # Check contracts directory
     $ContractsDir = Join-Path $SpecDir "contracts"
     if (Test-Path $ContractsDir) {
         $Contracts = Get-ChildItem -Path $ContractsDir -Filter "*.yaml" -ErrorAction SilentlyContinue
         $Contracts += Get-ChildItem -Path $ContractsDir -Filter "*.yml" -ErrorAction SilentlyContinue
-        
+
         if ($Contracts.Count -gt 0) {
             Write-Success "API contracts found: $($Contracts.Count)"
         } else {
@@ -195,18 +195,18 @@ foreach ($SpecDir in $SpecDirs) {
     if (-not (Test-Path $SpecDir)) {
         continue
     }
-    
+
     $SpecFile = Join-Path $SpecDir "spec.md"
     $TasksFile = Join-Path $SpecDir "tasks.md"
-    
+
     if ((Test-Path $SpecFile) -and (Test-Path $TasksFile)) {
         $SpecContent = Get-Content $SpecFile -Raw
         $TasksContent = Get-Content $TasksFile -Raw
-        
+
         # Extract user story IDs from spec
         $USMatches = [regex]::Matches($SpecContent, "US-\d+")
         $USIds = $USMatches.Value | Select-Object -Unique
-        
+
         foreach ($USId in $USIds) {
             if ($TasksContent -match "\[$USId\]") {
                 Write-Success "$USId has corresponding tasks"

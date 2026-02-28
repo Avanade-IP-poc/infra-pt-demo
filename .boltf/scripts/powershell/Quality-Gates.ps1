@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    AURORA-IA / AI-DLC - Quality Gates Script
+    Bolt Framework / AI-DLC - Quality Gates Script
 
 .DESCRIPTION
     Runs quality checks including linting, testing, and security scanning.
@@ -39,16 +39,16 @@ $Script:Warnings = 0
 
 # Helper functions
 function Write-Info { Write-Host "[INFO] $args" -ForegroundColor Blue }
-function Write-Success { 
-    Write-Host "[✓] $args" -ForegroundColor Green 
+function Write-Success {
+    Write-Host "[✓] $args" -ForegroundColor Green
     $Script:Passed++
 }
-function Write-Warning { 
-    Write-Host "[⚠] $args" -ForegroundColor Yellow 
+function Write-Warning {
+    Write-Host "[⚠] $args" -ForegroundColor Yellow
     $Script:Warnings++
 }
-function Write-Fail { 
-    Write-Host "[✗] $args" -ForegroundColor Red 
+function Write-Fail {
+    Write-Host "[✗] $args" -ForegroundColor Red
     $Script:Failed++
 }
 function Write-Section {
@@ -63,9 +63,9 @@ function Invoke-Check {
         [string]$Name,
         [scriptblock]$Command
     )
-    
+
     Write-Info "Running: $Name"
-    
+
     try {
         & $Command
         if ($LASTEXITCODE -eq 0 -or $null -eq $LASTEXITCODE) {
@@ -100,11 +100,11 @@ function Get-ProjectType {
 function Get-ConstitutionThresholds {
     $Script:CoverageThreshold = 80
     $Script:MutationThreshold = 60
-    
+
     if (Test-Path "memory/constitution.md") {
         Write-Info "Loading thresholds from constitution..."
         $content = Get-Content "memory/constitution.md" -Raw
-        
+
         if ($content -match "Coverage.*≥\s*(\d+)") {
             $Script:CoverageThreshold = [int]$Matches[1]
             Write-Info "  Coverage threshold: $($Script:CoverageThreshold)%"
@@ -293,7 +293,7 @@ switch ($ProjectType) {
         if ($Fix) {
             Invoke-Check "Go Fmt" { go fmt ./... }
         } else {
-            Invoke-Check "Go Fmt Check" { 
+            Invoke-Check "Go Fmt Check" {
                 $output = gofmt -l .
                 if ($output) { throw "Files need formatting" }
             }
@@ -477,7 +477,7 @@ switch ($ProjectType) {
 # =============================================================================
 if ($Full) {
     Write-Section "Security Scan"
-    
+
     switch ($ProjectType) {
         { $_ -in "node", "node-ts" } {
             Invoke-Check "NPM Audit" { npm audit --audit-level=high }
@@ -538,10 +538,10 @@ if ($Full) {
 # =============================================================================
 if ($Full) {
     Write-Section "Architecture Quality Gates"
-    
+
     $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
     $archGates = Join-Path $scriptDir "Architecture-Gates.ps1"
-    
+
     if (Test-Path $archGates) {
         Write-Info "Running architecture validation..."
         try {

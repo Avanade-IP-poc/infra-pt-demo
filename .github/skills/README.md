@@ -87,7 +87,7 @@ Después de crear un skill, regístralo en `.github/copilot-instructions.md`:
 <skill>
 <name>nombre-del-skill</name>
 <description>Descripción breve y cuándo usarlo</description>
-<file>f:\repos\aurora-ai\.github\skills\nombre-del-skill\SKILL.md</file>
+<file>f:\repos\bolt-framework\.github\skills\nombre-del-skill\SKILL.md</file>
 </skill>
 </skills>
 ```
@@ -271,7 +271,7 @@ Un skill de alta calidad debe:
 ¿Preguntas? ¿Problemas?
 
 1. Revisa [new-skill/SKILL.md](./new-skill/SKILL.md)
-2. Pregunta a `@AURORA` en el chat de Copilot
+2. Pregunta a `@Bolt Framework` en el chat de Copilot
 3. Abre un issue en el repositorio
 
 ---

@@ -1,16 +1,16 @@
 <#
 .SYNOPSIS
-    Synchronize AURORA feature specifications to Azure DevOps work items
+    Synchronize Bolt feature specifications to Azure DevOps work items
 
 .DESCRIPTION
-    This script reads AURORA specs from the specs/ folder and creates/updates
+    This script reads Bolt specs from the specs/ folder and creates/updates
     corresponding work items in Azure DevOps (Features, User Stories, Tasks).
-    
+
     It maintains bidirectional traceability through .metadata/devops-sync.json
-    and tags all work items with AURORA for filtering.
+    and tags all work items with Bolt for filtering.
 
 .PARAMETER FeaturePath
-    Path to the AURORA feature folder (e.g., "specs/001-time-tracking")
+    Path to the Bolt feature folder (e.g., "specs/001-time-tracking")
 
 .PARAMETER Mode
     Sync mode: "Full" (recreate all), "Incremental" (new/changed only)
@@ -22,11 +22,11 @@
     Skip confirmation prompts
 
 .EXAMPLE
-    .\Sync-AuroraToDevOps.ps1 -FeaturePath "specs/001-time-tracking" -DryRun
+    .\Sync-BoltToDevOps.ps1 -FeaturePath "specs/001-time-tracking" -DryRun
     Preview what work items would be created
 
 .EXAMPLE
-    .\Sync-AuroraToDevOps.ps1 -FeaturePath "specs/001-time-tracking" -Mode Incremental
+    .\Sync-BoltToDevOps.ps1 -FeaturePath "specs/001-time-tracking" -Mode Incremental
     Sync only new/changed items
 
 .NOTES
@@ -56,16 +56,272 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
-# Load shared environment (reads .env, builds $script:Config, validates PAT)
-. "$PSScriptRoot\_EnvLoader.ps1"
+# =============================================================================
+# Configuration
+# =============================================================================
+
+$script:Config = @{
+    Organization = "https://dev.azure.com/jdmveira"
+    Project      = "Registro Horario"
+    AreaPath     = "Registro Horario"
+    Iteration    = "Registro Horario\Sprint 1"  # TODO: Read from constitution or parameter
+    TagPrefix    = "AURORA"
+    MappingsPath = Join-Path $PSScriptRoot "..\mappings"  # Path to mapping files
+}
+
+# =============================================================================
+# Mapping Functions
+# =============================================================================
+
+function Get-WorkItemMapping {
+    <#
+    .SYNOPSIS
+        Load work item mapping configuration from JSON file
+    .PARAMETER WorkItemType
+        Type of work item (Epic, Feature, ProductBacklogItem, Task, Bug)
+    #>
+    param(
+        [Parameter(Mandatory = $true)]
+        [ValidateSet("Epic", "Feature", "ProductBacklogItem", "Task", "Bug")]
+        [string]$WorkItemType
+    )
+
+    $mappingFile = switch ($WorkItemType) {
+        "Epic"               { "epic-mapping.json" }
+        "Feature"            { "feature-mapping.json" }
+        "ProductBacklogItem" { "pbi-mapping.json" }
+        "Task"               { "task-mapping.json" }
+        "Bug"                { "bug-mapping.json" }
+    }
+
+    $mappingPath = Join-Path $script:Config.MappingsPath $mappingFile
+
+    if (-not (Test-Path $mappingPath)) {
+        throw "Mapping file not found: $mappingPath"
+    }
+
+    $mapping = Get-Content $mappingPath -Raw | ConvertFrom-Json
+
+    Write-Verbose "Loaded mapping for $WorkItemType from $mappingPath"
+
+    return $mapping
+}
+
+function Get-FieldValueFromAurora {
+    <#
+    .SYNOPSIS
+        Extract field value from AURORA artifact based on mapping definition
+    .PARAMETER FilePath
+        Path to AURORA artifact file
+    .PARAMETER FieldMapping
+        Field mapping configuration from mapping file
+    .PARAMETER Context
+        Additional context (e.g., current phase, parent work item)
+    #>
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$FilePath,
+
+        [Parameter(Mandatory = $true)]
+        [PSCustomObject]$FieldMapping,
+
+        [Parameter(Mandatory = $false)]
+        [hashtable]$Context = @{}
+    )
+
+    $auroraSource = $FieldMapping.boltfSource
+
+    # Handle null/empty source
+    if ([string]::IsNullOrWhiteSpace($auroraSource)) {
+        return $FieldMapping.defaultValue
+    }
+
+    # Handle computed values
+    if ($auroraSource -like "computed:*") {
+        $computation = $auroraSource -replace "^computed:", ""
+        return Invoke-ComputedValue -Computation $computation -Context $Context
+    }
+
+    # Handle inherited values
+    if ($auroraSource -like "inherited:*") {
+        $inheritSource = $auroraSource -replace "^inherited:", ""
+        return $Context[$inheritSource]
+    }
+
+    # Handle file-based extraction
+    if ($auroraSource -match "(.+?)#(.+)") {
+        $fileName = $Matches[1]
+        $fieldName = $Matches[2]
+
+        $fullPath = if (Test-Path $FilePath -PathType Container) {
+            Join-Path $FilePath $fileName
+        } else {
+            Join-Path (Split-Path $FilePath -Parent) $fileName
+        }
+
+        if (-not (Test-Path $fullPath)) {
+            Write-Warning "Source file not found: $fullPath for field $fieldName"
+            return $FieldMapping.defaultValue
+        }
+
+        $content = Get-Content $fullPath -Raw
+
+        # Try to extract from YAML frontmatter
+        if ($content -match "^---\s*\n(.*?)\n---" -and $fieldName -ne "description") {
+            $yamlBlock = $Matches[1]
+            if ($yamlBlock -match "$fieldName\s*:\s*(.+)") {
+                $value = $Matches[1].Trim()
+                return $value
+            }
+        }
+
+        # Try extraction pattern if specified
+        if ($FieldMapping.extractPattern) {
+            if ($content -match $FieldMapping.extractPattern) {
+                $value = $Matches[1]
+                return Apply-Transformation -Value $value -Transformation $FieldMapping.transformation
+            }
+        }
+
+        # Fallback: extract section content
+        if ($content -match "##\s*$fieldName\s*\n(.*?)(?=\n##|\z)") {
+            $value = $Matches[1].Trim()
+            return Apply-Transformation -Value $value -Transformation $FieldMapping.transformation
+        }
+    }
+
+    # Return default if extraction failed
+    return $FieldMapping.defaultValue
+}
+
+function Apply-Transformation {
+    <#
+    .SYNOPSIS
+        Apply transformation to extracted value
+    #>
+    param(
+        [string]$Value,
+        [string]$Transformation
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Transformation)) {
+        return $Value
+    }
+
+    switch ($Transformation) {
+        "markdown-to-html" {
+            # Simple markdown to HTML conversion
+            # In production, use a proper markdown library
+            $html = $Value -replace "\*\*(.+?)\*\*", "<strong>`$1</strong>"
+            $html = $html -replace "\*(.+?)\*", "<em>`$1</em>"
+            $html = $html -replace "`n`n", "</p><p>"
+            $html = "<p>$html</p>"
+            return $html
+        }
+        "markdown-to-html-list" {
+            # Convert markdown list to HTML
+            $lines = $Value -split "`n"
+            $html = "<ul>"
+            foreach ($line in $lines) {
+                if ($line -match "^[\s-]*\*\s*(.+)") {
+                    $html += "<li>$($Matches[1])</li>"
+                }
+            }
+            $html += "</ul>"
+            return $html
+        }
+        "html" {
+            return $Value
+        }
+        "path" {
+            # Ensure proper path format
+            return $Value -replace "[\\/]", "\"
+        }
+        "semicolon-separated" {
+            # Convert array or comma-separated to semicolon-separated
+            if ($Value -is [array]) {
+                return $Value -join ";"
+            }
+            return $Value -replace ",", ";"
+        }
+        default {
+            return $Value
+        }
+    }
+}
+
+function Invoke-ComputedValue {
+    <#
+    .SYNOPSIS
+        Compute field value based on computation rule
+    #>
+    param(
+        [string]$Computation,
+        [hashtable]$Context
+    )
+
+    switch ($Computation) {
+        "aurora-phase" {
+            # Map AURORA phase to DevOps state
+            $phase = $Context["auroraPhase"]
+            $stateMapping = @{
+                "DISCOVERY"    = "New"
+                "PLANNING"     = "Active"
+                "CONSTRUCTION" = "Active"
+                "TRANSITION"   = "Resolved"
+                "PRODUCTION"   = "Closed"
+            }
+            return $stateMapping[$phase] ?? "New"
+        }
+        "tags" {
+            # Generate tags
+            $tags = @($script:Config.TagPrefix)
+            if ($Context["featureId"]) { $tags += $Context["featureId"] }
+            if ($Context["phase"]) { $tags += $Context["phase"] }
+            return $tags -join ";"
+        }
+        "area-path" {
+            # Compute area path from constitution or feature location
+            return $script:Config.AreaPath
+        }
+        default {
+            Write-Warning "Unknown computation: $Computation"
+            return $null
+        }
+    }
+}
 
 # =============================================================================
 # Helper Functions
 # =============================================================================
 
+function Write-StatusMessage {
+    param(
+        [string]$Message,
+        [ValidateSet("Info", "Success", "Warning", "Error")]
+        [string]$Type = "Info"
+    )
+
+    $color = switch ($Type) {
+        "Info"    { "Cyan" }
+        "Success" { "Green" }
+        "Warning" { "Yellow" }
+        "Error"   { "Red" }
+    }
+
+    $prefix = switch ($Type) {
+        "Info"    { "ℹ️" }
+        "Success" { "✅" }
+        "Warning" { "⚠️" }
+        "Error"   { "❌" }
+    }
+
+    Write-Host "$prefix $Message" -ForegroundColor $color
+}
+
 function Test-AzureDevOpsAuth {
     Write-StatusMessage "Verifying Azure DevOps authentication..." -Type Info
-    
+
     if (-not $env:AZURE_DEVOPS_EXT_PAT) {
         Write-StatusMessage "AZURE_DEVOPS_EXT_PAT environment variable not set" -Type Error
         Write-Host @"
@@ -78,7 +334,7 @@ Please configure authentication:
 "@ -ForegroundColor Yellow
         return $false
     }
-    
+
     try {
         $null = az devops project show --project $script:Config.Project --query "name" -o tsv 2>&1
         if ($LASTEXITCODE -ne 0) {
@@ -96,13 +352,13 @@ Please configure authentication:
 
 function Get-FeatureMetadata {
     param([string]$FeaturePath)
-    
+
     $metadataPath = Join-Path $FeaturePath ".metadata\devops-sync.json"
-    
+
     if (Test-Path $metadataPath) {
         return Get-Content $metadataPath -Raw | ConvertFrom-Json
     }
-    
+
     # Return empty metadata structure
     return @{
         version          = "1.0.0"
@@ -124,41 +380,41 @@ function Save-FeatureMetadata {
         [string]$FeaturePath,
         [object]$Metadata
     )
-    
+
     $metadataDir = Join-Path $FeaturePath ".metadata"
     if (-not (Test-Path $metadataDir)) {
         New-Item -ItemType Directory -Path $metadataDir -Force | Out-Null
     }
-    
+
     $metadataPath = Join-Path $metadataDir "devops-sync.json"
     $Metadata.lastSync = (Get-Date).ToUniversalTime().ToString("o")
-    
+
     $Metadata | ConvertTo-Json -Depth 10 | Set-Content $metadataPath -Encoding UTF8
     Write-StatusMessage "Metadata saved to $metadataPath" -Type Success
 }
 
 function Read-FeatureMarkdown {
     param([string]$Path)
-    
+
     if (-not (Test-Path $Path)) {
         Write-StatusMessage "Feature file not found: $Path" -Type Warning
         return $null
     }
-    
+
     $content = Get-Content $Path -Raw
-    
+
     # Extract title (first H1)
     $titleMatch = [regex]::Match($content, '(?m)^# (.+)$')
     $title = if ($titleMatch.Success) { $titleMatch.Groups[1].Value } else { "Untitled Feature" }
-    
+
     # Extract description (content between ## Description and next ##)
     $descMatch = [regex]::Match($content, '(?s)## Description\s*\n(.+?)(?=\n##|\z)')
     $description = if ($descMatch.Success) { $descMatch.Groups[1].Value.Trim() } else { "" }
-    
+
     # Extract acceptance criteria
     $acMatch = [regex]::Match($content, '(?s)## Acceptance Criteria\s*\n(.+?)(?=\n##|\z)')
     $acceptanceCriteria = if ($acMatch.Success) { $acMatch.Groups[1].Value.Trim() } else { "" }
-    
+
     return @{
         Title              = $title
         Description        = $description
@@ -176,72 +432,41 @@ function New-AzureDevOpsWorkItem {
         [string[]]$Tags = @(),
         [int]$RemainingWork = 0
     )
-    
+
     if ($DryRun) {
         Write-Host "  [DRY RUN] Would create $Type`: $Title" -ForegroundColor Magenta
         return @{ id = -1 }  # Mock ID for dry run
     }
-    
-    # CRITICAL: Always include 'Bolt Framework' tag
-    $allTags = @($script:Config.RequiredTag) + $Tags | Select-Object -Unique
-    
+
     $fields = @(
         "System.AreaPath=$($script:Config.AreaPath)",
         "System.IterationPath=$($script:Config.Iteration)",
-        "System.Tags=$($allTags -join ';')"
+        "System.Tags=$($Tags -join ';')"
     )
-    
+
     if ($AcceptanceCriteria) {
         $fields += "Microsoft.VSTS.Common.AcceptanceCriteria=$AcceptanceCriteria"
     }
-    
+
     if ($ParentId) {
         $fields += "System.Parent=$ParentId"
     }
-    
+
     if ($RemainingWork -gt 0) {
         $fields += "Microsoft.VSTS.Scheduling.RemainingWork=$RemainingWork"
     }
-    
+
     $fieldsArgs = $fields | ForEach-Object { "--fields", $_ }
-    
+
     try {
-        # Sanitize inputs - remove problematic quotes
-        $cleanTitle = $Title.Replace('"', "'").Replace('`', "'")
-        $cleanDescription = $Description.Replace('"', "'").Replace('`', "'")
-        
-        $fieldsArgs = $fields | ForEach-Object { "--fields"; $_ }
-        
-        $azArgs = @(
-            'boards', 'work-item', 'create',
-            '--type', $Type,
-            '--title', $cleanTitle,
-            '--description', $cleanDescription,
-            '--project', $script:Config.Project,
-            '--output', 'json'
-        )
-        
-        $azArgs += $fieldsArgs
-        
-        $jsonOutput = & az @azArgs 2>&1 | Out-String
-        
-        if ($LASTEXITCODE -ne 0) {
-            Write-StatusMessage "Azure CLI error creating $Type`: $jsonOutput" -Type Error
-            return $null
-        }
-        
-        try {
-            $result = $jsonOutput | ConvertFrom-Json
-        } catch {
-            Write-StatusMessage "Failed to parse JSON response: $jsonOutput" -Type Error
-            return $null
-        }
-        
-        if (-not $result.id) {
-            Write-StatusMessage "Failed to create $Type (no ID returned)" -Type Error
-            return $null
-        }
-        
+        $result = az boards work-item create `
+            --type $Type `
+            --title $Title `
+            --description $Description `
+            --project $script:Config.Project `
+            @fieldsArgs `
+            --output json | ConvertFrom-Json
+
         Write-StatusMessage "Created $Type #$($result.id): $Title" -Type Success
         return $result
     }
@@ -256,41 +481,27 @@ function Sync-Feature {
         [string]$FeaturePath,
         [object]$Metadata
     )
-    
-    # Check if Feature already synced
-    if ($Metadata.azureDevOps.featureWorkItemId -and $Mode -eq "Incremental") {
-        Write-StatusMessage "Using existing Feature #$($Metadata.azureDevOps.featureWorkItemId)" -Type Info
-        return $Metadata.azureDevOps.featureWorkItemId
-    }
-    
-    # Look for feature definition in feature.md or spec.md (fallback)
+
     $featureMd = Join-Path $FeaturePath "feature.md"
-    $specMd = Join-Path $FeaturePath "spec.md"
-    
     $featureData = Read-FeatureMarkdown -Path $featureMd
-    
-    if (-not $featureData -and (Test-Path $specMd)) {
-        Write-StatusMessage "No feature.md found, using spec.md as fallback" -Type Warning
-        $featureData = Read-FeatureMarkdown -Path $specMd
-    }
-    
+
     if (-not $featureData) {
-        Write-StatusMessage "Skipping feature creation (no feature.md or spec.md found)" -Type Warning
+        Write-StatusMessage "Skipping feature creation (no feature.md found)" -Type Warning
         return $null
     }
-    
+
     $featureId = Split-Path $FeaturePath -Leaf
-    $tags = @($featureId, "feature")
-    
+    $tags = @($script:Config.TagPrefix, $featureId)
+
     Write-StatusMessage "Syncing Feature: $($featureData.Title)" -Type Info
-    
+
     $workItem = New-AzureDevOpsWorkItem `
         -Type "Feature" `
         -Title $featureData.Title `
         -Description $featureData.Description `
         -AcceptanceCriteria $featureData.AcceptanceCriteria `
         -Tags $tags
-    
+
     return $workItem.id
 }
 
@@ -300,69 +511,54 @@ function Sync-UserStories {
         [string]$ParentFeatureId,
         [object]$Metadata
     )
-    
+
     $requirementsPath = Join-Path $FeaturePath "requirements\requirements.md"
     if (-not (Test-Path $requirementsPath)) {
         Write-StatusMessage "No requirements.md found, skipping user stories" -Type Warning
         return @()
     }
-    
+
     # Simple parsing: Look for user stories in format "As a ... I want ... so that ..."
-    # Supports both single-line and multi-line formats
     $content = Get-Content $requirementsPath -Raw
-    
-    # Pattern for multi-line format:
-    # ### US-XXX: Title
-    # **As a** role
-    # **I want** goal
-    # **So that** benefit
-    $storyPattern = '(?s)### (US-[\d.]+):\s*(.+?)\s*\n\s*\*\*As a\*\*\s+(.+?)\s*\n\s*\*\*I want\*\*\s+(.+?)\s*\n\s*\*\*So that\*\*\s+(.+?)(?=\n\s*\*\*|\n\n|$)'
+    $storyPattern = '(?m)### (.+)\s*\n(?:.*?\n)*?(?:- \*\*As a\*\*|As a) (.+?),? I want (.+?),? (?:so that|to) (.+?)(?:\n|$)'
     $stories = [regex]::Matches($content, $storyPattern)
-    
-    if ($stories.Count -eq 0) {
-        Write-StatusMessage "No user stories found in requirements.md" -Type Warning
-        return @()
-    }
-    
-    Write-StatusMessage "Found $($stories.Count) user stories" -Type Info
-    
+
     $createdStories = @()
-    
+
     foreach ($match in $stories) {
-        $storyId = $match.Groups[1].Value.Trim()  # US-XXX
-        $storyTitle = $match.Groups[2].Value.Trim()  # Title after US-XXX:
-        $role = $match.Groups[3].Value.Trim()
-        $goal = $match.Groups[4].Value.Trim()
-        $benefit = $match.Groups[5].Value.Trim()
-        
+        $storyTitle = $match.Groups[1].Value.Trim()
+        $role = $match.Groups[2].Value.Trim()
+        $goal = $match.Groups[3].Value.Trim()
+        $benefit = $match.Groups[4].Value.Trim()
+
         $fullTitle = "As a $role I want $goal"
-        $description = "**So that**: $benefit`n`n**Feature**: $storyId - $storyTitle"
-        
-        # Extract acceptance criteria (table format after story)
-        $acPattern = "(?s)### $storyId.+?#### Acceptance Criteria\s*\n(.+?)(?=\n####|\n###|\z)"
+        $description = "**So that**: $benefit"
+
+        # Extract acceptance criteria (lines starting with - [ ] after the story)
+        $acPattern = "(?s)### $storyTitle.+?\n((?:- \[ \].+?\n)+)"
         $acMatch = [regex]::Match($content, $acPattern)
         $ac = if ($acMatch.Success) { $acMatch.Groups[1].Value } else { "" }
-        
-        $tags = @((Split-Path $FeaturePath -Leaf), $storyId, "user-story")
-        
+
+        $tags = @($script:Config.TagPrefix, (Split-Path $FeaturePath -Leaf), "US-" + ($createdStories.Count + 1))
+
         Write-StatusMessage "  Creating User Story: $storyTitle" -Type Info
-        
+
         $workItem = New-AzureDevOpsWorkItem `
-            -Type "Product Backlog Item" `
+            -Type "User Story" `
             -Title $fullTitle `
             -Description $description `
             -AcceptanceCriteria $ac `
             -ParentId $ParentFeatureId `
             -Tags $tags
-        
+
         $createdStories += @{
             workItemId     = $workItem.id
-            auroraStoryId  = $storyId
-            title          = "$storyId - $storyTitle"
+            auroraStoryId  = $tags[2]
+            title          = $storyTitle
             state          = "New"
         }
     }
-    
+
     return $createdStories
 }
 
@@ -372,68 +568,40 @@ function Sync-Tasks {
         [array]$UserStories,
         [object]$Metadata
     )
-    
+
     $tasksPath = Join-Path $FeaturePath "planning\tasks.md"
     if (-not (Test-Path $tasksPath)) {
         Write-StatusMessage "No tasks.md found, skipping tasks" -Type Warning
         return @()
     }
-    
+
     # Simple parsing: Look for task items (lines starting with - [ ] or - [x])
     $content = Get-Content $tasksPath -Raw
-    
-    # Enhanced pattern to capture task ID (e.g., **008-infra-001**)
-    $taskPattern = '(?m)^- \[([ x])\].*?\*\*(\d{3}-[\w-]+)\*\*\s+(.+?)(?:\s*\((\d+\.?\d*)(?:h|min)\))?$'
+    $taskPattern = '(?m)^- \[([ x])\] (.+?)(?:\s*\((\d+)h\))?$'
     $tasks = [regex]::Matches($content, $taskPattern)
-    
-    if ($tasks.Count -eq 0) {
-        # Fallback to simpler pattern if no task IDs found
-        Write-StatusMessage "  Using fallback task pattern (no task IDs detected)" -Type Warning
-        $taskPattern = '(?m)^- \[([ x])\] (.+?)(?:\s*\((\d+)h\))?$'
-        $tasks = [regex]::Matches($content, $taskPattern)
-    }
-    
+
     $createdTasks = @()
     $taskIndex = 1
-    
-    # Smart parent assignment: Map tasks to user stories based on Bolt sections
-    # For now, default to first user story if mapping not clear
+
+    # For simplicity, assign all tasks to first user story
+    # In production, would need smarter mapping logic
     $defaultParent = if ($UserStories.Count -gt 0) { $UserStories[0].workItemId } else { $null }
-    
+
     foreach ($match in $tasks) {
         $isCompleted = $match.Groups[1].Value -eq 'x'
-        
-        # Check if we have task IDs (enhanced pattern) or simple pattern
-        if ($match.Groups.Count -ge 5 -and $match.Groups[2].Success) {
-            # Enhanced pattern with task IDs
-            $taskId = $match.Groups[2].Value.Trim()
-            $taskTitle = $match.Groups[3].Value.Trim()
-            $estimatedValue = if ($match.Groups[4].Success) { $match.Groups[4].Value } else { "4" }
-            
-            # Convert minutes to hours (e.g., "45min" -> 0.75h)
-            if ($taskTitle -match '\((\d+)min\)$') {
-                $minutes = [int]$Matches[1]
-                $estimatedHours = [math]::Round($minutes / 60, 2)
-            } else {
-                $estimatedHours = [double]$estimatedValue
-            }
-        } else {
-            # Simple pattern fallback
-            $taskId = "task-$($taskIndex.ToString('000'))"
-            $taskTitle = $match.Groups[2].Value.Trim()
-            $estimatedHours = if ($match.Groups[3].Success) { [int]$match.Groups[3].Value } else { 4 }
-        }
-        
+        $taskTitle = $match.Groups[2].Value.Trim()
+        $estimatedHours = if ($match.Groups[3].Success) { [int]$match.Groups[3].Value } else { 4 }
+
         if (-not $defaultParent) {
-            Write-StatusMessage "  Skipping task $taskId (no parent user story)" -Type Warning
+            Write-StatusMessage "  Skipping task (no parent user story): $taskTitle" -Type Warning
             continue
         }
-        
+
         $featureId = Split-Path $FeaturePath -Leaf
-        $tags = @($featureId, $taskId, "bolt-task")
-        
-        Write-StatusMessage "    Creating Task: $taskId - $taskTitle" -Type Info
-        
+        $tags = @($script:Config.TagPrefix, "bolt", "$featureId-$($taskIndex.ToString('000'))")
+
+        Write-StatusMessage "    Creating Task: $taskTitle" -Type Info
+
         $workItem = New-AzureDevOpsWorkItem `
             -Type "Task" `
             -Title $taskTitle `
@@ -441,17 +609,17 @@ function Sync-Tasks {
             -ParentId $defaultParent `
             -Tags $tags `
             -RemainingWork $estimatedHours
-        
+
         $createdTasks += @{
             workItemId   = $workItem.id
             auroraBoltId = $tags[2]
             title        = $taskTitle
             state        = if ($isCompleted) { "Completed" } else { "To Do" }
         }
-        
+
         $taskIndex++
     }
-    
+
     return $createdTasks
 }
 
@@ -481,7 +649,7 @@ Write-StatusMessage "Feature ID: $($metadata.boltfFeatureId)" -Type Info
 # Step 3: Check sync mode
 if ($Mode -eq "Incremental" -and $metadata.azureDevOps.featureWorkItemId) {
     Write-StatusMessage "Feature already synced (ID: $($metadata.azureDevOps.featureWorkItemId))" -Type Info
-    
+
     if (-not $Force) {
         $response = Read-Host "Feature already exists in DevOps. Continue? (y/n)"
         if ($response -ne 'y') {
@@ -503,8 +671,6 @@ $userStories = Sync-UserStories `
     -ParentFeatureId $featureWorkItemId `
     -Metadata $metadata
 
-# Ensure $userStories is always an array
-if ($null -eq $userStories) { $userStories = @() }
 if ($userStories.Count -gt 0) {
     $metadata.azureDevOps.userStories = $userStories
 }
@@ -515,8 +681,6 @@ $tasks = Sync-Tasks `
     -UserStories $userStories `
     -Metadata $metadata
 
-# Ensure $tasks is always an array
-if ($null -eq $tasks) { $tasks = @() }
 if ($tasks.Count -gt 0) {
     $metadata.azureDevOps.tasks = $tasks
 }

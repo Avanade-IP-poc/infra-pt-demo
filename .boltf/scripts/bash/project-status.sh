@@ -105,11 +105,11 @@ EOF
 
 get_project_info() {
     local constitution="$PROJECT_ROOT/memory/constitution.md"
-    
+
     if [[ -f "$constitution" ]]; then
         # Extract project name (look for filled-in value or placeholder)
         PROJECT_NAME=$(grep -m1 "PROJECT_NAME\|project.*name" "$constitution" 2>/dev/null | head -1 || echo "[PROJECT_NAME]")
-        
+
         # Determine project scope
         if grep -q "\[x\].*Infrastructure Only" "$constitution" 2>/dev/null; then
             PROJECT_SCOPE="Infrastructure Only"
@@ -120,7 +120,7 @@ get_project_info() {
         else
             PROJECT_SCOPE="Not Configured"
         fi
-        
+
         # Determine migration context
         if grep -q "\[x\].*Greenfield" "$constitution" 2>/dev/null; then
             PROJECT_TYPE="Greenfield"
@@ -131,7 +131,7 @@ get_project_info() {
         else
             PROJECT_TYPE="Not Specified"
         fi
-        
+
         CONSTITUTION_STATUS="✅ Present"
     else
         PROJECT_NAME="[Unknown]"
@@ -147,9 +147,9 @@ analyze_features() {
     local complete_count=0
     local in_progress_count=0
     local pending_count=0
-    
+
     FEATURES_DATA=""
-    
+
     if [[ -d "$specs_dir" ]]; then
         for feature_dir in "$specs_dir"/*/; do
             if [[ -d "$feature_dir" ]]; then
@@ -158,23 +158,23 @@ analyze_features() {
                 local req_file="$feature_dir/requirements/requirements.md"
                 local plan_file="$feature_dir/planning/plan.md"
                 local tasks_file="$feature_dir/planning/tasks.md"
-                
+
                 local req_status="❌"
                 local plan_status="❌"
                 local tasks_status="❌"
                 local feature_status="⏳ Pending"
-                
+
                 [[ -f "$req_file" ]] && req_status="✅"
                 [[ -f "$plan_file" ]] && plan_status="✅"
                 [[ -f "$tasks_file" ]] && tasks_status="✅"
-                
+
                 # Determine feature status
                 if [[ "$req_status" == "✅" && "$plan_status" == "✅" && "$tasks_status" == "✅" ]]; then
                     # Check if tasks are complete
                     if [[ -f "$tasks_file" ]]; then
                         local total_tasks=$(grep -c "^\- \[" "$tasks_file" 2>/dev/null || echo "0")
                         local done_tasks=$(grep -c "^\- \[x\]" "$tasks_file" 2>/dev/null || echo "0")
-                        
+
                         if [[ "$total_tasks" -gt 0 && "$done_tasks" -eq "$total_tasks" ]]; then
                             feature_status="✅ Complete"
                             complete_count=$((complete_count + 1))
@@ -192,12 +192,12 @@ analyze_features() {
                 else
                     pending_count=$((pending_count + 1))
                 fi
-                
+
                 FEATURES_DATA+="| $feature_name | $req_status | $plan_status | $tasks_status | $feature_status |\n"
             fi
         done
     fi
-    
+
     TOTAL_FEATURES=$feature_count
     COMPLETE_FEATURES=$complete_count
     IN_PROGRESS_FEATURES=$in_progress_count
@@ -211,44 +211,44 @@ analyze_tasks() {
     local in_progress_tasks=0
     local pending_tasks=0
     local blocked_tasks=0
-    
+
     TASKS_DATA=""
     CURRENT_BOLT=""
     CURRENT_TASKS=""
-    
+
     if [[ -d "$specs_dir" ]]; then
         for tasks_file in "$specs_dir"/*/planning/tasks.md; do
             if [[ -f "$tasks_file" ]]; then
                 local feature_name=$(basename "$(dirname "$(dirname "$tasks_file")")")
-                
+
                 # Count tasks by status
                 local file_total=$(grep -c "^\- \[" "$tasks_file" 2>/dev/null || echo "0")
                 local file_done=$(grep -c "^\- \[x\]" "$tasks_file" 2>/dev/null || echo "0")
                 local file_pending=$((file_total - file_done))
-                
+
                 total_tasks=$((total_tasks + file_total))
                 done_tasks=$((done_tasks + file_done))
                 pending_tasks=$((pending_tasks + file_pending))
-                
+
                 # Find current bolt (first incomplete section)
                 if [[ -z "$CURRENT_BOLT" ]]; then
                     CURRENT_BOLT=$(grep -m1 "^## Bolt [0-9]" "$tasks_file" 2>/dev/null | sed 's/^## //' || echo "")
-                    
+
                     # Get current incomplete tasks
                     CURRENT_TASKS=$(grep "^\- \[ \]" "$tasks_file" 2>/dev/null | head -5 || echo "")
                 fi
-                
+
                 TASKS_DATA+="| $feature_name | $file_total | $file_done | $file_pending |\n"
             fi
         done
     fi
-    
+
     TOTAL_TASKS=$total_tasks
     DONE_TASKS=$done_tasks
     IN_PROGRESS_TASKS=$in_progress_tasks
     PENDING_TASKS=$pending_tasks
     BLOCKED_TASKS=$blocked_tasks
-    
+
     if [[ $total_tasks -gt 0 ]]; then
         TASKS_PERCENTAGE=$((done_tasks * 100 / total_tasks))
     else
@@ -261,7 +261,7 @@ analyze_quality() {
     COVERAGE_BRANCH="N/A"
     MUTATION_SCORE="N/A"
     LINT_STATUS="Not checked"
-    
+
     # Check for coverage reports
     local coverage_file=""
     if [[ -f "$PROJECT_ROOT/coverage/coverage-summary.json" ]]; then
@@ -269,19 +269,19 @@ analyze_quality() {
     elif [[ -f "$PROJECT_ROOT/coverage/lcov.info" ]]; then
         coverage_file="$PROJECT_ROOT/coverage/lcov.info"
     fi
-    
+
     if [[ -n "$coverage_file" && -f "$coverage_file" ]]; then
         if [[ "$coverage_file" == *".json" ]]; then
             COVERAGE_LINE=$(jq -r '.total.lines.pct // "N/A"' "$coverage_file" 2>/dev/null || echo "N/A")
             COVERAGE_BRANCH=$(jq -r '.total.branches.pct // "N/A"' "$coverage_file" 2>/dev/null || echo "N/A")
         fi
     fi
-    
+
     # Check for mutation reports
     if [[ -f "$PROJECT_ROOT/reports/mutation/mutation.json" ]]; then
         MUTATION_SCORE=$(jq -r '.mutationScore // "N/A"' "$PROJECT_ROOT/reports/mutation/mutation.json" 2>/dev/null || echo "N/A")
     fi
-    
+
     # Determine quality status
     if [[ "$COVERAGE_LINE" != "N/A" ]]; then
         if (( $(echo "$COVERAGE_LINE >= 80" | bc -l 2>/dev/null || echo 0) )); then
@@ -300,7 +300,7 @@ analyze_infrastructure() {
     INFRA_STATUS="Not present"
     INFRA_TOOL=""
     INFRA_MODULES=0
-    
+
     if [[ -d "$PROJECT_ROOT/infra/bicep" ]]; then
         INFRA_TOOL="Bicep"
         INFRA_STATUS="✅ Present"
@@ -319,7 +319,7 @@ analyze_infrastructure() {
 analyze_blockers() {
     BLOCKERS=""
     PENDING_DECISIONS=""
-    
+
     # Search for blockers in task files
     for tasks_file in "$PROJECT_ROOT"/specs/*/planning/tasks.md; do
         if [[ -f "$tasks_file" ]]; then
@@ -330,7 +330,7 @@ analyze_blockers() {
             fi
         fi
     done
-    
+
     # Search for pending decisions in ADRs or decision logs
     if [[ -d "$PROJECT_ROOT/docs/architecture/decisions" ]]; then
         local pending_adrs=$(grep -l "Status.*Proposed\|Status.*Pending" "$PROJECT_ROOT"/docs/architecture/decisions/*.md 2>/dev/null || true)
@@ -341,7 +341,7 @@ analyze_blockers() {
             fi
         done
     fi
-    
+
     # Check memory/decisions if exists
     if [[ -d "$PROJECT_ROOT/memory/decisions" ]]; then
         for decision in "$PROJECT_ROOT"/memory/decisions/*.md; do
@@ -379,7 +379,7 @@ generate_progress_bar() {
     local width=20
     local filled=$((percentage * width / 100))
     local empty=$((width - filled))
-    
+
     printf "["
     printf "%${filled}s" | tr ' ' '█'
     printf "%${empty}s" | tr ' ' '░'
@@ -387,16 +387,16 @@ generate_progress_bar() {
 }
 
 generate_summary_report() {
-    print_header "🚀 AURORA-IA Project Status"
-    
+    print_header "🚀 Bolt Framework Project Status"
+
     echo -e "${BOLD}Project:${NC} $PROJECT_NAME"
     echo -e "${BOLD}Type:${NC} $PROJECT_TYPE | ${BOLD}Scope:${NC} $PROJECT_SCOPE"
     echo -e "${BOLD}Branch:${NC} $CURRENT_BRANCH"
     echo -e "${BOLD}Last Activity:${NC} $LAST_COMMIT"
     echo ""
-    
+
     print_section "Quick Stats"
-    
+
     echo "| Metric | Value |"
     echo "|--------|-------|"
     echo "| Constitution | $CONSTITUTION_STATUS |"
@@ -405,9 +405,9 @@ generate_summary_report() {
     echo "| Quality | $QUALITY_STATUS |"
     echo "| Uncommitted | $UNCOMMITTED_CHANGES files |"
     echo ""
-    
+
     print_section "🎯 Resume Work"
-    
+
     if [[ -n "$CURRENT_BOLT" ]]; then
         echo -e "${BOLD}Current Bolt:${NC} $CURRENT_BOLT"
         echo ""
@@ -418,47 +418,47 @@ generate_summary_report() {
             fi
         done
     else
-        echo "No active tasks found. Run /aurora.feature to start a new feature."
+        echo "No active tasks found. Run @Bolt Feature to start a new feature."
     fi
     echo ""
-    
+
     if [[ -n "$BLOCKERS" ]]; then
         print_section "⚠️ Blockers"
         echo -e "$BLOCKERS"
     fi
-    
+
     if [[ -n "$PENDING_DECISIONS" ]]; then
         print_section "❓ Pending Decisions"
         echo -e "$PENDING_DECISIONS"
     fi
-    
+
     print_section "Recommended Actions"
-    
+
     if [[ "$CONSTITUTION_STATUS" == "❌ Missing" ]]; then
-        echo "🔴 HIGH: Create project constitution with /aurora.constitution"
+        echo "🔴 HIGH: Create project constitution with @Bolt Constitution"
     fi
-    
+
     if [[ -n "$BLOCKERS" ]]; then
-        echo "🔴 HIGH: Resolve blockers with /aurora.clarify"
+        echo "🔴 HIGH: Resolve blockers with @Bolt Clarify"
     fi
-    
+
     if [[ -n "$CURRENT_TASKS" ]]; then
         local next_task=$(echo "$CURRENT_TASKS" | head -1 | grep -oP 'T\d+' || echo "")
         if [[ -n "$next_task" ]]; then
-            echo "🟡 MEDIUM: Continue with $next_task using /aurora.implement"
+            echo "🟡 MEDIUM: Continue with $next_task using @Bolt Implement"
         fi
     fi
-    
+
     if [[ "$QUALITY_STATUS" == "⚠️ Below Target" || "$QUALITY_STATUS" == "❌ Critical" ]]; then
-        echo "🟡 MEDIUM: Improve test coverage with /aurora.test"
+        echo "🟡 MEDIUM: Improve test coverage with @Bolt Testing"
     fi
 }
 
 generate_full_report() {
     generate_summary_report
-    
+
     print_section "📋 Features Detail"
-    
+
     if [[ -n "$FEATURES_DATA" ]]; then
         echo "| Feature | Requirements | Plan | Tasks | Status |"
         echo "|---------|--------------|------|-------|--------|"
@@ -466,29 +466,29 @@ generate_full_report() {
     else
         echo "No features found in specs/ directory."
     fi
-    
+
     print_section "📊 Tasks Detail"
-    
+
     if [[ -n "$TASKS_DATA" ]]; then
         echo "| Feature | Total | Done | Pending |"
         echo "|---------|-------|------|---------|"
         echo -e "$TASKS_DATA"
     fi
-    
+
     echo ""
     echo "**Total Progress**: $DONE_TASKS/$TOTAL_TASKS tasks complete ($TASKS_PERCENTAGE%)"
-    
+
     print_section "🧪 Quality Metrics"
-    
+
     echo "| Metric | Target | Current | Status |"
     echo "|--------|--------|---------|--------|"
     echo "| Line Coverage | ≥80% | $COVERAGE_LINE% | $(if [[ "$COVERAGE_LINE" != "N/A" ]] && (( $(echo "$COVERAGE_LINE >= 80" | bc -l 2>/dev/null || echo 0) )); then echo "✅"; else echo "⚠️"; fi) |"
     echo "| Branch Coverage | ≥75% | $COVERAGE_BRANCH% | $(if [[ "$COVERAGE_BRANCH" != "N/A" ]] && (( $(echo "$COVERAGE_BRANCH >= 75" | bc -l 2>/dev/null || echo 0) )); then echo "✅"; else echo "⚠️"; fi) |"
     echo "| Mutation Score | ≥70% | $MUTATION_SCORE% | $(if [[ "$MUTATION_SCORE" != "N/A" ]] && (( $(echo "$MUTATION_SCORE >= 70" | bc -l 2>/dev/null || echo 0) )); then echo "✅"; else echo "⚠️"; fi) |"
-    
+
     if [[ "$PROJECT_SCOPE" == "Infrastructure Only" || "$PROJECT_SCOPE" == "Full Stack" ]]; then
         print_section "🏗️ Infrastructure"
-        
+
         echo "| Component | Status |"
         echo "|-----------|--------|"
         echo "| IaC Tool | $INFRA_TOOL |"
@@ -543,11 +543,11 @@ EOF
 save_report() {
     local context_dir="$PROJECT_ROOT/memory/context"
     mkdir -p "$context_dir"
-    
+
     local timestamp=$(date +"%Y%m%d_%H%M%S")
     local report_file="$context_dir/status_$timestamp.md"
     local latest_file="$context_dir/last-session.md"
-    
+
     # Generate and save report
     {
         echo "# Project Status Report"
@@ -556,10 +556,10 @@ save_report() {
         echo ""
         generate_full_report
     } > "$report_file"
-    
+
     # Update last-session symlink/copy
     cp "$report_file" "$latest_file"
-    
+
     print_success "Report saved to: $report_file"
     print_info "Latest session: $latest_file"
 }
@@ -619,7 +619,7 @@ main() {
                 ;;
         esac
     done
-    
+
     # Run analysis
     get_project_info
     analyze_features
@@ -628,7 +628,7 @@ main() {
     analyze_infrastructure
     analyze_blockers
     get_last_activity
-    
+
     # Generate output
     if [[ "$OUTPUT_FORMAT" == "json" ]]; then
         generate_json_report
@@ -663,7 +663,7 @@ main() {
                 ;;
         esac
     fi
-    
+
     # Save if requested
     if [[ "$SAVE_REPORT" == true ]]; then
         save_report

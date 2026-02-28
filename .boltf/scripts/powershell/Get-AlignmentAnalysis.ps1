@@ -1,8 +1,8 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-    AURORA-IA Alignment & Gap Analysis
-    
+    Bolt Framework Alignment & Gap Analysis
+
 .DESCRIPTION
     Analyzes alignment between RFP requirements, legacy code, implementation,
     and AURORA methodology compliance. Detects gaps and generates reports.
@@ -112,17 +112,17 @@ function Get-ProgressBar {
         [int]$Percentage,
         [int]$Width = 20
     )
-    
+
     $filled = [math]::Floor($Percentage * $Width / 100)
     $empty = $Width - $filled
-    
+
     $bar = "[" + ("█" * $filled) + ("░" * $empty) + "]"
     return "$bar $Percentage%"
 }
 
 function Get-StatusIcon {
     param([int]$Score)
-    
+
     if ($Score -ge 80) { return "✅" }
     elseif ($Score -ge 50) { return "⚠️" }
     else { return "❌" }
@@ -140,12 +140,12 @@ function Get-ProjectContext {
         HasRfp = $false
         HasLegacy = $false
     }
-    
+
     $constitutionPath = Join-Path $ProjectRoot "memory/constitution.md"
-    
+
     if (Test-Path $constitutionPath) {
         $content = Get-Content $constitutionPath -Raw
-        
+
         # Detect project type
         if ($content -match "\[x\].*Greenfield") {
             $result.Type = "Greenfield"
@@ -156,7 +156,7 @@ function Get-ProjectContext {
         elseif ($content -match "\[x\].*(Legacy Migration|Migration)") {
             $result.Type = "Migration"
         }
-        
+
         # Detect scope
         if ($content -match "\[x\].*Infrastructure Only") {
             $result.Scope = "Infrastructure Only"
@@ -167,7 +167,7 @@ function Get-ProjectContext {
         elseif ($content -match "\[x\].*Full Stack") {
             $result.Scope = "Full Stack"
         }
-        
+
         # Detect migration strategy
         if ($content -match "\[x\].*Strangler") {
             $result.MigrationStrategy = "Strangler Fig"
@@ -179,21 +179,21 @@ function Get-ProjectContext {
             $result.MigrationStrategy = "Branch by Abstraction"
         }
     }
-    
+
     # Check for RFP materials
     $rfpDir = Join-Path $ProjectRoot "demo/from_rfp"
     if (Test-Path $rfpDir) {
         $rfpFiles = Get-ChildItem $rfpDir -File -Include "*.md","*.pdf","*.docx" -ErrorAction SilentlyContinue
         $result.HasRfp = ($rfpFiles.Count -gt 0)
     }
-    
+
     # Check for legacy code
     $legacyDir = Join-Path $ProjectRoot "demo/from_old_src"
     if (Test-Path $legacyDir) {
         $legacyFiles = Get-ChildItem $legacyDir -File -Recurse -ErrorAction SilentlyContinue
         $result.HasLegacy = ($legacyFiles.Count -gt 0)
     }
-    
+
     return $result
 }
 
@@ -204,7 +204,7 @@ function Get-ProjectContext {
 function Get-RfpCoverage {
     $rfpDir = Join-Path $ProjectRoot "demo/from_rfp"
     $specsDir = Join-Path $ProjectRoot "specs"
-    
+
     $result = @{
         TotalItems = 0
         CoveredItems = 0
@@ -212,21 +212,21 @@ function Get-RfpCoverage {
         Documents = @()
         Uncovered = @()
     }
-    
+
     if (-not (Test-Path $rfpDir)) {
         $script:AlignmentScores["rfp"] = 0
         return $result
     }
-    
+
     $rfpFiles = Get-ChildItem $rfpDir -File -Include "*.md","*.txt" -ErrorAction SilentlyContinue
-    
+
     foreach ($file in $rfpFiles) {
         $content = Get-Content $file.FullName -Raw -ErrorAction SilentlyContinue
         if (-not $content) { continue }
-        
+
         # Count requirement items
         $items = ([regex]::Matches($content, "^[-*]|^[0-9]+\.", [System.Text.RegularExpressions.RegexOptions]::Multiline)).Count
-        
+
         # Estimate coverage based on specs
         $covered = 0
         if (Test-Path $specsDir) {
@@ -238,35 +238,35 @@ function Get-RfpCoverage {
                 }
             }
         }
-        
+
         if ($covered -gt $items) { $covered = $items }
-        
+
         $result.TotalItems += $items
         $result.CoveredItems += $covered
-        
+
         $docCoverage = if ($items -gt 0) { [math]::Floor($covered * 100 / $items) } else { 0 }
-        
+
         $result.Documents += @{
             Name = $file.Name
             Items = $items
             Covered = $covered
             Coverage = $docCoverage
         }
-        
+
         $pending = $items - $covered
         if ($pending -gt 0) {
             $result.Uncovered += "$($file.Name): $pending items uncovered"
         }
     }
-    
+
     $result.PendingItems = $result.TotalItems - $result.CoveredItems
-    
+
     if ($result.TotalItems -gt 0) {
         $script:AlignmentScores["rfp"] = [math]::Floor($result.CoveredItems * 100 / $result.TotalItems)
     } else {
         $script:AlignmentScores["rfp"] = 0
     }
-    
+
     return $result
 }
 
@@ -277,7 +277,7 @@ function Get-RfpCoverage {
 function Get-LegacyMigrationStatus {
     $legacyDir = Join-Path $ProjectRoot "demo/from_old_src"
     $srcDir = Join-Path $ProjectRoot "src"
-    
+
     $result = @{
         Files = 0
         Lines = 0
@@ -286,27 +286,27 @@ function Get-LegacyMigrationStatus {
         ByLanguage = @()
         Unmigrated = @()
     }
-    
+
     if (-not (Test-Path $legacyDir)) {
         $script:AlignmentScores["legacy"] = 0
         return $result
     }
-    
+
     $langStats = @{}
     $legacyFiles = Get-ChildItem $legacyDir -File -Recurse -ErrorAction SilentlyContinue
-    
+
     foreach ($file in $legacyFiles) {
         $result.Files++
         $content = Get-Content $file.FullName -Raw -ErrorAction SilentlyContinue
         if (-not $content) { continue }
-        
+
         $lines = ($content -split "`n").Count
         $result.Lines += $lines
-        
+
         $ext = $file.Extension.ToLower()
         $funcs = 0
         $lang = "Other"
-        
+
         switch -Regex ($ext) {
             "\.cbl|\.cob|\.cobol" {
                 $lang = "COBOL"
@@ -325,9 +325,9 @@ function Get-LegacyMigrationStatus {
                 $funcs = ([regex]::Matches($content, "CREATE PROCEDURE|CREATE FUNCTION|EXEC ", [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)).Count
             }
         }
-        
+
         $result.Functions += $funcs
-        
+
         if (-not $langStats.ContainsKey($lang)) {
             $langStats[$lang] = @{ Files = 0; Lines = 0; Functions = 0 }
         }
@@ -335,7 +335,7 @@ function Get-LegacyMigrationStatus {
         $langStats[$lang].Lines += $lines
         $langStats[$lang].Functions += $funcs
     }
-    
+
     foreach ($lang in $langStats.Keys) {
         $result.ByLanguage += @{
             Language = $lang
@@ -344,24 +344,24 @@ function Get-LegacyMigrationStatus {
             Functions = $langStats[$lang].Functions
         }
     }
-    
+
     # Estimate migration based on new source
     if (Test-Path $srcDir) {
         $newFiles = Get-ChildItem $srcDir -Recurse -File -Include "*.cs","*.ts","*.js" -ErrorAction SilentlyContinue
         $result.Migrated = [math]::Min($newFiles.Count * 2, $result.Functions)
     }
-    
+
     if ($result.Functions -gt 0) {
         $script:AlignmentScores["legacy"] = [math]::Floor($result.Migrated * 100 / $result.Functions)
     } else {
         $script:AlignmentScores["legacy"] = 0
     }
-    
+
     $unmigrated = $result.Functions - $result.Migrated
     if ($unmigrated -gt 0) {
         $result.Unmigrated += "$unmigrated functions not yet migrated"
     }
-    
+
     return $result
 }
 
@@ -373,15 +373,15 @@ function Get-MethodologyCompliance {
     $specsDir = Join-Path $ProjectRoot "specs"
     $memoryDir = Join-Path $ProjectRoot "memory"
     $docsDir = Join-Path $ProjectRoot "docs"
-    
+
     $result = @{
         PhaseScores = @()
         Missing = @()
     }
-    
+
     $totalScore = 0
     $phaseCount = 0
-    
+
     # INCEPTION: Constitution
     $inceptionScore = 0
     $constitutionPath = Join-Path $memoryDir "constitution.md"
@@ -394,7 +394,7 @@ function Get-MethodologyCompliance {
     $result.PhaseScores += @{ Phase = "INCEPTION"; Artifacts = "constitution.md"; Score = $inceptionScore }
     $totalScore += $inceptionScore
     $phaseCount++
-    
+
     # DISCOVERY: Domain analysis
     $discoveryScore = 0
     if (Test-Path (Join-Path $ProjectRoot "demo/from_rfp")) { $discoveryScore += 30 }
@@ -404,7 +404,7 @@ function Get-MethodologyCompliance {
     $result.PhaseScores += @{ Phase = "DISCOVERY"; Artifacts = "domain analysis"; Score = $discoveryScore }
     $totalScore += $discoveryScore
     $phaseCount++
-    
+
     # SPECIFY: Requirements
     $specifyScore = 0
     $totalFeatures = 0
@@ -420,7 +420,7 @@ function Get-MethodologyCompliance {
     $result.PhaseScores += @{ Phase = "SPECIFY"; Artifacts = "requirements.md"; Score = $specifyScore }
     $totalScore += $specifyScore
     $phaseCount++
-    
+
     # PLAN: Plans and tasks
     $planScore = 0
     $featuresWithPlan = 0
@@ -436,7 +436,7 @@ function Get-MethodologyCompliance {
     $result.PhaseScores += @{ Phase = "PLAN"; Artifacts = "plan.md, tasks.md"; Score = $planScore }
     $totalScore += $planScore
     $phaseCount++
-    
+
     # EXECUTE: Source code
     $executeScore = 0
     $srcDir = Join-Path $ProjectRoot "src"
@@ -449,7 +449,7 @@ function Get-MethodologyCompliance {
     $result.PhaseScores += @{ Phase = "EXECUTE"; Artifacts = "src/ code"; Score = $executeScore }
     $totalScore += $executeScore
     $phaseCount++
-    
+
     # VALIDATE: Tests
     $validateScore = 0
     $testFiles = Get-ChildItem $ProjectRoot -Recurse -File -Include "*.test.*","*.spec.*","*Tests.cs","test_*.py" -ErrorAction SilentlyContinue
@@ -460,7 +460,7 @@ function Get-MethodologyCompliance {
     $result.PhaseScores += @{ Phase = "VALIDATE"; Artifacts = "tests, coverage"; Score = [math]::Min($validateScore, 100) }
     $totalScore += [math]::Min($validateScore, 100)
     $phaseCount++
-    
+
     # OPERATE: CI/CD
     $operateScore = 0
     $workflowsDir = Join-Path $ProjectRoot ".github/workflows"
@@ -470,14 +470,14 @@ function Get-MethodologyCompliance {
     $result.PhaseScores += @{ Phase = "OPERATE"; Artifacts = "CI/CD, infra"; Score = $operateScore }
     $totalScore += $operateScore
     $phaseCount++
-    
+
     # Overall methodology score
     if ($phaseCount -gt 0) {
         $script:AlignmentScores["methodology"] = [math]::Floor($totalScore / $phaseCount)
     } else {
         $script:AlignmentScores["methodology"] = 0
     }
-    
+
     # Track missing items
     if ($inceptionScore -lt 100) { $result.Missing += "Constitution incomplete" }
     if ($discoveryScore -lt 50) { $result.Missing += "Domain analysis missing" }
@@ -486,7 +486,7 @@ function Get-MethodologyCompliance {
     if ($executeScore -lt 50) { $result.Missing += "Implementation behind" }
     if ([math]::Min($validateScore, 100) -lt 50) { $result.Missing += "Testing insufficient" }
     if ($operateScore -lt 50) { $result.Missing += "CI/CD not configured" }
-    
+
     return $result
 }
 
@@ -497,7 +497,7 @@ function Get-MethodologyCompliance {
 function Get-TestingStatus {
     $testFiles = Get-ChildItem $ProjectRoot -Recurse -File -Include "*.test.*","*.spec.*","*Tests.cs","test_*.py" -ErrorAction SilentlyContinue
     $testCount = $testFiles.Count
-    
+
     # Try to get coverage
     $coverage = 0
     $coveragePath = Join-Path $ProjectRoot "coverage/coverage-summary.json"
@@ -511,7 +511,7 @@ function Get-TestingStatus {
     } elseif ($testCount -gt 0) {
         $coverage = [math]::Min($testCount * 5, 100)
     }
-    
+
     $script:AlignmentScores["testing"] = $coverage
 }
 
@@ -519,7 +519,7 @@ function Get-DocumentationStatus {
     $docScore = 0
     $maxDocs = 5
     $docCount = 0
-    
+
     if (Test-Path (Join-Path $ProjectRoot "README.md")) { $docCount++ }
     if (Test-Path (Join-Path $ProjectRoot "memory/constitution.md")) { $docCount++ }
     $docsDir = Join-Path $ProjectRoot "docs"
@@ -527,7 +527,7 @@ function Get-DocumentationStatus {
     $adrDir = Join-Path $ProjectRoot "docs/architecture/decisions"
     if ((Test-Path $adrDir) -and (Get-ChildItem $adrDir -ErrorAction SilentlyContinue).Count -gt 0) { $docCount++ }
     if ((Test-Path (Join-Path $ProjectRoot "CONTRIBUTING.md")) -or (Test-Path (Join-Path $ProjectRoot "CHANGELOG.md"))) { $docCount++ }
-    
+
     $script:AlignmentScores["documentation"] = [math]::Floor($docCount * 100 / $maxDocs)
 }
 
@@ -535,14 +535,14 @@ function Get-InfrastructureStatus {
     $infraScore = 0
     $maxItems = 5
     $infraItems = 0
-    
+
     if ((Test-Path (Join-Path $ProjectRoot "infra/bicep")) -or (Test-Path (Join-Path $ProjectRoot "infra/terraform"))) { $infraItems++ }
     if (Test-Path (Join-Path $ProjectRoot "Dockerfile")) { $infraItems++ }
     if (Test-Path (Join-Path $ProjectRoot "docker-compose.yml")) { $infraItems++ }
     $workflowsDir = Join-Path $ProjectRoot ".github/workflows"
     if ((Test-Path $workflowsDir) -and (Get-ChildItem $workflowsDir -Filter "*.yml" -ErrorAction SilentlyContinue).Count -gt 0) { $infraItems++ }
     if ((Test-Path (Join-Path $ProjectRoot "k8s")) -or (Test-Path (Join-Path $ProjectRoot "infra/k8s"))) { $infraItems++ }
-    
+
     $script:AlignmentScores["infrastructure"] = [math]::Floor($infraItems * 100 / $maxItems)
 }
 
@@ -557,7 +557,7 @@ function Get-GapAnalysis {
         [hashtable]$LegacyData,
         [hashtable]$MethodData
     )
-    
+
     # RFP gaps
     if ($AlignmentScores["rfp"] -lt 100) {
         $rfpGap = 100 - $AlignmentScores["rfp"]
@@ -570,7 +570,7 @@ function Get-GapAnalysis {
             $script:HighGaps += "RFP coverage at $($AlignmentScores["rfp"])%"
         }
     }
-    
+
     # Legacy migration gaps
     if ($AlignmentScores["legacy"] -lt 100 -and $ProjectContext.HasLegacy) {
         $legacyGap = 100 - $AlignmentScores["legacy"]
@@ -584,7 +584,7 @@ function Get-GapAnalysis {
             $script:HighGaps += "Legacy migration at $($AlignmentScores["legacy"])%"
         }
     }
-    
+
     # Methodology gaps
     if ($AlignmentScores["methodology"] -lt 80) {
         $script:GapCounts.Total += $MethodData.Missing.Count
@@ -592,18 +592,18 @@ function Get-GapAnalysis {
             $script:GapCounts.Medium++
         }
     }
-    
+
     # Testing gaps
     if ($AlignmentScores["testing"] -lt 80) {
         $script:GapCounts.High++
         $script:HighGaps += "Test coverage at $($AlignmentScores["testing"])% (target: 80%)"
     }
-    
+
     # Documentation gaps
     if ($AlignmentScores["documentation"] -lt 60) {
         $script:GapCounts.Low++
     }
-    
+
     # Calculate overall alignment
     $scoreSum = 0
     $scoreCount = 0
@@ -613,40 +613,40 @@ function Get-GapAnalysis {
             $scoreCount++
         }
     }
-    
+
     if ($scoreCount -gt 0) {
         $script:AlignmentScores["overall"] = [math]::Floor($scoreSum / $scoreCount)
     } else {
         $script:AlignmentScores["overall"] = 0
     }
-    
+
     # Generate recommendations
     if ($AlignmentScores["rfp"] -lt 50) {
         $script:Recommendations += @{
             Priority = "High"
             Action = "Create feature specs for uncovered RFP items"
-            Command = "/aurora.feature"
+            Command = "@Bolt Feature"
         }
     }
     if ($AlignmentScores["legacy"] -lt 50 -and $ProjectContext.HasLegacy) {
         $script:Recommendations += @{
             Priority = "High"
             Action = "Analyze and migrate legacy functions"
-            Command = "/aurora.analyze"
+            Command = "@Bolt Analyze"
         }
     }
     if ($AlignmentScores["methodology"] -lt 60) {
         $script:Recommendations += @{
             Priority = "Medium"
             Action = "Complete missing methodology artifacts"
-            Command = "/aurora.specify"
+            Command = "@Bolt Specify"
         }
     }
     if ($AlignmentScores["testing"] -lt 80) {
         $script:Recommendations += @{
             Priority = "High"
             Action = "Improve test coverage"
-            Command = "/aurora.test"
+            Command = "@Bolt Testing"
         }
     }
 }
@@ -662,33 +662,33 @@ function Show-SummaryReport {
         [hashtable]$LegacyData,
         [hashtable]$MethodData
     )
-    
-    Write-Header "🎯 AURORA-IA Alignment Analysis"
-    
+
+    Write-Header "🎯 Bolt Framework Alignment Analysis"
+
     Write-Host "Project Type: " -NoNewline
     Write-Host $ProjectContext.Type -ForegroundColor White -NoNewline
     Write-Host " | Scope: " -NoNewline
     Write-Host $ProjectContext.Scope -ForegroundColor White
-    
+
     if ($ProjectContext.MigrationStrategy) {
         Write-Host "Migration Strategy: " -NoNewline
         Write-Host $ProjectContext.MigrationStrategy -ForegroundColor White
     }
-    
+
     Write-Host "Has RFP: " -NoNewline
     Write-Host $ProjectContext.HasRfp -ForegroundColor White -NoNewline
     Write-Host " | Has Legacy: " -NoNewline
     Write-Host $ProjectContext.HasLegacy -ForegroundColor White
     Write-Host ""
-    
+
     Write-Section "Overall Alignment: $($AlignmentScores["overall"])%"
     Write-Host (Get-ProgressBar $AlignmentScores["overall"])
     Write-Host ""
-    
+
     # Dimensions table
     Write-Host "| Dimension            | Score                        | Status |"
     Write-Host "|---------------------|------------------------------|--------|"
-    
+
     $dimensions = @(
         @{ Key = "rfp"; Label = "RFP Coverage"; ShowIf = $ProjectContext.HasRfp }
         @{ Key = "legacy"; Label = "Legacy Migration"; ShowIf = $ProjectContext.HasLegacy }
@@ -697,7 +697,7 @@ function Show-SummaryReport {
         @{ Key = "documentation"; Label = "Documentation"; ShowIf = $true }
         @{ Key = "infrastructure"; Label = "Infrastructure"; ShowIf = $true }
     )
-    
+
     foreach ($dim in $dimensions) {
         if (-not $dim.ShowIf) { continue }
         $score = $AlignmentScores[$dim.Key]
@@ -706,11 +706,11 @@ function Show-SummaryReport {
         $bar = Get-ProgressBar $score
         Write-Host ("| {0,-19} | {1,-28} | {2}      |" -f $dim.Label, $bar, $status)
     }
-    
+
     Write-Host ""
-    
+
     Write-Section "Gap Summary"
-    
+
     Write-Host "| Priority     | Count |"
     Write-Host "|-------------|-------|"
     Write-Host "| 🔴 Critical | $($GapCounts.Critical)     |"
@@ -719,7 +719,7 @@ function Show-SummaryReport {
     Write-Host "| 🟢 Low      | $($GapCounts.Low)     |"
     Write-Host "| **Total**   | **$($GapCounts.Total)**   |"
     Write-Host ""
-    
+
     if ($CriticalGaps.Count -gt 0) {
         Write-Section "🔴 Critical Gaps"
         foreach ($gap in $CriticalGaps) {
@@ -727,7 +727,7 @@ function Show-SummaryReport {
         }
         Write-Host ""
     }
-    
+
     if ($HighGaps.Count -gt 0) {
         Write-Section "🟠 High Priority Gaps"
         foreach ($gap in $HighGaps) {
@@ -735,9 +735,9 @@ function Show-SummaryReport {
         }
         Write-Host ""
     }
-    
+
     Write-Section "🎯 Recommended Actions"
-    
+
     if ($Recommendations.Count -gt 0) {
         Write-Host "| # | Priority | Action                                    | Command           |"
         Write-Host "|---|----------|-------------------------------------------|-------------------|"
@@ -758,12 +758,12 @@ function Show-FullReport {
         [hashtable]$LegacyData,
         [hashtable]$MethodData
     )
-    
+
     Show-SummaryReport -ProjectContext $ProjectContext -RfpData $RfpData -LegacyData $LegacyData -MethodData $MethodData
-    
+
     if ($ProjectContext.HasRfp -and $RfpData.Documents.Count -gt 0) {
         Write-Section "📄 RFP Coverage Detail"
-        
+
         Write-Host "| Document                  | Items | Covered | Coverage |"
         Write-Host "|--------------------------|-------|---------|----------|"
         foreach ($doc in $RfpData.Documents) {
@@ -771,7 +771,7 @@ function Show-FullReport {
         }
         Write-Host ("| **TOTAL**                | **{0}** | **{1}** | **{2}%** |" -f $RfpData.TotalItems, $RfpData.CoveredItems, $AlignmentScores["rfp"])
         Write-Host ""
-        
+
         if ($RfpData.Uncovered.Count -gt 0) {
             Write-Host "**Uncovered Items:**" -ForegroundColor Yellow
             foreach ($item in $RfpData.Uncovered) {
@@ -780,10 +780,10 @@ function Show-FullReport {
             Write-Host ""
         }
     }
-    
+
     if ($ProjectContext.HasLegacy -and $LegacyData.Files -gt 0) {
         Write-Section "📦 Legacy Code Migration"
-        
+
         Write-Host "| Language | Files | Lines  | Functions | Migrated |"
         Write-Host "|----------|-------|--------|-----------|----------|"
         foreach ($lang in $LegacyData.ByLanguage) {
@@ -794,9 +794,9 @@ function Show-FullReport {
         Write-Host "Migration Progress: $(Get-ProgressBar $AlignmentScores["legacy"])"
         Write-Host ""
     }
-    
+
     Write-Section "📋 AURORA Methodology Compliance"
-    
+
     Write-Host "| Phase     | Artifacts           | Compliance |"
     Write-Host "|-----------|---------------------|------------|"
     foreach ($phase in $MethodData.PhaseScores) {
@@ -804,7 +804,7 @@ function Show-FullReport {
         Write-Host ("| {0,-9} | {1,-19} | {2}% {3}     |" -f $phase.Phase, $phase.Artifacts, $phase.Score, $status)
     }
     Write-Host ""
-    
+
     if ($MethodData.Missing.Count -gt 0) {
         Write-Host "**Missing Elements:**" -ForegroundColor Yellow
         foreach ($missing in $MethodData.Missing) {
@@ -819,7 +819,7 @@ function Get-JsonReport {
         [hashtable]$RfpData,
         [hashtable]$LegacyData
     )
-    
+
     $report = @{
         project = @{
             type = $ProjectContext.Type
@@ -857,7 +857,7 @@ function Get-JsonReport {
         }
         generatedAt = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
     }
-    
+
     return $report | ConvertTo-Json -Depth 5
 }
 
@@ -867,18 +867,18 @@ function New-Baseline {
         [hashtable]$RfpData,
         [hashtable]$LegacyData
     )
-    
+
     $baselineDir = Join-Path $ProjectRoot "memory/baselines"
     if (-not (Test-Path $baselineDir)) {
         New-Item -ItemType Directory -Path $baselineDir -Force | Out-Null
     }
-    
+
     $timestamp = Get-Date -Format "yyyy-MM-dd"
     $baselineFile = Join-Path $baselineDir "alignment_$timestamp.json"
-    
+
     $json = Get-JsonReport -ProjectContext $ProjectContext -RfpData $RfpData -LegacyData $LegacyData
     $json | Out-File -FilePath $baselineFile -Encoding UTF8
-    
+
     Write-Success "Baseline created: $baselineFile"
 }
 
@@ -886,23 +886,23 @@ function Compare-Baseline {
     param(
         [string]$BaselineFile
     )
-    
+
     if (-not (Test-Path $BaselineFile)) {
         Write-Error "Baseline file not found: $BaselineFile"
         return
     }
-    
+
     $prev = Get-Content $BaselineFile | ConvertFrom-Json
     $prevDate = $prev.generatedAt -replace "T.*", ""
-    
+
     Write-Header "📊 Alignment Comparison"
-    
+
     Write-Host "Comparing with baseline: $prevDate"
     Write-Host ""
-    
+
     Write-Host "| Dimension        | Previous | Current | Delta   |"
     Write-Host "|------------------|----------|---------|---------|"
-    
+
     $comparisons = @(
         @{ Label = "Overall"; Prev = $prev.alignment.overall; Curr = $AlignmentScores["overall"] }
         @{ Label = "RFP Coverage"; Prev = $prev.alignment.rfp; Curr = $AlignmentScores["rfp"] }
@@ -910,7 +910,7 @@ function Compare-Baseline {
         @{ Label = "Methodology"; Prev = $prev.alignment.methodology; Curr = $AlignmentScores["methodology"] }
         @{ Label = "Testing"; Prev = $prev.alignment.testing; Curr = $AlignmentScores["testing"] }
     )
-    
+
     foreach ($comp in $comparisons) {
         $delta = $comp.Curr - $comp.Prev
         $sign = if ($delta -gt 0) { "+" } else { "" }
@@ -927,15 +927,15 @@ function Save-Report {
         [hashtable]$LegacyData,
         [hashtable]$MethodData
     )
-    
+
     $analysisDir = Join-Path $ProjectRoot "memory/analysis"
     if (-not (Test-Path $analysisDir)) {
         New-Item -ItemType Directory -Path $analysisDir -Force | Out-Null
     }
-    
+
     $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
     $reportFile = Join-Path $analysisDir "alignment_$timestamp.md"
-    
+
     $reportContent = @"
 # Alignment Analysis Report
 
@@ -960,9 +960,9 @@ function Save-Report {
 - Low: $($GapCounts.Low)
 - **Total**: $($GapCounts.Total)
 "@
-    
+
     $reportContent | Out-File -FilePath $reportFile -Encoding UTF8
-    
+
     Write-Success "Report saved: $reportFile"
 }
 
@@ -980,18 +980,18 @@ function Main {
     Get-DocumentationStatus
     Get-InfrastructureStatus
     Get-GapAnalysis -ProjectContext $projectContext -RfpData $rfpData -LegacyData $legacyData -MethodData $methodData
-    
+
     # Handle special modes
     if ($CreateBaseline) {
         New-Baseline -ProjectContext $projectContext -RfpData $rfpData -LegacyData $legacyData
         return
     }
-    
+
     if ($CompareTo) {
         Compare-Baseline -BaselineFile $CompareTo
         return
     }
-    
+
     # Generate output
     if ($AsJson) {
         Get-JsonReport -ProjectContext $projectContext -RfpData $rfpData -LegacyData $legacyData
@@ -1020,7 +1020,7 @@ function Main {
     else {
         Show-SummaryReport -ProjectContext $projectContext -RfpData $rfpData -LegacyData $legacyData -MethodData $methodData
     }
-    
+
     # Save if requested
     if ($SaveReport) {
         Save-Report -ProjectContext $projectContext -RfpData $rfpData -LegacyData $legacyData -MethodData $methodData
