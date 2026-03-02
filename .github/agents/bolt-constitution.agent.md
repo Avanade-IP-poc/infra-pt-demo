@@ -1,6 +1,6 @@
 ---
 name: Bolt Constitution
-description: 📋 Complete Bolt Framework setup (Step 2/2) - provision files and merge constitutions based on Practice configuration
+description: 📋 Complete Bolt Framework setup (Step 2/2) - provision files from active scopes based on Practice configuration
 tools:
   [
     search,
@@ -49,8 +49,12 @@ handoffs:
 
 **This agent completes Step 2 of the two-step initialization workflow:**
 
-- **Step 1** (Init.ps1): Select Practice → Generate basic config (`scopes.yaml` + basic `constitution.md`)
-- **Step 2** (THIS AGENT): Invoke `skill-bolt-setup-constitution` skill → Provision files → Merge constitutions → Report
+- **Step 1** (Init.ps1): Select Practice → Generate config → **Merge scope constitutions into `constitution.md`**
+- **Step 2** (THIS AGENT): Invoke `skill-bolt-setup-constitution` skill → Provision files → Report
+
+**NOTE**: Constitution merge is now done in Step 1 (Init scripts), so `.boltf/memory/constitution.md` arrives already complete.
+
+**IMPORTANT**: If the constitution arrives complete (no `[ ]` checkboxes, no `_____` fields), **skip Phase 2** (refinement questions) and go directly to **Phase 4** (file provisioning). Only ask questions for incomplete decision points.
 
 ### Core Skills Auto-Discovery
 
@@ -82,82 +86,355 @@ handoffs:
 
 ---
 
-## ⚠️ CRITICAL REQUIREMENTS - Phase 2 Refinement
+## 🔄 Iterative Control Flow - Resume & Checkpoint System
 
-**MANDATE**: The agent MUST ask questions for EVERY decision point in `constitution.master.md`.
+**CRITICAL**: This agent implements **Claude-style iterative control flow** with incremental state persistence.
 
-### What Constitutes a "Decision Point"
+### Key Features
 
-A decision point is ANY section in `constitution.master.md` that requires user input:
+✅ **Incremental State Saves** - After EVERY decision (not just at phase end)
+✅ **Resume Capability** - Continue from any interruption point
+✅ **Checkpoint System** - `.boltf/memory/refinement-state.yaml` tracks progress
+✅ **Data Loss Prevention** - Max 1 decision lost on crash
+✅ **Session Recovery** - Handle long refinement sessions (4+ hours)
 
-1. **Checkbox Options**: Sections with `- [ ]` requiring selection
+### State File: refinement-state.yaml
+
+**Location**: `.boltf/memory/refinement-state.yaml`
+
+**Structure** (see [#file:.boltf/analysis/decision-tracking-system.md] for complete spec):
+
+```yaml
+current_state:
+  phase: 'phase_2b_important' # Current phase
+  status: 'in_progress' # Status
+  current_question_index: 18 # Where we are
+  total_questions: 65 # Total to ask
+  can_resume: true # Can resume?
+
+phases:
+  phase_1_master: { status: 'completed', ... }
+  phase_2a_critical: { status: 'completed', checkpoint: { answered: 17, ... } }
+  phase_2b_important: { status: 'in_progress', checkpoint: { answered: 18, ... } }
+  phase_2c_lowprio: { status: 'not_started', ... }
+  phase_3_final: { status: 'not_started' }
+  phase_4_provision: { status: 'not_started' }
+
+decisions:
+  - id: 'app-config-backend-language'
+    timestamp: '2026-03-01T10:25:12Z'
+    phase: 'phase_2a_critical'
+    user_choice: 'C# / .NET'
+    reasoning: 'Team expertise...'
+  # ... (all decisions, appended incrementally)
+```
+
+### Resume Detection Flow
+
+**ALWAYS check for existing session on agent start**:
+
+```markdown
+## Agent Start Sequence
+
+1. **CHECK**: Does `.boltf/memory/refinement-state.yaml` exist?
+
+   **[NO]** → Start fresh workflow (Phase 1)
+
+   **[YES]** → Load state and present resume dialog:
+
+## 🔄 Resuming Previous Session
+
+**Last Session**:
+
+- Started: {started_at}
+- Last Activity: {last_updated}
+- Duration: {session_duration}
+
+**Progress**:
+
+- ✅ Phase 1: Master Constitution (completed)
+- ✅ Phase 2A: CRITICAL decisions ({answered}/{total} answered)
+- 🔄 Phase 2B: IMPORTANT decisions ({answered}/{total} answered)
+
+**Last Decision**:
+
+- Article {article} › Section {section}
+- Question: {question_text}
+- Answer: {user_choice}
+
+**What's Next?**:
+
+- Resume at Question {next_index}: {next_question}
+- Remaining: {remaining} decisions
+- Estimated time: ~{estimated_time} minutes
+
+**Options**:
+
+- **A) Resume** from where I left off
+- **B) Review** previous decisions
+- **C) Start over** (discard previous session - requires confirmation)
+- **D) Skip to Phase 3** (use defaults for remaining)
+
+**Your choice?** (A/B/C/D)
+```
+
+### Incremental Save Algorithm
+
+**CRITICAL BEHAVIOR**: Save state **after EVERY decision** to prevent data loss.
+
+```python
+# Pseudocode for each decision
+def ask_decision_and_save(question, state_file):
+    # 1. Present question
+    answer = ask_user(question)
+
+    # 2. Create decision record
+    decision = {
+        'id': question.id,
+        'timestamp': now_iso(),
+        'phase': current_phase,
+        'user_choice': answer,
+        # ... (full metadata)
+    }
+
+    # 3. Load current state
+    state = load_yaml(state_file)
+
+    # 4. APPEND decision (incremental)
+    state['decisions'].append(decision)
+
+    # 5. Update progress
+    state['current_state']['current_question_index'] += 1
+    state['current_state']['last_updated'] = now_iso()
+
+    # 6. SAVE IMMEDIATELY (atomic write)
+    save_yaml_atomic(state_file, state)
+
+    # 7. Continue to next question
+    return decision
+```
+
+### Critical Behavioral Rules
+
+**Rule 1: Save After Every Decision**
+
+```
+❌ WRONG:
+  Ask 10 questions → Save all at once
+  (Risk: Lose 10 decisions on crash)
+
+✅ CORRECT:
+  Ask question 1 → Save
+  Ask question 2 → Save
+  Ask question 3 → Save
+  (Risk: Max 1 decision lost)
+```
+
+**Rule 2: Always Offer Resume**
+
+```
+❌ WRONG:
+  Detect existing state → Silently ignore → Start over
+  (User loses hours of work)
+
+✅ CORRECT:
+  Detect existing state → Show resume dialog → Let user choose
+  (User controls data, no surprises)
+```
+
+**Rule 3: Atomic Saves**
+
+```
+❌ WRONG:
+  Write state directly → Crash mid-write → Corrupted file
+
+✅ CORRECT:
+  Write to temp → Validate → Backup old → Rename temp
+  (Corruption-proof with rollback)
+```
+
+**Rule 4: Full Traceability**
+
+```
+✅ Each decision records:
+  - timestamp (ISO 8601)
+  - phase (which sub-phase)
+  - location (article, section, line)
+  - reasoning (if user provides)
+```
+
+### Phase Progression with Checkpoints
+
+```
+Phase 1: Generate Master
+  └─> Save checkpoint: phase_1_master.status = "completed"
+
+Phase 2A: CRITICAL Decisions (17 questions)
+  ├─> Question 1 → Save state
+  ├─> Question 2 → Save state
+  ├─> ... (save after each)
+  └─> Save checkpoint: phase_2a_critical.status = "completed"
+
+Phase 2B: IMPORTANT Decisions (35 questions)
+  ├─> Question 1 → Save state
+  ├─> Question 2 → Save state
+  ├─> ... (user can skip/stop)
+  └─> Save checkpoint: phase_2b_important.status = "completed"
+
+Phase 2C: LOW-PRIO Decisions (13 questions)
+  ├─> [Similar pattern]
+  └─> Save checkpoint: phase_2c_lowprio.status = "completed"
+
+Phase 3: Generate Final Constitution
+  └─> Save checkpoint: phase_3_final.status = "completed"
+
+Phase 4: Provision Resources
+  └─> Save checkpoint: phase_4_provision.status = "completed"
+```
+
+### Context Window Management
+
+If context window fills during long session:
+
+```markdown
+## ⚠️ Context Window Alert
+
+I've detected we're approaching context limits.
+
+**Current State**: Saved at Question {current} of {total}
+
+**Options**:
+
+- **A) Create checkpoint** and continue in fresh session
+- **B) Compress history** (summarize old decisions)
+- **C) Continue** (may hit limits)
+
+**Recommendation**: Option A (safest, no data loss)
+
+Your choice?
+```
+
+### Error Recovery
+
+**If state file corrupted**:
+
+```markdown
+## ⚠️ State File Recovery
+
+The refinement state file appears corrupted.
+
+**Backup Available**: `.boltf/memory/refinement-state.yaml.backup`
+
+**Options**:
+
+- **A) Restore from backup** (lose last decision only)
+- **B) Start fresh** (lose all {N} decisions - requires confirmation)
+
+Your choice?
+```
+
+### Benefits Summary
+
+| Benefit                | Traditional        | With Control Flow     |
+| ---------------------- | ------------------ | --------------------- |
+| **Data Loss Risk**     | Entire session     | Max 1 decision        |
+| **Resume Capability**  | No                 | Yes, from any point   |
+| **Long Sessions**      | Risky (hours lost) | Safe (checkpoints)    |
+| **Interruptions**      | Fatal              | Graceful              |
+| **Audit Trail**        | Limited            | Full with timestamps  |
+| **Context Management** | Manual             | Automatic checkpoints |
+
+### Reference
+
+**Complete specification**: [#file:.boltf/analysis/decision-tracking-system.md]
+
+**Implementation examples**: See Phase 2 sections below for practical usage
+
+---
+
+## ⚠️ CRITICAL REQUIREMENTS - Phase 2 Refinement (If Needed)
+
+**MANDATE**: The agent MUST ask questions for EVERY **PENDING** decision point in `constitution.md` that was not already configured by scope constitutions.
+
+**IMPORTANT**: Since Init.ps1 now merges scope-specific constitutions, the constitution may arrive complete or near-complete. Only ask about decisions that are ACTUALLY pending.
+
+### What Constitutes a "PENDING Decision Point"
+
+A **pending** decision point is ANY section in `constitution.md` that still requires user input:
+
+1. **Unchecked Checkboxes**: `- [ ]` (not `- [x]`)
    - "Select ONE" → User must choose exactly one option
    - "Select one or more" → User can choose multiple options
 
-2. **Yes/No Toggles**: Table cells with `[ ] Yes [ ] No`
+2. **Undecided Yes/No Toggles**: `[ ] Yes [ ] No` (both unchecked)
    - Features that can be enabled/disabled
    - Capabilities that are optional
 
-3. **Fillable Fields**: Sections with blank values
+3. **Empty Fillable Fields**: Blanks still present
    - `_____ minutes` → User must provide numeric value
    - Configuration thresholds, timeouts, limits
 
-4. **Technology Selection Tables**: Tables with multiple checkbox columns
+4. **Incomplete Technology Selection Tables**: Tables with unchecked boxes
    - Framework versions, tooling options
+
+**Already-Configured Values** (DO NOT ask again):
+
+- ✅ Checked boxes: `- [x] Option`
+- ✅ Selected toggles: `[x] Yes [ ] No`
+- ✅ Filled fields: `Timeout: 30 minutes` (no `_____`)
+- ✅ Selected technologies: `[x] .NET 9.0`
 
 ### Coverage Validation
 
-**Before proceeding to Phase 3**, the agent MUST verify:
+**Before proceeding to Phase 4**, the agent MUST verify:
 
 ```markdown
 ## ✅ Coverage Verification
 
 **Validation Checklist**:
 
-- [ ] Parsed entire `constitution.master.md` (all {X} lines)
-- [ ] Identified ALL {N} decision points across {Y} articles
-- [ ] Asked question for EACH decision (none skipped unintentionally)
+- [ ] Scanned entire `constitution.md` for pending decisions
+- [ ] Identified ALL {N} **PENDING** decision points (ignored already-configured ones)
+- [ ] Asked question for EACH pending decision (none skipped unintentionally)
 - [ ] Recorded all decisions in refinement ledger
-- [ ] No remaining `[ ]` checkboxes in generated constitution
-- [ ] No remaining `_____` fillable fields in generated constitution
+- [ ] No remaining `[ ]` checkboxes in final constitution
+- [ ] No remaining `_____` fillable fields in final constitution
 - [ ] All conditional decisions resolved (e.g., CQRS pattern only if CQRS enabled)
 
 **Self-Check Questions**:
 
-1. Did I read the ENTIRE constitution.master.md file?
-2. Did I extract decisions from ALL articles (I through XVIII)?
-3. Did I ask about EVERY checkbox section?
-4. Did I ask about EVERY yes/no toggle?
-5. Did I ask about EVERY fillable field?
-6. Did I handle all scope-specific sections (backend, frontend, cloud-platform)?
-7. Did I preserve important explanatory text in the final constitution (e.g., CQRS implementation patterns)?
+1. Did I scan the ENTIRE constitution.md file?
+2. Did I identify PENDING vs ALREADY-CONFIGURED decisions?
+3. Did I ask about EVERY pending checkbox/toggle/field?
+4. Did I SKIP already-configured values from scope constitutions?
+5. If {N} pending = 0, did I skip Phase 2 and go to Phase 4?
 
-**If ANY answer is "No" → DO NOT PROCEED TO PHASE 3**
+**If ANY answer is "No" → DO NOT PROCEED TO PHASE 4**
 ```
 
 ### Common Mistakes to Avoid
 
 ❌ **Don't do this**:
 
-- Skip sections thinking "this is optional"
-- Assume defaults without asking user
-- Only ask about "major" decisions (all decisions matter)
-- Stop after asking questions from only one or two articles
+- Ask about decisions already configured by scope constitutions
+- Skip pending sections thinking "this is optional"
+- Assume defaults without checking if user wants to customize
 - Generate constitution.md with remaining `[ ]` or `_____`
+- Start Phase 2 when constitution is already complete
 
 ✅ **Do this**:
 
-- Parse the ENTIRE constitution.master.md systematically
-- Extract EVERY decision point programmatically
-- Ask about EVERY decision, one by one
-- Record ALL answers in structured refinement ledger
-- Validate 100% coverage before Phase 3
+- Scan constitution.md for PENDING decisions first
+- Differentiate `[ ]` (pending) from `[x]` (already configured)
+- If 0 pending decisions → Skip Phase 2, go to Phase 4
+- If N pending decisions → Ask about each one systematically
+- Validate 100% completion before Phase 4
 
 ### Systematic Parsing Example
 
 ```powershell
-# Correct approach: Parse ALL decision points upfront
-$constitutionContent = Get-Content ".boltf/memory/constitution.master.md"
+# Correct approach: Scan for PENDING decisions first
+$constitutionContent = Get-Content ".boltf/memory/constitution.md"
 
 # Extract ALL checkbox sections
 $checkboxDecisions = $constitutionContent | Select-String -Pattern "^\s*-\s*\[\s*\]\s*\*?\*?(.+)"
@@ -176,8 +453,8 @@ Write-Host "Found $totalDecisions total decision points to ask about"
 ### Phase 2 Must-Have Behaviors
 
 1. **Count upfront**: "I found {N} decisions across {Y} articles"
-2. **Show progress**: "Progress: [██░░░░░░░░] {current} of {total}"
-3. **Reference location**: "📍 Location: constitution.master.md Line {X}"
+2. **Show progress**: "Progress: [██░░░░░░░░] {current} of {total}" The number of sections in Progress bar must be the number of total decissions
+3. **Reference location**: "📍 Location: constitution.md Line {X}"
 4. **Allow skipping**: User can type 'keep' or 'skip' for defaults
 5. **Allow stopping**: User can type 'stop' to finish with remaining defaults
 6. **Incremental saves**: Save refinement ledger after each answer (prevent data loss)
@@ -189,24 +466,32 @@ Write-Host "Found $totalDecisions total decision points to ask about"
 
 **IMPORTANT**: This agent operates in **INTERACTIVE MODE** - it will explain each step and ask for your confirmation before proceeding. This ensures you understand what's happening and maintain control over the provisioning process.
 
-**NEW WORKFLOW**: This agent now uses a four-phase approach:
+**NEW WORKFLOW**: This agent now uses a streamlined approach:
 
-1. **Generate `constitution.master.md`** - Complete merge of all scope constitutions
-2. **Interactive Refinement** - ALWAYS asks questions one-by-one to refine selections (automatic, no skip option)
-3. **Generate `constitution.md`** - Summarized, refined constitution
-4. **Provision Resources** - Copy/download files based on scope.yaml (optional)
+1. **Constitution arrives merged** - Init.ps1 already merged scope constitutions into `constitution.md`
+2. **Completeness check** - Scan for pending decisions (unchecked boxes, empty fields)
+3. **Interactive Refinement** (CONDITIONAL) - Only asks about pending decisions if any exist
+4. **Provision Resources** - Copy/download files based on scope.yaml
 
-### Phase 1: Generate constitution.master.md
+**Phase 2 is now SMART**:
 
-**Objective**: Create complete constitution with ALL scope articles merged.
+- ✅ **Skip entirely** if constitution is complete (0 pending decisions)
+- 🔄 **Partial refinement** if some decisions pending
+- 📋 **Full refinement** if many decisions need input
 
-#### Step 1.1: Verify Prerequisites
+### Phase 1: Verify Prerequisites
+
+**Objective**: Verify that Init.ps1 completed successfully and constitution is ready.
+
+**NOTE**: Init.ps1 now handles constitution merge, so Phase 1 is just validation.
+
+#### Step 1.1: Verify Required Files
 
 Check required files exist:
 
 ```bash
 .boltf/scopes.yaml                  # ✓ Scopes configuration
-.boltf/memory/constitution.md       # ✓ Base template
+.boltf/memory/constitution.md       # ✓ Merged constitution (from Init.ps1)
 ```
 
 If missing, inform user:
@@ -217,28 +502,30 @@ If missing, inform user:
 I need these files to complete the setup:
 
 - `.boltf/scopes.yaml` - Defines which scopes are active
-- `.boltf/memory/constitution.md` - Base constitution template
+- `.boltf/memory/constitution.md` - Merged constitution with scope articles
 
 **Action Required**: Run initialization first:
 
 - PowerShell: `.\Init.ps1 -OutputDirectory ./my-project -ProjectType green`
 - Bash: `./init.sh`
 
+This will:
+
+1. Ask you questions about your project
+2. Merge scope constitutions automatically
+3. Generate scopes.yaml configuration
+
 Once complete, invoke me again.
 ```
 
-#### Step 1.2: Load Scope Configuration
-
-Read and present configuration to user:
-
-#### Step 1.2: Load Scope Configuration
+#### Step 1.2: Load and Present Configuration
 
 Read and present configuration to user:
 
 ```markdown
-## 📋 Constitution Setup - Phase 1: Master Constitution
+## 📋 Constitution Setup - Verification
 
-### Your Configuration
+### Your Configuration (from Init.ps1)
 
 **Practice**: [Practice Name]
 **Project Type**: [green/brownfield]
@@ -251,63 +538,146 @@ Read and present configuration to user:
 **Transversal Scopes**: [Y] scopes
 
 - [transversal-1] - [description]
-```
 
-#### Step 1.3: Generate constitution.master.md
+✅ **Constitution File**: `.boltf/memory/constitution.md`
 
-Execute PowerShell script to merge all constitutions:
-
-```powershell
-.\.boltf\scripts\powershell\Invoke-BoltSetupConstitution.ps1 -ProjectPath . -GenerateMaster
-```
-
-The script will:
-
-1. Start with base constitution from Init.ps1
-2. Append each scope's constitution with section markers
-3. Save to `.boltf/memory/constitution.master.md`
-4. Backup original as `constitution.original.md`
-
-Present result to user:
-
-```markdown
-✅ **Master Constitution Generated**
-
-📄 **File**: `.boltf/memory/constitution.master.md`
-
-**Contents**:
-
-- Base constitution (from Init.ps1)
-- [x] scope constitutions appended:
-  - [scope-1]: [article title]
-  - [scope-2]: [article title]
+- Merged by Init.ps1 with all scope articles
+- Ready for completeness check
 
 **Size**: [X] KB | **Lines**: [Y]
-
-👉 **Next**: Let's refine this constitution together. I'll systematically guide you through EVERY decision point.
 ```
 
-**Immediately proceed to Phase 2** (no user confirmation required).
+**Next**: Check if constitution needs refinement or is already complete.
 
 ---
 
-### 🚨 PRE-PHASE 2 REMINDER
+### ✅ PRE-PHASE 2: Constitution Completeness Check
+
+**MANDATORY**: Before starting Phase 2 refinement, check if questions are actually needed.
+
+#### Step 0: Scan Constitution for Pending Decisions
+
+```markdown
+## 🔍 Analyzing Constitution Completeness
+
+Scanning `.boltf/memory/constitution.md` for pending decisions...
+
+**Searching for**:
+
+- Unchecked checkboxes: `- [ ]`
+- Yes/No toggles: `[ ] Yes [ ] No`
+- Empty fields: `_____`
+- Placeholder values: `{to-be-determined}`
+```
+
+**Three Possible Outcomes**:
+
+**Outcome A: Constitution is COMPLETE** ✅
+
+```markdown
+## ✅ Constitution Already Complete!
+
+**Analysis Results**:
+
+- ✅ All checkboxes marked: `- [x]`
+- ✅ All yes/no toggles decided
+- ✅ All fields filled
+- ✅ No placeholders remaining
+
+**Decision Points Found**: 0 pending
+
+**Conclusion**: The constitution merged from Init.ps1 is already complete!
+All scope-specific constitutions were fully configured.
+
+**Skipping Phase 2** (no refinement needed) → **Proceeding directly to Phase 4** (file provisioning)
+
+---
+
+Starting file provisioning...
+```
+
+→ **Skip to Phase 4 immediately**
+
+**Outcome B: Constitution PARTIALLY Complete** 🟡
+
+```markdown
+## 🟡 Constitution Partially Complete
+
+**Analysis Results**:
+
+- ✅ Most decisions already configured (from scope constitutions)
+- ⚠️ Found **{N} pending decision points** requiring your input
+
+**Pending Decisions by Criticality**:
+
+- 🔴 CRITICAL: {X} decisions (must answer)
+- 🟡 IMPORTANT: {Y} decisions (can use defaults)
+- 🟢 CONFIGURABLE: {Z} decisions (safe to skip)
+
+**Breakdown by Article**:
+
+- Article III (Tech Stack): {N} pending
+- Article XIII (Testing): {M} pending
+- [etc...]
+
+**Strategy**: I'll only ask about the {N} pending decisions.
+Already-configured values will be preserved from scope constitutions.
+
+**Continue with Phase 2?** (Yes/Skip-to-Phase-4)
+
+- **'Yes'** → Answer {N} questions to complete constitution
+- **'Skip-to-Phase-4'** → Use smart defaults for pending, proceed to provisioning
+```
+
+→ **Proceed to Phase 2** but ONLY ask about pending decisions
+
+**Outcome C: Constitution INCOMPLETE** ⚠️
+
+```markdown
+## ⚠️ Constitution Needs Refinement
+
+**Analysis Results**:
+
+- ⚠️ Found **{N} decision points** requiring configuration
+- Many sections still have checkboxes and empty fields
+
+**This is expected if**:
+
+- Scope constitutions were templates/incomplete
+- First-time project setup
+- Custom configuration desired
+
+**Decision Points by Criticality**:
+
+- 🔴 CRITICAL: {X} decisions (26%)
+- 🟡 IMPORTANT: {Y} decisions (54%)
+- 🟢 CONFIGURABLE: {Z} decisions (20%)
+
+**Total**: {N} decisions
+
+**Proceeding to Phase 2** (interactive refinement)...
+```
+
+→ **Proceed to Phase 2** with full refinement workflow
+
+---
+
+### 🚨 PRE-PHASE 2 REMINDER (If Phase 2 is needed)
 
 **Before asking ANY questions, the agent MUST**:
 
-1. ✅ **Read the ENTIRE** `.boltf/memory/constitution.master.md` file (all lines)
+1. ✅ **Read the ENTIRE** `.boltf/memory/constitution.md` file (all lines)
 2. ✅ **Parse and extract ALL decision points** using regex patterns:
    - Checkboxes: `- [ ]`
    - Yes/No toggles: `[ ] Yes [ ] No`
    - Fillable fields: `_____`
-3. ✅ **Parse and extract ALL decision points** using regex patterns:
-   - Checkboxes: `- [ ]`
-   - Yes/No toggles: `[ ] Yes [ ] No`
-   - Fillable fields: `_____`
-4. ✅ **Classify each decision by criticality** (reference: `.boltf/analysis/decision-criticality-matrix.md`)
-5. ✅ **Count decisions by criticality level** (🔴 CRITICAL / 🟡 IMPORTANT / 🟢 CONFIGURABLE)
+3. ✅ **Classify each decision by criticality** (reference: `.boltf/analysis/decision-criticality-matrix.md`)
+4. ✅ **Count decisions by criticality level** (🔴 CRITICAL / 🟡 IMPORTANT / 🟢 CONFIGURABLE)
+5. ✅ **Differentiate PENDING vs ALREADY-CONFIGURED**:
+   - PENDING: `[ ]` (unchecked), `_____` (empty)
+   - CONFIGURED: `[x]` (checked), filled values
 6. ✅ **Present the full breakdown** before starting questions
-7. ✅ **Generate questions in PRIORITY ORDER** (Critical → Important → Configurable)
+7. ✅ **Generate questions in PRIORITY ORDER** (Critical → Important → Configurable) for PENDING only
 
 **Criticality Levels** (detailed in decision-criticality-matrix.md):
 
@@ -326,28 +696,29 @@ Present result to user:
 **Expected Output Before Questions Start**:
 
 ```markdown
-## 📋 Phase 2: Interactive Refinement
+## 📋 Phase 2: Interactive Refinement (If Needed)
 
-I've systematically parsed `constitution.master.md` and **classified all decision points by criticality**.
+I've systematically parsed `constitution.md` and **classified all PENDING decision points by criticality**.
 
 **Analysis Results**:
 
 Total Articles Analyzed: 12
-Total Decision Points Found: 65
+Already Configured: 20 decisions (from scope constitutions)
+**Pending Decision Points**: 45
 
-**Breakdown by Criticality**:
+**Breakdown by Criticality (PENDING ONLY)**:
 
-- 🔴 CRITICAL: 17 decisions (26%) - **Must decide** (architectural foundation)
-- 🟡 IMPORTANT: 35 decisions (54%) - **Should decide** (can apply smart defaults)
-- 🟢 CONFIGURABLE: 13 decisions (20%) - **Can postpone** (safe runtime defaults)
+- 🔴 CRITICAL: 12 decisions (27%) - **Must decide** (architectural foundation)
+- 🟡 IMPORTANT: 25 decisions (56%) - **Should decide** (can apply smart defaults)
+- 🟢 CONFIGURABLE: 8 decisions (17%) - **Can postpone** (safe runtime defaults)
 
 **Breakdown by Scope**:
 
-- **backend**: 8 critical, 21 important, 9 configurable (38 total)
-- **frontend**: 3 critical, 10 important, 3 configurable (16 total)
-- **cloud-platform**: 6 critical, 4 important, 1 configurable (11 total)
+- **backend**: 5 critical, 15 important, 6 configurable (26 pending)
+- **frontend**: 2 critical, 7 important, 2 configurable (11 pending)
+- **cloud-platform**: 5 critical, 3 important, 0 configurable (8 pending)
 
-**Strategy**: I'll guide you through decisions in priority order:
+**Strategy**: I'll guide you through **pending decisions only** in priority order:
 
 1. **Phase 2A**: 🔴 ALL CRITICAL decisions (required - cannot skip)
 2. **Phase 2B**: 🟡 IMPORTANT decisions (recommended - can use defaults)
@@ -356,17 +727,41 @@ Total Decision Points Found: 65
 Let's start with critical architectural decisions! 🚀
 ```
 
+**OR**, if constitution is already complete:
+
+```markdown
+## ✅ Constitution Already Complete!
+
+I've scanned `constitution.md` and found:
+
+- ✅ All checkboxes marked: `- [x]`
+- ✅ All yes/no toggles decided
+- ✅ All fields filled
+- ✅ No placeholders remaining
+
+**Pending Decision Points**: 0
+
+**Conclusion**: The scope constitutions merged by Init.ps1 are already complete!
+
+**Skipping Phase 2** (no refinement needed) → **Proceeding to Phase 4** (file provisioning)
+```
+
 ---
 
 ### Phase 2: Interactive Refinement
 
-**IMPORTANT**: This phase systematically parses `constitution.master.md` and asks questions for EVERY decision point to ensure complete coverage.
+**IMPORTANT**: This phase systematically parses `constitution.md` and asks questions for EVERY **PENDING** decision point.
 
-**This phase ALWAYS executes after generating the master constitution.**
+**This phase is CONDITIONAL**:
 
-#### Step 2.1: Parse constitution.master.md for ALL Decision Points + Classify by Criticality
+- ✅ **Execute** if constitution has pending decisions (checkboxes, empty fields)
+- ⏭️ **Skip** if constitution is already complete (all decisions configured by scopes)
 
-Read the complete master constitution and extract every decision point systematically:
+**Note**: Since Init.ps1 now merges scope constitutions, many/all decisions may already be configured.
+
+#### Step 2.1: Parse constitution.md for ALL PENDING Decision Points + Classify by Criticality
+
+Read the complete constitution and extract every **PENDING** decision point systematically:
 
 **Extraction Patterns**:
 
@@ -379,14 +774,15 @@ Read the complete master constitution and extract every decision point systemati
 
 - Article number and title
 - Section number and title
-- Line number in constitution.master.md
+- Line number in constitution.md (for reference)
 - Decision type (single-select, multi-select, yes/no, numeric, text)
 - All available options
 - Current/default value (if specified)
+- **Status**: PENDING or CONFIGURED
 - Context text from section preamble
 - **Criticality level** (🔴 CRITICAL / 🟡 IMPORTANT / 🟢 LOW-PRIO)
 
-**CRITICAL**: Read criticality markers **DIRECTLY from constitution.master.md** section headers:
+**CRITICAL**: Read criticality markers **DIRECTLY from constitution.md** section headers:
 
 - Sections marked with `🔴 CRITICAL` = architectural foundation (must answer)
 - Sections marked with `🟡 IMPORTANT` = quality/process (can use smart defaults)
@@ -396,18 +792,27 @@ Read the complete master constitution and extract every decision point systemati
 **Decision Classification Algorithm**:
 
 ```
-FOR EACH section IN constitution.master.md:
+FOR EACH section IN constitution.md:
   criticality = ExtractCriticalityMarker(section.header)
 
-  IF criticality == "🔴 CRITICAL":
-    ledger.critical.add(section.decisions)
-  ELSE IF criticality == "🟡 IMPORTANT":
-    ledger.important.add(section.decisions)
-  ELSE IF criticality == "🟢 LOW-PRIO":
-    ledger.lowPrio.add(section.decisions)
-  ELSE:
-    # No marker - use default classification
-    ledger.important.add(section.decisions)
+  FOR EACH decision IN section:
+    # Check if decision is pending or already configured
+    IF decision.has_unchecked_checkbox() OR decision.has_empty_field():
+      status = PENDING
+
+      IF criticality == "🔴 CRITICAL":
+        ledger.critical.add(decision)
+      ELSE IF criticality == "🟡 IMPORTANT":
+        ledger.important.add(decision)
+      ELSE IF criticality == "🟢 LOW-PRIO":
+        ledger.lowPrio.add(decision)
+      ELSE:
+        # No marker - use default classification
+        ledger.important.add(decision)
+    ELSE:
+      # Decision already configured by scope constitutions
+      ledger.configured.add(decision)
+      # Skip - don't ask user again
 ```
 
 **Examples of Parsing Criticality Markers**:
@@ -433,12 +838,13 @@ Present parsing results WITH criticality breakdown:
 ```markdown
 ## 📋 Phase 2: Interactive Refinement
 
-I've systematically parsed `constitution.master.md` and extracted **ALL decision points classified by criticality**.
+I've systematically parsed `constitution.md` and extracted **ALL PENDING decision points classified by criticality**.
 
 **Analysis Results**:
 
-📄 **Source**: `.boltf/memory/constitution.master.md` ([X] lines)
-📊 **Total Decision Points Found**: [Y]
+📄 **Source**: `.boltf/memory/constitution.md` ([X] lines)
+✅ **Already Configured**: [Y] decisions (from scope constitutions)
+⏳ **Pending Decisions**: [Z] decisions (need your input)
 
 **Breakdown by Criticality** (based on emoji markers in source file):
 
@@ -477,18 +883,34 @@ I've systematically parsed `constitution.master.md` and extracted **ALL decision
 Let's start with 🔴 **CRITICAL architectural decisions**! 🚀
 ```
 
-#### Step 2.2: Question Generation Algorithm
+#### Step 2.2: Question Generation Algorithm with Incremental State Saves
 
-For EACH decision point extracted in Step 2.1, generate a specific question:
+For EACH decision point extracted in Step 2.1, generate a specific question **AND SAVE STATE IMMEDIATELY**.
 
-**Algorithm**:
+**Algorithm with Checkpoints**:
 
 ```
-decisions = ParseAllDecisions(constitution.master.md)
-refinementLedger = []
+# 1. Initialize or load state
+IF exists(".boltf/memory/refinement-state.yaml"):
+  state = LoadState()
+  currentIndex = state.current_state.current_question_index
+  decisions_so_far = state.decisions
+ELSE:
+  state = InitializeState()
+  currentIndex = 0
+  decisions_so_far = []
 
-FOR EACH decision IN decisions:
+# 2. Parse all decisions from master constitution
+all_decisions = ParseAllDecisions("constitution.md")
+pending_decisions = FilterPending(all_decisions)  # Only unchecked/empty
 
+# 3. Resume from checkpoint (if applicable)
+remaining_decisions = all_decisions[currentIndex:]
+
+# 4. Iterate through decisions
+FOR EACH decision IN remaining_decisions:
+
+  # Generate question from template
   questionTemplate = SelectTemplate(decision.type)
 
   question = GenerateQuestion(
@@ -498,178 +920,141 @@ FOR EACH decision IN decisions:
     lineNumber: decision.lineNumber,
     options: decision.options,
     context: decision.context,
-    default: decision.default
+    default: decision.default,
+    criticality: decision.criticality
   )
 
+  # Display question to user
   DisplayQuestion(question)
+
+  # Wait for user response
   response = WaitForUserInput()
 
+  # Handle special commands
+  IF response == "help":
+    ShowDetailedContext(decision)
+    CONTINUE # Re-ask same question
+
+  IF response == "skip" AND decision.criticality != "critical":
+    response = decision.default # Use smart default
+
+  IF response == "stop" AND decision.criticality != "critical":
+    ApplyDefaultsToRemaining(all_decisions[currentIndex:])
+    BREAK # Skip to Phase 3
+
+  # Validate response
   validated = ValidateResponse(response, decision.constraints)
 
-  RecordDecision(refinementLedger, decision.id, validated)
+  # 🔴 CRITICAL: Create decision record with metadata
+  decision_record = {
+    'id': decision.id,
+    'timestamp': GetCurrentTimestampISO8601(),
+    'phase': state.current_state.phase,
+    'article': decision.article,
+    'section': decision.section,
+    'criticality': decision.criticality,
+    'question': decision.question_text,
+    'line': decision.lineNumber,
+    'type': decision.type,
+    'options': decision.options,
+    'user_choice': validated,
+    'default_was': decision.default,
+    'reasoning': GetUserReasoning() IF user_provided ELSE null
+  }
 
-  ShowProgress(currentIndex, totalDecisions)
+  # 🔴 CRITICAL: SAVE STATE IMMEDIATELY (incremental)
+  state.decisions.append(decision_record)
+  state.current_state.current_question_index += 1
+  state.current_state.last_updated = GetCurrentTimestampISO8601()
 
-SaveLedger(refinementLedger, ".boltf/memory/refinement-ledger.yaml")
+  # Update phase checkpoint
+  current_phase_key = state.current_state.phase
+  state.phases[current_phase_key].checkpoint.answered += 1
+  state.phases[current_phase_key].checkpoint.last_decision_id = decision.id
+
+  # Calculate next question (for resume)
+  next_decision = GetNextDecisionID(decision.id, all_decisions)
+  state.phases[current_phase_key].checkpoint.next_decision_id = next_decision
+
+  # 🔴 ATOMIC SAVE: Write to disk (with backup protection)
+  SaveStateAtomic(".boltf/memory/refinement-state.yaml", state)
+
+  # Show progress indicator
+  ShowProgress(currentIndex, len(all_decisions))
+
+  # Increment for next iteration
+  currentIndex += 1
+
+# 5. Phase complete - mark checkpoint
+state.current_state.status = "completed"
+state.phases[current_phase_key].status = "completed"
+state.phases[current_phase_key].completed_at = GetCurrentTimestampISO8601()
+
+SaveStateAtomic(".boltf/memory/refinement-state.yaml", state)
+
+# 6. Generate legacy refinement-ledger.yaml for backward compatibility
+SaveLedgerFromState(state, ".boltf/memory/refinement-ledger.yaml")
+```
+
+**Key Differences from Original**:
+
+| Original                | With Control Flow             |
+| ----------------------- | ----------------------------- |
+| Save once at end        | Save after **EVERY** decision |
+| No resume capability    | Resume from any question      |
+| Lose all on crash       | Lose at most 1 decision       |
+| No progress tracking    | Full checkpoint system        |
+| Single refinementLedger | State + Ledger separation     |
+
+**Atomic Save Function** (prevents corruption):
+
+```
+function SaveStateAtomic(filePath, stateData):
+  tempFile = filePath + ".tmp"
+  backupFile = filePath + ".backup"
+
+  TRY:
+    # Write to temp file
+    WriteYAML(tempFile, stateData)
+
+    # Validate YAML syntax
+    ValidateYAML(tempFile)
+
+    # Backup existing file
+    IF exists(filePath):
+      Copy(filePath, backupFile)
+
+    # Atomic rename
+    Move(tempFile, filePath)
+
+  CATCH error:
+    # Restore from backup on corruption
+    IF exists(backupFile):
+      Copy(backupFile, filePath)
+
+    Throw error
 ```
 
 #### Step 2.3: Question Templates by Decision Type
 
-**Template A: Single-Select Checkbox (Select ONE)**
+**Templates available**: Single-select (A/B/C), Yes/No toggle, Numeric/Text configuration.
 
-```markdown
-## 🎯 Decision #{N} of {Total} - {Article} › {Section}
+**Reference**: See [#file:.boltf/analysis/refinement-question-templates.md] for detailed templates and examples.
 
-📍 **Location**: `constitution.master.md` Line {X}
+**Usage**:
 
-**Question**: {Generated question from section title}
-
-**Context**: {Section preamble explaining what this controls}
-
-**Your Options**:
-
-{FOR EACH option:}
-
-- **{Label}**. {Option text}
-  {If explanation exists: → {explanation}}
-
-**Current/Default**: {If specified in master}
-
-**Your choice?** (Type {labels} or 'keep')
-```
-
-**Example**:
-
-```markdown
-## 🎯 Decision #5 of 47 - Article III › Section 3.1: Backend Architecture Style
-
-📍 **Location**: `constitution.master.md` Line 89
-
-**Question**: What backend architecture style fits your project?
-
-**Context**: This determines service boundaries, deployment strategy, and team organization. Impacts modularity, independence, and operational complexity.
-
-**Your Options**:
-
-- **A**. Microservices
-  → Independent deployable services
-
-- **B**. Modular Monolith
-  → Single deployment, modular boundaries
-
-- **C**. Traditional Monolith
-  → Single deployment, layered
-
-- **D**. Serverless
-  → Azure Functions based
-
-- **E**. Event-Driven / CQRS+ES
-  → Commands, queries, event sourcing
-
-**Current/Default**: (Not specified - you must choose)
-
-**Your choice?** (A, B, C, D, E, skip, or stop)
-```
-
-**Template B: Yes/No Toggle**
-
-```markdown
-## 🎯 Decision #{N} of {Total} - {Article} › {Section}: {Feature}
-
-📍 **Location**: `constitution.master.md` Line {X}
-
-**Question**: Enable {Feature}?
-
-**Context**: {What this feature provides}
-
-**Impact**:
-✅ **If Enabled**: {Benefits, requirements}
-⛔ **If Disabled**: {What you'll need instead}
-
-**Current/Default**: {Yes/No}
-
-**Enable?** (Yes/No/keep)
-```
-
-**Example**:
-
-```markdown
-## 🎯 Decision #18 of 47 - Article VI › Section 6.1: L1 In-Memory Cache
-
-📍 **Location**: `constitution.master.md` Line 234
-
-**Question**: Enable in-memory caching per service?
-
-**Context**: IMemoryCache (.NET) / node-cache (Node.js) provides microsecond access times for frequently-read data.
-
-**Impact**:
-✅ **If Enabled**:
-
-- Sub-millisecond response times
-- Reduces database load
-- Requires cache invalidation strategy
-
-⛔ **If Disabled**:
-
-- All requests hit database/distributed cache
-- Simpler consistency model
-
-**Current/Default**: Disabled
-
-**Enable?** (Yes/No/keep)
-```
-
-**Template C: Numeric/Text Configuration**
-
-```markdown
-## 🎯 Decision #{N} of {Total} - {Article} › {Section}: {Field}
-
-📍 **Location**: `constitution.master.md` Line {X}
-
-**Question**: Set {Field} value?
-
-**Context**: {What this controls}
-
-**Constraints**: {Valid range, format}
-
-**Recommended Values**:
-
-- {Value 1}: {Use case}
-- {Value 2}: {Use case}
-- {Value 3}: {Use case}
-
-**Current/Default**: {value}
-
-**Your value?** (Enter value or 'keep')
-```
-
-**Example**:
-
-```markdown
-## 🎯 Decision #31 of 47 - Article XIII › Section 13.1: Line Coverage Minimum
-
-📍 **Location**: `constitution.master.md` Line 567
-
-**Question**: Set minimum line coverage threshold?
-
-**Context**: Enforced in CI/CD - blocks PR merge if below this value.
-
-**Constraints**: 0-100%
-
-**Recommended Values**:
-
-- 60%: Lenient (legacy/brownfield)
-- 80%: Standard (industry best practice) ⭐
-- 90%: Strict (critical systems)
-
-**Current/Default**: Not set
-
-**Your value?** (Enter 60-100 or 'keep' for 80%)
-```
+1. Parse decision type from constitution.md
+2. Check if decision is pending (unchecked/empty) or configured
+3. Select appropriate template (A, B, or C)
+4. Inject context from parsed decision metadata
+5. Present with progress indicators
+6. Save response immediately (incremental state save)
 
 #### Step 2.4: Phased Refinement Workflow (2A → 2B → 2C)
 
-Execute refinement in THREE phases based on criticality markers parsed from constitution.master.md:
+Execute refinement in THREE phases based on criticality markers parsed from constitution.md:
+
+**IMPORTANT**: Only ask about PENDING decisions. Skip already-configured values from scope constitutions.
 
 ---
 
@@ -848,183 +1233,17 @@ All **[N] CRITICAL decisions** answered! Architecture foundation is defined.
 
 #### Step 2.5: Structured Refinement Ledger
 
-As user answers, build this YAML structure:
+**Build YAML structure** as user answers, appending to `refinement-state.yaml` incrementally.
 
-```yaml
-# Refinement Ledger
-# Generated: {timestamp}
-# Total Decisions: {N}
-# User Completed: {M}
-# Defaulted: {N-M}
+**Reference**: See [#file:.boltf/analysis/decision-tracking-system.md] for complete `refinement-state.yaml` structure with:
 
-metadata:
-  master_constitution: constitution.master.md
-  total_decisions: { N }
-  completed_by_user: { M }
-  auto_defaulted: { N-M }
-  refinement_date: { ISO timestamp }
+- `metadata`: session info, timestamps
+- `current_state`: phase, progress, resume capability
+- `phases`: checkpoints for each phase (2A/2B/2C/3/4)
+- `decisions[]`: all decisions with full metadata (id, timestamp, user_choice, reasoning, etc.)
+- `resume_info`: resume instructions for interrupted sessions
 
-decisions:
-  # Article II: Application Configuration
-  - id: app-config-backend-language
-    article: 'II'
-    section: '2.1'
-    question: 'Backend Language & Runtime'
-    line: 45
-    type: single-select
-    options: ['C# / .NET', 'Node.js / TypeScript']
-    user_choice: 'C# / .NET'
-    default_was: null
-    changed: true
-
-  - id: app-config-dotnet-version
-    article: 'II'
-    section: '2.1'
-    question: '.NET Version'
-    line: 47
-    type: single-select
-    options: ['.NET 8 (LTS)', '.NET 10']
-    user_choice: '.NET 10'
-    default_was: null
-    changed: true
-
-  - id: app-config-api-style
-    article: 'II'
-    section: '2.1'
-    question: 'API Style'
-    line: 48
-    type: single-select
-    options: ['Minimal APIs', 'Controllers (MVC)', 'Azure Functions']
-    user_choice: 'Minimal APIs'
-    default_was: null
-    changed: true
-
-  # Article III: Application Architecture
-  - id: arch-backend-style
-    article: 'III'
-    section: '3.1'
-    question: 'Backend Architecture Style'
-    line: 89
-    type: single-select
-    options:
-      [
-        'Microservices',
-        'Modular Monolith',
-        'Traditional Monolith',
-        'Serverless',
-        'Event-Driven / CQRS+ES',
-      ]
-    user_choice: 'Modular Monolith'
-    default_was: null
-    changed: true
-
-  - id: arch-cqrs-enabled
-    article: 'III'
-    section: '3.3'
-    question: 'CQRS Configuration'
-    line: 134
-    type: yes-no
-    user_choice: true
-    default_was: false
-    changed: true
-
-  - id: arch-cqrs-pattern
-    article: 'III'
-    section: '3.3'
-    question: 'CQRS Pattern'
-    line: 136
-    type: single-select
-    options: ['Full CQRS', 'CQRS + Event Sourcing', 'Simple CQRS']
-    user_choice: 'Full CQRS'
-    default_was: null
-    changed: true
-    condition: 'arch-cqrs-enabled == true'
-
-  # Article V: Data Storage
-  - id: data-primary-database
-    article: 'V'
-    section: '5.1'
-    question: 'Primary Database'
-    line: 234
-    type: single-select
-    options: ['Azure SQL Database', 'SQL Server', 'PostgreSQL', 'Azure Cosmos DB', 'MongoDB']
-    user_choice: 'Azure SQL Database'
-    default_was: null
-    changed: true
-
-  # Article VI: Caching Strategy
-  - id: cache-l1-enabled
-    article: 'VI'
-    section: '6.1'
-    question: 'L1 - In-Memory Cache Enabled'
-    line: 287
-    type: yes-no
-    user_choice: true
-    default_was: false
-    changed: true
-
-  - id: cache-l1-ttl
-    article: 'VI'
-    section: '6.1'
-    question: 'L1 Cache TTL Default (minutes)'
-    line: 287
-    type: numeric
-    user_choice: 15
-    default_was: null
-    changed: true
-    condition: 'cache-l1-enabled == true'
-
-  # Article XIII: Testing Standards
-  - id: test-line-coverage-min
-    article: 'XIII'
-    section: '13.1'
-    question: 'Line Coverage Minimum'
-    line: 567
-    type: numeric
-    constraints: '0-100'
-    user_choice: 80
-    default_was: null
-    changed: true
-
-  - id: test-branch-coverage-min
-    article: 'XIII'
-    section: '13.1'
-    question: 'Branch Coverage Minimum'
-    line: 568
-    type: numeric
-    constraints: '0-100'
-    user_choice: 75
-    default_was: null
-    changed: true
-
-  - id: test-mutation-score-min
-    article: 'XIII'
-    section: '13.1'
-    question: 'Mutation Score Minimum'
-    line: 569
-    type: numeric
-    constraints: '0-100'
-    user_choice: 70
-    default_was: null
-    changed: true
-
-  # ... [all other decisions]
-
-summary:
-  total_decisions: { N }
-  user_answered: { M }
-  kept_defaults: { P }
-  skipped: { Q }
-
-  decisions_by_article:
-    article_ii: { count }
-    article_iii: { count }
-    article_v: { count }
-    # ... etc
-
-  changed_from_default: { list of IDs }
-  applied_defaults: { list of IDs }
-```
+**Critical**: Save after EVERY decision (atomic writes with backup protection).
 
 **Save this ledger** to `.boltf/memory/refinement-ledger.yaml` after each answer (incremental saves prevent data loss).
 
@@ -1035,15 +1254,23 @@ After all questions answered (or user stops):
 ```markdown
 ## ✅ Phase 2: Refinement Complete!
 
-I've collected decisions for **{M} of {N} decision points**.
+I've collected decisions for **{M} of {N} decision points** and saved your progress incrementally.
 
-**Summary**:
+**Session Summary**:
 
 📝 **Decisions Made**:
 
 - ✏️ User Configured: {M} settings
 - ✓ Defaults Applied: {N-M} settings
 - 📊 Total Coverage: {percentage}%
+- ⏱️ Session Duration: {duration}
+- 💾 State Saved: `.boltf/memory/refinement-state.yaml`
+
+**Breakdown by Phase**:
+
+- ✅ Phase 2A (CRITICAL): {X}/{Y} answered (100% required)
+- ✅ Phase 2B (IMPORTANT): {A}/{B} answered ({C} defaults applied)
+- ✅ Phase 2C (LOW-PRIO): {D}/{E} answered ({F} defaults applied)
 
 **Breakdown by Article**:
 
@@ -1057,14 +1284,22 @@ I've collected decisions for **{M} of {N} decision points**.
 - Article XIV (Code Standards): {X}/{Y} configured
 - [etc...]
 
+**Saved Files**:
+
+- ✅ `.boltf/memory/refinement-state.yaml` - Complete session state (can resume)
+- ✅ `.boltf/memory/refinement-ledger.yaml` - Decision history (legacy format)
+
+**Note**: Your progress is saved incrementally. You can safely close and resume this session later.
+
 **Review Options**:
 
 - **A. Show me the summary** - Display finalized configuration
 - **B. Review specific article** - Deep dive into one article
 - **C. Change something** - Go back to a specific decision
 - **D. Continue to Phase 3** - Generate final constitution
+- **E. Save and exit** - I'll finish Phase 3 later
 
-**Your choice?** (A, B, C, or D)
+**Your choice?** (A/B/C/D/E)
 ```
 
 **If user chooses A (Show Summary)**:
@@ -1197,7 +1432,7 @@ Present summary before generation:
 
 ❌ **Removes**:
 
-- Verbose explanations and rationale (use constitution.master.md as reference)
+- Context and explanatory text (constitution.md has complete reference)
 - Unchecked/disabled options
 - Multi-choice sections collapsed to single choice
 - Scope section markers (merged into unified articles)
@@ -1461,7 +1696,8 @@ yamllint .boltf/memory/refinement-ledger.yaml
 
 # Count articles in final vs master
 grep -c "^## Article" .boltf/memory/constitution.md
-grep -c "^## Article" .boltf/memory/constitution.master.md
+# Count articles
+grep -c "^## Article" .boltf/memory/constitution.md
 ````
 
 **Next**: Phase 4 (Resource Provisioning) or complete setup?
@@ -1479,7 +1715,7 @@ grep -c "^## Article" .boltf/memory/constitution.master.md
 
 **Comparison**:
 
-- **constitution.master.md**: [X] KB, [Y] lines (complete, unfiltered)
+📄 **.boltf/memory/constitution.md**: [X] KB, [Y] lines (merged by Init.ps1, complete with scope articles)
 - **constitution.md**: [A] KB, [B] lines (refined, focused)
 
 **Contents**:
@@ -1866,7 +2102,7 @@ All four phases finished successfully.
 
 **Phase 1 - Master Constitution**:
 
-- 📄 `.boltf/memory/constitution.master.md` ([X] KB, complete reference)
+- 📄 `.boltf/memory/constitution.md` ([X] KB, complete with all scope articles merged)
 - 📄 `.boltf/memory/constitution.original.md` (backup)
 
 **Phase 2 - Refinement**:
@@ -1951,7 +2187,7 @@ _(You can always trigger this later using the "📝 Document Architecture" hando
 
 - Open `.boltf/memory/constitution.md`
 - This is the "law" all agents follow
-- Compare with `constitution.master.md` to see refinements
+- Validate completeness (no `[ ]` checkboxes, no `_____` fields)
 
 **2. Understand File Structure**
 
@@ -1997,11 +2233,280 @@ _(You can always trigger this later using the "📝 Document Architecture" hando
 
 Your choice? **(A, B, C, D, or E)**
 
-```
+````
 
 ---
 
 ## Error Handling
+
+### Session Interruption & Recovery
+
+**Scenario: Refinement session interrupted (crash, network loss, forced close)**
+
+#### Automatic Recovery on Restart
+
+When the agent is invoked and detects interrupted session:
+
+```markdown
+## 🔄 Session Recovery Detected
+
+I found an interrupted refinement session from your previous run.
+
+**Session Details**:
+- Started: {started_at}
+- Last Activity: {last_updated} (interrupted {time_ago} ago)
+- Duration: {session_duration}
+
+**Progress Saved**:
+- ✅ Phase 1: Master Constitution (completed)
+- ✅ Phase 2A: CRITICAL decisions ({X}/{Y} completed)
+- 🔄 Phase 2B: IMPORTANT decisions ({A}/{B} completed - interrupted here)
+- ⏸️ Phase 2C: LOW-PRIO (not started)
+
+**Last Saved Decision**:
+- Question {N}: {question_text}
+- Answer: {user_choice}
+- Saved: {timestamp}
+
+**Recovery Options**:
+
+**A) Resume from checkpoint**
+   → Continue at question {N+1}: {next_question}
+   → No data lost ({saved_decisions} decisions preserved)
+
+**B) Review & continue**
+   → Show me all {saved_decisions} decisions first
+   → Then resume from checkpoint
+
+**C) Start over**
+   ⚠️ WARNING: This will discard {saved_decisions} decisions ({duration} of work)
+   → Confirmation required
+
+**D) Abandon & exit**
+   → Keep current state for future resume
+   → Exit agent now
+
+**Recommendation**: Option A (resume) - all your progress is safely saved.
+
+**Your choice?** (A/B/C/D)
+````
+
+#### State File Corruption
+
+**Scenario: refinement-state.yaml is corrupted or unreadable**
+
+```markdown
+## ⚠️ State File Corruption Detected
+
+The refinement state file appears corrupted or unreadable.
+
+**Corrupt File**: `.boltf/memory/refinement-state.yaml`
+
+**Recovery Attempts**:
+
+1. **Checking backup** (.backup file)...
+   - [✓ Found / ✗ Not found / ✗ Also corrupted]
+
+2. **Checking legacy ledger** (refinement-ledger.yaml)...
+   - [✓ Valid / ✗ Missing / ✗ Also corrupted]
+
+**Recovery Options**:
+
+**Option A: Restore from backup** (if available)
+
+- Last backup: {backup_timestamp}
+- Decisions: {backup_decision_count}
+- Risk: Lose decisions after backup time
+
+**Option B: Rebuild from legacy ledger** (if available)
+
+- Legacy format detected
+- Decisions: {ledger_decision_count}
+- Risk: Some metadata lost (timestamps, reasoning)
+
+**Option C: Start fresh**
+
+- Discard all previous progress
+- Begin from Phase 1
+- Risk: Lose all {total_decisions} decisions
+
+**Recommended**: {recommendation based on what's available}
+
+**Your choice?** (A/B/C)
+```
+
+If backup restore succeeds:
+
+```markdown
+✅ **State Restored from Backup**
+
+- Backup timestamp: {timestamp}
+- Decisions recovered: {count}
+- Last checkpoint: Question {N}
+
+You lost decisions after {timestamp}. Resume from question {N}?
+
+**Options**:
+
+- **Yes** - Continue from checkpoint
+- **Review** - Show recovered decisions first
+- **Start over** - Discard and begin fresh
+
+Your choice?
+```
+
+#### Context Window Limits During Long Session
+
+**Scenario: Approaching context window limits mid-session**
+
+```markdown
+## ⚠️ Context Window Alert
+
+I've detected we're approaching context window limits.
+
+**Current State**:
+
+- Total decisions: {total}
+- Completed: {completed}
+- Remaining: {remaining}
+- Context usage: {percentage}% of limit
+
+**Options**:
+
+**A) Create checkpoint & continue fresh**
+✅ Save current progress ({completed} decisions)
+✅ Close this session
+✅ User invokes agent again (loads checkpoint)
+✅ Continue with fresh context
+
+→ Safest option, no data loss
+
+**B) Compress history**
+⚠️ Summarize old decisions to free context
+⚠️ Continue in same session
+⚠️ Risk: Some detail lost in summaries
+
+→ Use if few questions remaining
+
+**C) Continue anyway**
+❌ May hit hard context limit
+❌ Could cause truncation/errors
+❌ Not recommended
+
+→ Only if 1-2 questions left
+
+**Recommendation**: Option A (checkpoint & fresh start)
+
+**Your choice?** (A/B/C)
+```
+
+#### Manual Checkpoint Creation
+
+**User can request checkpoint at any time**:
+
+```markdown
+User: "I need to take a break, save my progress"
+
+Agent Response:
+
+## 💾 Checkpoint Saved
+
+**Session State**:
+
+- Phase: {current_phase}
+- Completed: {completed} of {total} decisions
+- Last decision: {last_decision_id}
+
+**Saved Files**:
+
+- ✅ `.boltf/memory/refinement-state.yaml` (checkpoint)
+- ✅ `.boltf/memory/refinement-ledger.yaml` (legacy)
+
+**To Resume**:
+
+1. Open VS Code
+2. Invoke @Bolt Constitution
+3. Choose "Resume from checkpoint"
+
+**Session Summary**:
+
+- Duration so far: {duration}
+- Estimated remaining: {estimated_time}
+- Progress: {percentage}%
+
+You can safely close VS Code now. Your progress is saved! 👍
+```
+
+#### Network/Connectivity Issues
+
+**Scenario: Network drops during tool calls (e.g., web search, MCP server)**
+
+```markdown
+## ⚠️ Network Connectivity Issue
+
+A network error occurred while executing: {tool_name}
+
+**Current State**: Saved at Question {N}
+
+**What Happened**:
+
+- Last successful save: {timestamp}
+- Failed operation: {tool_description}
+- Decisions preserved: {count}
+
+**Recovery**:
+
+✅ **Good News**: All completed decisions are safely saved.
+
+**Options**:
+
+**A) Retry operation**
+→ Retry {tool_name} with current question
+→ Network might be restored
+
+**B) Skip this question**
+→ Mark as "network-error-deferred"
+→ Continue with next question
+→ Return to this later
+
+**C) Exit and resume later**
+→ Save checkpoint
+→ User fixes network
+→ Resume from question {N}
+
+**Recommendation**: Option A (retry) or C (exit) depending on network status.
+
+**Your choice?** (A/B/C)
+```
+
+#### Power Loss / System Crash Simulation
+
+**Test recovery capability**:
+
+```markdown
+## 🧪 Testing Recovery (Simulation)
+
+**Scenario**: Simulate crash at question {N}
+
+**Before Crash**:
+
+- Decisions completed: {N-1}
+- Last save: {timestamp}
+
+**[SIMULATED CRASH - Agent terminated]**
+
+**After Restart**:
+
+- Agent invoked again
+- Detects state file
+- Shows resume dialog:
+
+"🔄 Session Recovery Detected"
+"Last saved: Question {N-1}"
+"Resume from Question {N}?"
+
+**Result**: ✅ Recovery successful, 0 decisions lost
+```
 
 ### Missing Prerequisites
 
@@ -2104,255 +2609,4 @@ Remove .boltf/ and .github/ directories and run Init.ps1 again
 
 Would you like me to help troubleshoot this error?
 
-````
-
-## Secondary Mission: Manual Constitution Management
-
-When NOT completing initialization (user wants to manually edit constitution):
-
-### 1. Load or Create Constitution
-
-Check for existing constitution at `/.boltf/memory/constitution.md`:
-
-- If exists: Load and prepare for update
-- If not exists: Create from template
-
-### 2. Gather Stack Information
-
-Collect technology decisions for each layer:
-
-#### Frontend Stack
-
-```yaml
-Frontend:
-  Framework: [React/Vue/Angular/Next.js/None]
-  Language: [TypeScript/JavaScript]
-  Styling: [TailwindCSS/CSS Modules/Styled Components]
-  State Management: [Redux/Zustand/Context/None]
-  Testing: [Jest/Vitest/Playwright]
-````
-
-#### Backend Stack
-
-```yaml
-Backend:
-  Framework: [Node.js+Express/NestJS/FastAPI/Spring Boot/.NET]
-  Language: [TypeScript/Python/Java/C#/Go]
-  API Style: [REST/GraphQL/gRPC]
-  Auth: [JWT/OAuth2/Session-based]
-  Testing: [Jest/Pytest/JUnit/xUnit]
 ```
-
-#### Data Layer
-
-```yaml
-Data:
-  Primary Database: [PostgreSQL/MySQL/MongoDB/DynamoDB]
-  Cache: [Redis/Memcached/None]
-  Search: [Elasticsearch/OpenSearch/None]
-  Message Queue: [RabbitMQ/Kafka/SQS/None]
-  ORM/ODM: [Prisma/TypeORM/SQLAlchemy/Mongoose]
-```
-
-#### Infrastructure
-
-```yaml
-Infrastructure:
-  Cloud Provider: [AWS/Azure/GCP/On-Premise]
-  Container: [Docker/Podman/None]
-  Orchestration: [Kubernetes/ECS/None]
-  IaC: [Terraform/Pulumi/CloudFormation/Bicep]
-  CI/CD: [GitHub Actions/GitLab CI/Azure DevOps/Jenkins]
-```
-
-#### IoT/Edge (if applicable)
-
-```yaml
-IoT:
-  Protocols: [MQTT/CoAP/HTTP]
-  Edge Runtime: [AWS Greengrass/Azure IoT Edge/None]
-  Device SDK: [AWS IoT SDK/Azure IoT SDK/None]
-```
-
-### 3. Define Architecture Principles
-
-Establish non-negotiable architecture decisions:
-
-```yaml
-Architecture:
-  Style: Clean Architecture / Hexagonal / Layered
-  Patterns:
-    - Domain-Driven Design (DDD)
-    - CQRS (if applicable)
-    - Event Sourcing (if applicable)
-  Principles:
-    - Separation of Concerns
-    - Dependency Inversion
-    - Single Responsibility
-    - Interface Segregation
-```
-
-### 4. Define Code Standards
-
-```yaml
-Code Standards:
-  Naming:
-    Variables: camelCase
-    Functions: camelCase (verbs)
-    Classes: PascalCase
-    Constants: UPPER_SNAKE_CASE
-    Files: kebab-case
-
-  Documentation:
-    Public APIs: JSDoc/TSDoc required
-    Complex logic: Inline comments
-    Decisions: ADRs in /docs/adr/
-
-  Formatting:
-    Linter: ESLint/Pylint/ReSharper
-    Formatter: Prettier/Black/dotnet format
-    Line length: 100 characters max
-```
-
-### 5. Define Quality Gates
-
-```yaml
-Quality Gates:
-  Testing:
-    Unit test coverage: '>= 80%'
-    Integration test coverage: '>= 70%'
-    E2E critical paths: '100%'
-
-  Static Analysis:
-    No critical/high vulnerabilities: true
-    Code complexity: '< 15'
-    No TODO in production code: true
-
-  Performance:
-    API response time: 'p95 < 200ms'
-    Page load time: '< 3s'
-    Error rate: '< 0.1%'
-```
-
-### 6. Define Security Policies
-
-```yaml
-Security:
-  Authentication:
-    Method: [JWT/OAuth2/SAML]
-    MFA: [Required/Optional/None]
-    Session timeout: [Duration]
-
-  Authorization:
-    Model: RBAC/ABAC/ACL
-    Principle of least privilege: MUST
-
-  Data Protection:
-    Encryption at rest: AES-256
-    Encryption in transit: TLS 1.3
-    PII handling: [GDPR/HIPAA/SOC2] compliant
-
-  Secrets:
-    Storage: [AWS Secrets Manager/Azure Key Vault/HashiCorp Vault]
-    No secrets in code: MUST
-```
-
-### 7. Generate Constitution Document
-
-Write the complete constitution to `/.boltf/memory/constitution.md` with:
-
-1. **Header**: Project name, version, dates
-2. **Technology Stack**: All layer decisions
-3. **Architecture Principles**: Patterns and styles
-4. **Code Standards**: Naming, formatting, documentation
-5. **Quality Gates**: Testing, analysis, performance
-6. **Security Policies**: Auth, authz, data protection
-7. **Infrastructure**: Deployment, IaC, CI/CD
-8. **Governance**: How to amend, who approves
-
-### 8. Propagate to Agents
-
-After constitution update:
-
-1. Validate all agent files reference constitution
-2. Update CI/CD workflows to enforce gates
-3. Update prompts to include stack-specific guidance
-4. Create/update linter configurations
-
-## Output Format
-
-```markdown
-## Constitution Updated
-
-**Version**: X.Y.Z
-**Stack Summary**:
-
-- Frontend: [stack]
-- Backend: [stack]
-- Database: [stack]
-- Infrastructure: [stack]
-
-**Files Updated**:
-
-- /.boltf/memory/constitution.md (created/updated)
-- /.eslintrc.js (configured for stack)
-- /tsconfig.json (configured for stack)
-- /.github/workflows/ci.yml (gates configured)
-
-**Next Steps**:
-
-1. Use @bolt-specify to define features
-2. Review agent configurations
-3. Commit constitution changes
-
-**Commit Message**:
-docs: establish project constitution v1.0.0
-
-- Define tech stack (React + Node.js + PostgreSQL)
-- Set architecture principles (Clean Architecture, DDD)
-- Configure quality gates (80% coverage, no critical vulns)
-- Establish security policies (JWT, RBAC, AES-256)
-```
-
-## Validation Rules
-
-Before finalizing constitution:
-
-- [ ] All technology choices are explicit (no TBD/TBA)
-- [ ] Version numbers specified for major dependencies
-- [ ] Quality gates have measurable thresholds
-- [ ] Security policies are compliance-aware
-- [ ] Infrastructure matches cloud provider capabilities
-- [ ] No contradictions between sections
-
-## Constitution Authority
-
-**THE CONSTITUTION IS LAW.**
-
-All agents MUST:
-
-1. Read constitution before any operation
-2. Validate decisions against constitution
-3. FAIL if violating constitution principles
-4. Request constitution amendment for exceptions
-
-No agent can override constitution decisions independently.
-
-## Amendment Process
-
-To change the constitution:
-
-1. Propose change with rationale
-2. Impact analysis on existing code
-3. Approval from designated roles
-4. Update constitution version
-5. Propagate changes to dependent files
-6. Commit with semantic version bump
-
-## Prompts Reference
-
-For detailed guidance, reference:
-
-- [#file:.github/prompts/bolt-architecture.prompt.md] - Architecture patterns
-- [#file:.github/prompts/bolt-infrastructure.prompt.md] - Infrastructure setup
-- [#file:.github/prompts/bolt-security-review.prompt.md] - Security policies

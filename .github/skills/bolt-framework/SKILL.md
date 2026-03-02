@@ -1,6 +1,6 @@
 ---
 name: bolt-framework
-description: Bolt Framework methodology with 6 lifecycle phases (INCEPTION, DISCOVERY, CONSTRUCTION, TRANSITION, PRODUCTION, RETIREMENT) and Bolt micro-iterations. ALWAYS use when orchestrating Bolt projects, managing lifecycle phases, implementing features, or following Bolt methodology. Triggers: "Bolt Framework", "lifecycle phase", "micro-iteration", "constitution", "feature spec", "Bolt workflow", "inception", "discovery", "construction", "quality gates". This is the PRIMARY skill for Bolt Framework projects.
+description: "Bolt Framework methodology with 6 lifecycle phases (INCEPTION, DISCOVERY, CONSTRUCTION, TRANSITION, PRODUCTION, RETIREMENT) and Bolt micro-iterations. ALWAYS use when orchestrating Bolt projects, managing lifecycle phases, implementing features, or following Bolt methodology. Triggers: 'Bolt Framework', 'lifecycle phase', 'micro-iteration', 'constitution', 'feature spec', 'Bolt workflow', 'inception', 'discovery', 'construction', 'quality gates'. This is the PRIMARY skill for Bolt Framework projects."
 ---
 
 # Bolt Framework

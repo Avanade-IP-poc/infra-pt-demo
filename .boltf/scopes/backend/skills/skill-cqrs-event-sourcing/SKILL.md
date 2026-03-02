@@ -1,6 +1,6 @@
 ---
 name: skill-cqrs-event-sourcing
-description: Implement CQRS (Command Query Responsibility Segregation) and Event Sourcing patterns without MediatR library using native implementations. ALWAYS use when implementing CQRS, event sourcing, domain events, event stores, projections, read models,event versioning, or audit trails. Triggers: CQRS, event sourcing, command query separation, event store, domain events, EventStoreDB, Cosmos DB event store, native CQRS, no MediatR, projections, read models, event versioning, event replay, audit trail, temporal queries, event-driven architecture patterns. Essential for systems requiring complete audit trails or temporal queries.
+description: Implement CQRS and Event Sourcing patterns with native code (no MediatR) using EventStoreDB or Cosmos DB. Use when building systems requiring complete audit trails, temporal queries, event replay, or separate read/write models. Critical for event-driven architectures - helps choose between full CQRS+ES, simple CQRS, or traditional CRUD.
 ---
 
 # CQRS & Event Sourcing

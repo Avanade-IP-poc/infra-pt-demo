@@ -871,207 +871,96 @@ YAML
 # --- Prefill constitution -----------------------------------------------------
 
 prefill_constitution() {
-    log_step "Prefilling constitution with your decisions..."
+    log_step "Generating constitution from active scopes..."
 
-    local path="$OUTPUT_DIR/.boltf/memory/constitution.md"
-    if [[ ! -f "$path" ]]; then
-        log_warn "constitution.md not found -- skipping prefill"
-        return
-    fi
+    local memory_dir="$OUTPUT_DIR/.boltf/memory"
+    mkdir -p "$memory_dir"
 
-    # Use a temp file for sed operations
-    local tmp="${path}.tmp"
-    cp "$path" "$tmp"
+    local path="$memory_dir/constitution.md"
+    local date=$(date '+%Y-%m-%d %H:%M:%S')
+    local boltf_root="$SCRIPT_DIR"
 
-    # Article I §1.1 -- Active Scopes
+    # Build scope list
+    local scopes_list=""
     for scope in "${D_SCOPES[@]}"; do
-        sed -i "s/| \[ \] | \*\*${scope}\*\*/| [x] | **${scope}**/" "$tmp"
+        scopes_list+="- **${scope}**"$'\n'
     done
 
-    # Article X §10.1 -- Environments
-    for env in "${D_ENVIRONMENTS[@]}"; do
-        sed -i "s/\(\*\*${env}\*\*[^|]*|[^|]*|\) \[ \] Yes/\1 [x] Yes/" "$tmp"
-    done
+    # Start with metadata header
+    cat > "$path" << EOF
+# Project Constitution
 
-    # Article X §10.1 -- Auto-Deploy
-    for env in "${D_ENVIRONMENTS[@]}"; do
-        local varname="D_AUTO_DEPLOY_${env^^}"
-        local val="${!varname}"
-        if [[ "$val" == "true" ]]; then
-            sed -i "s/\(\*\*${env}\*\*.*\[x\] Yes |\) \[ \]/\1 [x]/" "$tmp"
+> **Generated**: $date
+> **Practice**: $D_PRACTICE
+> **Active Scopes**: ${D_SCOPES[*]}
+> **Project Type**: $D_PROJECT_TYPE ($PROJECT_TYPE)
+
+---
+
+# Article I §1.1 — Active Scopes
+
+The following scopes are active for this project:
+
+$scopes_list
+
+---
+
+# Merged Scope Constitutions
+
+The following sections are merged from active scope constitutions.
+Articles may be duplicated; use consolidation agent to clean up later.
+
+---
+
+
+EOF
+
+    # Merge scope-specific constitutions
+    local merged_count=0
+    for scope in "${D_SCOPES[@]}"; do
+        local scope_constitution_path="$boltf_root/.boltf/scopes/$scope/memory/constitution.md"
+
+        if [[ -f "$scope_constitution_path" ]]; then
+            log_info "Merging constitution from scope: $scope"
+
+            # Add scope section header and content
+            cat >> "$path" << EOF
+<!-- ================================================================ -->
+<!-- SCOPE: $scope -->
+<!-- ================================================================ -->
+
+EOF
+            cat "$scope_constitution_path" >> "$path"
+            cat >> "$path" << EOF
+
+---
+
+
+EOF
+            ((merged_count++))
+        else
+            log_warn "Constitution not found for scope '$scope' at: $scope_constitution_path"
         fi
     done
 
-    # Article X §10.2 -- Config management
-    local config_label=""
-    case "$D_CONFIG_MANAGEMENT" in
-        azure-app-config) config_label="Azure App Configuration" ;;
-        env-vars)         config_label="Environment Variables" ;;
-        config-files)     config_label="appsettings" ;;
-        combination)      config_label="Combination" ;;
-    esac
-    [[ -n "$config_label" ]] && sed -i "s/- \[ \] \*\*${config_label}/- [x] **${config_label}/" "$tmp"
+    # Add footer with instructions
+    cat >> "$path" << EOF
 
-    # Article X §10.3 -- Local dev secrets
-    local secret_label=""
-    case "$D_SECRETS_DEV" in
-        user-secrets)   secret_label="User Secrets" ;;
-        env-files)      secret_label="\.env files" ;;
-        local-keyvault) secret_label="Local Key Vault" ;;
-    esac
-    [[ -n "$secret_label" ]] && sed -i "s/- \[ \] \*\*${secret_label}/- [x] **${secret_label}/" "$tmp"
+---
 
-    # Article X §10.4 -- Feature flags
-    local ff_label=""
-    case "$D_FEATURE_FLAGS" in
-        none)             ff_label="None" ;;
-        azure-app-config) ff_label="Azure App Configuration" ;;
-        launchdarkly)     ff_label="LaunchDarkly" ;;
-        unleash)          ff_label="Unleash" ;;
-    esac
-    [[ -n "$ff_label" ]] && sed -i "s/- \[ \] \*\*${ff_label}\*\*/- [x] **${ff_label}**/" "$tmp"
+# Next Steps
 
-    # Article XI §11.1 -- CI/CD
-    local cicd_label=""
-    case "$D_CICD_PLATFORM" in
-        github-actions) cicd_label="GitHub Actions" ;;
-        azure-devops)   cicd_label="Azure DevOps Pipelines" ;;
-    esac
-    [[ -n "$cicd_label" ]] && sed -i "s/- \[ \] \*\*${cicd_label}\*\*/- [x] **${cicd_label}**/" "$tmp"
+1. **Review**: This constitution contains $merged_count merged scope constitutions
+2. **Consolidate**: Run consolidation agent to merge duplicate articles
+3. **Customize**: Edit this constitution to reflect project-specific decisions
+4. **Commit**: Save to version control and iterate
 
-    # Article XI §11.3 -- Deploy strategy
-    local deploy_label=""
-    case "$D_DEPLOY_STRATEGY" in
-        rolling)       deploy_label="Rolling Update" ;;
-        blue-green)    deploy_label="Blue-Green" ;;
-        canary)        deploy_label="Canary" ;;
-        feature-flags) deploy_label="Feature Flags" ;;
-    esac
-    [[ -n "$deploy_label" ]] && sed -i "s/- \[ \] \*\*${deploy_label}\*\*/- [x] **${deploy_label}**/" "$tmp"
+---
 
-    # Article XI §11.4 -- Branch strategy
-    local branch_label=""
-    case "$D_BRANCH_STRATEGY" in
-        gitflow)     branch_label="GitFlow" ;;
-        github-flow) branch_label="GitHub Flow" ;;
-        trunk-based) branch_label="Trunk-Based" ;;
-    esac
-    [[ -n "$branch_label" ]] && sed -i "s/- \[ \] \*\*${branch_label}\*\*/- [x] **${branch_label}**/" "$tmp"
+**Generated by Bolt Framework init.sh** on $date
+EOF
 
-    # Article XI §11.2 -- App Pipeline Stages
-    declare -A app_stage_map=(
-        ["build"]="Build" ["lint-format"]="Lint/Format"
-        ["unit-tests"]="Unit Tests" ["integration-tests"]="Integration Tests"
-        ["architecture-tests"]="Architecture Tests" ["mutation-tests"]="Mutation Tests"
-        ["container-build"]="Container Build" ["container-scan"]="Container Scan"
-    )
-    for stage in "${D_APP_PIPELINE_STAGES[@]}"; do
-        if [[ "$stage" == "security-scan" ]]; then
-            # Disambiguate: app table has "0 Critical"
-            sed -i 's/\(\*\*Security Scan\*\*\s*|\)\s*\[ \] Yes\(\s*|\s*0 Critical\)/\1 [x] Yes\2/' "$tmp"
-            continue
-        fi
-        local label="${app_stage_map[$stage]}"
-        if [[ -n "$label" ]]; then
-            sed -i "s/\(\*\*${label}\*\*\s*|\)\s*\[ \] Yes/\1 [x] Yes/" "$tmp"
-        fi
-    done
-
-    # Thresholds
-    if [[ "$D_UNIT_TEST_COVERAGE" -gt 0 ]]; then
-        sed -i "s/Coverage >= \\_\\_%/Coverage >= ${D_UNIT_TEST_COVERAGE}%/" "$tmp"
-    fi
-    if [[ "$D_MUTATION_SCORE" -gt 0 ]]; then
-        sed -i "s/Score >= \\_\\_%/Score >= ${D_MUTATION_SCORE}%/" "$tmp"
-    fi
-
-    # Article XI §11.2 -- Infra Pipeline Stages
-    declare -A infra_stage_map=(
-        ["iac-lint"]="IaC Lint" ["iac-validation"]="IaC Validation"
-        ["cost-estimation"]="Cost Estimation" ["compliance-check"]="Compliance Check"
-    )
-    for stage in "${D_INFRA_PIPELINE_STAGES[@]}"; do
-        if [[ "$stage" == "security-scan" ]]; then
-            # Disambiguate: infra table has "Checkov"
-            sed -i 's/\(\*\*Security Scan\*\*\s*|\)\s*\[ \] Yes\(\s*|\s*Checkov\)/\1 [x] Yes\2/' "$tmp"
-            continue
-        fi
-        local label="${infra_stage_map[$stage]}"
-        if [[ -n "$label" ]]; then
-            sed -i "s/\(\*\*${label}\*\*\s*|\)\s*\[ \] Yes/\1 [x] Yes/" "$tmp"
-        fi
-    done
-
-    # Article XI §11.2 -- Deploy Stages
-    declare -A deploy_stage_map=(
-        ["dev"]="Deploy Dev" ["uat"]="Deploy UAT"
-        ["pre"]="Deploy Pre" ["prod"]="Deploy Prod"
-    )
-    for env in "${D_DEPLOY_PIPELINE_STAGES[@]}"; do
-        local label="${deploy_stage_map[$env]}"
-        if [[ -n "$label" ]]; then
-            sed -i "s/\(\*\*${label}\*\*\s*|\)\s*\[ \] Yes/\1 [x] Yes/" "$tmp"
-        fi
-    done
-
-    # Article XII §12.1 -- Observability
-    local obs_label=""
-    case "$D_OBSERVABILITY" in
-        azure-native) obs_label="Azure-Native" ;;
-        otel-azure)   obs_label="OpenTelemetry → Azure" ;;
-        otel-grafana) obs_label="OpenTelemetry → Grafana Stack" ;;
-    esac
-    [[ -n "$obs_label" ]] && sed -i "s/- \[ \] \*\*${obs_label}\*\*/- [x] **${obs_label}**/" "$tmp"
-
-    # Article XII §12.3 -- Infra Monitoring
-    declare -A monitor_map=(
-        ["resource-health"]="Resource Health" ["activity-logs"]="Activity Logs"
-        ["diagnostics"]="Diagnostics" ["alerts"]="Alerts"
-        ["dashboards"]="Dashboards"
-    )
-    for mon in "${D_INFRA_MONITORING[@]}"; do
-        local label="${monitor_map[$mon]}"
-        if [[ -n "$label" ]]; then
-            sed -i "s/\(${label}\s*|[^|]*|\)\s*\[ \] Yes/\1 [x] Yes/" "$tmp"
-        fi
-    done
-
-    # Article XVI §16.1 -- Network security
-    if [[ "$D_VNET" == "true" ]]; then
-        sed -i 's/\[ \] Azure VNet/[x] Azure VNet/' "$tmp"
-    else
-        sed -i 's/\[ \] None/[x] None/' "$tmp"
-    fi
-    if [[ "$D_PRIVATE_ENDPOINTS" == "true" ]]; then
-        sed -i 's/\[ \] Enabled/[x] Enabled/' "$tmp"
-    else
-        sed -i 's/\[ \] Disabled/[x] Disabled/' "$tmp"
-    fi
-    if [[ "$D_WAF" == "true" ]]; then
-        sed -i 's/\[ \] Azure Front Door WAF/[x] Azure Front Door WAF/' "$tmp"
-    fi
-
-    # Article XVI §16.2 -- Data protection
-    case "$D_ENCRYPTION_KEYS" in
-        azure-managed)    sed -i 's/\[ \] Azure-managed keys/[x] Azure-managed keys/' "$tmp" ;;
-        customer-managed) sed -i 's/\[ \] Customer-managed keys/[x] Customer-managed keys/' "$tmp" ;;
-    esac
-    case "$D_PII_HANDLING" in
-        anonymization)    sed -i 's/\[ \] Anonymization/[x] Anonymization/' "$tmp" ;;
-        pseudonymization) sed -i 's/\[ \] Pseudonymization/[x] Pseudonymization/' "$tmp" ;;
-        encryption)       sed -i 's/\[ \] Encryption/[x] Encryption/' "$tmp" ;;
-    esac
-
-    # Article XVI §16.3 -- Compliance
-    for std in "${D_COMPLIANCE[@]}"; do
-        if [[ "$std" == "none" ]]; then continue; fi
-        local upper
-        upper=$(echo "$std" | tr '[:lower:]' '[:upper:]')
-        sed -i "s/\(|\s*${upper}\s*|[^|]*|\) \[ \] Yes/\1 [x] Yes/" "$tmp"
-    done
-
-    mv "$tmp" "$path"
-    log_success "Constitution prefilled with all base decisions"
+    log_success "Constitution created with $merged_count scope constitutions merged"
 }
 
 # --- Demo content -------------------------------------------------------------

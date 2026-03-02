@@ -100,47 +100,111 @@ function Read-Choice {
 
 function Read-MultiChoice {
     <#
-    .SYNOPSIS  Show a numbered list, allow comma-separated multi-select.
+    .SYNOPSIS  Interactive checkbox-based multi-select (↑↓ navigate, Space toggle, Enter confirm)
     #>
     param(
         [string]$Title,
         [string[]]$Options,
         [string[]]$Values
     )
-    Write-Host ""
-    Write-Host "  $Title" -ForegroundColor Cyan
-    for ($i = 0; $i -lt $Options.Count; $i++) {
-        Write-Host "    $($i + 1). $($Options[$i])"
-    }
-    Write-Prompt "  Select (comma-separated, e.g. 1,2,4) > "
-    $raw = Read-Host
-    $selected = @()
 
-    # Check if "All" option (first option with value "all") is selected
+    # Initialize state
+    $currentIndex = 0
+    $selectedIndices = @()
     $hasAllOption = ($Values.Count -gt 0 -and $Values[0] -eq "all")
-    $selectAll = $false
+    $linesDrawn = 0
 
-    foreach ($tok in ($raw -split ',')) {
-        $tok = $tok.Trim()
-        if ($tok -match '^\d+$') {
-            $idx = [int]$tok - 1
-            if ($idx -ge 0 -and $idx -lt $Values.Count) {
-                # If user selected option 1 and it's the "all" option, mark to select all
-                if ($hasAllOption -and $idx -eq 0) {
-                    $selectAll = $true
+    # Helper to draw the menu
+    function Draw-Menu {
+        param($Index, $Selected, [ref]$LastDrawnLines)
+
+        # If not first draw, move up and clear
+        if ($LastDrawnLines.Value -gt 0) {
+            # Move cursor up the exact number of lines we drew last time
+            for ($i = 0; $i -lt $LastDrawnLines.Value; $i++) {
+                Write-Host "`e[1A`e[2K" -NoNewline  # Move up 1 line + Clear line
+            }
+        }
+
+        # Reset line counter
+        $linesThisDraw = 0
+
+        Write-Host ""
+        $linesThisDraw++
+        Write-Host "  $Title" -ForegroundColor Cyan
+        $linesThisDraw++
+        Write-Host "  (↑↓ navigate | Space select | Enter confirm)" -ForegroundColor DarkGray
+        $linesThisDraw++
+
+        for ($i = 0; $i -lt $Options.Count; $i++) {
+            $checkbox = if ($Selected -contains $i) { "[X]" } else { "[ ]" }
+            $prefix = if ($i -eq $Index) { "  >" } else { "   " }
+
+            if ($i -eq $Index) {
+                Write-Host "$prefix $checkbox " -NoNewline -ForegroundColor Yellow
+                Write-Host "$($Options[$i])" -ForegroundColor Yellow
+            } else {
+                Write-Host "$prefix $checkbox $($Options[$i])"
+            }
+            $linesThisDraw++
+        }
+
+        # Save how many lines we drew for next redraw
+        $LastDrawnLines.Value = $linesThisDraw
+    }
+
+    # Initial draw
+    Draw-Menu -Index $currentIndex -Selected $selectedIndices -LastDrawnLines ([ref]$linesDrawn)
+
+    # Input loop
+    $done = $false
+    while (-not $done) {
+        $key = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+
+        switch ($key.VirtualKeyCode) {
+            38 { # Up Arrow
+                $currentIndex = if ($currentIndex -gt 0) { $currentIndex - 1 } else { $Options.Count - 1 }
+                Draw-Menu -Index $currentIndex -Selected $selectedIndices -LastDrawnLines ([ref]$linesDrawn)
+            }
+            40 { # Down Arrow
+                $currentIndex = if ($currentIndex -lt $Options.Count - 1) { $currentIndex + 1 } else { 0 }
+                Draw-Menu -Index $currentIndex -Selected $selectedIndices -LastDrawnLines ([ref]$linesDrawn)
+            }
+            32 { # Space
+                if ($selectedIndices -contains $currentIndex) {
+                    $selectedIndices = @($selectedIndices | Where-Object { $_ -ne $currentIndex })
                 } else {
-                    $selected += $Values[$idx]
+                    $selectedIndices += $currentIndex
                 }
+                Draw-Menu -Index $currentIndex -Selected $selectedIndices -LastDrawnLines ([ref]$linesDrawn)
+            }
+            13 { # Enter
+                $done = $true
             }
         }
     }
 
-    # If "All" was selected, return all values except the "all" marker itself
+    Write-Host ""
+
+    # Process selection
+    $result = @()
+
+    # Check if "All" option was selected
+    $selectAll = $hasAllOption -and ($selectedIndices -contains 0)
+
     if ($selectAll) {
+        # Return all values except the "all" marker
         return $Values | Where-Object { $_ -ne "all" }
     }
 
-    return $selected
+    # Return selected values
+    foreach ($idx in $selectedIndices) {
+        if ($idx -ge 0 -and $idx -lt $Values.Count) {
+            $result += $Values[$idx]
+        }
+    }
+
+    return $result
 }
 
 function Read-YesNo {
@@ -456,13 +520,11 @@ function Get-AllDecisions {
         $d.AppPipelineStages = Read-MultiChoice `
             -Title "§11.2  Application pipeline stages" `
             -Options @(
-                "All / Select All",
                 "Build", "Lint/Format", "Unit Tests", "Integration Tests",
                 "Architecture Tests", "Mutation Tests", "Security Scan",
                 "Container Build", "Container Scan"
             ) `
             -Values @(
-                "all",
                 "build", "lint-format", "unit-tests", "integration-tests",
                 "architecture-tests", "mutation-tests", "security-scan",
                 "container-build", "container-scan"
@@ -494,12 +556,10 @@ function Get-AllDecisions {
         $d.InfraPipelineStages = Read-MultiChoice `
             -Title "§11.2  Infrastructure pipeline stages" `
             -Options @(
-                "All / Select All",
                 "IaC Lint", "IaC Validation", "Security Scan",
                 "Cost Estimation", "Compliance Check"
             ) `
             -Values @(
-                "all",
                 "iac-lint", "iac-validation", "security-scan",
                 "cost-estimation", "compliance-check"
             )
@@ -549,14 +609,13 @@ function Get-AllDecisions {
         $d.InfraMonitoring = Read-MultiChoice `
             -Title "§12.3  Infrastructure monitoring components" `
             -Options @(
-                "All / Select All",
                 "Resource Health (Azure Resource Health)",
                 "Activity Logs (Azure Monitor)",
                 "Diagnostics (Log Analytics)",
                 "Alerts (Azure Monitor Alerts)",
                 "Dashboards (Azure Workbooks / Grafana)"
             ) `
-            -Values @("all", "resource-health", "activity-logs", "diagnostics", "alerts", "dashboards")
+            -Values @("resource-health", "activity-logs", "diagnostics", "alerts", "dashboards")
         if ($d.InfraMonitoring.Count -eq 0) {
             $d.InfraMonitoring = @("resource-health", "activity-logs", "diagnostics", "alerts", "dashboards")
         }
@@ -796,13 +855,13 @@ $autoDeployLines
 
 function New-BasicConstitution {
     <#
-    .SYNOPSIS  Generate minimal constitution template (Phase 1 of two-step init).
-    .DESCRIPTION  Creates basic constitution.md with Practice, Scopes, and metadata.
-                  Full provisioning is delegated to bolt-setup-constitution skill.
+    .SYNOPSIS  Generate and merge constitution from active scopes.
+    .DESCRIPTION  Creates constitution.md by merging scope-specific constitutions.
+                  Articles may be duplicated; consolidation can happen later.
     #>
     param([hashtable]$D)
 
-    Write-Step "Generating basic constitution..."
+    Write-Step "Generating constitution from active scopes..."
 
     $memoryDir = "$OutputDirectory\.boltf\memory"
     if (-not (Test-Path $memoryDir)) {
@@ -811,22 +870,19 @@ function New-BasicConstitution {
 
     $path = "$memoryDir\constitution.md"
     $date = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
+    $boltfRoot = $PSScriptRoot
 
     # Build scope list
     $scopesList = ($D.Scopes | ForEach-Object { "- **$_**" }) -join "`n"
 
+    # Start with metadata header
     $content = @"
 # Project Constitution
 
-> **Two-Step Initialization**: This is a basic constitution generated by Init.ps1.
-> Run ``@Bolt Constitution`` to provision files and merge scope-specific constitutions.
-
-## Metadata
-
-- **Practice**: $($D.Practice)
-- **Active Scopes**: $($D.Scopes -join ', ')
-- **Project Type**: $($D.ProjectType) ($ProjectType)
-- **Initialized**: $date
+> **Generated**: $date
+> **Practice**: $($D.Practice)
+> **Active Scopes**: $($D.Scopes -join ', ')
+> **Project Type**: $($D.ProjectType) ($ProjectType)
 
 ---
 
@@ -836,24 +892,64 @@ The following scopes are active for this project:
 
 $scopesList
 
-## Next Steps
+---
 
-1. **Provision Files**: Run ``@Bolt Constitution`` agent or manually invoke the ``skill-bolt-setup-constitution`` skill
-2. **Review**: The skill will merge scope-specific constitutions from ``.boltf/scopes/<scope>/memory/constitution.md``
-3. **Customize**: Edit this constitution to reflect project-specific decisions
+# Merged Scope Constitutions
+
+The following sections are merged from active scope constitutions.
+Articles may be duplicated; use consolidation agent to clean up later.
 
 ---
 
-# Notes
-
-- This constitution was generated by **Bolt Framework Init.ps1** on $date
-- Practice **$($D.Practice)** pre-selected scopes: $($D.Scopes -join ', ')
-- Full constitution structure will be provisioned in Step 2
 
 "@
 
+    # Merge scope-specific constitutions
+    $mergedCount = 0
+    foreach ($scope in $D.Scopes) {
+        $scopeConstitutionPath = Join-Path $boltfRoot ".boltf\scopes\$scope\memory\constitution.md"
+
+        if (Test-Path $scopeConstitutionPath) {
+            Write-Info "Merging constitution from scope: $scope"
+            $scopeContent = Get-Content $scopeConstitutionPath -Raw -Encoding UTF8
+
+            # Add scope section header
+            $content += @"
+<!-- ================================================================ -->
+<!-- SCOPE: $scope -->
+<!-- ================================================================ -->
+
+$scopeContent
+
+---
+
+
+"@
+            $mergedCount++
+        } else {
+            Write-Warn "Constitution not found for scope '$scope' at: $scopeConstitutionPath"
+        }
+    }
+
+    # Add footer with instructions
+    $content += @"
+
+---
+
+# Next Steps
+
+1. **Review**: This constitution contains $mergedCount merged scope constitutions
+2. **Consolidate**: Run consolidation agent to merge duplicate articles
+3. **Customize**: Edit this constitution to reflect project-specific decisions
+4. **Commit**: Save to version control and iterate
+
+---
+
+**Generated by Bolt Framework Init.ps1** on $date
+"@
+
     Set-Content -Path $path -Value $content -Encoding UTF8
-    Write-Success "Basic constitution created: memory/constitution.md"
+    Write-Success "Constitution created with $mergedCount scope constitutions merged"
 }
 
 # ─── Legacy Function (Deprecated in Practice-based workflow) ────────────────
