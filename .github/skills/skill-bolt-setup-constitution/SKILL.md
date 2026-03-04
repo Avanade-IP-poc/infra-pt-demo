@@ -125,11 +125,11 @@ FOR EACH scope IN active_scopes:
   #   'modified' → Article WILL appear (with modifications)
   #   'exclude'  → Article WILL NOT appear in final constitution
   #   'skip'     → Article WILL NOT appear (deferred/not applicable)
-  
+
   FOR EACH article IN sorted_articles:
     IF article.status == 'refined':
       SKIP to next article
-    
+
     # Criticality-based handling
     IF article.criticality == HIGH:
       # High criticality: Explicit user decision required
@@ -145,7 +145,7 @@ FOR EACH scope IN active_scopes:
       - ELSE IF user says 'exclude':
           - Set decision = 'exclude'
       - Record decision with timestamp and reason
-    
+
     ELSE IF article.criticality == MEDIUM:
       # Medium criticality: Agent recommends, user approves
       - Analyze article + generate recommendation
@@ -161,7 +161,7 @@ FOR EACH scope IN active_scopes:
       - OFFER: "Apply this decision to all remaining MEDIUM articles? [y/N]"
           - IF yes: Set bulk_decision_medium = current_decision
       - Record decision
-    
+
     ELSE IF article.criticality == LOW:
       # Low criticality: Auto-recommend, quick approval
       - Generate auto-recommendation (usually 'include' for low-impact)
@@ -174,7 +174,7 @@ FOR EACH scope IN active_scopes:
       - OFFER: "Apply to all remaining LOW articles? [y/N]"
           - IF yes: Set bulk_decision_low = current_decision
       - Record decision
-    
+
     # Checkpoint after EACH decision
     UPDATE {scope}-refinement.yaml:
       articles[current].status = 'refined'
@@ -184,7 +184,7 @@ FOR EACH scope IN active_scopes:
       IF decision == 'modified':
         articles[current].modified_content = [user's modified version]
     SAVE FILE
-    
+
     LOG INFO: "Article {article.number}: decision='{decision}' | Will appear in final: {decision IN ['include', 'modified']}"
   # Step 2.7: Mark scope as completed
   UPDATE {scope}-refinement.yaml:
@@ -241,7 +241,7 @@ FOR EACH article_number:
 
 **Goal:** Create a concise, focused constitution containing ONLY user-approved articles.
 
-**Source:** `merged-refinement.yaml`  
+**Source:** `merged-refinement.yaml`
 **Output:** `.boltf/memory/constitution.md`
 
 **CRITICAL FILTERING RULES:**
@@ -450,8 +450,8 @@ status: completed
 total_articles: 10
 articles:
   # ✅ INCLUDED: decision='include'
-  - number: "III"
-    title: "Tech Stack"
+  - number: 'III'
+    title: 'Tech Stack'
     criticality: HIGH
     status: refined
     content: |
@@ -460,12 +460,12 @@ articles:
       - Framework: ASP.NET Core Minimal APIs
       - Database: PostgreSQL
     decision: include
-    reason: "Approved default .NET stack for backend"
-    decided_at: "2026-03-04 10:23:45"
-  
+    reason: 'Approved default .NET stack for backend'
+    decided_at: '2026-03-04 10:23:45'
+
   # ✅ INCLUDED: decision='modified' (uses modified_content, NOT original)
-  - number: "V"
-    title: "Code Quality"
+  - number: 'V'
+    title: 'Code Quality'
     criticality: MEDIUM
     status: refined
     content: |
@@ -479,12 +479,12 @@ articles:
       - Integration Test Coverage: 75%
       - Mutation Score: 75%
       - Static Analysis: SonarQube with Quality Gate
-    reason: "Increased thresholds and added static analysis per team standards"
-    decided_at: "2026-03-04 10:25:12"
-  
+    reason: 'Increased thresholds and added static analysis per team standards'
+    decided_at: '2026-03-04 10:25:12'
+
   # ❌ EXCLUDED: decision='exclude'
-  - number: "VII"
-    title: "API Versioning Strategy"
+  - number: 'VII'
+    title: 'API Versioning Strategy'
     criticality: MEDIUM
     status: refined
     content: |
@@ -492,12 +492,12 @@ articles:
       - Versioning: URL-based (e.g., /api/v1/)
       - Deprecation: 6-month notice period
     decision: exclude
-    reason: "Project uses single-version API, versioning not needed at this stage"
-    decided_at: "2026-03-04 10:26:30"
-  
+    reason: 'Project uses single-version API, versioning not needed at this stage'
+    decided_at: '2026-03-04 10:26:30'
+
   # ✅ INCLUDED: decision='include' (LOW criticality auto-approved)
-  - number: "IX"
-    title: "Logging Standards"
+  - number: 'IX'
+    title: 'Logging Standards'
     criticality: LOW
     status: refined
     content: |
@@ -506,12 +506,12 @@ articles:
       - Levels: Debug, Info, Warning, Error, Fatal
       - Structured logging: JSON format
     decision: include
-    reason: "Auto-approved: standard logging configuration"
-    decided_at: "2026-03-04 10:27:15"
-  
+    reason: 'Auto-approved: standard logging configuration'
+    decided_at: '2026-03-04 10:27:15'
+
   # ❌ EXCLUDED: decision='skip'
-  - number: "XII"
-    title: "Mobile App Guidelines"
+  - number: 'XII'
+    title: 'Mobile App Guidelines'
     criticality: LOW
     status: refined
     content: |
@@ -519,8 +519,8 @@ articles:
       - Platform: React Native
       - Offline support: Required
     decision: skip
-    reason: "Not applicable: backend-only project, no mobile app"
-    decided_at: "2026-03-04 10:28:00"
+    reason: 'Not applicable: backend-only project, no mobile app'
+    decided_at: '2026-03-04 10:28:00'
 
 # Summary: 3 included, 2 excluded
 # Final constitution will contain ONLY articles III, V (modified), and IX
@@ -536,17 +536,20 @@ This constitution contains only articles explicitly approved during refinement.
 # Scope: backend
 
 # Article III — Tech Stack
+
 - Language: C# (.NET 10)
 - Framework: ASP.NET Core Minimal APIs
 - Database: PostgreSQL
 
 # Article V — Code Quality (Enhanced)
+
 - Unit Test Coverage: 85%
 - Integration Test Coverage: 75%
 - Mutation Score: 75%
 - Static Analysis: SonarQube with Quality Gate
 
 # Article IX — Logging
+
 - Framework: Serilog
 - Levels: Debug, Info, Warning, Error, Fatal
 - Structured logging: JSON format
@@ -561,11 +564,10 @@ This constitution contains only articles explicitly approved during refinement.
 - **Articles Excluded**: 2
 - **Total Reviewed**: 5
 
-*Only articles with decision='include' or decision='modified' are present in this constitution.*
+_Only articles with decision='include' or decision='modified' are present in this constitution._
 ```
 
 **Note:** Articles VII and XII do not appear because their decisions were 'exclude' and 'skip' respectively.
-
 
 ## Next Steps
 
