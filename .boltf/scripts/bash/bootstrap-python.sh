@@ -103,6 +103,7 @@ source "$VENV_PATH/bin/activate"
 if [[ "$SKIP_INSTALL" != "true" ]]; then
     REQUIREMENTS_FILES=(
         ".github/skills/skill-creator/requirements.txt"
+        ".github/skills/skill-bolt-setup-constitution/requirements.txt"
     )
 
     INSTALLED=false

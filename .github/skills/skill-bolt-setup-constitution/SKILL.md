@@ -1,6 +1,7 @@
 ---
 name: skill-bolt-setup-constitution
-description: Step 2 of Bolt Framework initialization - scope-based provisioning engine. Reads scopes.yaml, provisions files (skills, agents, templates) from active scopes, and generates provision report. Constitution merge is now done in Init scripts (Step 1). Critical auto-discovery of ALL Bolt Framework core skills. Use when provisioning files, initializing Bolt, scope provisioning, second init step.
+description: Step 2 of Bolt Framework initialization - scope-based provisioning engine. Processes separate constitution files per scope, creates per-scope refinement YAMLs, and merges all decisions at the end. Use when provisioning files, initializing Bolt, scope provisioning, second init step, or resuming interrupted refinement.
+user-invokable: false
 ---
 
 # Bolt Setup Constitution
@@ -11,457 +12,333 @@ description: Step 2 of Bolt Framework initialization - scope-based provisioning 
 - When adding new scopes to existing project
 - When updating constitution articles
 - Invoked by `@Bolt Constitution` agent
-- **Resuming interrupted refinement** - detect and restore from `refinement-state.yaml`
+- **Resuming interrupted refinement** - detect and restore from per-scope refinement state
 
-## Control Flow & Resume Capability
+## New Architecture: Per-Scope Processing
 
-**NEW**: This skill implements **iterative control flow with checkpoint system** (inspired by Claude's extended thinking pattern).
+**KEY CHANGE**: Instead of merging all constitutions into one master file, this skill now:
 
-### Key Features
-
-✅ **Incremental State Persistence** - Saves after EVERY decision
-✅ **Resume from Interruption** - Continue from last checkpoint
-✅ **Data Loss Prevention** - Max 1 decision lost on crash
-✅ **Session Management** - Handle long refinement sessions (4+ hours)
+1. **Processes each scope separately** (`<scope>-constitution.md`)
+2. **Creates per-scope refinement state** (`<scope>-refinement.yaml`)
+3. **Merges all YAMLs at the end** (`merged-refinement.yaml`)
+4. **Generates final constitution** from merged decisions
 
 ### State Management Files
 
-```
+```text
 .boltf/memory/
-├── refinement-state.yaml       # 🔴 CRITICAL: Checkpoint system (resume from here)
-├── refinement-ledger.yaml      # Legacy format (backward compatibility)
-├── constitution.master.md      # Phase 1: Complete unfiltered constitution
-└── constitution.md             # Phase 3: Final refined constitution
+├── constitution-init.md                    # Base constitution (from Init step)
+├── backend-constitution.md                 # Backend scope constitution
+├── frontend-constitution.md                # Frontend scope constitution
+├── cloud-platform-constitution.md          # Cloud platform scope constitution
+├── constitution.md                         # Final merged constitution (after refinement)
+└── refinement-states/
+    ├── backend-refinement.yaml             # Backend scope decisions
+    ├── frontend-refinement.yaml            # Frontend scope decisions
+    ├── cloud-platform-refinement.yaml      # Cloud platform scope decisions
+    └── merged-refinement.yaml              # Final merged decisions
 ```
 
-### Resume Detection Pattern
+## Control Flow & Resume Capability
 
-**ALWAYS check on agent start**:
-
-```python
-if exists(".boltf/memory/refinement-state.yaml"):
-    state = load_yaml(state_file)
-
-    if state.current_state.can_resume:
-        # Show resume dialog to user
-        present_resume_options(state)
-    else:
-        # State complete, proceed normally
-        load_final_constitution()
-else:
-    # Fresh start - Phase 1
-    start_fresh_workflow()
-```
-
-### Incremental Save Pattern
-
-**CRITICAL**: Save state **after EVERY decision** in Phase 2:
-
-```python
-def ask_and_save(question, state_file):
-    # 1. Ask question
-    answer = ask_user(question)
-
-    # 2. Create decision record
-    decision = {
-        'id': question.id,
-        'timestamp': now_iso(),
-        'user_choice': answer,
-        # ... (metadata)
-    }
-
-    # 3. APPEND to state (incremental)
-    state = load_state(state_file)
-    state['decisions'].append(decision)
-    state['current_state']['current_question_index'] += 1
-
-    # 4. SAVE IMMEDIATELY (atomic)
-    save_yaml_atomic(state_file, state)
-
-    return decision
-```
-
-See [#file:.boltf/analysis/decision-tracking-system.md] for complete specification.
-
-## Mission
-
-Complete Bolt Framework project setup by:
-
-1. **Provisioning files** (skills, agents, templates) from active scopes
-2. **Generating provision report** documenting all changes
-
-**This is Step 2 of Two-Step Initialization:**
-
-- **Step 1** (Init.ps1): Select Practice → Generate config → **Merge scope constitutions** → Write `constitution.md`
-- **Step 2** (THIS SKILL): Read config → Provision files → Generate report
-
-**NOTE**: Constitution merge is now automatic in Init scripts, so `.boltf/memory/constitution.md` arrives complete or near-complete.
-
-**IMPORTANT**: The refinement system (refinement-state.yaml) is OPTIONAL and only activates if the constitution has pending decisions (unchecked boxes, empty fields). If the constitution from Init.ps1 is already complete, this skill skips refinement and proceeds directly to file provisioning.
-
-## Inputs
-
-### Required Files
-
-- `.boltf/scopes.yaml` - Configuration of active scopes (generated by Init.ps1)
-- `.boltf/memory/constitution.md` - **Complete merged constitution** (generated by Init.ps1 with scope articles merged)
-- `.boltf/scopes/**/scope.yaml` - Scope manifests defining what to provision
-
-### scopes.yaml Format
-
-```yaml
-# Generated by Init.ps1/init.sh
-project:
-  type: full-stack
-  migration-type: green
-
-active-scopes:
-  - backend
-  - frontend
-  - cloud-platform
-
-transversal-scopes:
-  - work-management
-
-decisions:
-  environments:
-    enabled: [dev, uat, pre, prod]
-  cicd:
-    platform: github-actions
-  # ... (all wizard decisions)
-```
-
-### scope.yaml Format
-
-```yaml
-# .boltf/scopes/backend/scope.yaml
-scope:
-  name: backend
-  description: 'Server-side APIs, services, domain logic'
-
-constitution:
-  articles:
-    - id: III
-      title: 'Tech Stack'
-      source_path: memory/constitution.md
-      sections: ['## Backend']
-
-    - id: XV
-      title: 'Testing Strategy'
-      source_path: memory/constitution.md
-      sections: ['## Backend Testing']
-
-provision:
-  skills:
-    - name: bolt-backend-patterns
-      source_type: local_file
-      source_path: .boltf/available-skills/dotnet-backend/dotnet-backend-patterns/
-      destination: .github/skills/bolt-backend-patterns/
-      auto_provision: true
-      condition: "scope == 'backend' && language == '.NET'"
-
-  agents:
-    - name: bolt-testing
-      source_type: local_file
-      source_path: .boltf/scopes/backend/agents/bolt-testing.agent.md
-      destination: .github/agents/bolt-testing.agent.md
-      auto_provision: true
-```
+✅ **Per-Scope State Persistence** - Each scope has its own refinement state
+✅ **Resume from Interruption** - Continue from last unprocessed scope
+✅ **Parallel Processing Ready** - Scopes are independent
+✅ **Session Management** - Handle long refinement sessions (4+ hours)
 
 ## Workflow
 
-### Step 1: Load Active Scopes
+### Phase 0: Initialization Check
 
-```bash
-# Read active scopes from scopes.yaml
-cat .boltf/scopes.yaml | grep "active-scopes:" -A 10
+**Check for existing state:**
+
+```yaml
+# Check for resume capability
+if exists(.boltf/memory/refinement-states/):
+  # Resume mode: find first scope with status != 'completed'
+  # Ask user: "Resume from <scope>? [Y/n]"
+else:
+  # Fresh start: create refinement-states/ directory
+  mkdir .boltf/memory/refinement-states/
 ```
 
-**Extract:**
+### Phase 1: Read Active Scopes
 
-- Project type (full-stack, app-only, infra-only)
-- Active scopes list
-- Transversal scopes (always active)
-- Wizard decisions
+**Source:** `.boltf/memory/scopes.yaml`
 
-### Step 2: Provision Scope-Specific Files
+```yaml
+# Read active scopes
+active-scopes:
+  - name: backend
+    enabled: true
+  - name: frontend
+    enabled: true
+  - name: cloud-platform
+    enabled: true
+```
 
-**NOTE**: Constitution merge is now done automatically by Init.ps1/init.sh during Step 1.
-The `.boltf/memory/constitution.md` file arrives already complete with all scope articles merged.
-This step focuses only on file provisioning.
+**Output:** Array of active scope names → `['backend', 'frontend', 'cloud-platform']`
+
+### Phase 2: Process Each Scope (Iterative)
 
 **For each active scope:**
 
-1. Read provision manifest: `.boltf/scopes/{scope}/scope.yaml → provision`
-2. Filter items with `auto_provision: true`
-3. Evaluate conditions (if specified)
-4. Provision each item
+```text
+FOR EACH scope IN active_scopes:
 
-### Step 3: Provision Bolt Framework Core Skills (ALWAYS - AUTO-DISCOVERY)
+  # Step 2.1: Check if scope already processed
+  IF exists(.boltf/memory/refinement-states/{scope}-refinement.yaml):
+    READ state from {scope}-refinement.yaml
+    IF state.status == 'completed':
+      SKIP to next scope
+    ELSE:
+      RESUME from last processed article
 
-**CRITICAL**: After scope provisioning, **auto-discover and provision ALL core skills**:
+  # Step 2.2: Read scope constitution
+  READ .boltf/memory/{scope}-constitution.md
 
-```powershell
-# Auto-discover ALL skills in bolt-framework directory
-$boltFrameworkPath = ".boltf/available-skills/bolt-framework"
-$coreSkills = Get-ChildItem -Path $boltFrameworkPath -Directory |
-              Select-Object -ExpandProperty Name
+  # Step 2.3: Initialize refinement state (if new)
+  CREATE .boltf/memory/refinement-states/{scope}-refinement.yaml:
+    scope: {scope}
+    status: in-progress
+    total_articles: [count from constitution]
+    articles: []
+    decisions: []
 
-# Will find (currently 7 skills):
-# - bolt-framework
-# - skill-bolt-adr
-# - skill-bolt-branch-management
-# - skill-bolt-constitution-driven-development
-# - skill-bolt-quality-gates
-# - skill-bolt-setup-constitution
-# - skill-bolt-testing-discipline
+  # Step 2.4: Extract articles from scope constitution
+  EXTRACT articles (Article I, Article II, etc.)
+  FOR EACH article:
+    ADD to {scope}-refinement.yaml:
+      - number: "I"
+        title: "Article Title"
+        criticality: HIGH | MEDIUM | LOW
+        status: pending
+        content: "Article markdown content"
 
-# Copy each discovered skill
-foreach ($skillName in $coreSkills) {
-    $sourcePath = "$boltFrameworkPath\$skillName"
-    $destPath = ".github\skills\$skillName"
-    Copy-Item -Path $sourcePath -Destination $destPath -Recurse -Force
-}
+  # Step 2.5: Sort articles by criticality
+  SORT articles: HIGH → MEDIUM → LOW
+  UPDATE {scope}-refinement.yaml with sorted_articles
+
+  # Step 2.6: Iteratively refine each article
+  FOR EACH article IN sorted_articles:
+    IF article.status == 'refined':
+      SKIP to next article
+
+    # Criticality-based handling
+    IF article.criticality == HIGH:
+      - Present article to user with context
+      - Ask for decision: include/exclude/modify
+      - Record decision in decisions array
+
+    ELSE IF article.criticality == MEDIUM:
+      - Analyze article + generate recommendation
+      - Present recommendation to user
+      - Ask for approval/modification
+      - OFFER: "Apply this to all remaining MEDIUM articles? [y/N]"
+      - Record decision
+
+    ELSE IF article.criticality == LOW:
+      - Generate auto-recommendation
+      - Present for approval
+      - OFFER: "Apply this to all remaining LOW articles? [y/N]"
+      - Record decision
+
+    # Checkpoint after EACH decision
+    UPDATE {scope}-refinement.yaml:
+      article.status = 'refined'
+      article.decision = [user's choice]
+    SAVE FILE
+
+  # Step 2.7: Mark scope as completed
+  UPDATE {scope}-refinement.yaml:
+    status: completed
+    completed_at: [timestamp]
+  SAVE FILE
+
+  NEXT scope
 ```
 
-**Why Auto-Discovery?**
+### Phase 3: Merge All Refinement YAMLs
 
-- ✅ No hardcoded skill list to maintain
-- ✅ Add new skill → automatically provisioned
-- ✅ Remove skill → automatically excluded
-- ✅ Extensible without code changes
+**After all scopes are processed:**
 
-**Skills Provisioning (Scope-Specific):**
+```text
+# Step 3.1: Collect all scope refinement files
+scope_yamls = [
+  .boltf/memory/refinement-states/backend-refinement.yaml,
+  .boltf/memory/refinement-states/frontend-refinement.yaml,
+  .boltf/memory/refinement-states/cloud-platform-refinement.yaml
+]
 
-```bash
-# Example: backend scope provisions bolt-testing
-SOURCE=".boltf/available-skills/dotnet-backend/backend-testing-dotnet/"
-DEST=".github/skills/bolt-backend-testing/"
+# Step 3.2: Merge into unified structure
+CREATE .boltf/memory/refinement-states/merged-refinement.yaml:
+  scopes:
+    - scope: backend
+      articles: [from backend-refinement.yaml]
+      decisions: [from backend-refinement.yaml]
+    - scope: frontend
+      articles: [from frontend-refinement.yaml]
+      decisions: [from frontend-refinement.yaml]
+    - scope: cloud-platform
+      articles: [from cloud-platform-refinement.yaml]
+      decisions: [from cloud-platform-refinement.yaml]
 
-# Create directories
-mkdir -p "$DEST"
+  # Summary stats
+  total_scopes: 3
+  total_articles: [sum of all articles]
+  total_decisions: [sum of all decisions]
+  merge_timestamp: [timestamp]
 
-# Copy recursively
-cp -r "$SOURCE"* "$DEST"
-
-# Log
-echo "✓ Skill provisioned: bolt-backend-testing (from backend scope)"
+# Step 3.3: Detect conflicts (same article number across scopes)
+FOR EACH article_number:
+  IF article appears in multiple scopes:
+    # Flag for manual review
+    ADD to merged-refinement.yaml:
+      conflicts:
+        - article: "Article III"
+          scopes: [backend, frontend]
+          resolution: pending
 ```
 
-**Agents Provisioning:**
+### Phase 4: Generate Final Constitution
 
-```bash
-# Example: backend scope provisions agent
-SOURCE=".boltf/scopes/backend/agents/bolt-testing.agent.md"
-DEST=".github/agents/bolt-testing.agent.md"
+**Source:** `merged-refinement.yaml`
+**Output:** `.boltf/memory/constitution.md`
 
-# Copy file
-cp "$SOURCE" "$DEST"
+```text
+# Step 4.1: Start with constitution-init.md header
+READ .boltf/memory/constitution-init.md
+EXTRACT header (metadata, active scopes)
 
-# Log
-echo "✓ Agent provisioned: bolt-testing (from backend scope)"
+# Step 4.2: Include only approved articles
+CREATE .boltf/memory/constitution.md:
+
+  # Header from constitution-init.md
+  [metadata block]
+
+  # For each scope
+  FOR EACH scope IN merged-refinement.yaml.scopes:
+
+    WRITE "## Scope: {scope.name}"
+
+    FOR EACH article IN scope.articles:
+      IF article.decision == 'include' OR article.decision == 'modified':
+        WRITE article.content
+        IF article.decision == 'modified':
+          WRITE article.modified_content
+
+    WRITE "---"
+
+  # Footer
+  WRITE "Generated from merged refinement decisions on [timestamp]"
+
+# Step 4.3: Generate provision report
+CREATE .boltf/memory/provision-report.md:
+  - Total scopes processed: X
+  - Total articles reviewed: Y
+  - Articles included: Z
+  - Articles excluded: W
+  - Conflicts detected: C
+  - Completion timestamp: [timestamp]
 ```
 
-### Step 4: Provision Core Skills (ALWAYS - LEGACY NOTE)
+## Resume Capability
 
-**IMPORTANT**: `bolt-framework` skill is ALWAYS provisioned, regardless of scopes.
+**Detect interruption:**
 
-```bash
-SOURCE=".boltf/available-skills/bolt-framework/"
-DEST=".github/skills/bolt-framework/"
+```text
+IF exists(.boltf/memory/refinement-states/{scope}-refinement.yaml):
+  READ state
+  IF state.status == 'in-progress':
+    # Find last processed article
+    last_article = FIND article WHERE status == 'refined' (last one)
+    next_article_index = last_article.index + 1
 
-# Copy entire structure
-mkdir -p "$DEST"
-cp -r "$SOURCE"* "$DEST"
+    ASK USER: "Resume scope '{scope}' from Article {next_article.number}? [Y/n]"
 
-# Includes:
-#   - SKILL.md (methodology documentation)
-#   - HANDOFF-MATRIX.md (agent orchestration)
-#   - examples/ (workflows: greenfield, brownfield, hotfix)
-#   - templates/ (bolt-template, constitution-template, quality-gate-checklist)
-
-echo "✓ Core skill provisioned: bolt-framework (always included)"
+    IF yes:
+      CONTINUE from next_article_index
+    ELSE:
+      START from beginning
 ```
 
-**Other core skills:**
+## Quality Gates
 
-- `new-skill` (skill creation guide)
-- `skill-bolt-adr` (Architecture Decision Records)
-- `markdown-formatting` (documentation standards)
-
-### Step 5: Generate Provision Report
-
-**Create:** `.boltf/memory/provision-report.md`
-
-```markdown
-# Bolt Setup Constitution - Provision Report
-
-**Date**: 2026-02-23 14:30:00
-**Practice**: Apps & Infra
-**Scopes**: backend, frontend, cloud-platform
-**Project Type**: full-stack
-
-## Constitution Status
-
-✓ Constitution already merged by Init.ps1 (Step 1)
-✓ File: `.boltf/memory/constitution.md` (complete with all scope articles)
-✓ Articles: 12 articles from 3 scopes (backend, frontend, cloud-platform)
-
-**NOTE**: Init scripts now handle constitution merge automatically.
-
-## Files Provisioned
-
-### Skills (8 total)
-
-✓ Core skills (ALWAYS provisioned):
-
-- bolt-framework (methodology + examples + templates)
-- bolt-adr (ADR creation)
-- new-skill (skill creation guide)
-- markdown-formatting (documentation standards)
-
-✓ Scope-specific skills:
-
-- bolt-backend-patterns (from backend scope)
-- bolt-quality-gates (from backend scope)
-- bolt-testing-discipline (from backend scope)
-- bolt-branch-management (from work-management scope)
-
-### Agents (5 total)
-
-✓ Provisioned from scopes:
-
-- bolt-testing.agent.md (from backend)
-- bolt-implement.agent.md (from backend)
-- bolt-review.agent.md (from backend)
-- bolt-ops.agent.md (from cloud-platform)
-- bolt-monitoring.agent.md (from cloud-platform)
-
-## Warnings
-
-⚠ Skipped (already exist):
-
-- .github/skills/bolt-framework/SKILL.md (preserving existing)
-
-⚠ Conditions not met (not provisioned):
-
-- bolt-azure-identity (condition: language == '.NET' && platform == 'Azure' - not met)
-
-## Summary Statistics
-
-- Constitution Articles Merged: 12
-- Skills Provisioned: 8
-- Agents Provisioned: 5
-- Files Skipped: 1
-- Errors: 0
-
-## Next Steps
-
-1. Review constitution: `.boltf/memory/constitution.md`
-2. Verify skills: `.github/skills/`
-3. Verify agents: `.github/agents/`
-4. Start development: Invoke `@Bolt Framework`
-```
+- [ ] All scope constitutions exist in `.boltf/memory/`
+- [ ] Each scope has a corresponding refinement YAML
+- [ ] All HIGH criticality articles have explicit decisions
+- [ ] All conflicts are resolved
+- [ ] Final `constitution.md` generated successfully
+- [ ] Provision report created with stats
 
 ## Error Handling
 
-### Missing Required Files
+```yaml
+# Graceful degradation
+errors:
+  missing_scope_constitution:
+    action: Log warning, skip scope, continue
 
-```markdown
-⚠ ERROR: Missing required file
+  yaml_parse_error:
+    action: Backup corrupt file, regenerate from scratch
 
-**File**: `.boltf/scopes.yaml`
-**Action**: Run `Init.ps1` or `init.sh` first to initialize project
-**Command**: `./Init.ps1 --output ./my-project --type green`
+  user_interruption:
+    action: Save checkpoint, exit gracefully
+
+  merge_conflict:
+    action: Flag for manual review, include both versions with markers
 ```
 
-### Invalid Scope Configuration
-
-```markdown
-⚠ ERROR: Invalid scope manifest
-
-**Scope**: backend
-**File**: `.boltf/scopes/backend/scope.yaml`
-**Issue**: Missing required field `constitution.articles`
-**Action**: Fix scope.yaml or contact maintainer
-```
-
-### Provisioning Conflicts
-
-```markdown
-⚠ WARNING: File already exists
-
-**File**: `.github/skills/bolt-framework/SKILL.md`
-**Action**: Skipping (preserving existing). Use --force to overwrite.
-```
-
-## Conditional Provisioning
-
-**Conditions evaluate wizard decisions from `scopes.yaml`:**
+## Example: Processing Backend Scope
 
 ```yaml
-provision:
-  skills:
-    - name: bolt-azure-identity
-      condition: "language == '.NET' && platform == 'Azure'"
-      auto_provision: true
+# .boltf/memory/refinement-states/backend-refinement.yaml
+scope: backend
+status: completed
+total_articles: 8
+articles:
+  - number: 'III'
+    title: 'Tech Stack'
+    criticality: HIGH
+    status: refined
+    content: |
+      # Article III — Tech Stack
+      - Language: C# (.NET 10)
+      - Framework: ASP.NET Core Minimal APIs
+      - Database: PostgreSQL
+    decision: include
+    decided_at: '2026-03-04 10:23:45'
 
-    - name: bolt-react-patterns
-      condition: "frontend == 'react'"
-      auto_provision: true
+  - number: 'V'
+    title: 'Code Quality'
+    criticality: MEDIUM
+    status: refined
+    content: |
+      # Article V — Code Quality
+      - Coverage: 80%
+      - Mutation: 70%
+    decision: modified
+    modified_content: |
+      # Article V — Code Quality
+      - Coverage: 85%
+      - Mutation: 75%
+    decided_at: '2026-03-04 10:25:12'
+
+decisions:
+  - article: 'III'
+    action: include
+    reason: 'Approved default .NET stack'
+  - article: 'V'
+    action: modified
+    reason: 'Increased thresholds per team standards'
 ```
 
-**Available variables:**
+## Next Steps
 
-- `language` (from constitution Article II)
-- `platform` (from wizard decisions)
-- `scope` (current scope being processed)
-- `cicd_platform` (from wizard: github-actions, azure-devops)
-- `observability` (from wizard: azure-native, otel-azure, otel-grafana)
+After constitution refinement:
 
-## Terminal Commands
-
-```bash
-# Manual invocation (rare - usually invoked by @Bolt Constitution agent)
-# Requires: PowerShell or Bash with yaml parsing tools
-
-# PowerShell
-. ./.boltf/scripts/powershell/Invoke-SetupConstitution.ps1
-
-# Bash
-./.boltf/scripts/bash/setup-constitution.sh
-
-# Verify results
-cat .boltf/memory/constitution.md
-cat .boltf/memory/provision-report.md
-ls -R .github/skills
-ls .github/agents
-```
-
-## Integration Points
-
-**Invoked by:**
-
-- `@Bolt Constitution` agent (primary)
-- Manual script execution (advanced users)
-- CI/CD pipeline (future: automated constitution updates)
-
-**Depends on:**
-
-- `Init.ps1` / `init.sh` (must run first)
-- `.boltf/scopes/*.yaml` (scope manifests)
-- `.boltf/available-skills/` (skill source)
-
-**Produces:**
-
-- `.boltf/memory/constitution.md` (complete constitution)
-- `.boltf/memory/provision-report.md` (change log)
-- `.github/skills/` (provisioned skills)
-- `.github/agents/` (provisioned agents)
-
-## References
-
-- `Init.ps1` / `init.sh` (Step 1: initialization)
-- `.boltf/scopes/README.md` (Scope system documentation)
-- `@Bolt Constitution` agent (Invokes this skill)
-- Plan: Phase 4 (bolt-setup-constitution implementation)
+1. ✅ **Reviewed**: All scope constitutions processed
+2. ✅ **Merged**: Single `merged-refinement.yaml` created
+3. ✅ **Generated**: Final `constitution.md` with approved articles
+4. ➡️ **Provision**: Run `@Bolt Provisioner` to download skills/agents
+5. ➡️ **Commit**: Save constitution to version control

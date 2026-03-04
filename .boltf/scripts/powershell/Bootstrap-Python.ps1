@@ -27,6 +27,7 @@ function Write-Err     { param([string]$M) Write-Host "[ERR]  $M" -ForegroundCol
 $VenvPath = Join-Path $ProjectRoot ".bolt-venv"
 $RequirementsFiles = @(
     ".github/skills/skill-creator/requirements.txt"
+    ".github/skills/skill-bolt-setup-constitution/requirements.txt"
     # Add more requirements.txt paths here as needed
 )
 

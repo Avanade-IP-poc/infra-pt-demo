@@ -640,5 +640,4 @@ npm run lint && npm test -- --coverage && npx stryker run
 ### Templates
 
 - BOLT template: `templates/bolt-template.md`
-- Constitution template: `templates/constitution-template.md`
 - Quality gate checklist: `templates/quality-gate-checklist.md`
