@@ -120,35 +120,72 @@ FOR EACH scope IN active_scopes:
   UPDATE {scope}-refinement.yaml with sorted_articles
 
   # Step 2.6: Iteratively refine each article
+  # CRITICAL: Decision values determine final constitution inclusion
+  #   'include'  → Article WILL appear in final constitution (as-is)
+  #   'modified' → Article WILL appear (with modifications)
+  #   'exclude'  → Article WILL NOT appear in final constitution
+  #   'skip'     → Article WILL NOT appear (deferred/not applicable)
+  
   FOR EACH article IN sorted_articles:
     IF article.status == 'refined':
       SKIP to next article
-
+    
     # Criticality-based handling
     IF article.criticality == HIGH:
-      - Present article to user with context
-      - Ask for decision: include/exclude/modify
-      - Record decision in decisions array
-
+      # High criticality: Explicit user decision required
+      - Present article to user with full context
+      - Explain implications for the project
+      - Ask: "Include this article? [include/exclude/modify]"
+      - IF user says 'modify':
+          - Prompt for modifications
+          - Store in article.modified_content
+          - Set decision = 'modified'
+      - ELSE IF user says 'include':
+          - Set decision = 'include'
+      - ELSE IF user says 'exclude':
+          - Set decision = 'exclude'
+      - Record decision with timestamp and reason
+    
     ELSE IF article.criticality == MEDIUM:
+      # Medium criticality: Agent recommends, user approves
       - Analyze article + generate recommendation
-      - Present recommendation to user
-      - Ask for approval/modification
-      - OFFER: "Apply this to all remaining MEDIUM articles? [y/N]"
+      - Present: "Recommendation: [include/modify/exclude] because [reason]"
+      - Ask user: "Accept recommendation? [y/n/modify]"
+      - IF user accepts:
+          - Set decision = recommended value
+      - ELSE IF user says 'modify':
+          - Prompt for changes
+          - Set decision = 'modified'
+      - ELSE:
+          - Ask for manual decision (include/exclude)
+      - OFFER: "Apply this decision to all remaining MEDIUM articles? [y/N]"
+          - IF yes: Set bulk_decision_medium = current_decision
       - Record decision
-
+    
     ELSE IF article.criticality == LOW:
-      - Generate auto-recommendation
-      - Present for approval
-      - OFFER: "Apply this to all remaining LOW articles? [y/N]"
+      # Low criticality: Auto-recommend, quick approval
+      - Generate auto-recommendation (usually 'include' for low-impact)
+      - Present: "Auto-recommendation: [include] - [brief reason]"
+      - Ask: "Approve? [Y/n]"
+      - IF user approves (or no response):
+          - Set decision = 'include'
+      - ELSE:
+          - Ask for manual decision (include/exclude/modify)
+      - OFFER: "Apply to all remaining LOW articles? [y/N]"
+          - IF yes: Set bulk_decision_low = current_decision
       - Record decision
-
+    
     # Checkpoint after EACH decision
     UPDATE {scope}-refinement.yaml:
-      article.status = 'refined'
-      article.decision = [user's choice]
+      articles[current].status = 'refined'
+      articles[current].decision = [user's choice: include|modified|exclude|skip]
+      articles[current].decided_at = [timestamp]
+      articles[current].reason = [brief reason]
+      IF decision == 'modified':
+        articles[current].modified_content = [user's modified version]
     SAVE FILE
-
+    
+    LOG INFO: "Article {article.number}: decision='{decision}' | Will appear in final: {decision IN ['include', 'modified']}"
   # Step 2.7: Mark scope as completed
   UPDATE {scope}-refinement.yaml:
     status: completed
@@ -202,49 +239,164 @@ FOR EACH article_number:
 
 ### Phase 4: Generate Final Constitution
 
-**Source:** `merged-refinement.yaml`
+**Goal:** Create a concise, focused constitution containing ONLY user-approved articles.
+
+**Source:** `merged-refinement.yaml`  
 **Output:** `.boltf/memory/constitution.md`
 
-```text
-# Step 4.1: Start with constitution-init.md header
-READ .boltf/memory/constitution-init.md
-EXTRACT header (metadata, active scopes)
+**CRITICAL FILTERING RULES:**
 
-# Step 4.2: Include only approved articles
+1. ✅ **Include** articles with `decision='include'` (original content)
+2. ✅ **Include** articles with `decision='modified'` (modified content only)
+3. ❌ **Exclude** articles with `decision='exclude'`
+4. ❌ **Exclude** articles with `decision='skip'`
+5. ❌ **Exclude** articles with `decision=null` or no decision
+6. 💡 **Length Goal**: Keep final constitution focused and maintainable (typically 200-500 lines)
+
+**Why This Matters:**
+
+- Prevents information overload
+- Makes constitution easier to reference during development
+- Focuses on project-specific decisions, not generic boilerplate
+- Ensures constitution reflects actual team choices, not defaults
+
+````text
+# Step 4.1: Start with constitution-init.md header (metadata only, NO articles)
+READ .boltf/memory/constitution-init.md
+EXTRACT header ONLY:
+  - Project name
+  - Generated timestamp
+  - Practice
+  - Active Scopes list
+  - Project Type
+DO NOT EXTRACT: Any article content from constitution-init.md
+
+# Step 4.2: Filter and include ONLY approved articles
+# Decision types and actions:
+#   'include'   → Include original article content
+#   'modified'  → Include modified_content (NOT original)
+#   'exclude'   → SKIP completely (do not write)
+#   'pending'   → SKIP completely (do not write)
+#   null/empty  → SKIP completely (do not write)
+
 CREATE .boltf/memory/constitution.md:
 
-  # Header from constitution-init.md
-  [metadata block]
+  # Header from constitution-init.md (metadata ONLY)
+  WRITE [metadata block]
+  WRITE "---"
+  WRITE ""
+  WRITE "# Final Constitution"
+  WRITE ""
+  WRITE "This constitution contains only articles explicitly approved during refinement."
+  WRITE ""
+
+  # Track statistics
+  included_count = 0
+  excluded_count = 0
 
   # For each scope
   FOR EACH scope IN merged-refinement.yaml.scopes:
 
-    WRITE "## Scope: {scope.name}"
+    # Filter articles before writing scope header
+    approved_articles = FILTER scope.articles WHERE
+      decision IN ['include', 'modified']
 
-    FOR EACH article IN scope.articles:
-      IF article.decision == 'include' OR article.decision == 'modified':
-        WRITE article.content
-        IF article.decision == 'modified':
-          WRITE article.modified_content
+    # Only write scope section if it has approved articles
+    IF approved_articles.length > 0:
 
-    WRITE "---"
+      WRITE "# Scope: {scope.name}"
+      WRITE ""
 
-  # Footer
-  WRITE "Generated from merged refinement decisions on [timestamp]"
+      FOR EACH article IN approved_articles:
 
-# Step 4.3: Generate provision report
+        # Validate decision before writing
+        IF article.decision == 'include':
+          # Use original article content
+          WRITE article.content
+          WRITE ""
+          included_count++
+
+        ELSE IF article.decision == 'modified':
+          # Use modified content ONLY (discard original)
+          IF article.modified_content IS NOT EMPTY:
+            WRITE article.modified_content
+            WRITE ""
+            included_count++
+          ELSE:
+            # Fallback if modified_content is missing
+            LOG WARNING: "Article {article.number} marked 'modified' but no modified_content"
+            WRITE article.content
+            WRITE "<!-- ⚠️  Marked as modified but changes not found -->"
+            WRITE ""
+            included_count++
+
+        ELSE:
+          # Safety catch: should never reach here due to filter
+          LOG WARNING: "Article {article.number} has unexpected decision: {article.decision}"
+          excluded_count++
+
+      WRITE "---"
+      WRITE ""
+
+    ELSE:
+      # Scope has no approved articles - skip entirely
+      LOG INFO: "Scope '{scope.name}' has no approved articles - skipping section"
+
+  # Footer with statistics
+  WRITE "---"
+  WRITE ""
+  WRITE "## Constitution Metadata"
+  WRITE ""
+  WRITE "- **Generated**: [timestamp]"
+  WRITE "- **Source**: Merged refinement from {total_scopes} scopes"
+  WRITE "- **Articles Included**: {included_count}"
+  WRITE "- **Articles Excluded**: {excluded_count}"
+  WRITE "- **Total Reviewed**: {included_count + excluded_count}"
+  WRITE ""
+  WRITE "*Only articles with decision='include' or decision='modified' are present in this constitution.*"
+
+# Step 4.3: Validate constitution length
+constitution_size = GET FILE SIZE of constitution.md
+constitution_lines = COUNT LINES in constitution.md
+
+IF constitution_lines < 10:
+  LOG WARNING: "Constitution is suspiciously short ({constitution_lines} lines)"
+  LOG WARNING: "Verify that articles were properly approved during refinement"
+
+IF constitution_lines > 2000:
+  LOG WARNING: "Constitution is very long ({constitution_lines} lines)"
+  LOG WARNING: "Consider reviewing which articles are truly necessary"
+
+LOG INFO: "Final constitution: {included_count} articles, {constitution_lines} lines"
+
+# Step 4.4: Generate provision report
 CREATE .boltf/memory/provision-report.md:
-  - Total scopes processed: X
-  - Total articles reviewed: Y
-  - Articles included: Z
-  - Articles excluded: W
-  - Conflicts detected: C
-  - Completion timestamp: [timestamp]
-```
+  ## Constitution Refinement Report
 
-## Resume Capability
+  **Generated**: [timestamp]
 
-**Detect interruption:**
+  ### Summary
+  - **Total Scopes Processed**: {total_scopes}
+  - **Total Articles Reviewed**: {included_count + excluded_count}
+  - **Articles Included**: {included_count}
+  - **Articles Excluded**: {excluded_count}
+  - **Inclusion Rate**: {(included_count / total) * 100}%
+  - **Conflicts Detected**: {conflict_count}
+
+  ### Per-Scope Breakdown
+  FOR EACH scope:
+    - **{scope.name}**: {scope.included}/{scope.total} articles included
+
+  ### Final Constitution
+  - **File**: .boltf/memory/constitution.md
+  - **Size**: {constitution_lines} lines
+  - **Status**: ✅ Generated successfully
+
+  ### Next Steps
+  1. Review final constitution for completeness
+  2. Resolve any flagged conflicts
+  3. Run `@Bolt Provisioner` to download resources
+  4. Commit constitution to version control
 
 ```text
 IF exists(.boltf/memory/refinement-states/{scope}-refinement.yaml):
@@ -260,7 +412,7 @@ IF exists(.boltf/memory/refinement-states/{scope}-refinement.yaml):
       CONTINUE from next_article_index
     ELSE:
       START from beginning
-```
+````
 
 ## Quality Gates
 
@@ -295,10 +447,11 @@ errors:
 # .boltf/memory/refinement-states/backend-refinement.yaml
 scope: backend
 status: completed
-total_articles: 8
+total_articles: 10
 articles:
-  - number: 'III'
-    title: 'Tech Stack'
+  # ✅ INCLUDED: decision='include'
+  - number: "III"
+    title: "Tech Stack"
     criticality: HIGH
     status: refined
     content: |
@@ -307,10 +460,12 @@ articles:
       - Framework: ASP.NET Core Minimal APIs
       - Database: PostgreSQL
     decision: include
-    decided_at: '2026-03-04 10:23:45'
-
-  - number: 'V'
-    title: 'Code Quality'
+    reason: "Approved default .NET stack for backend"
+    decided_at: "2026-03-04 10:23:45"
+  
+  # ✅ INCLUDED: decision='modified' (uses modified_content, NOT original)
+  - number: "V"
+    title: "Code Quality"
     criticality: MEDIUM
     status: refined
     content: |
@@ -319,19 +474,98 @@ articles:
       - Mutation: 70%
     decision: modified
     modified_content: |
-      # Article V — Code Quality
-      - Coverage: 85%
-      - Mutation: 75%
-    decided_at: '2026-03-04 10:25:12'
+      # Article V — Code Quality (Enhanced)
+      - Unit Test Coverage: 85%
+      - Integration Test Coverage: 75%
+      - Mutation Score: 75%
+      - Static Analysis: SonarQube with Quality Gate
+    reason: "Increased thresholds and added static analysis per team standards"
+    decided_at: "2026-03-04 10:25:12"
+  
+  # ❌ EXCLUDED: decision='exclude'
+  - number: "VII"
+    title: "API Versioning Strategy"
+    criticality: MEDIUM
+    status: refined
+    content: |
+      # Article VII — API Versioning
+      - Versioning: URL-based (e.g., /api/v1/)
+      - Deprecation: 6-month notice period
+    decision: exclude
+    reason: "Project uses single-version API, versioning not needed at this stage"
+    decided_at: "2026-03-04 10:26:30"
+  
+  # ✅ INCLUDED: decision='include' (LOW criticality auto-approved)
+  - number: "IX"
+    title: "Logging Standards"
+    criticality: LOW
+    status: refined
+    content: |
+      # Article IX — Logging
+      - Framework: Serilog
+      - Levels: Debug, Info, Warning, Error, Fatal
+      - Structured logging: JSON format
+    decision: include
+    reason: "Auto-approved: standard logging configuration"
+    decided_at: "2026-03-04 10:27:15"
+  
+  # ❌ EXCLUDED: decision='skip'
+  - number: "XII"
+    title: "Mobile App Guidelines"
+    criticality: LOW
+    status: refined
+    content: |
+      # Article XII — Mobile Development
+      - Platform: React Native
+      - Offline support: Required
+    decision: skip
+    reason: "Not applicable: backend-only project, no mobile app"
+    decided_at: "2026-03-04 10:28:00"
 
-decisions:
-  - article: 'III'
-    action: include
-    reason: 'Approved default .NET stack'
-  - article: 'V'
-    action: modified
-    reason: 'Increased thresholds per team standards'
+# Summary: 3 included, 2 excluded
+# Final constitution will contain ONLY articles III, V (modified), and IX
 ```
+
+### Resulting Final Constitution
+
+```markdown
+# Final Constitution
+
+This constitution contains only articles explicitly approved during refinement.
+
+# Scope: backend
+
+# Article III — Tech Stack
+- Language: C# (.NET 10)
+- Framework: ASP.NET Core Minimal APIs
+- Database: PostgreSQL
+
+# Article V — Code Quality (Enhanced)
+- Unit Test Coverage: 85%
+- Integration Test Coverage: 75%
+- Mutation Score: 75%
+- Static Analysis: SonarQube with Quality Gate
+
+# Article IX — Logging
+- Framework: Serilog
+- Levels: Debug, Info, Warning, Error, Fatal
+- Structured logging: JSON format
+
+---
+
+## Constitution Metadata
+
+- **Generated**: 2026-03-04 10:30:00
+- **Source**: Merged refinement from 1 scopes
+- **Articles Included**: 3
+- **Articles Excluded**: 2
+- **Total Reviewed**: 5
+
+*Only articles with decision='include' or decision='modified' are present in this constitution.*
+```
+
+**Note:** Articles VII and XII do not appear because their decisions were 'exclude' and 'skip' respectively.
+
 
 ## Next Steps
 
