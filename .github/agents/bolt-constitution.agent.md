@@ -73,6 +73,10 @@ It processes **separate constitution files per scope** and merges refinement dec
    - Guide user through scope-specific decisions
 3. **Merge all refinement YAMLs** into `merged-refinement.yaml`
 4. **Generate final `constitution.md`** with all approved articles
+5. **Provision resources** based on the final constitution and active scopes using '.boltf/available-skills'
+6. **Provision resources** based on the final constitution and active scopes using and install relevant skills using 'awesome-copilot install'
+7. **Document architecture decisions** in ADR-001 based on the constitution and provisioning outcomes
+8. **Move all intermediate files** into memory/refinement-states for organization\
 
 ## Usage
 
