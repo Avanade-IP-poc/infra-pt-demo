@@ -15,3 +15,7 @@ constitution:
       refined: true|false
       criticallity: low|medium|high
       notes: <any additional notes or comments on this article>
+      skills:
+        - skill_name: <name of the skill relevant to this article, if applicable>
+          relevance: low|medium|high
+          notes: <any additional notes on how this skill relates to the article>
