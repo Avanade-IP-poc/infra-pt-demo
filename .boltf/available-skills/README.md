@@ -13,6 +13,7 @@ Los skills están organizados en subcarpetas por dominio tecnológico:
 │
 ├── azdo/                    # Azure DevOps
 │   ├── azdo-sync/          # Sincronización BOLT ↔ Azure DevOps
+│   ├── skill-azdo-pipeline-templates/ # Templates de Azure DevOps Pipelines
 │   └── azdo-wiki/          # Gestión de Azure DevOps Wiki
 │
 ├── azure/                   # Azure Cloud
@@ -108,10 +109,9 @@ Cuando se activa un scope:
 
 ### Azure DevOps (`azdo/`)
 
-| Skill                        | Descripción                                      | Cuándo Usar                              |
-| ---------------------------- | ------------------------------------------------ | ---------------------------------------- |
 | [azdo-sync](azdo/azdo-sync/) | Sincronización bidireccional BOLT ↔ Azure DevOps | Gestión de work items, sprints, tracking |
-| [azdo-wiki](azdo/azdo-wiki/) | Publicación automática en Azure DevOps Wiki      | Documentación, diagramas Mermaid         |
+| [skill-azdo-pipeline-templates](azdo/skill-azdo-pipeline-templates/) | Templates y patrones de Azure DevOps Pipelines | CI/CD cuando Article XI selecciona Azure DevOps |
+| [azdo-wiki](azdo/azdo-wiki/) | Publicación automática en Azure DevOps Wiki | Documentación, diagramas Mermaid |
 
 ### Azure Cloud (`azure/`)
 
@@ -149,7 +149,7 @@ Cuando se activa un scope:
 
 ### React (`react/`)
 
-_Carpeta preparada para skills de React - actualmente sin skills_
+**Estado**: Carpeta preparada para skills de React - actualmente sin skills.
 
 ### UI Common (`ui-common/`)
 

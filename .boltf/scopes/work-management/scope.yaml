@@ -2,6 +2,44 @@ version: 1
 scope: work-management
 description: Sincronización de features, use cases, bolts, tareas y dependencias con sistemas de gestión (Azure DevOps, GitHub Projects, Jira).
 items:
+  - id: work-management-cicd-orchestrator-skill
+    kind: skills
+    enabled: true
+    auto_provision: true
+    tags: ['cicd', 'orchestrator']
+    source:
+      type: local_folder
+      path: scopes/common/skills/skill-cicd-pipeline-azure
+    destination:
+      folder: .github/skills
+      name: skill-cicd-pipeline-azure
+
+  - id: work-management-github-actions-templates-skill
+    kind: skills
+    enabled: true
+    auto_provision: true
+    condition: "cicd_platform == 'github-actions'"
+    tags: ['cicd', 'github-actions']
+    source:
+      type: local_folder
+      path: available-skills/github/github-actions-templates
+    destination:
+      folder: .github/skills
+      name: github-actions-templates
+
+  - id: work-management-azdo-pipeline-templates-skill
+    kind: skills
+    enabled: true
+    auto_provision: true
+    condition: "cicd_platform == 'azure-devops'"
+    tags: ['cicd', 'azure-devops', 'pipelines']
+    source:
+      type: local_folder
+      path: available-skills/azdo/skill-azdo-pipeline-templates
+    destination:
+      folder: .github/skills
+      name: skill-azdo-pipeline-templates
+
   - id: work-management-mcp-settings-local
     kind: templates
     enabled: false

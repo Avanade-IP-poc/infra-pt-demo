@@ -14,6 +14,7 @@
     4. Custom mode (manual scope selection)
     5. Dry-run mode
     6. Re-provisioning (idempotency)
+    7. CI/CD provider skill routing from `cicd.platform`
 
 .PARAMETER TestNumber
     Run specific test (1-6). If not specified, runs all tests.
@@ -23,7 +24,7 @@
 
 .EXAMPLE
     .\Test-InitFlows.ps1
-    # Runs all 6 tests
+    # Runs all 7 tests
 
 .EXAMPLE
     .\Test-InitFlows.ps1 -TestNumber 1 -KeepTestProjects
@@ -534,6 +535,70 @@ function Test-06-Idempotency {
     }
 }
 
+# ─── Test 7: CI/CD Provider Skill Routing ─────────────────────────────────────
+
+function Test-07-CicdProviderRouting {
+        Write-TestHeader "TEST 7: CI/CD Provider Skill Routing"
+
+        try {
+                $setupScript = Join-Path $FrameworkRoot ".boltf\scripts\powershell\Invoke-BoltSetupConstitution.ps1"
+                $cases = @(
+                        @{ Platform = 'github-actions'; Expected = 'github-actions-templates'; Unexpected = 'skill-azdo-pipeline-templates' },
+                        @{ Platform = 'azure-devops'; Expected = 'skill-azdo-pipeline-templates'; Unexpected = 'github-actions-templates' }
+                )
+
+                foreach ($case in $cases) {
+                        $projectPath = New-TestProject ("test-07-cicd-" + $case.Platform)
+                        Write-TestStep "Preparing project for platform: $($case.Platform)"
+
+                        Copy-Item (Join-Path $FrameworkRoot '.boltf') $projectPath -Recurse -Force
+
+                        $memoryDir = Join-Path $projectPath '.boltf\memory'
+                        New-Item -ItemType Directory -Path $memoryDir -Force | Out-Null
+                        Set-Content -Path (Join-Path $memoryDir 'constitution.md') -Value '# Project Constitution' -Encoding UTF8
+
+                        $scopesYaml = @"
+project:
+    practice: Apps & Infra
+    type: full-stack
+    migration-type: green
+    local-orchestration: none
+    work-management-tool: none
+
+active-scopes:
+    - backend
+
+transversal-scopes:
+    - work-management
+
+decisions:
+    cicd:
+        platform: $($case.Platform)
+"@
+                        Set-Content -Path (Join-Path $projectPath '.boltf\scopes.yaml') -Value $scopesYaml -Encoding UTF8
+
+                        Write-TestStep "Running provisioning for $($case.Platform)..."
+                        & $setupScript -ProjectPath $projectPath -Provision | Out-Null
+
+                        $skillsDir = Join-Path $projectPath '.github\skills'
+                        Assert-FileExists (Join-Path $skillsDir 'skill-cicd-pipeline-azure\SKILL.md') "CI/CD orchestrator skill for $($case.Platform)"
+                        Assert-FileExists (Join-Path $skillsDir "$($case.Expected)\SKILL.md") "Expected provider skill for $($case.Platform)"
+                        Assert-FileNotExists (Join-Path $skillsDir "$($case.Unexpected)\SKILL.md") "Unexpected provider skill for $($case.Platform)"
+
+                        Remove-TestProject $projectPath
+                }
+
+                Write-TestPass "TEST 7 PASSED"
+                $script:PassedTests++
+                $script:TestResults += @{ Test = 7; Name = "CI/CD Provider Routing"; Status = "PASS" }
+        }
+        catch {
+                Write-TestFail "TEST 7 FAILED: $_"
+                $script:FailedTests++
+                $script:TestResults += @{ Test = 7; Name = "CI/CD Provider Routing"; Status = "FAIL"; Error = $_.Exception.Message }
+        }
+}
+
 # ─── Main Test Runner ─────────────────────────────────────────────────────────
 
 function Show-TestSummary {
@@ -595,6 +660,7 @@ function Main {
         Test-04-CustomMode
         Test-05-DryRunMode
         Test-06-Idempotency
+        Test-07-CicdProviderRouting
     } else {
         # Run specific test
         switch ($TestNumber) {
@@ -604,7 +670,8 @@ function Main {
             4 { Test-04-CustomMode }
             5 { Test-05-DryRunMode }
             6 { Test-06-Idempotency }
-            default { Write-Host "Invalid test number: $TestNumber (valid: 1-6)" -ForegroundColor Red; exit 1 }
+            7 { Test-07-CicdProviderRouting }
+            default { Write-Host "Invalid test number: $TestNumber (valid: 1-7)" -ForegroundColor Red; exit 1 }
         }
     }
 
