@@ -1,186 +1,70 @@
 # CI/CD Pipeline Azure - Microsoft Learn Resources
 
-Curated official Microsoft documentation for implementing CI/CD pipelines with GitHub Actions and Azure DevOps Pipelines for Azure deployments.
+Curated documentation for the **orchestration layer**. These links help the skill reason about provider choice, approvals, strategies, and security posture before delegating to the provider-specific skill.
 
 ---
 
-## GitHub Actions with Azure
+## Constitution-to-Provider Decision Support
 
-### Core Documentation
+- [Deploy to Azure using GitHub Actions](https://learn.microsoft.com/en-us/azure/developer/github/github-actions) - good high-level overview when Article XI points toward GitHub-native delivery
+- [Azure Pipelines documentation](https://learn.microsoft.com/en-us/azure/devops/pipelines/) - good high-level overview when Article XI points toward Azure DevOps-native delivery
+- [YAML pipeline schema](https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/) - reference for Azure Pipelines structure
+- [GitHub Actions documentation](https://docs.github.com/en/actions) - reference for workflow structure and environment controls
 
-- [GitHub Actions documentation](https://docs.github.com/en/actions) - Official GitHub Actions overview
-- [Deploy to Azure using GitHub Actions](https://learn.microsoft.com/en-us/azure/developer/github/github-actions) - Azure deployment with GitHub Actions overview
-- [GitHub Actions for Azure](https://learn.microsoft.com/en-us/azure/developer/github/github-actions-overview) - Azure-specific actions catalog
-
-### Authentication
-
-- [Use GitHub Actions to connect to Azure](https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure) - OIDC authentication (Workload Identity Federation)
-- [Configure OpenID Connect in Azure](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-azure) - GitHub OIDC setup guide
-- [Azure Login action](https://github.com/Azure/login) - `Azure/login@v2` action documentation
-
-### Azure Static Web Apps
-
-- [Deploy to Azure Static Web Apps](https://learn.microsoft.com/en-us/azure/static-web-apps/github-actions-workflow) - Static Web Apps deployment workflow
-- [Build configuration for Static Web Apps](https://learn.microsoft.com/en-us/azure/static-web-apps/build-configuration) - Build settings and output locations
-- [Preview environments in Static Web Apps](https://learn.microsoft.com/en-us/azure/static-web-apps/review-publish-pull-requests) - PR preview deployments
-
-### Azure Container Apps
-
-- [Deploy to Azure Container Apps with GitHub Actions](https://learn.microsoft.com/en-us/azure/container-apps/github-actions) - Container Apps workflow guide
-- [Build and deploy with GitHub Actions](https://learn.microsoft.com/en-us/azure/container-apps/github-actions-cli) - Azure CLI deployment approach
-- [Continuous deployment with Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/overview) - Container Apps CI/CD overview
-
-### Azure App Service
-
-- [Deploy to Azure App Service](https://learn.microsoft.com/en-us/azure/app-service/deploy-github-actions) - App Service deployment workflows
-- [Deployment slots with GitHub Actions](https://learn.microsoft.com/en-us/azure/app-service/deploy-staging-slots) - Blue-green deployment strategy
-- [Azure Web Apps Deploy action](https://github.com/Azure/webapps-deploy) - `Azure/webapps-deploy@v3` action
-
-### Infrastructure as Code
-
-- [Deploy Bicep with GitHub Actions](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deploy-github-actions) - Bicep deployment workflows
-- [ARM Deploy action](https://github.com/Azure/arm-deploy) - `Azure/arm-deploy@v2` for Bicep/ARM templates
-- [Deploy Terraform with GitHub Actions](https://learn.microsoft.com/en-us/azure/developer/terraform/deploy-terraform-using-github-actions) - Terraform workflow guide
+Use this group when the question is still “which provider path fits the constitution?” rather than “what exact YAML should I write?”
 
 ---
 
-## Azure DevOps Pipelines
+## Authentication and Security Posture
 
-### Core Documentation
+- [Use GitHub Actions to connect to Azure](https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure) - OIDC / workload identity for GitHub Actions
+- [Configure OpenID Connect in Azure for GitHub Actions](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-azure) - GitHub-side OIDC setup
+- [Azure Resource Manager service connection using workload identity federation](https://learn.microsoft.com/en-us/azure/devops/pipelines/library/connect-to-azure#create-an-azure-resource-manager-service-connection-using-workload-identity-federation) - Azure DevOps equivalent
+- [Secure Azure Pipelines](https://learn.microsoft.com/en-us/azure/devops/pipelines/security/overview) - overall security posture for Azure Pipelines
+- [Security hardening for GitHub Actions](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions) - GitHub-specific hardening guidance
 
-- [Azure Pipelines documentation](https://learn.microsoft.com/en-us/azure/devops/pipelines/) - Azure DevOps Pipelines overview
-- [YAML pipeline schema](https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/) - Complete YAML reference
-- [Classic vs YAML pipelines](https://learn.microsoft.com/en-us/azure/devops/pipelines/get-started/pipelines-get-started) - Pipeline types comparison
+These links support the orchestration rule that passwordless federation is preferred over long-lived secrets.
 
-### Multi-Stage Pipelines
+---
 
-- [Multi-stage pipelines](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/stages) - Stages, dependencies, conditions
-- [Deployment jobs](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/deployment-jobs) - Deployment strategies (runOnce, rolling, canary)
-- [Environments](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/environments) - Environment approvals and gates
+## Environments, Approvals, and Promotion Flow
 
-### Azure Deployment Tasks
+- [Using environments for deployment in GitHub Actions](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment) - reviewers, protection rules, deployment history
+- [Azure DevOps environments](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/environments) - environments, checks, and deployment history
+- [Approvals in Azure DevOps](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals) - manual approval configuration
+- [Stages in Azure Pipelines](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/stages) - explicit stage design and dependencies
 
-- [Azure Web App task](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/azure-web-app-v1) - Deploy to App Service
-- [Azure Resource Manager Deployment task](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/azure-resource-manager-template-deployment-v3) - ARM/Bicep deployment
-- [Azure CLI task](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/azure-cli-v2) - Azure CLI commands in pipeline
-
-### Service Connections
-
-- [Service connections](https://learn.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints) - Azure service connections overview
-- [Azure Resource Manager service connection](https://learn.microsoft.com/en-us/azure/devops/pipelines/library/connect-to-azure) - ARM connection setup
-- [Workload Identity Federation for Azure DevOps](https://learn.microsoft.com/en-us/azure/devops/pipelines/library/connect-to-azure#create-an-azure-resource-manager-service-connection-using-workload-identity-federation) - OIDC authentication
-
-### Infrastructure as Code
-
-- [Terraform task](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/terraform-task-v4) - Terraform integration
-- [Deploy Bicep files](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deploy-azure-pipelines) - Bicep deployment guide
-- [Pipeline templates](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/templates) - Reusable YAML templates
+Use these when Article XI defines promotion flow or approval requirements that the provider skill must implement.
 
 ---
 
 ## Deployment Strategies
 
-### Blue-Green Deployment
+- [Deployment slots for App Service](https://learn.microsoft.com/en-us/azure/app-service/deploy-staging-slots) - blue-green on App Service
+- [Deployment jobs in Azure Pipelines](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/deployment-jobs) - `runOnce`, `rolling`, and deployment-specific orchestration
+- [Container Apps revisions and traffic splitting](https://learn.microsoft.com/en-us/azure/container-apps/revisions-manage#traffic-splitting) - canary-style rollout for Container Apps
+- [Canary deployment pattern](https://learn.microsoft.com/en-us/azure/architecture/patterns/deployment-stamp#canary-deployment) - architectural framing for gradual rollout
 
-- [Blue-green deployment pattern](https://learn.microsoft.com/en-us/azure/architecture/patterns/deployment-stamp) - Architectural pattern overview
-- [Deployment slots (App Service)](https://learn.microsoft.com/en-us/azure/app-service/deploy-staging-slots) - Staging slot configuration
-- [Swap deployment slots](https://learn.microsoft.com/en-us/azure/app-service/deploy-staging-slots#swap-deployment-slots) - Slot swap mechanics
-
-### Canary Deployment
-
-- [Canary deployment pattern](https://learn.microsoft.com/en-us/azure/architecture/patterns/deployment-stamp#canary-deployment) - Gradual rollout strategy
-- [Traffic splitting in Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/revisions-manage#traffic-splitting) - Container Apps revision traffic management
-- [Azure Traffic Manager](https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-routing-methods#weighted-traffic-routing-method) - DNS-level traffic splitting
-
-### Rolling Deployment
-
-- [Rolling deployment strategy](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/deployment-jobs#rolling-deployment) - Azure DevOps rolling deployments
-- [Update strategies for Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/revisions) - Revision management
+Use these when the constitution defines rollout strategy and the provider skill needs a hosting-aligned implementation pattern.
 
 ---
 
-## Container Registry Integration
+## Infrastructure Pipeline Alignment
 
-### Azure Container Registry
+- [Deploy Bicep with GitHub Actions](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deploy-github-actions) - GitHub-side Bicep delivery
+- [Deploy Bicep with Azure Pipelines](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deploy-azure-pipelines) - Azure DevOps-side Bicep delivery
+- [Deploy Terraform using GitHub Actions](https://learn.microsoft.com/en-us/azure/developer/terraform/deploy-terraform-using-github-actions) - Terraform in GitHub Actions
+- [Terraform task for Azure DevOps](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/terraform-task-v4) - Terraform integration in Azure Pipelines
 
-- [Push images to ACR](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli) - Docker push to ACR
-- [Authenticate with ACR](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-authentication) - ACR authentication methods
-- [ACR Tasks](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-tasks-overview) - Build images in ACR (cloud-based builds)
-
-### Docker Build and Push
-
-- [Build Docker images](https://learn.microsoft.com/en-us/azure/devops/pipelines/ecosystems/containers/build-image) - Azure Pipelines Docker task
-- [Docker@2 task](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/docker-v2) - Docker task reference
-- [GitHub Actions Docker Buildx](https://github.com/docker/build-push-action) - `docker/build-push-action@v5`
+These links help the orchestrator verify that provider choice still supports the constitutionally required IaC stages.
 
 ---
 
-## Secrets Management
+## Quality Gates and Verification
 
-### GitHub Secrets
+- [Publish test results in Azure Pipelines](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-test-results-v2) - quality reporting in Azure DevOps
+- [Code coverage results in Azure Pipelines](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results) - coverage reporting
+- [Workflow run logs in GitHub Actions](https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/using-workflow-run-logs) - provider-side troubleshooting
+- [Pipeline report in Azure DevOps](https://learn.microsoft.com/en-us/azure/devops/pipelines/reports/pipelinereport) - deployment and pipeline analytics
 
-- [Encrypted secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets) - GitHub repository/environment secrets
-- [Using secrets in workflows](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions) - Secret access patterns
-
-### Azure Key Vault
-
-- [Azure Key Vault task](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/azure-key-vault-v2) - Fetch secrets in Azure Pipelines
-- [Use Key Vault from GitHub Actions](https://learn.microsoft.com/en-us/azure/developer/github/github-key-vault) - Key Vault integration with GitHub Actions
-- [Key Vault references in App Service](https://learn.microsoft.com/en-us/azure/app-service/app-service-key-vault-references) - Direct Key Vault integration
-
-### Variable Groups
-
-- [Variable groups in Azure DevOps](https://learn.microsoft.com/en-us/azure/devops/pipelines/library/variable-groups) - Shared variables across pipelines
-- [Link Azure Key Vault to variable group](https://learn.microsoft.com/en-us/azure/devops/pipelines/library/variable-groups#link-secrets-from-an-azure-key-vault) - Key Vault-backed variable groups
-
----
-
-## Testing and Quality Gates
-
-### Testing in Pipelines
-
-- [Run tests in pipeline](https://learn.microsoft.com/en-us/azure/devops/pipelines/ecosystems/dotnet-core#run-your-tests) - .NET test task
-- [Publish test results](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-test-results-v2) - Test result reporting
-- [Code coverage](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/review-code-coverage-results) - Code coverage visualization
-
-### Approvals and Gates
-
-- [Approvals in GitHub Actions](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment#required-reviewers) - Environment protection rules
-- [Approvals in Azure DevOps](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/approvals) - Manual approval configuration
-- [Gates in Azure DevOps](https://learn.microsoft.com/en-us/azure/devops/pipelines/release/approvals/gates) - Automated quality gates
-
----
-
-## Monitoring and Troubleshooting
-
-### Pipeline Monitoring
-
-- [Monitor pipeline runs](https://learn.microsoft.com/en-us/azure/devops/pipelines/reports/pipelinereport) - Azure Pipelines analytics
-- [GitHub Actions logs](https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/using-workflow-run-logs) - View workflow run logs
-- [Deployment history](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/environments#deployment-history) - Azure DevOps environment history
-
-### Troubleshooting
-
-- [Troubleshoot pipelines](https://learn.microsoft.com/en-us/azure/devops/pipelines/troubleshooting/troubleshooting) - Common pipeline issues
-- [Debug GitHub Actions](https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/enabling-debug-logging) - Enable debug logging
-- [Pipeline caching](https://learn.microsoft.com/en-us/azure/devops/pipelines/release/caching) - Speed up builds with caching
-
----
-
-## Best Practices
-
-### Security
-
-- [Security hardening for GitHub Actions](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions) - GitHub Actions security best practices
-- [Secure Azure Pipelines](https://learn.microsoft.com/en-us/azure/devops/pipelines/security/overview) - Azure DevOps security guidance
-- [Least privilege service connections](https://learn.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints#secure-a-service-connection) - RBAC for service connections
-
-### Performance
-
-- [Optimize pipeline performance](https://learn.microsoft.com/en-us/azure/devops/pipelines/build/triggers) - Trigger optimization, parallel jobs
-- [Caching dependencies](https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows) - GitHub Actions caching strategies
-- [Self-hosted runners](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners) - Custom GitHub Actions runners
-
----
-
-**Note**: Always reference official Microsoft Learn documentation for Azure deployment tasks and GitHub Docs for Actions-specific features. Cross-reference both when designing CI/CD pipelines for Azure workloads.
+Use these when validating whether the concrete provider pipeline can satisfy the constitution's quality gates and release verification expectations.

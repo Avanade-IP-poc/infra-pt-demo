@@ -66,15 +66,16 @@ def load_yaml_file(file_path: Path) -> Dict[str, Any]:
 
 def save_yaml_file(file_path: Path, data: Dict[str, Any]) -> None:
     """Save data to a YAML file with custom formatting."""
+    separator = f"# {'=' * 77}\n"
     with open(file_path, 'w', encoding='utf-8') as f:
         # Write header
-        f.write("# " + "=" * 77 + "\n")
+        f.write(separator)
         f.write("# Bolt Framework - Merged Refinement State\n")
         f.write(f"# Generated: {data['merge_timestamp']}\n")
-        f.write("# " + "=" * 77 + "\n")
+        f.write(separator)
         f.write("# This file contains the merged refinement decisions from all active scopes.\n")
         f.write("# Used by constitution generation phase to create the final constitution.md\n")
-        f.write("# " + "=" * 77 + "\n\n")
+        f.write(f"{separator}\n")
 
         # Write summary statistics
         f.write("# Summary Statistics\n")
@@ -103,12 +104,12 @@ def save_yaml_file(file_path: Path, data: Dict[str, Any]) -> None:
                 f.write(f"    resolution: {conflict['resolution']}\n")
 
         # Write detailed scope data
-        f.write("\n# " + "=" * 77 + "\n")
+        f.write(f"\n{separator}")
         f.write("# Detailed Scope Data\n")
-        f.write("# " + "=" * 77 + "\n")
+        f.write(separator)
         f.write("# Each scope's full refinement data is preserved below for reference.\n")
         f.write("# The constitution generator will merge these based on the summary above.\n")
-        f.write("# " + "=" * 77 + "\n\n")
+        f.write(f"{separator}\n")
         f.write("scope_data:\n")
 
         for scope_name, scope_content in data.get('scope_data', {}).items():
@@ -335,9 +336,12 @@ def main() -> int:
     )
 
     args = parser.parse_args()
-    project_path = Path(args.project_path).resolve()
+    # Type assertion to help type checker
+    project_path_str: str = args.project_path
+    force_flag: bool = args.force
+    project_path = Path(project_path_str).resolve()
 
-    return merge_refinement_files(project_path, args.force)
+    return merge_refinement_files(project_path, force_flag)
 
 
 if __name__ == '__main__':
