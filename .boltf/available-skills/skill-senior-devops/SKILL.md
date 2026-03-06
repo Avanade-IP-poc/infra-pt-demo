@@ -1,6 +1,6 @@
 ---
-name: senior-devops
-description: Comprehensive DevOps for CI/CD, infrastructure automation (Terraform, Bicep), containerization (Docker, Kubernetes), and cloud platforms (AWS, GCP, Azure). Use when setting up pipelines (GitHub Actions, Azure DevOps), deploying applications, managing infrastructure as code, implementing monitoring (Prometheus, Grafana), or optimizing deployments. Triggers: "CI/CD", "pipeline", "Terraform", "Kubernetes", "Docker", "deploy", "infrastructure as code", "IaC", "DevOps automation", "container orchestration", "cloud infrastructure".
+name: skill-senior-devops
+description: Comprehensive DevOps for CI/CD, infrastructure automation (Terraform, Bicep), containerization (Docker, Kubernetes), and cloud platforms (AWS, GCP, Azure). Use when setting up pipelines (GitHub Actions, Azure DevOps), deploying applications, managing infrastructure as code, implementing monitoring (Prometheus, Grafana), or optimizing deployments. Triggers => "CI/CD", "pipeline", "Terraform", "Kubernetes", "Docker", "deploy", "infrastructure as code", "IaC", "DevOps automation", "container orchestration", "cloud infrastructure".
 ---
 
 # Senior Devops

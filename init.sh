@@ -239,8 +239,29 @@ check_prerequisites() {
     if [[ "$PROJECT_TYPE" == "brown" && ! -d "$SOURCE_DIR" ]]; then
         log_error "Source directory '$SOURCE_DIR' does not exist"; exit 1
     fi
+    if [[ -e "$OUTPUT_DIR" && ! -d "$OUTPUT_DIR" ]]; then
+        log_error "Output path '$OUTPUT_DIR' exists but is not a directory"; exit 1
+    fi
     if [[ -d "$OUTPUT_DIR" ]]; then
-        log_error "Output directory '$OUTPUT_DIR' already exists"; exit 1
+        read_yes_no "Output directory '$OUTPUT_DIR' already exists. Overwrite it?" "false"
+        if [[ "$REPLY_YN" != "true" ]]; then
+            log_error "Cancelled by user"; exit 1
+        fi
+
+        local resolved_output_dir
+        resolved_output_dir="$(cd "$OUTPUT_DIR" && pwd)"
+        local current_dir
+        current_dir="$(pwd)"
+
+        if [[ "$resolved_output_dir" == "/" ]]; then
+            log_error "Refusing to overwrite the filesystem root"; exit 1
+        fi
+        if [[ "$resolved_output_dir" == "$current_dir" ]]; then
+            log_error "Refusing to overwrite the current working directory"; exit 1
+        fi
+
+        rm -rf "$OUTPUT_DIR"
+        log_warn "Existing output directory removed: $OUTPUT_DIR"
     fi
 }
 

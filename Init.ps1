@@ -224,8 +224,28 @@ function Test-Prerequisites {
     if ($ProjectType -eq "brown" -and -not (Test-Path $SourceDirectory)) {
         Write-Err "Source directory '$SourceDirectory' does not exist"; exit 1
     }
-    if (Test-Path $OutputDirectory) {
-        Write-Err "Output directory '$OutputDirectory' already exists"; exit 1
+    if (Test-Path $OutputDirectory -PathType Leaf) {
+        Write-Err "Output path '$OutputDirectory' exists but is not a directory"; exit 1
+    }
+    if (Test-Path $OutputDirectory -PathType Container) {
+        $overwrite = Read-YesNo "Output directory '$OutputDirectory' already exists. Overwrite it?" $false
+        if (-not $overwrite) {
+            Write-Err "Cancelled by user"; exit 1
+        }
+
+        $resolvedOutputDirectory = (Resolve-Path $OutputDirectory).Path
+        $currentDirectory = (Get-Location).Path
+        $rootDirectory = [System.IO.Path]::GetPathRoot($resolvedOutputDirectory)
+
+        if ($resolvedOutputDirectory -eq $rootDirectory) {
+            Write-Err "Refusing to overwrite the filesystem root"; exit 1
+        }
+        if ($resolvedOutputDirectory -eq $currentDirectory) {
+            Write-Err "Refusing to overwrite the current working directory"; exit 1
+        }
+
+        Remove-Item -Path $resolvedOutputDirectory -Recurse -Force
+        Write-Warn "Existing output directory removed: $resolvedOutputDirectory"
     }
 }
 
@@ -1292,7 +1312,7 @@ function Show-Summary {
             Push-Location $OutputDirectory
             try {
                 # TODO: Need to validate which tools to allow by default
-                & copilot --agent="bolt-constitution" --banner --model "claude-sonnet-4.5" --allow-tool 'shell' -i "setup constitution" --allow-path $OutputDirectory
+                & copilot --agent="bolt-constitution" --banner --model "gpt-5.4" --allow-tool 'shell' -i "setup constitution"
                 Write-Host ""
                 Write-Host "  ✓ @Bolt Constitution agent completed" -ForegroundColor Green
                 Write-Host "  📝 Review provision results above" -ForegroundColor Cyan

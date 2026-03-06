@@ -277,9 +277,9 @@ Cada skill que requiere Python tiene su propio `requirements.txt`:
 .github/skills/
 ├── skill-creator/
 │   └── requirements.txt     # anthropic, pyyaml
-├── senior-devops/
+├── skill-senior-devops/
 │   └── requirements.txt     # terraform-related
-└── senior-frontend/
+└── skill-senior-frontend/
     └── requirements.txt     # webpack-analyzer
 ```
 

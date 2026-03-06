@@ -1,6 +1,6 @@
 ---
 name: skill-bolt-quality-gates
-description: Per-Bolt quality gates with code coverage, mutation testing, and linting thresholds. MANDATORY at the end of every Bolt iteration - no PR merge without passing gates. Use for enforcing quality standards, checking coverage, running mutation tests, or validating linting. Triggers: "quality gates", "coverage threshold", "mutation testing", "lint check", "quality check", "gate validation", "Bolt gates", "enforce quality". NON-OPTIONAL checkpoint.
+description: Per-Bolt quality gates with code coverage, mutation testing, and linting thresholds. MANDATORY at the end of every Bolt iteration - no PR merge without passing gates. Use for enforcing quality standards, checking coverage, running mutation tests, or validating linting. Triggers => 'quality gates', 'coverage threshold', 'mutation testing', 'lint check', 'quality check', 'gate validation', 'Bolt gates', 'enforce quality'. NON-OPTIONAL checkpoint.
 ---
 
 # Quality Gates

@@ -1,6 +1,6 @@
 ---
 name: azdo-wiki
-description: Synchronize project documentation from docs/ folder to Azure DevOps wiki with automatic Mermaid diagram conversion to SVG. Use when publishing to Azure DevOps wiki, syncing documentation, or converting Mermaid to SVG for Azure DevOps. Triggers: "Azure DevOps wiki", "AzDO wiki", "publish docs", "sync wiki", "Mermaid to SVG", "wiki publish", "documentation sync Azure DevOps", "convert diagrams", "wiki navigation".
+description: Synchronize project documentation from docs/ folder to Azure DevOps wiki with automatic Mermaid diagram conversion to SVG. Use when publishing to Azure DevOps wiki, syncing documentation, or converting Mermaid to SVG for Azure DevOps. Triggers => "Azure DevOps wiki", "AzDO wiki", "publish docs", "sync wiki", "Mermaid to SVG", "wiki publish", "documentation sync Azure DevOps", "convert diagrams", "wiki navigation".
 ---
 
 # Azure DevOps Wiki Sync

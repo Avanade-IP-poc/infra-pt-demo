@@ -1,8 +1,6 @@
 ---
-name: bolt-aspire-orchestration
-description: .NET Aspire AppHost orchestration pattern for distributed multi-service .NET applications. Covers service discovery (https+http:// resolution), ServiceDefaults project (OpenTelemetry, health checks, resilience), observability dashboard (http://localhost:15888), and multi-service coordination. Use when setting up Aspire, orchestrating microservices, configuring service discovery. Triggers: "Aspire orchestration", "AppHost", "distributed .NET", "Aspire project", "service discovery", "microservices .NET", "Aspire dashboard", "multi-service app".
-scope: backend, frontend, cloud-platform
-version: 1.0.0
+name: skill-bolt-aspire-orchestration
+description: .NET Aspire AppHost orchestration pattern for distributed multi-service .NET applications. Covers service discovery (https+http:// resolution), ServiceDefaults project (OpenTelemetry, health checks, resilience), observability dashboard, and multi-service coordination. Use when setting up Aspire, orchestrating microservices, configuring service discovery. Triggers => "Aspire orchestration", "AppHost", "distributed .NET", "Aspire project", "service discovery", "microservices .NET", "Aspire dashboard", "multi-service app".
 ---
 
 # .NET Aspire Orchestration Skill

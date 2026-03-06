@@ -1,6 +1,6 @@
 ---
 name: skill-azdo-pipeline-templates
-description: 'Create Azure DevOps Pipelines templates for Azure-oriented application and infrastructure delivery. Use when Article XI selects Azure DevOps Pipelines, when you need multi-stage YAML, environments and approvals, service connections or workload identity, or when translating quality gates into `azure-pipelines.yml`. Critical because Azure DevOps-specific pipeline design should live in a dedicated provider skill instead of being embedded in the CI/CD orchestrator.'
+description: Create Azure DevOps Pipelines templates for Azure-oriented application and infrastructure delivery. Use when Article XI selects Azure DevOps Pipelines, when you need multi-stage YAML, environments and approvals, service connections or workload identity, or when translating quality gates into `azure-pipelines.yml`. Critical because Azure DevOps-specific pipeline design should live in a dedicated provider skill instead of being embedded in the CI/CD orchestrator.
 ---
 
 # Azure DevOps Pipeline Templates

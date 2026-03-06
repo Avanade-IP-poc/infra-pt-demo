@@ -1,7 +1,7 @@
 ---
 name: skill-bolt-setup-constitution
 description: Step 2 of Bolt Framework initialization - scope-based provisioning engine. Processes separate constitution files per scope, creates per-scope refinement YAMLs, and merges all decisions at the end. Use when provisioning files, initializing Bolt, scope provisioning, second init step, or resuming interrupted refinement.
-user-invokable: false
+user-invocable: false
 ---
 
 # Bolt Setup Constitution

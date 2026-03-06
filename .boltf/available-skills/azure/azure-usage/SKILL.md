@@ -1,6 +1,6 @@
 ---
 name: azure-usage
-description: Query and manage Azure resources using Azure MCP tools. ALWAYS use when listing storage accounts, managing Key Vault secrets, working with Cosmos DB, checking AKS clusters, or interacting with any Azure service via MCP. Triggers: "query Azure", "list storage accounts", "Key Vault secret", "Cosmos DB", "AKS cluster", "Azure MCP", "Azure resource", "az cli alternative", "manage Azure", "Azure MCP tools", "query resources".
+description: Query and manage Azure resources using Azure MCP tools. ALWAYS use when listing storage accounts, managing Key Vault secrets, working with Cosmos DB, checking AKS clusters, or interacting with any Azure service via MCP. Triggers => "query Azure", "list storage accounts", "Key Vault secret", "Cosmos DB", "AKS cluster", "Azure MCP", "Azure resource", "az cli alternative", "manage Azure", "Azure MCP tools", "query resources".
 ---
 
 # Azure MCP Best Practices

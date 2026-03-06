@@ -1,6 +1,6 @@
 ---
 name: playwright-comprehensive
-description: > Comprehensive Playwright browser automation for E2E testing, general browser automation, and local webapp testing. Covers Page Object Model, fixtures, Aspire integration, dev server detection, responsive design validation, and complete test orchestration.
+description: Comprehensive Playwright browser automation for E2E testing, general browser automation, and local webapp testing. Covers Page Object Model, fixtures, Aspire integration, dev server detection, responsive design validation, and complete test orchestration.
 ---
 
 # Playwright Comprehensive - Browser Automation & Testing
