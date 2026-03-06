@@ -7,7 +7,6 @@ tools:
     read,
     edit,
     web,
-    memory,
     vscode,
     agent,
     'github/*',
