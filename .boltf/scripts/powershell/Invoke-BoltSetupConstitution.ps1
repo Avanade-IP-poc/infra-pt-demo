@@ -499,6 +499,10 @@ function Copy-ProvisionedFiles {
                 }
 
                 # Copy file or directory
+                # IMPORTANT: Skills are copied in FLAT structure to .github/skills/
+                # - Source: .boltf/available-skills/<category>/<skill-name>/
+                # - Dest:   .github/skills/<skill-name>/
+                # Category folders (github/, azure/, etc.) are NOT copied, only individual skills
                 if (Test-Path $sourcePath -PathType Container) {
                     Copy-Item -Path $sourcePath -Destination $destPath -Recurse -Force
                 }
@@ -602,7 +606,9 @@ function Copy-CoreSkills {
                 New-Item -ItemType Directory -Path $skillsDir -Force | Out-Null
             }
 
-            # Copy skill recursively
+            # Copy skill recursively in FLAT structure
+            # This copies individual skill folders directly to .github/skills/
+            # NOT the parent bolt-framework/ category folder
             Copy-Item -Path $sourcePath -Destination $destPath -Recurse -Force
             Write-Success "Core skill provisioned: $skillName"
             $provisionedCore += $skillName

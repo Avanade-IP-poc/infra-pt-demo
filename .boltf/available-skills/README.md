@@ -86,6 +86,18 @@ Cuando se activa un scope:
 - Se coloca en `.github/skills/<skill>/`
 - GitHub Copilot lo detecta automáticamente
 
+> **⚠️ IMPORTANTE**: Los skills se copian en **estructura plana** (flat) directamente bajo `.github/skills/`.
+> Las carpetas de categoría (`github/`, `azure/`, `vue/`, etc.) **NO** se copian, solo los skills individuales.
+>
+> **✅ Correcto**:
+>
+> - `.boltf/available-skills/github/gh-fix-ci/` → `.github/skills/gh-fix-ci/`
+> - `.boltf/available-skills/azure/azure-identity-dotnet/` → `.github/skills/azure-identity-dotnet/`
+>
+> **❌ Incorrecto**:
+>
+> - `.boltf/available-skills/github/` → `.github/skills/github/` ← NUNCA hacer esto
+
 ## 📦 Skills por Tecnología
 
 ### Angular (`angular/`)

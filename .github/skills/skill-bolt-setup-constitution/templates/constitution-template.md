@@ -7,13 +7,13 @@
 
 ## 📋 Project Identity
 
-| Field | Value |
-|-------|-------|
-| **Project Name** | [PROJECT_NAME] |
+| Field            | Value                     |
+| ---------------- | ------------------------- |
+| **Project Name** | [PROJECT_NAME]            |
 | **Project Type** | [greenfield / brownfield] |
-| **Created** | [DATE] |
-| **Version** | 1.0.0 |
-| **Status** | ⬜ Draft / ✅ Ratified |
+| **Created**      | [DATE]                    |
+| **Version**      | 1.0.0                     |
+| **Status**       | ⬜ Draft / ✅ Ratified    |
 
 ## 🎯 Project Purpose
 
@@ -23,22 +23,22 @@
 
 ### Languages & Frameworks
 
-| Layer | Technology | Version |
-|-------|-----------|---------|
-| **Frontend** | [React / Angular / Vue / None] | [version] |
-| **Backend** | [.NET / Node.js / Python / Java] | [version] |
-| **Database** | [PostgreSQL / SQL Server / MongoDB] | [version] |
-| **ORM** | [Entity Framework / Prisma / SQLAlchemy] | [version] |
-| **Testing** | [Jest / xUnit / pytest] | [version] |
+| Layer        | Technology                               | Version   |
+| ------------ | ---------------------------------------- | --------- |
+| **Frontend** | [React / Angular / Vue / None]           | [version] |
+| **Backend**  | [.NET / Node.js / Python / Java]         | [version] |
+| **Database** | [PostgreSQL / SQL Server / MongoDB]      | [version] |
+| **ORM**      | [Entity Framework / Prisma / SQLAlchemy] | [version] |
+| **Testing**  | [Jest / xUnit / pytest]                  | [version] |
 
 ### Infrastructure
 
-| Component | Technology |
-|-----------|-----------|
-| **Hosting** | [Azure / AWS / GCP / On-Premise] |
-| **CI/CD** | [GitHub Actions / Azure DevOps / Jenkins] |
-| **Container** | [Docker / Podman / None] |
-| **Orchestration** | [Kubernetes / Docker Compose / None] |
+| Component         | Technology                                |
+| ----------------- | ----------------------------------------- |
+| **Hosting**       | [Azure / AWS / GCP / On-Premise]          |
+| **CI/CD**         | [GitHub Actions / Azure DevOps / Jenkins] |
+| **Container**     | [Docker / Podman / None]                  |
+| **Orchestration** | [Kubernetes / Docker Compose / None]      |
 
 ## 📐 Architecture
 
@@ -67,30 +67,30 @@ src/
 
 ### Naming Conventions
 
-| Element | Convention | Example |
-|---------|-----------|---------|
-| Files | [kebab-case / PascalCase] | `user-service.ts` / `UserService.cs` |
-| Classes | PascalCase | `UserService` |
-| Methods | [camelCase / PascalCase] | `getUser()` / `GetUser()` |
-| Variables | camelCase | `userName` |
-| Constants | UPPER_SNAKE | `MAX_RETRIES` |
+| Element   | Convention                | Example                              |
+| --------- | ------------------------- | ------------------------------------ |
+| Files     | [kebab-case / PascalCase] | `user-service.ts` / `UserService.cs` |
+| Classes   | PascalCase                | `UserService`                        |
+| Methods   | [camelCase / PascalCase]  | `getUser()` / `GetUser()`            |
+| Variables | camelCase                 | `userName`                           |
+| Constants | UPPER_SNAKE               | `MAX_RETRIES`                        |
 
 ### Code Quality
 
-| Rule | Standard |
-|------|----------|
-| Max file length | [300 lines recommended] |
-| Max function length | [30 lines recommended] |
-| Max parameters | [4 recommended] |
-| Comments | [JSDoc / XML Doc / docstrings] |
+| Rule                | Standard                       |
+| ------------------- | ------------------------------ |
+| Max file length     | [300 lines recommended]        |
+| Max function length | [30 lines recommended]         |
+| Max parameters      | [4 recommended]                |
+| Comments            | [JSDoc / XML Doc / docstrings] |
 
 ## 🧪 Testing Requirements
 
-| Metric | Minimum | Target |
-|--------|---------|--------|
-| Line Coverage | ≥ 80% | ≥ 90% |
-| Branch Coverage | ≥ 75% | ≥ 85% |
-| Mutation Score | ≥ 70% | ≥ 80% |
+| Metric          | Minimum | Target |
+| --------------- | ------- | ------ |
+| Line Coverage   | ≥ 80%   | ≥ 90%  |
+| Branch Coverage | ≥ 75%   | ≥ 85%  |
+| Mutation Score  | ≥ 70%   | ≥ 80%  |
 
 ### Testing Strategy
 
@@ -101,21 +101,21 @@ src/
 
 ## 🔒 Security
 
-| Requirement | Standard |
-|-------------|----------|
-| Authentication | [JWT / OAuth2 / Session] |
-| Authorization | [RBAC / ABAC / Claims] |
-| Input Validation | [All inputs validated] |
-| OWASP Compliance | [Top 10 addressed] |
-| Dependency Scanning | [Enabled in CI] |
+| Requirement         | Standard                 |
+| ------------------- | ------------------------ |
+| Authentication      | [JWT / OAuth2 / Session] |
+| Authorization       | [RBAC / ABAC / Claims]   |
+| Input Validation    | [All inputs validated]   |
+| OWASP Compliance    | [Top 10 addressed]       |
+| Dependency Scanning | [Enabled in CI]          |
 
 ## 📦 Versioning
 
-| Aspect | Standard |
-|--------|----------|
-| **Versioning** | Semantic Versioning (semver) |
+| Aspect              | Standard                               |
+| ------------------- | -------------------------------------- |
+| **Versioning**      | Semantic Versioning (semver)           |
 | **Branch Strategy** | [Git Flow / GitHub Flow / Trunk-Based] |
-| **Commit Format** | [Conventional Commits] |
+| **Commit Format**   | [Conventional Commits]                 |
 
 ## 📋 Quality Gates
 

@@ -1090,7 +1090,8 @@ show_summary() {
         echo ""
 
         # Change to project directory and invoke agent
-        if (cd "$OUTPUT_DIR" && copilot --agent="bolt-constitution" --banner --model claude-sonnet-4.5 -i "setup constitution"); then
+        # TODO: Need to validate which tools to allow by default
+        if (cd "$OUTPUT_DIR" && copilot --agent="bolt-constitution" --banner --model "claude-sonnet-4.5" --allow-tool 'shell' -i "setup constitution" --allow-path "$OUTPUT_DIR"); then
             echo ""
             echo -e "  ${GREEN}✓ @Bolt Constitution agent completed${NC}"
             echo -e "  ${CYAN}📝 Review provision results above${NC}"
