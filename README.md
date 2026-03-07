@@ -387,6 +387,9 @@ python .github/skills/skill-creator/scripts/quick_validate.py my-skill/
 
 - **Python 3.9+** (download from <https://python.org/downloads/>)
 - Packages installed automatically: `anthropic`, `pyyaml`
+- **GitHub Copilot** VS Code extension ([`GitHub.copilot`](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot))
+- **GitHub Copilot Chat** VS Code extension ([`GitHub.copilot-chat`](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot-chat))
+- **Awesome Copilot** plugin ([`kinfey.awesome-copilots`](https://marketplace.visualstudio.com/items?itemName=kinfey.awesome-copilots))
 
 📚 **Full guide**: [docs/python-integration.md](docs/python-integration.md)
 

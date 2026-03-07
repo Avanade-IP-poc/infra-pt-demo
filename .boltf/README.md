@@ -59,9 +59,12 @@ This directory contains the **Bolt Framework** - a modular, practice-based AI-na
 ### Prerequisites
 
 - **Node.js** 20+ or **Python** 3.11+
+- **Python** 3.9+ (required for advanced AI-powered features)
 - **Git** 2.40+
 - **Docker** (optional, for local development)
-- **VS Code** with GitHub Copilot (recommended)
+- **VS Code** with **GitHub Copilot** extension ([`GitHub.copilot`](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot))
+- **GitHub Copilot Chat** extension ([`GitHub.copilot-chat`](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot-chat))
+- **Awesome Copilot** plugin ([`kinfey.awesome-copilots`](https://marketplace.visualstudio.com/items?itemName=kinfey.awesome-copilots)) (recommended for skill provisioning)
 
 ### Installation
 
