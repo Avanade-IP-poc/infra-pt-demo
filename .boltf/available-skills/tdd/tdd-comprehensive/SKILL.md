@@ -1,6 +1,6 @@
 ---
 name: tdd-comprehensive
-description: > Test-Driven Development (TDD) with Red-Green-Refactor cycle, strict test-first discipline, unit testing workflow, coverage requirements, failing test patterns, and comprehensive testing strategy. Use when implementing test driven development, writing tests before code, red green refactor cycle, test first approach, ensuring code quality through comprehensive test coverage, or enforcing TDD workflow discipline.
+description: 'Test-Driven Development (TDD) with Red-Green-Refactor cycle, strict test-first discipline, unit testing workflow, coverage requirements, failing test patterns, and comprehensive testing strategy. Use when implementing test driven development, writing tests before code, red green refactor cycle, test first approach, ensuring code quality through comprehensive test coverage, or enforcing TDD workflow discipline.'
 ---
 
 # TDD Comprehensive - Test-Driven Development
