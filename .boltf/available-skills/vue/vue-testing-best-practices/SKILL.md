@@ -1,9 +1,7 @@
 ---
 name: vue-testing-best-practices
-version: 1.0.0
 license: MIT
-author: github.com/vuejs-ai
-description: Vue.js testing with Vitest, Vue Test Utils, component testing, mocking, testing patterns, and Playwright for E2E. ALWAYS use for Vue component tests, Vitest setup, mocking composables, testing emits/props, or E2E with Playwright. Triggers: "test Vue component", "Vitest", "Vue Test Utils", "@testing-library/vue", "mock composable", "test emits", "test props", "Vue E2E", "component testing Vue", "Vitest setup".
+description: Vue.js testing with Vitest, Vue Test Utils, component testing, mocking, testing patterns, and Playwright for E2E. ALWAYS use for Vue component tests, Vitest setup, mocking composables, testing emits/props, or E2E with Playwright. Triggers => "test Vue component", "Vitest", "Vue Test Utils", "@testing-library/vue", "mock composable", "test emits", "test props", "Vue E2E", "component testing Vue", "Vitest setup".
 ---
 
 Vue.js testing best practices, patterns, and common gotchas.

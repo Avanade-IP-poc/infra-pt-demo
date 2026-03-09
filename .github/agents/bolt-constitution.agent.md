@@ -73,6 +73,7 @@ It processes **separate constitution files per scope** and merges refinement dec
    - Guide user through scope-specific decisions
 3. **Merge all refinement YAMLs** into `merged-refinement.yaml`
 4. **Based on merged refinement** select and provision resources for active scopes using '.boltf/available-skills' and update `merged-refinement.yaml` skills array with provisioned resources.
+   - ⚠️ **CRITICAL**: Copy individual skill folders in FLAT structure to `.github/skills/`, never copy parent category folders
 5. **Based on merged refinement** select and provision resources for active scopes using 'awesome-copilot install' and update `merged-refinement.yaml` skills array with provisioned resources. If a resource seems duplicated or has been already provisioned, prefer the one from available-skills to avoid unnecessary installations.
 6. **Generate final `constitution.md`** with all approved articles, ensure you reference the provisioned resources and skills in the appropiate sections of the constitution.
 7. **Document architecture decisions** by delegating to @Bolt ADR agent with constitution context and refinement decissions, build at least as many ADR-xxx as scopes but try to aggregate decissions as much as possible, for example: if there are decissions about backend architecture and communication patterns, it makes sense to group them in the same ADR.

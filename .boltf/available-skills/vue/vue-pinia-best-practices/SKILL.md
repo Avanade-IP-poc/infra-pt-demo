@@ -1,6 +1,6 @@
 ---
 name: vue-pinia-best-practices
-description: Pinia state management for Vue 3 with stores, actions, getters, reactivity gotchas (destructuring, method binding), and setup store patterns (getActivePinia errors). Vuex successor recommended for all new Vue 3 projects. Use for global state, shared data, or store patterns. Triggers: "Pinia", "Vuex alternative", "Vue state management", "store", "defineStore", "Pinia actions", "getActivePinia", "destructure store", "Pinia reactivity", "shared state Vue".
+description: Pinia state management for Vue 3 with stores, actions, getters, reactivity gotchas (destructuring, method binding), and setup store patterns (getActivePinia errors). Vuex successor recommended for all new Vue 3 projects. Use for global state, shared data, or store patterns. Triggers => "Pinia", "Vuex alternative", "Vue state management", "store", "defineStore", "Pinia actions", "getActivePinia", "destructure store", "Pinia reactivity", "shared state Vue".
 version: 1.0.0
 license: MIT
 author: github.com/vuejs-ai

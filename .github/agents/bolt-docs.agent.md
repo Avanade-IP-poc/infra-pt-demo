@@ -7,7 +7,6 @@ tools:
     read,
     edit,
     web,
-    memory,
     vscode,
     agent,
     'github/*',
@@ -38,7 +37,7 @@ You are the documentation specialist for Bolt Framework projects. You create, ma
 ### Technical Documentation:
 
 - **API Documentation**: OpenAPI specs, endpoint docs, SDK guides
-- **Architecture Documentation**: System design, component diagrams, ADRs
+- **Architecture Documentation**: System design, component diagrams, ADRs, Data models, Sequence diagrams and Class diagrams
 - **Code Documentation**: Inline comments, README files, code guides
 - **Deployment Documentation**: Environment setup, deployment guides
 
@@ -161,8 +160,8 @@ paths:
 
 ### System Diagram Generation:
 
-```mermaid
 # docs/architecture/system-overview.md (auto-generated)
+```mermaid
 graph TB
     subgraph "Frontend Layer"
         UI[React SPA]
@@ -447,6 +446,15 @@ export async function processPayment(
 
 _ADR Template v1.0 - Bolt Framework-DLC_
 ```
+### Data Model Template:
+
+Relay on the skill `bolt-datamodel-diagramer` to generate Mermaid diagrams for data models.
+  
+### Class Diagram
+
+Class diagrams should be used to document the structure of complex components, showing classes, interfaces, and their relationships.
+
+
 
 ## Documentation Validation and Quality
 

@@ -1,6 +1,6 @@
 ---
 name: dotnet-backend-patterns
-description: Master C# backend development with Clean Architecture, dependency injection, async/await patterns, Entity Framework Core, Dapper, Result pattern, and SOLID principles. Use for .NET APIs, domain logic, data access layers, or service implementations. Triggers: "C# backend", ".NET backend", "dependency injection", "async programming", "EF Core", "Entity Framework", "clean architecture", "backend patterns .NET", "service layer", "repository pattern", "SOLID". ALWAYS use for .NET backend architecture questions.
+description: Master C# backend development with Clean Architecture, dependency injection, async/await patterns, Entity Framework Core, Dapper, Result pattern, and SOLID principles. Use for .NET APIs, domain logic, data access layers, or service implementations. Triggers => "C# backend", ".NET backend", "dependency injection", "async programming", "EF Core", "Entity Framework", "clean architecture", "backend patterns .NET", "service layer", "repository pattern", "SOLID". ALWAYS use for .NET backend architecture questions.
 ---
 
 # .NET Backend Patterns - Clean Architecture & Best Practices

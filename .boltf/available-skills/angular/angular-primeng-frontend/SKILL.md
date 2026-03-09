@@ -1,6 +1,6 @@
 ---
 name: angular-primeng-frontend
-description: Angular 20 + PrimeNG 18 frontend development with standalone components, signals, typed forms, modern control flow (@if, @for), and inject() pattern. Use when developing Angular apps with PrimeNG, implementing Angular components, configuring PrimeNG themes, or building enterprise Angular UIs. Triggers: "Angular", "PrimeNG", "Angular 20", "p-button", "PrimeNG component", "Angular forms", "Angular routing", "standalone component", "ng generate", "signals Angular".
+description: Angular 20 + PrimeNG 18 frontend development with standalone components, signals, typed forms, modern control flow (@if, @for), and inject() pattern. Use when developing Angular apps with PrimeNG, implementing Angular components, configuring PrimeNG themes, or building enterprise Angular UIs. Triggers => "Angular", "PrimeNG", "Angular 20", "p-button", "PrimeNG component", "Angular forms", "Angular routing", "standalone component", "ng generate", "signals Angular".
 ---
 
 # Angular 20 + PrimeNG Frontend Development

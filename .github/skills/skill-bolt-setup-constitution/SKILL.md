@@ -1,7 +1,7 @@
 ---
 name: skill-bolt-setup-constitution
 description: Step 2 of Bolt Framework initialization - scope-based provisioning engine. Processes separate constitution files per scope, creates per-scope refinement YAMLs, and merges all decisions at the end. Use when provisioning files, initializing Bolt, scope provisioning, second init step, or resuming interrupted refinement.
-user-invokable: false
+user-invocable: false
 ---
 
 # Bolt Setup Constitution
@@ -13,6 +13,37 @@ user-invokable: false
 - When updating constitution articles
 - Invoked by `@Bolt Constitution` agent
 - **Resuming interrupted refinement** - detect and restore from per-scope refinement state
+
+## Available Scripts
+
+This skill includes automation scripts for common tasks:
+
+### Merge Refinement YAMLs
+
+Automatically merge all scope refinement files into `merged-refinement.yaml`:
+
+| Platform   | Script Path                         | Usage                                        |
+| ---------- | ----------------------------------- | -------------------------------------------- |
+| PowerShell | `scripts/Merge-RefinementYamls.ps1` | `.\Merge-RefinementYamls.ps1 -ProjectPath .` |
+| Bash       | `scripts/merge-refinement-yamls.sh` | `./merge-refinement-yamls.sh . [--force]`    |
+| Python     | `scripts/merge_refinement_yamls.py` | `python merge_refinement_yamls.py .`         |
+
+**Features:**
+
+- ✅ Auto-discovers all `*-refinement.yaml` files
+- ✅ Detects article conflicts across scopes
+- ✅ Calculates summary statistics
+- ✅ Generates structured `merged-refinement.yaml`
+
+### Sort Constitution by Criticality
+
+Sort articles in constitution by criticality level (high → medium → low):
+
+| Platform   | Script Path                                   |
+| ---------- | --------------------------------------------- |
+| PowerShell | `scripts/Sort-ConstitutionByCriticality.ps1`  |
+| Bash       | `scripts/sort-constitution-by-criticality.sh` |
+| Python     | `scripts/sort-constitution-by-criticality.py` |
 
 ## New Architecture: Per-Scope Processing
 
@@ -81,161 +112,46 @@ active-scopes:
 
 ### Phase 2: Process Each Scope (Iterative)
 
-**For each active scope:**
+**For each active scope, the agent processes its constitution file through a structured refinement workflow.**
 
-```text
-FOR EACH scope IN active_scopes:
-
-  # Step 2.1: Check if scope already processed
-  IF exists(.boltf/memory/refinement-states/{scope}-refinement.yaml):
-    READ state from {scope}-refinement.yaml
-    IF state.status == 'completed':
-      SKIP to next scope
-    ELSE:
-      RESUME from last processed article
-
-  # Step 2.2: Read scope constitution
-  READ .boltf/memory/{scope}-constitution.md
-
-  # Step 2.3: Initialize refinement state (if new)
-  CREATE .boltf/memory/refinement-states/{scope}-refinement.yaml:
-    scope: {scope}
-    status: in-progress
-    total_articles: [count from constitution]
-    articles: []
-    decisions: []
-
-  # Step 2.4: Extract articles from scope constitution
-  EXTRACT articles (Article I, Article II, etc.)
-  FOR EACH article:
-    ADD to {scope}-refinement.yaml:
-      - number: "I"
-        title: "Article Title"
-        criticality: HIGH | MEDIUM | LOW
-        status: pending
-        content: "Article markdown content"
-
-  # Step 2.5: Sort articles by criticality
-  SORT articles: HIGH → MEDIUM → LOW
-  UPDATE {scope}-refinement.yaml with sorted_articles
-
-  # Step 2.6: Iteratively refine each article
-  # CRITICAL: Decision values determine final constitution inclusion
-  #   'include'  → Article WILL appear in final constitution (as-is)
-  #   'modified' → Article WILL appear (with modifications)
-  #   'exclude'  → Article WILL NOT appear in final constitution
-  #   'skip'     → Article WILL NOT appear (deferred/not applicable)
-
-  FOR EACH article IN sorted_articles:
-    IF article.status == 'refined':
-      SKIP to next article
-
-    # Criticality-based handling
-    IF article.criticality == HIGH:
-      # High criticality: Explicit user decision required
-      - Present article to user with full context
-      - Explain implications for the project
-      - Ask: "Include this article? [include/exclude/modify]"
-      - IF user says 'modify':
-          - Prompt for modifications
-          - Store in article.modified_content
-          - Set decision = 'modified'
-      - ELSE IF user says 'include':
-          - Set decision = 'include'
-      - ELSE IF user says 'exclude':
-          - Set decision = 'exclude'
-      - Record decision with timestamp and reason
-
-    ELSE IF article.criticality == MEDIUM:
-      # Medium criticality: Agent recommends, user approves
-      - Analyze article + generate recommendation
-      - Present: "Recommendation: [include/modify/exclude] because [reason]"
-      - Ask user: "Accept recommendation? [y/n/modify]"
-      - IF user accepts:
-          - Set decision = recommended value
-      - ELSE IF user says 'modify':
-          - Prompt for changes
-          - Set decision = 'modified'
-      - ELSE:
-          - Ask for manual decision (include/exclude)
-      - OFFER: "Apply this decision to all remaining MEDIUM articles? [y/N]"
-          - IF yes: Set bulk_decision_medium = current_decision
-      - Record decision
-
-    ELSE IF article.criticality == LOW:
-      # Low criticality: Auto-recommend, quick approval
-      - Generate auto-recommendation (usually 'include' for low-impact)
-      - Present: "Auto-recommendation: [include] - [brief reason]"
-      - Ask: "Approve? [Y/n]"
-      - IF user approves (or no response):
-          - Set decision = 'include'
-      - ELSE:
-          - Ask for manual decision (include/exclude/modify)
-      - OFFER: "Apply to all remaining LOW articles? [y/N]"
-          - IF yes: Set bulk_decision_low = current_decision
-      - Record decision
-
-    # Checkpoint after EACH decision
-    UPDATE {scope}-refinement.yaml:
-      articles[current].status = 'refined'
-      articles[current].decision = [user's choice: include|modified|exclude|skip]
-      articles[current].decided_at = [timestamp]
-      articles[current].reason = [brief reason]
-      IF decision == 'modified':
-        articles[current].modified_content = [user's modified version]
-    SAVE FILE
-
-    LOG INFO: "Article {article.number}: decision='{decision}' | Will appear in final: {decision IN ['include', 'modified']}"
-  # Step 2.7: Mark scope as completed
-  UPDATE {scope}-refinement.yaml:
-    status: completed
-    completed_at: [timestamp]
-  SAVE FILE
-
-  NEXT scope
-```
+📄 **[Scope Processing Logic Reference](references/scope-processing-logic.md)**
 
 ### Phase 3: Merge All Refinement YAMLs
 
 **After all scopes are processed:**
 
-```text
-# Step 3.1: Collect all scope refinement files
-scope_yamls = [
-  .boltf/memory/refinement-states/backend-refinement.yaml,
-  .boltf/memory/refinement-states/frontend-refinement.yaml,
-  .boltf/memory/refinement-states/cloud-platform-refinement.yaml
-]
+#### Option A: Automated Merge with Scripts (Recommended)
 
-# Step 3.2: Merge into unified structure
-CREATE .boltf/memory/refinement-states/merged-refinement.yaml:
-  scopes:
-    - scope: backend
-      articles: [from backend-refinement.yaml]
-      decisions: [from backend-refinement.yaml]
-    - scope: frontend
-      articles: [from frontend-refinement.yaml]
-      decisions: [from frontend-refinement.yaml]
-    - scope: cloud-platform
-      articles: [from cloud-platform-refinement.yaml]
-      decisions: [from cloud-platform-refinement.yaml]
+Use the provided merge scripts to automatically combine all refinement files:
 
-  # Summary stats
-  total_scopes: 3
-  total_articles: [sum of all articles]
-  total_decisions: [sum of all decisions]
-  merge_timestamp: [timestamp]
+**PowerShell:**
 
-# Step 3.3: Detect conflicts (same article number across scopes)
-FOR EACH article_number:
-  IF article appears in multiple scopes:
-    # Flag for manual review
-    ADD to merged-refinement.yaml:
-      conflicts:
-        - article: "Article III"
-          scopes: [backend, frontend]
-          resolution: pending
+```powershell
+# From project root
+.\.github\skills\skill-bolt-setup-constitution\scripts\Merge-RefinementYamls.ps1 -ProjectPath . [-Force]
 ```
+
+**Bash:**
+
+```bash
+# From project root
+.github/skills/skill-bolt-setup-constitution/scripts/merge-refinement-yamls.sh . [--force]
+```
+
+**Python:**
+
+```bash
+# From project root
+python .github/skills/skill-bolt-setup-constitution/scripts/merge_refinement_yamls.py . [--force]
+```
+
+#### Option B: Manual Merge (For Custom Processing)
+
+If you need custom merge logic, refer to the detailed manual merge process:
+
+📄 **[Manual Merge Logic Reference](references/manual-merge-logic.md)**
+
+This reference provides step-by-step pseudocode for collecting scope refinement files, merging into a unified structure, and detecting conflicts between scopes.
 
 ### Phase 4: Generate Final Constitution
 
@@ -419,7 +335,10 @@ IF exists(.boltf/memory/refinement-states/{scope}-refinement.yaml):
 - [ ] All scope constitutions exist in `.boltf/memory/`
 - [ ] Each scope has a corresponding refinement YAML
 - [ ] All HIGH criticality articles have explicit decisions
-- [ ] All conflicts are resolved
+- [ ] Merge script executed successfully to create `merged-refinement.yaml`
+  - **Recommended**: Use `python .github/skills/skill-bolt-setup-constitution/scripts/merge_refinement_yamls.py .`
+  - Alternative: Manual merge following Phase 3 instructions
+- [ ] All conflicts are resolved (check `conflicts:` section in merged-refinement.yaml)
 - [ ] Final `constitution.md` generated successfully
 - [ ] Provision report created with stats
 

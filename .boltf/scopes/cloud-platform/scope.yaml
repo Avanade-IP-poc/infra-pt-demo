@@ -6,17 +6,17 @@ items:
   # DEVOPS & PLATFORM SKILLS
   # ============================================
 
-  - id: cloud-senior-devops
+  - id: skill-senior-devops
     kind: skills
     enabled: true
     auto_provision: true
     tags: ['devops', 'ci-cd', 'iac']
     source:
       type: local_folder
-      path: available-skills/cloud-platform/senior-devops
+      path: available-skills/cloud-platform/skill-senior-devops
     destination:
       folder: .github/skills
-      name: senior-devops
+      name: skill-senior-devops
     description: >
       Complete DevOps toolkit with CI/CD, IaC (Terraform/Bicep), containers, and monitoring.
       Includes Python automation scripts for infrastructure management.

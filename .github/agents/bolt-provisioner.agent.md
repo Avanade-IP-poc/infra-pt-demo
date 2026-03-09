@@ -110,19 +110,23 @@ Report what's already in place:
 
 #### Mapping Rules
 
-| Scope             | Available-Skills Folders                                | Selection Logic                                   |
-| ----------------- | ------------------------------------------------------- | ------------------------------------------------- |
-| `backend`         | `dotnet-backend/`, `testing-must/`, `functional-tests/` | If .NET in stack → copy all dotnet-backend skills |
-| `frontend`        | `angular/`, `vue/`, `ui-common/`                        | If Angular → angular/, If Vue → vue/              |
-| `cloud-platform`  | `azure/`, `bolt-framework/`                             | Copy all azure/ skills if Azure cloud             |
-| `ai`              | `bolt-framework/`                                       | Copy skill-bolt-testing-discipline                |
-| `data`            | `testing-must/`                                         | Copy tdd-\* skills                                |
-| `work-management` | `azdo/`, `github/`                                      | If Azure DevOps → azdo/, else github/             |
+| Scope             | Available-Skills Category Folders                       | Selection Logic                                            |
+| ----------------- | ------------------------------------------------------- | ---------------------------------------------------------- |
+| `backend`         | `dotnet-backend/`, `testing-must/`, `functional-tests/` | If .NET in stack → scan these categories for skill folders |
+| `frontend`        | `angular/`, `vue/`, `ui-common/`                        | If Angular → scan angular/, If Vue → scan vue/             |
+| `cloud-platform`  | `azure/`, `bolt-framework/`                             | If Azure → scan azure/ category for skill folders          |
+| `ai`              | `bolt-framework/`                                       | Scan for skill-bolt-testing-discipline                     |
+| `data`            | `testing-must/`                                         | Scan for tdd-\* skill folders                              |
+| `work-management` | `azdo/`, `github/`                                      | If Azure DevOps → scan azdo/, else scan github/            |
+
+> **⚠️ CRITICAL**: Skills must be copied in a **FLAT structure** to `.github/skills/`.
+> **NEVER** copy the parent category folder (e.g., `github/`, `azure/`).
+> **ALWAYS** copy individual skill folders directly under `.github/skills/`.
 
 **Example for `backend` + `.NET` stack**:
 
 ```bash
-# Copy all skills from:
+# ✅ CORRECT - Copy individual skill folders in flat structure:
 .boltf/available-skills/dotnet-backend/backend-testing-dotnet/
   → .github/skills/backend-testing-dotnet/
 
@@ -134,6 +138,10 @@ Report what's already in place:
 
 .boltf/available-skills/testing-must/webapp-testing/
   → .github/skills/webapp-testing/
+
+# ❌ WRONG - DO NOT copy category folders:
+# .boltf/available-skills/dotnet-backend/
+#   → .github/skills/dotnet-backend/  ← NEVER DO THIS
 ```
 
 **Report auto-selected skills**:
@@ -169,12 +177,38 @@ Proceed with copying these skills? **(yes/no)**
 **Copy skills** after confirmation:
 
 ```bash
-# For each selected skill
+# ⚠️ CRITICAL: Copy individual skill folders FLAT to .github/skills/
+# DO NOT preserve the category folder structure
+
+# ✅ CORRECT - For each individual skill folder:
 cp -r .boltf/available-skills/dotnet-backend/backend-testing-dotnet/ \
      .github/skills/backend-testing-dotnet/
 
-# Verify
+cp -r .boltf/available-skills/azure/azure-identity-dotnet/ \
+     .github/skills/azure-identity-dotnet/
+
+cp -r .boltf/available-skills/github/github-workflows/ \
+     .github/skills/github-workflows/
+
+# ❌ WRONG - DO NOT copy entire category folders:
+# cp -r .boltf/available-skills/github/ .github/skills/github/  ← NEVER DO THIS
+
+# Verify each skill has SKILL.md
 ls .github/skills/backend-testing-dotnet/SKILL.md
+ls .github/skills/azure-identity-dotnet/SKILL.md
+ls .github/skills/github-workflows/SKILL.md
+```
+
+**Final validation**:
+
+```bash
+# Verify flat structure in .github/skills/
+ls -1 .github/skills/
+# Expected output (flat list of skill names):
+# backend-testing-dotnet/
+# azure-identity-dotnet/
+# github-workflows/
+# (NOT: github/, azure/, dotnet-backend/)
 ```
 
 ### Step 4: Download from Context7

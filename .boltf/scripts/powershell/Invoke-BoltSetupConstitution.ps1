@@ -73,6 +73,28 @@ function Write-Warn { Write-Host "  ⚠ $args" -ForegroundColor Yellow }
 function Write-Err { Write-Host "  ✗ $args" -ForegroundColor Red }
 function Write-Step { param($msg) Write-Host "`n[$msg]" -ForegroundColor Cyan }
 
+function Convert-YamlScalar {
+    param([string]$Value)
+
+    if ($null -eq $Value) {
+        return $null
+    }
+
+    $trimmed = $Value.Trim()
+    if ($trimmed.StartsWith("'") -and $trimmed.EndsWith("'")) {
+        return $trimmed.Substring(1, $trimmed.Length - 2)
+    }
+
+    if ($trimmed.StartsWith('"') -and $trimmed.EndsWith('"')) {
+        return $trimmed.Substring(1, $trimmed.Length - 2)
+    }
+
+    switch -Regex ($trimmed) {
+        '^(true|false)$' { return ($trimmed -eq 'true') }
+        default { return $trimmed }
+    }
+}
+
 # ─── YAML Parser ──────────────────────────────────────────────────────────────
 
 function Read-Yaml {
@@ -83,44 +105,66 @@ function Read-Yaml {
         return $null
     }
 
-    # Simple YAML parsing for our use case (PowerShell 5.1 compatible)
-    # For complex YAML, consider PowerShell-Yaml module
-    $content = Get-Content $FilePath -Raw
-    $yaml = @{}
+    # Simple line-based YAML parsing for our use case (PowerShell 5.1 compatible)
+    $lines = Get-Content $FilePath
+    $yaml = @{
+        project = @{}
+        decisions = @{}
+        'active-scopes' = @()
+        'transversal-scopes' = @()
+    }
 
-    # Extract project section
-    if ($content -match 'project:\s+practice:\s*(.+?)\s+type:\s*(.+?)\s+migration-type:\s*(.+?)\s+use-aspire:\s*(true|false)[\r\n]') {
-        $yaml.project = @{
-            practice = $matches[1].Trim()
-            type = $matches[2].Trim()
-            'migration-type' = $matches[3].Trim()
-            'use-aspire' = ($matches[4].Trim() -eq 'true')
+    $currentSection = $null
+    $currentDecisionSection = $null
+
+    foreach ($line in $lines) {
+        $normalizedLine = $line.TrimEnd()
+        $normalizedLine = $normalizedLine.TrimStart([char]0xFEFF)
+
+        if ($normalizedLine -match '^([A-Za-z0-9-]+):\s*$') {
+            $currentSection = $matches[1]
+            $currentDecisionSection = $null
+            continue
+        }
+
+        switch ($currentSection) {
+            'project' {
+                if ($normalizedLine -match '^\s{2,}([A-Za-z0-9-]+):\s*(.+)$') {
+                    $yaml.project[$matches[1]] = Convert-YamlScalar -Value $matches[2]
+                }
+            }
+
+            'active-scopes' {
+                if ($normalizedLine -match '^\s*-\s*(.+)$') {
+                    $yaml.'active-scopes' += (Convert-YamlScalar -Value $matches[1])
+                }
+            }
+
+            'transversal-scopes' {
+                if ($normalizedLine -match '^\s*-\s*(.+)$') {
+                    $yaml.'transversal-scopes' += (Convert-YamlScalar -Value $matches[1])
+                }
+            }
+
+            'decisions' {
+                if ($normalizedLine -match '^\s{2,}([A-Za-z0-9-]+):\s*$') {
+                    $currentDecisionSection = $matches[1]
+                    if (-not $yaml.decisions.ContainsKey($currentDecisionSection)) {
+                        $yaml.decisions[$currentDecisionSection] = @{}
+                    }
+                    continue
+                }
+
+                if ($currentDecisionSection -and $normalizedLine -match '^\s{4,}([A-Za-z0-9-]+):\s*(.+)$') {
+                    $yaml.decisions[$currentDecisionSection][$matches[1]] = Convert-YamlScalar -Value $matches[2]
+                }
+            }
         }
     }
-    elseif ($content -match 'project:\s+practice:\s*(.+?)\s+type:\s*(.+?)\s+migration-type:\s*(.+?)[\r\n]') {
-        # Fallback for older scopes.yaml without use-aspire field
-        $yaml.project = @{
-            practice = $matches[1].Trim()
-            type = $matches[2].Trim()
-            'migration-type' = $matches[3].Trim()
-            'use-aspire' = $false
-        }
-    }
 
-    # Extract active scopes
-    $scopes = @()
-    if ($content -match 'active-scopes:([\s\S]+?)(?:transversal-scopes:|decisions:)') {
-        $scopesBlock = $matches[1]
-        $scopes = $scopesBlock -split "`n" | Where-Object { $_ -match '^\s*-\s*(.+)' } | ForEach-Object { $matches[1].Trim() }
+    if (-not $yaml.project.ContainsKey('use-aspire')) {
+        $yaml.project['use-aspire'] = $false
     }
-    $yaml.'active-scopes' = $scopes
-
-    # Extract transversal scopes
-    $transversal = @()
-    if ($content -match 'transversal-scopes:([\s\S]+?)(?:decisions:|$)') {
-        $transversal = $matches[1] -split "`n" | Where-Object { $_ -match '^\s*-\s*(.+)' } | ForEach-Object { $matches[1].Trim() }
-    }
-    $yaml.'transversal-scopes' = $transversal
 
     return $yaml
 }
@@ -138,7 +182,7 @@ function Read-ScopeYaml {
     $scopeName = if ($content -match 'scope:\s*(.+)') { $matches[1].Trim() } else { $null }
     $description = if ($content -match 'description:\s*(.+)') { $matches[1].Trim() } else { '' }
 
-    # Extract enabled items (enabled: true, not auto_provision)
+    # Extract enabled + auto-provision items
     $enabledItems = @()
     $lines = $content -split "`n"
     $inItem = $false
@@ -148,7 +192,7 @@ function Read-ScopeYaml {
         # New item starts with  - id:
         if ($line -match '^\s*-\s*id:\s*(.+)') {
             # Save previous item if it was enabled
-            if ($currentItem.Count -gt 0 -and $currentItem.enabled -eq 'true') {
+            if ($currentItem.Count -gt 0 -and $currentItem.enabled -eq 'true' -and $currentItem.auto_provision -ne 'false') {
                 $enabledItems += $currentItem
             }
             # Start new item
@@ -159,6 +203,8 @@ function Read-ScopeYaml {
             # Extract item properties
             if ($line -match '^\s*kind:\s*(.+)') { $currentItem.kind = $matches[1].Trim() }
             if ($line -match '^\s*enabled:\s*(true|false)') { $currentItem.enabled = $matches[1].Trim() }
+            if ($line -match '^\s*auto_provision:\s*(true|false)') { $currentItem.auto_provision = $matches[1].Trim() }
+            if ($line -match '^\s*condition:\s*(.+)') { $currentItem.condition = Convert-YamlScalar -Value $matches[1] }
             if ($line -match '^\s*tags:\s*\[(.+)\]') {
                 $currentItem.tags = $matches[1].Trim() -split ',' | ForEach-Object { $_.Trim().Trim("'") }
             }
@@ -171,15 +217,11 @@ function Read-ScopeYaml {
             if ($line -match '^\s*folder:\s*(.+)') { $currentItem.dest_folder = $matches[1].Trim() }
             if ($line -match '^\s*name:\s*(.+)') { $currentItem.dest_name = $matches[1].Trim() }
 
-            # Detect start of next section (end of current item)
-            if ($line -match '^\s*-\s*id:') {
-                $inItem = $false
-            }
         }
     }
 
-    # Add last item if it was enabled
-    if ($currentItem.Count -gt 0 -and $currentItem.enabled -eq 'true') {
+    # Add last item if it was enabled and auto-provisioned (or auto_provision omitted)
+    if ($currentItem.Count -gt 0 -and $currentItem.enabled -eq 'true' -and $currentItem.auto_provision -ne 'false') {
         $enabledItems += $currentItem
     }
 
@@ -188,6 +230,70 @@ function Read-ScopeYaml {
         description = $description
         enabled_items = $enabledItems
     }
+}
+
+function Test-ProvisionCondition {
+    param(
+        [string]$Condition,
+        [hashtable]$Context
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Condition)) {
+        return $true
+    }
+
+    $orClauses = $Condition -split '\|\|'
+    foreach ($orClause in $orClauses) {
+        $allMatched = $true
+        $andClauses = $orClause -split '&&'
+
+        foreach ($andClause in $andClauses) {
+            $clause = $andClause.Trim()
+            if ($clause -notmatch '^(?<var>[A-Za-z0-9_-]+)\s*(?<op>==|!=)\s*["''](?<value>[^"'']+)["'']$') {
+                Write-Warn "Unsupported provision condition '$Condition' - skipping conditional item"
+                return $false
+            }
+
+            $key = $matches['var'] -replace '-', '_'
+            $expectedValue = $matches['value']
+            $actualValue = if ($Context.ContainsKey($key) -and $null -ne $Context[$key]) { "$($Context[$key])" } else { '' }
+            $isMatch = if ($matches['op'] -eq '==') { $actualValue -eq $expectedValue } else { $actualValue -ne $expectedValue }
+
+            if (-not $isMatch) {
+                $allMatched = $false
+                break
+            }
+        }
+
+        if ($allMatched) {
+            return $true
+        }
+    }
+
+    return $false
+}
+
+function New-ProvisionContext {
+    param(
+        [hashtable]$ScopesConfig,
+        [string]$Scope
+    )
+
+    $decisions = if ($ScopesConfig.decisions) { $ScopesConfig.decisions } else { @{} }
+    $project = if ($ScopesConfig.project) { $ScopesConfig.project } else { @{} }
+    $cicdDecision = if ($decisions.ContainsKey('cicd')) { $decisions.cicd } else { @{} }
+
+    $context = @{
+        scope = $Scope
+        practice = $ScopesConfig.practice
+        project_type = $project.type
+        migration_type = $project['migration-type']
+        cicd_platform = if ($cicdDecision) { $cicdDecision.platform } else { $null }
+        work_management_tool = if ($project.ContainsKey('work-management-tool')) { $project['work-management-tool'] } else { $null }
+        local_orchestration = if ($project.ContainsKey('local-orchestration')) { $project['local-orchestration'] } else { $null }
+    }
+
+    return $context
 }
 
 # ─── Step 1: Load Active Scopes ──────────────────────────────────────────────
@@ -230,6 +336,8 @@ function Get-ActiveScopes {
         active = $activeScopes
         transversal = $transversal
         practice = $practice
+        project = $scopesConfig.project
+        decisions = $scopesConfig.decisions
         all = $activeScopes + $transversal
     }
 }
@@ -391,7 +499,8 @@ $masterContent
 function Copy-ProvisionedFiles {
     param(
         [string]$ProjectPath,
-        [array]$Scopes
+        [array]$Scopes,
+        [hashtable]$ScopesConfig
     )
 
     Write-Step "Step 3: Provisioning Files by Scope"
@@ -422,8 +531,14 @@ function Copy-ProvisionedFiles {
         }
 
         Write-Info "Processing scope: $scope ($($scopeConfig.enabled_items.Count) items enabled)"
+        $provisionContext = New-ProvisionContext -ScopesConfig $ScopesConfig -Scope $scope
 
         foreach ($item in $scopeConfig.enabled_items) {
+            if ($item.condition -and -not (Test-ProvisionCondition -Condition $item.condition -Context $provisionContext)) {
+                Write-Info "Skipping $($item.id) - condition not met: $($item.condition)"
+                continue
+            }
+
             $destPath = Join-Path $ProjectPath "$($item.dest_folder)\$($item.dest_name)"
             $sourcePath = $null
             $sourceType = $item.source_type
@@ -432,6 +547,11 @@ function Copy-ProvisionedFiles {
             # Handle different source types
             switch ($sourceType) {
                 'local_file' {
+                    if ($item.source_path) {
+                        $sourcePath = Join-Path $ProjectPath ".boltf\$($item.source_path)"
+                    }
+                }
+                'local_folder' {
                     if ($item.source_path) {
                         $sourcePath = Join-Path $ProjectPath ".boltf\$($item.source_path)"
                     }
@@ -499,6 +619,10 @@ function Copy-ProvisionedFiles {
                 }
 
                 # Copy file or directory
+                # IMPORTANT: Skills are copied in FLAT structure to .github/skills/
+                # - Source: .boltf/available-skills/<category>/<skill-name>/
+                # - Dest:   .github/skills/<skill-name>/
+                # Category folders (github/, azure/, etc.) are NOT copied, only individual skills
                 if (Test-Path $sourcePath -PathType Container) {
                     Copy-Item -Path $sourcePath -Destination $destPath -Recurse -Force
                 }
@@ -602,7 +726,9 @@ function Copy-CoreSkills {
                 New-Item -ItemType Directory -Path $skillsDir -Force | Out-Null
             }
 
-            # Copy skill recursively
+            # Copy skill recursively in FLAT structure
+            # This copies individual skill folders directly to .github/skills/
+            # NOT the parent bolt-framework/ category folder
             Copy-Item -Path $sourcePath -Destination $destPath -Recurse -Force
             Write-Success "Core skill provisioned: $skillName"
             $provisionedCore += $skillName
@@ -969,12 +1095,12 @@ function Main {
             Write-Host ""
 
             # Read scopes.yaml to check if Aspire orchestration is selected
-            $scopesYamlPath = Join-Path $resolvedPath ".boltf\memory\scopes.yaml"
+            $scopesYamlPath = Join-Path $resolvedPath ".boltf\scopes.yaml"
             $scopesConfig = Read-Yaml -FilePath $scopesYamlPath
             $localOrch = if ($scopesConfig.project.'local-orchestration') { $scopesConfig.project.'local-orchestration' } else { 'none' }
             $useAspire = ($localOrch -eq 'aspire')
 
-            $scopeFiles = Copy-ProvisionedFiles -ProjectPath $resolvedPath -Scopes $scopes.all
+            $scopeFiles = Copy-ProvisionedFiles -ProjectPath $resolvedPath -Scopes $scopes.all -ScopesConfig $scopes
             $coreSkills = Copy-CoreSkills -ProjectPath $resolvedPath
             $aspireResources = Copy-AspireResources -ProjectPath $resolvedPath -UseAspire $useAspire
 
@@ -1002,17 +1128,39 @@ function Main {
             Write-Host ""
         }
         else {
-            # No phase specified - show usage
-            Write-Err "No phase specified"
+            # Default execution mode: provisioning
+            Write-Info "No explicit phase specified - defaulting to resource provisioning"
             Write-Host ""
-            Write-Info "Usage:"
-            Write-Info "  Phase 1: .\Invoke-BoltSetupConstitution.ps1 -GenerateMaster"
-            Write-Info "  Phase 3: .\Invoke-BoltSetupConstitution.ps1 -GenerateFinal -Refinements `$refine"
-            Write-Info "  Phase 4: .\Invoke-BoltSetupConstitution.ps1 -Provision"
+            $scopesYamlPath = Join-Path $resolvedPath ".boltf\scopes.yaml"
+            $scopesConfig = Read-Yaml -FilePath $scopesYamlPath
+            $localOrch = if ($scopesConfig.project.'local-orchestration') { $scopesConfig.project.'local-orchestration' } else { 'none' }
+            $useAspire = ($localOrch -eq 'aspire')
+
+            $scopeFiles = Copy-ProvisionedFiles -ProjectPath $resolvedPath -Scopes $scopes.all -ScopesConfig $scopes
+            $coreSkills = Copy-CoreSkills -ProjectPath $resolvedPath
+            $aspireResources = Copy-AspireResources -ProjectPath $resolvedPath -UseAspire $useAspire
+
+            $reportPath = New-ProvisionReport `
+                -ProjectPath $resolvedPath `
+                -Scopes $scopes `
+                -Constitution @{count=0} `
+                -ScopeFiles $scopeFiles `
+                -CoreSkills $coreSkills `
+                -AspireResources $aspireResources
+
             Write-Host ""
-            Write-Info "Add -DryRun to preview without writing files"
+            Write-Success "Default Provisioning Complete"
+            Write-Success "Core skills: $($coreSkills.Count)"
+            if ($useAspire) {
+                Write-Success "Aspire resources: $($aspireResources.Count)"
+            }
+            Write-Success "Prompts: $($scopeFiles.prompts.Count)"
+            Write-Success "Instructions: $($scopeFiles.instructions.Count)"
+            Write-Success "Skills: $($scopeFiles.skills.Count)"
+            Write-Success "Templates: $($scopeFiles.templates.Count)"
+            Write-Success "Agents: $($scopeFiles.agents.Count)"
+            Write-Info "Provision report: $reportPath"
             Write-Host ""
-            exit 1
         }
 
         # Success banner

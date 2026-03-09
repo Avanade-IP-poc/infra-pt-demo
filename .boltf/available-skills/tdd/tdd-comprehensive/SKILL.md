@@ -1,6 +1,6 @@
 ---
 name: tdd-comprehensive
-description: 'Test-Driven Development (TDD) with Red-Green-Refactor cycle, strict test-first discipline, unit testing workflow, coverage requirements, failing test patterns, and comprehensive testing strategy. Use when implementing test driven development, writing tests before code, red green refactor cycle, test first approach, ensuring code quality through comprehensive test coverage, or enforcing TDD workflow discipline.'
+description: Test-Driven Development (TDD) with Red-Green-Refactor cycle, strict test-first discipline, unit testing workflow, coverage requirements, failing test patterns, and comprehensive testing strategy. Use when implementing test driven development, writing tests before code, red green refactor cycle, test first approach, ensuring code quality through comprehensive test coverage, or enforcing TDD workflow discipline.
 ---
 
 # TDD Comprehensive - Test-Driven Development
@@ -481,18 +481,18 @@ Before writing production code:
 
 ## When TDD is Working Well
 
-✅ Cycle time is short (< 30 min)  
-✅ Tests are green most of the time  
-✅ Refactoring is fearless  
-✅ Code coverage is high naturally  
+✅ Cycle time is short (< 30 min)
+✅ Tests are green most of the time
+✅ Refactoring is fearless
+✅ Code coverage is high naturally
 ✅ Bugs are caught early
 
 ## When TDD is Not Working
 
-❌ Cycle time > 1 hour  
-❌ Tests frequently break  
-❌ Afraid to refactor  
-❌ Coverage gaps after TDD  
+❌ Cycle time > 1 hour
+❌ Tests frequently break
+❌ Afraid to refactor
+❌ Coverage gaps after TDD
 ❌ Tests feel like burden
 
 **If experiencing these: Review workflow, ask for help, don't abandon TDD.**

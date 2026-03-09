@@ -5,7 +5,7 @@ tools:
   [
     search,
     read,
-    memory,
+    vscode/memory,
     web,
     vscode,
     agent,
