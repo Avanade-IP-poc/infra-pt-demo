@@ -1312,7 +1312,7 @@ function Show-Summary {
             Push-Location $OutputDirectory
             try {
                 # TODO: Need to validate which tools to allow by default
-                & copilot --agent="bolt-constitution" --banner --model "gpt-5.4" --allow-tool 'shell' -i "setup constitution"
+                & copilot --agent="bolt-constitution" --banner --model "gpt-5.4" --yolo --allow-tool 'shell' -i "setup constitution"
                 Write-Host ""
                 Write-Host "  ✓ @Bolt Constitution agent completed" -ForegroundColor Green
                 Write-Host "  📝 Review provision results above" -ForegroundColor Cyan
