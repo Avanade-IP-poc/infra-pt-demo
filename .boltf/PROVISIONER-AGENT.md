@@ -17,12 +17,12 @@ Se ha creado un **agente especializado** `@Bolt Provisioner` que se encarga de t
 ```mermaid
 graph TD
     A[Usuario ejecuta Init.ps1] --> B[scopes.yaml generado]
-    B --> C[@Bolt Constitution invocado]
+    B --> C["@Bolt Constitution invocado"]
     C --> D[Phase 1: Master Constitution]
     D --> E[Phase 2: Refinement Opcional]
     E --> F[Phase 3: Final Constitution]
     F --> G{Provision?}
-    G -->|Yes| H[Handoff a @Bolt Provisioner]
+    G -->|Yes| H["Handoff a @Bolt Provisioner"]
     H --> I[PowerShell: Copy local files]
     H --> J[Auto-select skills from available-skills]
     H --> K[Download Context7 via MCP]
@@ -33,7 +33,7 @@ graph TD
     K --> N
     L --> N
     M --> N
-    N --> O[Return to @Bolt Constitution]
+    N --> O["Return to @Bolt Constitution"]
     O --> P[Phase 4.4: Final Summary]
 ```
 

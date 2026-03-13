@@ -216,6 +216,141 @@ function Read-YesNo {
     return ($ans.Trim().ToLower() -eq 'y')
 }
 
+function Get-CopilotCliModels {
+    <#
+    .SYNOPSIS  Query available models from GitHub Copilot CLI.
+    .DESCRIPTION
+        Parses 'copilot --help' output to extract the list of available models.
+    .OUTPUTS  Array of model names, or empty array if CLI not available or parsing fails.
+    #>
+    try {
+        $helpText = & copilot --help 2>&1 | Out-String
+        
+        # Parse: --model <model>  Set the AI model to use (choices: "model1", "model2", ...)
+        if ($helpText -match '--model <model>\s+Set the AI model to use \(choices:\s*([^)]+)\)') {
+            $modelList = $Matches[1]
+            # Extract model names from quoted strings: "claude-sonnet-4.6", "gpt-5.4", etc.
+            $models = [regex]::Matches($modelList, '"([^"]+)"') | ForEach-Object { $_.Groups[1].Value }
+            return $models
+        }
+        return @()
+    }
+    catch {
+        return @()
+    }
+}
+
+function Select-CopilotModel {
+    <#
+    .SYNOPSIS  Let user select a model from available Copilot CLI models.
+    .OUTPUTS  Selected model name or $null if no models available.
+    #>
+    Write-Host ""
+    Write-Host "  🔍 Querying available models from Copilot CLI..." -ForegroundColor DarkGray
+    
+    $models = Get-CopilotCliModels
+    
+    if ($models.Count -eq 0) {
+        Write-Warn "Could not retrieve model list from CLI. Using default."
+        return "gpt-5.1"  # Fallback default
+    }
+    
+    # Group models by family for better display
+    $claudeModels = $models | Where-Object { $_ -like "claude*" }
+    $gptModels = $models | Where-Object { $_ -like "gpt*" }
+    $geminiModels = $models | Where-Object { $_ -like "gemini*" }
+    $otherModels = $models | Where-Object { $_ -notlike "claude*" -and $_ -notlike "gpt*" -and $_ -notlike "gemini*" }
+    
+    # Reorder: Claude first (best for agents), then GPT, then Gemini, then others
+    $orderedModels = @()
+    $orderedModels += $claudeModels
+    $orderedModels += $gptModels
+    $orderedModels += $geminiModels
+    $orderedModels += $otherModels
+    
+    # Find a sensible default (prefer claude-sonnet-4 or gpt-5.1)
+    $defaultIdx = 1
+    for ($i = 0; $i -lt $orderedModels.Count; $i++) {
+        if ($orderedModels[$i] -eq "claude-sonnet-4") { $defaultIdx = $i + 1; break }
+        if ($orderedModels[$i] -eq "gpt-5.1") { $defaultIdx = $i + 1 }
+    }
+    
+    return Read-Choice `
+        -Title "Select AI model for @Bolt Constitution agent:" `
+        -Options $orderedModels `
+        -Values $orderedModels `
+        -Default $defaultIdx
+}
+
+function Test-CopilotCliVersion {
+    <#
+    .SYNOPSIS  Check if Copilot CLI is up-to-date.
+    .DESCRIPTION
+        Compares installed version against latest available in npm registry.
+        Returns hashtable with: IsUpToDate, CurrentVersion, LatestVersion, NeedsUpdate
+    #>
+    
+    $result = @{
+        IsUpToDate = $false
+        CurrentVersion = $null
+        LatestVersion = $null
+        NeedsUpdate = $true
+    }
+    
+    try {
+        # Get installed version
+        $versionOutput = & copilot --version 2>&1 | Out-String
+        
+        # Parse version: "GitHub Copilot CLI 1.0.4." or similar
+        if ($versionOutput -match '(\d+\.\d+\.\d+)') {
+            $result.CurrentVersion = $Matches[1]
+        }
+        else {
+            $result.CurrentVersion = "unknown"
+            return $result
+        }
+        
+        # Get latest version from npm registry
+        $npmCheck = Get-Command npm -ErrorAction SilentlyContinue
+        if ($null -ne $npmCheck) {
+            $latestVersion = & npm view @github/copilot version 2>&1 | Out-String
+            $latestVersion = $latestVersion.Trim()
+            
+            if ($latestVersion -match '^\d+\.\d+\.\d+$') {
+                $result.LatestVersion = $latestVersion
+                
+                # Compare versions
+                $current = [System.Version]$result.CurrentVersion
+                $latest = [System.Version]$latestVersion
+                
+                if ($current -ge $latest) {
+                    $result.IsUpToDate = $true
+                    $result.NeedsUpdate = $false
+                }
+            }
+            else {
+                # Could not fetch latest, assume current is ok
+                $result.LatestVersion = "unknown"
+                $result.IsUpToDate = $true
+                $result.NeedsUpdate = $false
+            }
+        }
+        else {
+            # npm not available, can't check latest - assume current is ok
+            $result.LatestVersion = "unknown"
+            $result.IsUpToDate = $true
+            $result.NeedsUpdate = $false
+        }
+    }
+    catch {
+        # CLI not available or error parsing
+        $result.CurrentVersion = "unknown"
+        $result.LatestVersion = "unknown"
+    }
+    
+    return $result
+}
+
 # ─── Prerequisite checks ────────────────────────────────────────────────────
 function Test-Prerequisites {
     if ($ProjectType -eq "brown" -and [string]::IsNullOrEmpty($SourceDirectory)) {
@@ -1298,21 +1433,54 @@ function Show-Summary {
     Write-Host "  AUTOMATED SETUP (Phase 2 of 2):" -ForegroundColor Cyan
     Write-Host ""
 
-    # Check if GitHub Copilot CLI is available
+    # Check if GitHub Copilot CLI is available and up-to-date
     $cliAvailable = Get-Command copilot -ErrorAction SilentlyContinue
 
     if ($null -ne $cliAvailable) {
-        Write-Host "  ✓ GitHub Copilot CLI detected" -ForegroundColor Green
+        # Check if there's a newer version available
+        Write-Host "  🔍 Checking Copilot CLI version..." -ForegroundColor DarkGray
+        $versionCheck = Test-CopilotCliVersion
+        
+        if ($versionCheck.NeedsUpdate -and $versionCheck.LatestVersion -ne "unknown") {
+            Write-Host ""
+            Write-Host "  ⚠ GitHub Copilot CLI update available" -ForegroundColor Yellow
+            Write-Host "    Installed: $($versionCheck.CurrentVersion)" -ForegroundColor Red
+            Write-Host "    Latest:    $($versionCheck.LatestVersion)" -ForegroundColor Green
+            Write-Host ""
+            Write-Host "  📦 UPDATE RECOMMENDED:" -ForegroundColor Cyan
+            Write-Host "     Run: copilot update" -ForegroundColor White
+            Write-Host "     Or:  npm install -g @github/copilot" -ForegroundColor White
+            Write-Host ""
+            
+            $continueAnyway = Read-YesNo "Continue with current version anyway?" $false
+            if (-not $continueAnyway) {
+                Write-Host ""
+                Write-Host "  📝 AFTER UPDATING, RUN:" -ForegroundColor Yellow
+                Write-Host "     1. cd $OutputDirectory" -ForegroundColor White
+                Write-Host "     2. Run: copilot" -ForegroundColor White
+                Write-Host "     3. Prompt: @Bolt Constitution setup constitution" -ForegroundColor White
+                Write-Host ""
+                return
+            }
+            Write-Host ""
+        }
+        
+        Write-Host "  ✓ GitHub Copilot CLI v$($versionCheck.CurrentVersion) detected" -ForegroundColor Green
         Write-Host "  🤖 Invoking @Bolt Constitution agent (INTERACTIVE MODE)..." -ForegroundColor Yellow
         Write-Host "  ⚠  You will be prompted to approve each provisioning step" -ForegroundColor Yellow
+        Write-Host ""
+
+        # Let user select which AI model to use
+        $selectedModel = Select-CopilotModel
+        Write-Host ""
+        Write-Host "  📦 Using model: $selectedModel" -ForegroundColor Cyan
         Write-Host ""
 
         try {
             # Change to project directory and invoke agent
             Push-Location $OutputDirectory
             try {
-                # TODO: Need to validate which tools to allow by default
-                & copilot --agent="bolt-constitution" --banner --model "gpt-5.4" --yolo --allow-tool 'shell' -i "setup constitution"
+                & copilot --agent="bolt-constitution" --banner --model $selectedModel --yolo --allow-tool 'shell' -i "setup constitution"
                 Write-Host ""
                 Write-Host "  ✓ @Bolt Constitution agent completed" -ForegroundColor Green
                 Write-Host "  📝 Review provision results above" -ForegroundColor Cyan
@@ -1325,7 +1493,7 @@ function Show-Summary {
             Write-Warn "Failed to invoke agent: $_"
             Write-Host "  📝 MANUAL FALLBACK:" -ForegroundColor Yellow
             Write-Host "     1. cd $OutputDirectory" -ForegroundColor White
-            Write-Host "     2. Run: copilot" -ForegroundColor White
+            Write-Host "     2. Run: copilot --model $selectedModel" -ForegroundColor White
             Write-Host "     3. Prompt: Use Bolt Constitution agent to setup constitution" -ForegroundColor White
         }
     }
