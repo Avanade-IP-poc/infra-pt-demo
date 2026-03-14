@@ -1532,7 +1532,7 @@ function Show-Summary {
             # Change to project directory and invoke agent
             Push-Location $OutputDirectory
             try {
-                & copilot --agent="bolt-constitution" --banner --model $selectedModel --yolo --allow-tool 'shell' -i "setup constitution" --allow-path $OutputDirectory
+                & copilot --agent="bolt-constitution" --banner --model $selectedModel --yolo --allow-tool 'shell' -i "setup constitution" --add-dir $OutputDirectory
                 Write-Host ""
                 Write-Host "  ✓ @Bolt Constitution agent completed" -ForegroundColor Green
                 Write-Host "  📝 Review provision results above" -ForegroundColor Cyan
