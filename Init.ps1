@@ -216,6 +216,25 @@ function Read-YesNo {
     return ($ans.Trim().ToLower() -eq 'y')
 }
 
+function Test-ScopeActive {
+    <#
+    .SYNOPSIS  Check if any of the specified scopes are active.
+    .PARAMETER Scopes  Array of active scopes.
+    .PARAMETER RequiredScopes  Array of scopes to check (OR logic).
+    .OUTPUTS  $true if any required scope is active, $false otherwise.
+    #>
+    param(
+        [string[]]$Scopes,
+        [string[]]$RequiredScopes
+    )
+    foreach ($required in $RequiredScopes) {
+        if ($Scopes -contains $required) {
+            return $true
+        }
+    }
+    return $false
+}
+
 function Get-CopilotCliModels {
     <#
     .SYNOPSIS  Query available models from GitHub Copilot CLI.
@@ -225,7 +244,7 @@ function Get-CopilotCliModels {
     #>
     try {
         $helpText = & copilot --help 2>&1 | Out-String
-        
+
         # Parse: --model <model>  Set the AI model to use (choices: "model1", "model2", ...)
         if ($helpText -match '--model <model>\s+Set the AI model to use \(choices:\s*([^)]+)\)') {
             $modelList = $Matches[1]
@@ -247,34 +266,34 @@ function Select-CopilotModel {
     #>
     Write-Host ""
     Write-Host "  🔍 Querying available models from Copilot CLI..." -ForegroundColor DarkGray
-    
+
     $models = Get-CopilotCliModels
-    
+
     if ($models.Count -eq 0) {
         Write-Warn "Could not retrieve model list from CLI. Using default."
         return "gpt-5.1"  # Fallback default
     }
-    
+
     # Group models by family for better display
     $claudeModels = $models | Where-Object { $_ -like "claude*" }
     $gptModels = $models | Where-Object { $_ -like "gpt*" }
     $geminiModels = $models | Where-Object { $_ -like "gemini*" }
     $otherModels = $models | Where-Object { $_ -notlike "claude*" -and $_ -notlike "gpt*" -and $_ -notlike "gemini*" }
-    
+
     # Reorder: Claude first (best for agents), then GPT, then Gemini, then others
     $orderedModels = @()
     $orderedModels += $claudeModels
     $orderedModels += $gptModels
     $orderedModels += $geminiModels
     $orderedModels += $otherModels
-    
+
     # Find a sensible default (prefer claude-sonnet-4 or gpt-5.1)
     $defaultIdx = 1
     for ($i = 0; $i -lt $orderedModels.Count; $i++) {
         if ($orderedModels[$i] -eq "claude-sonnet-4") { $defaultIdx = $i + 1; break }
         if ($orderedModels[$i] -eq "gpt-5.1") { $defaultIdx = $i + 1 }
     }
-    
+
     return Read-Choice `
         -Title "Select AI model for @Bolt Constitution agent:" `
         -Options $orderedModels `
@@ -289,18 +308,18 @@ function Test-CopilotCliVersion {
         Compares installed version against latest available in npm registry.
         Returns hashtable with: IsUpToDate, CurrentVersion, LatestVersion, NeedsUpdate
     #>
-    
+
     $result = @{
         IsUpToDate = $false
         CurrentVersion = $null
         LatestVersion = $null
         NeedsUpdate = $true
     }
-    
+
     try {
         # Get installed version
         $versionOutput = & copilot --version 2>&1 | Out-String
-        
+
         # Parse version: "GitHub Copilot CLI 1.0.4." or similar
         if ($versionOutput -match '(\d+\.\d+\.\d+)') {
             $result.CurrentVersion = $Matches[1]
@@ -309,20 +328,20 @@ function Test-CopilotCliVersion {
             $result.CurrentVersion = "unknown"
             return $result
         }
-        
+
         # Get latest version from npm registry
         $npmCheck = Get-Command npm -ErrorAction SilentlyContinue
         if ($null -ne $npmCheck) {
             $latestVersion = & npm view @github/copilot version 2>&1 | Out-String
             $latestVersion = $latestVersion.Trim()
-            
+
             if ($latestVersion -match '^\d+\.\d+\.\d+$') {
                 $result.LatestVersion = $latestVersion
-                
+
                 # Compare versions
                 $current = [System.Version]$result.CurrentVersion
                 $latest = [System.Version]$latestVersion
-                
+
                 if ($current -ge $latest) {
                     $result.IsUpToDate = $true
                     $result.NeedsUpdate = $false
@@ -347,7 +366,7 @@ function Test-CopilotCliVersion {
         $result.CurrentVersion = "unknown"
         $result.LatestVersion = "unknown"
     }
-    
+
     return $result
 }
 
@@ -782,22 +801,42 @@ function Get-AllDecisions {
     Write-Host ""
     Write-Step "Article XVI — Security Policies"
 
-    $d.VNet          = Read-YesNo "§16.1  Azure Virtual Network?"          $true
-    $d.PrivateEndpoints = Read-YesNo "§16.1  Private Endpoints?"           $true
-    $d.WAF           = Read-YesNo "§16.1  Web Application Firewall (Front Door)?" $false
+    # §16.1 — Network Security (cloud-platform scope only)
+    $hasCloudForSecurity = Test-ScopeActive -Scopes $d.Scopes -RequiredScopes @("cloud-platform")
+    if ($hasCloudForSecurity) {
+        $d.VNet          = Read-YesNo "§16.1  Azure Virtual Network?"          $true
+        $d.PrivateEndpoints = Read-YesNo "§16.1  Private Endpoints?"           $true
+        $d.WAF           = Read-YesNo "§16.1  Web Application Firewall (Front Door)?" $false
+    } else {
+        # Default values for projects without cloud-platform scope
+        $d.VNet = $false
+        $d.PrivateEndpoints = $false
+        $d.WAF = $false
+        Write-Info "Network security (VNet, Private Endpoints, WAF) — skipped (no cloud-platform scope)"
+    }
 
-    $d.EncryptionKeys = Read-Choice `
-        -Title "§16.2  Encryption at rest" `
-        -Options @("Azure-managed keys", "Customer-managed keys") `
-        -Values @("azure-managed", "customer-managed") `
-        -Default 1
+    # §16.2 — Data Security (backend, data, ai scopes)
+    $hasDataScopes = Test-ScopeActive -Scopes $d.Scopes -RequiredScopes @("backend", "data", "ai")
+    if ($hasDataScopes) {
+        $d.EncryptionKeys = Read-Choice `
+            -Title "§16.2  Encryption at rest" `
+            -Options @("Azure-managed keys", "Customer-managed keys") `
+            -Values @("azure-managed", "customer-managed") `
+            -Default 1
 
-    $d.PiiHandling = Read-Choice `
-        -Title "§16.2  PII handling" `
-        -Options @("Anonymization", "Pseudonymization", "Encryption") `
-        -Values @("anonymization", "pseudonymization", "encryption") `
-        -Default 3
+        $d.PiiHandling = Read-Choice `
+            -Title "§16.2  PII handling" `
+            -Options @("Anonymization", "Pseudonymization", "Encryption") `
+            -Values @("anonymization", "pseudonymization", "encryption") `
+            -Default 3
+    } else {
+        # Default values for projects without data-related scopes
+        $d.EncryptionKeys = "azure-managed"
+        $d.PiiHandling = "encryption"
+        Write-Info "Data security (Encryption, PII) — skipped (no backend/data/ai scope)"
+    }
 
+    # §16.3 — Compliance (applies to all scopes)
     $d.Compliance = Read-MultiChoice `
         -Title "§16.3  Compliance requirements" `
         -Options @("GDPR", "HIPAA", "SOC 2", "PCI-DSS", "None") `
@@ -1440,7 +1479,7 @@ function Show-Summary {
         # Check if there's a newer version available
         Write-Host "  🔍 Checking Copilot CLI version..." -ForegroundColor DarkGray
         $versionCheck = Test-CopilotCliVersion
-        
+
         if ($versionCheck.NeedsUpdate -and $versionCheck.LatestVersion -ne "unknown") {
             Write-Host ""
             Write-Host "  ⚠ GitHub Copilot CLI update available" -ForegroundColor Yellow
@@ -1451,7 +1490,7 @@ function Show-Summary {
             Write-Host "     Run: copilot update" -ForegroundColor White
             Write-Host "     Or:  npm install -g @github/copilot" -ForegroundColor White
             Write-Host ""
-            
+
             $continueAnyway = Read-YesNo "Continue with current version anyway?" $false
             if (-not $continueAnyway) {
                 Write-Host ""
@@ -1464,7 +1503,7 @@ function Show-Summary {
             }
             Write-Host ""
         }
-        
+
         Write-Host "  ✓ GitHub Copilot CLI v$($versionCheck.CurrentVersion) detected" -ForegroundColor Green
         Write-Host "  🤖 Invoking @Bolt Constitution agent (INTERACTIVE MODE)..." -ForegroundColor Yellow
         Write-Host "  ⚠  You will be prompted to approve each provisioning step" -ForegroundColor Yellow
@@ -1480,7 +1519,7 @@ function Show-Summary {
             # Change to project directory and invoke agent
             Push-Location $OutputDirectory
             try {
-                & copilot --agent="bolt-constitution" --banner --model $selectedModel --yolo --allow-tool 'shell' -i "setup constitution"
+                & copilot --agent="bolt-constitution" --banner --model $selectedModel --yolo --allow-tool 'shell' -i "setup constitution" --allow-path $OutputDirectory
                 Write-Host ""
                 Write-Host "  ✓ @Bolt Constitution agent completed" -ForegroundColor Green
                 Write-Host "  📝 Review provision results above" -ForegroundColor Cyan

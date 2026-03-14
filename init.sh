@@ -222,6 +222,141 @@ read_yes_no() {
     fi
 }
 
+test_scope_active() {
+    # Check if any of the specified scopes are active
+    # Usage: test_scope_active "backend frontend" "${D_SCOPES[@]}"
+    # Returns: 0 (true) if any required scope is active, 1 (false) otherwise
+    local required_scopes="$1"; shift
+    local -a active_scopes=("$@")
+
+    for required in $required_scopes; do
+        for active in "${active_scopes[@]}"; do
+            if [[ "$active" == "$required" ]]; then
+                return 0  # true
+            fi
+        done
+    done
+    return 1  # false
+}
+
+get_copilot_cli_models() {
+    # Query available models from GitHub Copilot CLI
+    # Parses 'copilot --help' output to extract the list of available models
+    # Returns: Array of model names, or empty array if CLI not available
+    local help_text
+    help_text=$(copilot --help 2>&1 || true)
+
+    # Parse: --model <model>  Set the AI model to use (choices: "model1", "model2", ...)
+    if echo "$help_text" | grep -q "--model <model>.*choices:"; then
+        # Extract model names from quoted strings: "claude-sonnet-4.6", "gpt-5.4", etc.
+        echo "$help_text" | grep -oP '"\K[^"]+(?=")' | grep -E '^(claude|gpt|gemini)'
+    fi
+}
+
+REPLY_MODEL=""
+select_copilot_model() {
+    # Let user select a model from available Copilot CLI models
+    # Returns: Selected model name or fallback default
+    echo ""
+    echo -e "  ${WHITE}🔍 Querying available models from Copilot CLI...${NC}"
+
+    local -a models=()
+    mapfile -t models < <(get_copilot_cli_models)
+
+    if [[ ${#models[@]} -eq 0 ]]; then
+        log_warn "Could not retrieve model list from CLI. Using default."
+        REPLY_MODEL="gpt-5.1"  # Fallback default
+        return
+    fi
+
+    # Group models by family for better display
+    local -a claude_models=()
+    local -a gpt_models=()
+    local -a gemini_models=()
+    local -a other_models=()
+
+    for model in "${models[@]}"; do
+        if [[ "$model" == claude* ]]; then
+            claude_models+=("$model")
+        elif [[ "$model" == gpt* ]]; then
+            gpt_models+=("$model")
+        elif [[ "$model" == gemini* ]]; then
+            gemini_models+=("$model")
+        else
+            other_models+=("$model")
+        fi
+    done
+
+    # Reorder: Claude first (best for agents), then GPT, then Gemini, then others
+    local -a ordered_models=()
+    ordered_models+=("${claude_models[@]}")
+    ordered_models+=("${gpt_models[@]}")
+    ordered_models+=("${gemini_models[@]}")
+    ordered_models+=("${other_models[@]}")
+
+    # Find a sensible default (prefer claude-sonnet-4 or gpt-5.1)
+    local default_idx=1
+    for i in "${!ordered_models[@]}"; do
+        if [[ "${ordered_models[$i]}" == "claude-sonnet-4" ]]; then
+            default_idx=$((i + 1))
+            break
+        elif [[ "${ordered_models[$i]}" == "gpt-5.1" ]]; then
+            default_idx=$((i + 1))
+        fi
+    done
+
+    read_choice "Select AI model for @Bolt Constitution agent:" "$default_idx" \
+        "${ordered_models[@]}" \
+        --- "${ordered_models[@]}"
+    REPLY_MODEL="$REPLY_CHOICE"
+}
+
+test_copilot_cli_version() {
+    # Check if Copilot CLI is up-to-date
+    # Compares installed version against latest available in npm registry
+    # Sets: CLI_VERSION_CHECK_RESULT="up-to-date" | "needs-update" | "unknown"
+    #       CLI_CURRENT_VERSION, CLI_LATEST_VERSION
+    CLI_VERSION_CHECK_RESULT="unknown"
+    CLI_CURRENT_VERSION="unknown"
+    CLI_LATEST_VERSION="unknown"
+
+    # Get installed version
+    local version_output
+    version_output=$(copilot --version 2>&1 || true)
+
+    # Parse version: "GitHub Copilot CLI 1.0.4." or similar
+    if [[ "$version_output" =~ ([0-9]+\.[0-9]+\.[0-9]+) ]]; then
+        CLI_CURRENT_VERSION="${BASH_REMATCH[1]}"
+    else
+        return 0  # Can't determine version
+    fi
+
+    # Get latest version from npm registry (if npm is available)
+    if command -v npm &> /dev/null; then
+        local latest_version
+        latest_version=$(npm view @github/copilot version 2>&1 || true)
+        latest_version=$(echo "$latest_version" | tr -d '[:space:]')
+
+        if [[ "$latest_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            CLI_LATEST_VERSION="$latest_version"
+
+            # Simple version comparison (works for semver)
+            if [[ "$CLI_CURRENT_VERSION" == "$CLI_LATEST_VERSION" ]] || \
+               [[ "$(printf '%s\n' "$CLI_LATEST_VERSION" "$CLI_CURRENT_VERSION" | sort -V | head -n1)" == "$CLI_LATEST_VERSION" ]]; then
+                CLI_VERSION_CHECK_RESULT="up-to-date"
+            else
+                CLI_VERSION_CHECK_RESULT="needs-update"
+            fi
+        else
+            # Could not fetch latest, assume current is ok
+            CLI_VERSION_CHECK_RESULT="up-to-date"
+        fi
+    else
+        # npm not available, can't check latest - assume current is ok
+        CLI_VERSION_CHECK_RESULT="up-to-date"
+    fi
+}
+
 # --- Prerequisite checks -----------------------------------------------------
 check_prerequisites() {
     if [[ -z "$OUTPUT_DIR" ]]; then
@@ -665,25 +800,43 @@ collect_all_decisions() {
     echo ""
     log_step "Article XVI — Security Policies"
 
-    read_yes_no "§16.1  Azure Virtual Network?" "true"
-    D_VNET="$REPLY_YN"
+    # §16.1 — Network Security (cloud-platform scope only)
+    if test_scope_active "cloud-platform" "${D_SCOPES[@]}"; then
+        read_yes_no "§16.1  Azure Virtual Network?" "true"
+        D_VNET="$REPLY_YN"
 
-    read_yes_no "§16.1  Private Endpoints?" "true"
-    D_PRIVATE_ENDPOINTS="$REPLY_YN"
+        read_yes_no "§16.1  Private Endpoints?" "true"
+        D_PRIVATE_ENDPOINTS="$REPLY_YN"
 
-    read_yes_no "§16.1  Web Application Firewall (Front Door)?" "false"
-    D_WAF="$REPLY_YN"
+        read_yes_no "§16.1  Web Application Firewall (Front Door)?" "false"
+        D_WAF="$REPLY_YN"
+    else
+        # Default values for projects without cloud-platform scope
+        D_VNET="false"
+        D_PRIVATE_ENDPOINTS="false"
+        D_WAF="false"
+        log_info "Network security (VNet, Private Endpoints, WAF) — skipped (no cloud-platform scope)"
+    fi
 
-    read_choice "§16.2  Encryption at rest" 1 \
-        "Azure-managed keys" "Customer-managed keys" \
-        --- "azure-managed" "customer-managed"
-    D_ENCRYPTION_KEYS="$REPLY_CHOICE"
+    # §16.2 — Data Security (backend, data, ai scopes)
+    if test_scope_active "backend data ai" "${D_SCOPES[@]}"; then
+        read_choice "§16.2  Encryption at rest" 1 \
+            "Azure-managed keys" "Customer-managed keys" \
+            --- "azure-managed" "customer-managed"
+        D_ENCRYPTION_KEYS="$REPLY_CHOICE"
 
-    read_choice "§16.2  PII handling" 3 \
-        "Anonymization" "Pseudonymization" "Encryption" \
-        --- "anonymization" "pseudonymization" "encryption"
-    D_PII_HANDLING="$REPLY_CHOICE"
+        read_choice "§16.2  PII handling" 3 \
+            "Anonymization" "Pseudonymization" "Encryption" \
+            --- "anonymization" "pseudonymization" "encryption"
+        D_PII_HANDLING="$REPLY_CHOICE"
+    else
+        # Default values for projects without data-related scopes
+        D_ENCRYPTION_KEYS="azure-managed"
+        D_PII_HANDLING="encryption"
+        log_info "Data security (Encryption, PII) — skipped (no backend/data/ai scope)"
+    fi
 
+    # §16.3 — Compliance (applies to all scopes)
     read_multi_choice "§16.3  Compliance requirements" \
         "GDPR" "HIPAA" "SOC 2" "PCI-DSS" "None" \
         --- "gdpr" "hipaa" "soc2" "pci-dss" "none"
@@ -1103,16 +1256,49 @@ show_summary() {
     echo -e "  ${CYAN}AUTOMATED SETUP (Phase 2 of 2):${NC}"
     echo ""
 
-    # Check if GitHub Copilot CLI is available
+    # Check if GitHub Copilot CLI is available and up-to-date
     if command -v copilot &> /dev/null; then
-        echo -e "  ${GREEN}✓ GitHub Copilot CLI detected${NC}"
+        # Check if there's a newer version available
+        echo -e "  ${WHITE}🔍 Checking Copilot CLI version...${NC}"
+        test_copilot_cli_version
+
+        if [[ "$CLI_VERSION_CHECK_RESULT" == "needs-update" ]] && [[ "$CLI_LATEST_VERSION" != "unknown" ]]; then
+            echo ""
+            echo -e "  ${YELLOW}⚠ GitHub Copilot CLI update available${NC}"
+            echo -e "    ${RED}Installed: $CLI_CURRENT_VERSION${NC}"
+            echo -e "    ${GREEN}Latest:    $CLI_LATEST_VERSION${NC}"
+            echo ""
+            echo -e "  ${CYAN}📦 UPDATE RECOMMENDED:${NC}"
+            echo -e "     ${WHITE}Run: copilot update${NC}"
+            echo -e "     ${WHITE}Or:  npm install -g @github/copilot${NC}"
+            echo ""
+
+            read_yes_no "Continue with current version anyway?" "false"
+            if [[ "$REPLY_YN" != "true" ]]; then
+                echo ""
+                echo -e "  ${YELLOW}📝 AFTER UPDATING, RUN:${NC}"
+                echo -e "     ${WHITE}1. cd $OUTPUT_DIR${NC}"
+                echo -e "     ${WHITE}2. Run: copilot${NC}"
+                echo -e "     ${WHITE}3. Prompt: @Bolt Constitution setup constitution${NC}"
+                echo ""
+                return 0
+            fi
+            echo ""
+        fi
+
+        echo -e "  ${GREEN}✓ GitHub Copilot CLI v$CLI_CURRENT_VERSION detected${NC}"
         echo -e "  ${YELLOW}🤖 Invoking @Bolt Constitution agent (INTERACTIVE MODE)...${NC}"
         echo -e "  ${YELLOW}⚠  You will be prompted to approve each provisioning step${NC}"
         echo ""
 
+        # Let user select which AI model to use
+        select_copilot_model
+        echo ""
+        echo -e "  ${CYAN}📦 Using model: $REPLY_MODEL${NC}"
+        echo ""
+
         # Change to project directory and invoke agent
-        # TODO: Need to validate which tools to allow by default
-        if (cd "$OUTPUT_DIR" && copilot --agent="bolt-constitution" --banner --model "claude-sonnet-4.5" --allow-tool 'shell' -i "setup constitution" --allow-path "$OUTPUT_DIR"); then
+        if (cd "$OUTPUT_DIR" && copilot --agent="bolt-constitution" --banner --model "$REPLY_MODEL" --yolo --allow-tool 'shell' -i "setup constitution" --allow-path "$OUTPUT_DIR"); then
             echo ""
             echo -e "  ${GREEN}✓ @Bolt Constitution agent completed${NC}"
             echo -e "  ${CYAN}📝 Review provision results above${NC}"
@@ -1120,7 +1306,7 @@ show_summary() {
             log_warn "Failed to invoke agent"
             echo -e "  ${YELLOW}📝 MANUAL FALLBACK:${NC}"
             echo -e "     ${WHITE}1. cd $OUTPUT_DIR${NC}"
-            echo -e "     ${WHITE}2. Run: copilot${NC}"
+            echo -e "     ${WHITE}2. Run: copilot --model $REPLY_MODEL${NC}"
             echo -e "     ${WHITE}3. Prompt: Use Bolt Constitution agent to setup constitution${NC}"
         fi
     else
