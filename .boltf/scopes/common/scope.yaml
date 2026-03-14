@@ -120,6 +120,85 @@ items:
       Manus-style workflow with task_plan.md, notes.md, and deliverable.md patterns.
       Universal planning approach for structured development work.
 
+  - id: common-api-contracts-doc
+    kind: skills
+    enabled: true
+    auto_provision: true
+    tags: ['documentation', 'api', 'openapi']
+    source:
+      type: local_folder
+      path: available-skills/document/api-contracts-doc
+    destination:
+      folder: .github/skills
+      name: api-contracts-doc
+    description: >
+      Documents REST API contracts from source code: extracts endpoints, schemas and examples.
+      Universal for any project exposing APIs; produces docs/api/ Markdown and OpenAPI 3.0 YAML.
+
+  - id: common-architect-diagramer
+    kind: skills
+    enabled: true
+    auto_provision: true
+    tags: ['documentation', 'architecture', 'diagrams']
+    source:
+      type: local_folder
+      path: available-skills/document/architect-diagramer
+    destination:
+      folder: .github/skills
+      name: architect-diagramer
+    description: >
+      Create architecture, application, flow and any other diagrams for documentation markdowns.
+      Universal for any project requiring visual architecture or system documentation.
+
+  - id: common-user-journey-doc
+    kind: skills
+    enabled: true
+    auto_provision: true
+    tags: ['documentation', 'ux', 'user-journey']
+    source:
+      type: local_folder
+      path: available-skills/document/user-journey-doc
+    destination:
+      folder: .github/skills
+      name: user-journey-doc
+    description: >
+      Documents user journeys and personas with structured narrative and Mermaid journey diagrams.
+      Universal for any project that needs to document how users interact with the system.
+
+  # ============================================
+  # FUNCTIONAL TESTING SKILLS
+  # ============================================
+
+  - id: common-integration-e2e-testing
+    kind: skills
+    enabled: true
+    auto_provision: true
+    tags: ['testing', 'integration', 'e2e', 'testcontainers']
+    source:
+      type: local_folder
+      path: available-skills/functional-tests/integration-e2e-testing
+    destination:
+      folder: .github/skills
+      name: integration-e2e-testing
+    description: >
+      Comprehensive integration and E2E testing with Playwright, Aspire, Testcontainers and Respawn.
+      Critical rule: NEVER use SQLite for integration tests. ALWAYS reset database at START of test.
+
+  - id: common-playwright-e2e
+    kind: skills
+    enabled: true
+    auto_provision: true
+    tags: ['testing', 'e2e', 'playwright', 'browser']
+    source:
+      type: local_folder
+      path: available-skills/functional-tests/playwright-e2e
+    destination:
+      folder: .github/skills
+      name: playwright-e2e
+    description: >
+      Playwright E2E testing: Page Object Model, locators, assertions, visual regression,
+      accessibility and CI setup. Universal for any project requiring browser-based E2E tests.
+
   # ============================================
   # NOTES
   # ============================================

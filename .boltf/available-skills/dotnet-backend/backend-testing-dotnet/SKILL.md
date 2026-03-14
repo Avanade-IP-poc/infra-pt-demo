@@ -1,388 +1,122 @@
 ---
 name: backend-testing-dotnet
-description: Comprehensive backend testing for .NET with xUnit, Testcontainers, NetArchTest, and Respawn. Use when writing unit tests, integration tests, architecture tests, or test fixtures for .NET backends. Triggers => "test backend .NET", "xUnit tests", "Testcontainers", "architecture tests", "integration testing .NET", "NetArchTest", "Respawn", "mock database", "test fixtures", "backend test patterns", ".NET testing", "SQL Server tests".
+description: Unit tests and architecture tests for .NET backends. Use for xUnit, FluentAssertions, Moq patterns, CQRS handler testing (ICommandHandler/IQueryHandler — no MediatR), test data builders, and architecture enforcement with NetArchTest (MicroserviceConfig pattern). For integration tests (DatabaseFixture, SQL Server, Respawn) and E2E tests use the integration-e2e-testing skill.
 ---
 
 # Backend Testing for .NET
 
-## When to Use
-
-- Writing unit tests for domain logic, application services, and infrastructure
-- Creating integration tests with real databases using Testcontainers
-- Enforcing architecture boundaries with NetArchTest
-- Achieving coverage targets (80%+ line, 75%+ branch)
-- The user or an agent needs to create technical tests for backend
+> 🔗 Integration & E2E tests → [`integration-e2e-testing`](../integration-e2e-testing/SKILL.md)  
+> 🔗 Playwright patterns → [`playwright-e2e`](../playwright-e2e/SKILL.md)
 
 ## Quick Start
 
 ```bash
-# Create test project
-dotnet new xunit -n TimeTracking.UnitTests
-dotnet add TimeTracking.UnitTests reference ../src/TimeTracking.Domain
 dotnet add package FluentAssertions
 dotnet add package Moq
 dotnet add package coverlet.collector
 
-# Run tests with coverage
-dotnet test /p:CollectCoverage=true /p:CoverageThreshold=80
+dotnet test Backend.sln
+dotnet test Backend.sln --settings coverlet.runsettings /p:CollectCoverage=true
+dotnet test --filter "Category=Unit"
+dotnet test --filter "Category=Architecture"
 ```
 
 ## Test Project Structure
 
 ```
 tests/
-├── TimeTracking.UnitTests/          # Domain + Application
-│   ├── Domain/
-│   │   ├── Entities/
-│   │   │   └── TimeEntryTests.cs
-│   │   └── ValueObjects/
-│   │       └── TimeRangeTests.cs
-│   ├── Application/
-│   │   ├── Commands/
-│   │   │   └── CreateTimeEntryHandlerTests.cs
-│   │   └── Queries/
-│   │       └── GetTimeEntriesHandlerTests.cs
-│   └── Builders/                     # Test data builders
-│       └── TimeEntryBuilder.cs
-├── TimeTracking.IntegrationTests/   # Infrastructure + API
-│   ├── API/
-│   │   └── TimeEntriesControllerTests.cs
-│   ├── Database/
-│   │   └── TimeEntryRepositoryTests.cs
-│   └── Fixtures/
-│       └── DatabaseFixture.cs
-└── Architecture.Tests/               # NetArchTest rules
-    └── ArchitectureTests.cs
+├── {BoundedContext}.UnitTests/           # e.g. GestionUsuarios.UnitTests
+│   ├── Commands/
+│   │   └── CreateEntityCommandHandlerTests.cs
+│   ├── Queries/
+│   │   └── SearchEntityQueryHandlerTests.cs
+│   └── Builders/                          # Test data builders
+│       └── EntityBuilder.cs
+├── {BoundedContext}.IntegrationTests/    # → see integration-e2e-testing skill
+├── Architecture.Tests.Common/            # Shared NetArchTest rule classes
+│   └── Rules/
+│       ├── LayerDependencyRules.cs        # ADR-001: Clean Architecture isolation
+│       ├── CqrsComplianceRules.cs         # ADR-002: no MediatR, ICommandHandler/IQueryHandler
+│       ├── NamingConventionRules.cs        # Async suffix, interface I-prefix
+│       ├── DomainEntityRules.cs
+│       ├── DomainEventsComplianceRules.cs
+│       ├── MinimalApiComplianceRules.cs
+│       ├── RepositoryPatternRules.cs
+│       └── SharedLibrariesRules.cs        # ADR-011
+└── Architecture.Tests.{BoundedContext}/  # Per-bounded-context architecture tests
+    └── {BoundedContext}ArchitectureTests.cs
 ```
 
-## Unit Tests (xUnit + FluentAssertions + Moq)
+## Unit Tests
+
+AAA pattern, class-level `[Trait]` attributes on every test class, `HandleAsync()` — never
+`.Handle()` (MediatR is forbidden per ADR-002).
+
+See → [examples/unit-test.cs](examples/unit-test.cs)
+
+Required traits:
 
 ```csharp
-// tests/TimeTracking.UnitTests/Domain/Entities/TimeEntryTests.cs
-using FluentAssertions;
-using TimeTracking.Domain.Entities;
-using Xunit;
-
-namespace TimeTracking.UnitTests.Domain.Entities;
-
-public class TimeEntryTests
-{
-    [Fact]
-    public void Create_WithValidData_ShouldSucceed()
-    {
-        // Arrange
-        var userId = Guid.NewGuid();
-        var accountId = Guid.NewGuid();
-        var startTime = DateTime.UtcNow;
-        var endTime = startTime.AddHours(2);
-
-        // Act
-        var result = TimeEntry.Create(userId, accountId, startTime, endTime);
-
-        // Assert
-        result.IsSuccess.Should().BeTrue();
-        result.Value.UserId.Should().Be(userId);
-        result.Value.Duration.Should().Be(TimeSpan.FromHours(2));
-    }
-
-    [Theory]
-    [InlineData(-1)]  // End before start
-    [InlineData(0)]   // Zero duration
-    public void Create_WithInvalidDuration_ShouldFail(int hoursToAdd)
-    {
-        // Arrange
-        var userId = Guid.NewGuid();
-        var accountId = Guid.NewGuid();
-        var startTime = DateTime.UtcNow;
-        var endTime = startTime.AddHours(hoursToAdd);
-
-        // Act
-        var result = TimeEntry.Create(userId, accountId, startTime, endTime);
-
-        // Assert
-        result.IsFailure.Should().BeTrue();
-        result.Error.Code.Should().Be("INVALID_TIME_RANGE");
-    }
-
-    [Fact]
-    public async Task CreateTimeEntryHandler_ShouldCallRepository()
-    {
-        // Arrange
-        var mockRepository = new Mock<ITimeEntryRepository>();
-        var handler = new CreateTimeEntryHandler(mockRepository.Object);
-        var command = new CreateTimeEntryCommand(
-            Guid.NewGuid(),
-            Guid.NewGuid(),
-            DateTime.UtcNow,
-            DateTime.UtcNow.AddHours(2)
-        );
-
-        mockRepository
-            .Setup(x => x.AddAsync(It.IsAny<TimeEntry>(), default))
-            .ReturnsAsync((TimeEntry entry, CancellationToken _) => entry);
-
-        // Act
-        var result = await handler.Handle(command, CancellationToken.None);
-
-        // Assert
-        result.IsSuccess.Should().BeTrue();
-        mockRepository.Verify(
-            x => x.AddAsync(It.IsAny<TimeEntry>(), default),
-            Times.Once
-        );
-    }
-}
+[Trait("Category", "Unit")]    // Unit | Integration | E2E | Architecture
+[Trait("Speed", "Fast")]       // Fast (<100ms) | Medium (<5s) | Slow (>5s)
+[Trait("Feature", "MyCtx")]    // Bounded context name
+[Trait("Layer", "Domain")]     // Domain | Application | Infrastructure
 ```
 
-## Integration Tests (Testcontainers)
+## Integration Tests (con Base de Datos)
 
-```csharp
-// tests/TimeTracking.IntegrationTests/Fixtures/DatabaseFixture.cs
-using Microsoft.EntityFrameworkCore;
-using Testcontainers.PostgreSql;
-using Xunit;
+> 🔗 Los integration tests con base de datos real están a cargo del skill
+> [`integration-e2e-testing`](../integration-e2e-testing/SKILL.md).
+>
+> Ese skill provee `DatabaseFixture<TContext>` + `GlobalTestContainers` (SQL Server compartido),
+> Respawn para reset rápido (~200-300 ms), y colecciones xUnit.
 
-namespace TimeTracking.IntegrationTests.Fixtures;
+Reglas clave para no violate el patrón:
 
-public class DatabaseFixture : IAsyncLifetime
-{
-    private readonly PostgreSqlContainer _container = new PostgreSqlBuilder()
-        .WithImage("postgres:16-alpine")
-        .WithDatabase("timetracking_test")
-        .WithUsername("test")
-        .WithPassword("test")
-        .Build();
+- ✅ SQL Server ONLY (nunca SQLite ni in-memory)
+- ✅ Un contenedor compartido (`GlobalTestContainers`) — nunca uno por test
+- ✅ Resetear la BD al **inicio** de cada test, nunca al final
+- ✅ `[Trait("Database", "Required")]` en todos los tests que usen BD real
+- ✅ `[Trait("Feature", "<feature-name>")]` en todos los tests que se creen dentro de una feature y sus bolts
 
-    public string ConnectionString => _container.GetConnectionString();
+## Architecture Tests (NetArchTest + MicroserviceConfig)
 
-    public async Task InitializeAsync()
-    {
-        await _container.StartAsync();
+Each bounded context has a dedicated `Architecture.Tests.{BoundedContext}` project that delegates
+to shared static rule classes from `Architecture.Tests.Common/Rules/`:
 
-        // Run migrations
-        var options = new DbContextOptionsBuilder<TimeTrackingDbContext>()
-            .UseNpgsql(ConnectionString)
-            .Options;
+| Rule class                      | What it enforces                                                      |
+| ------------------------------- | --------------------------------------------------------------------- |
+| `LayerDependencyRules`          | Clean Architecture layer isolation (ADR-001)                          |
+| `CqrsComplianceRules`           | No MediatR, `ICommandHandler`/`IQueryHandler` compliance (ADR-002)   |
+| `NamingConventionRules`         | Async suffix, interface `I`-prefix, handler/service/repo naming       |
+| `DomainEntityRules`             | Domain entity structure constraints                                   |
+| `DomainEventsComplianceRules`   | Domain event naming and placement                                     |
+| `MinimalApiComplianceRules`     | Minimal API endpoint conventions                                      |
+| `RepositoryPatternRules`        | Repository and DbContext placement                                    |
+| `SharedLibrariesRules`          | Shared library compliance (ADR-011)                                   |
 
-        await using var context = new TimeTrackingDbContext(options);
-        await context.Database.MigrateAsync();
-    }
-
-    public async Task DisposeAsync()
-    {
-        await _container.DisposeAsync();
-    }
-}
-
-// tests/TimeTracking.IntegrationTests/Database/TimeEntryRepositoryTests.cs
-using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
-using Xunit;
-
-namespace TimeTracking.IntegrationTests.Database;
-
-public class TimeEntryRepositoryTests : IClassFixture<DatabaseFixture>
-{
-    private readonly DatabaseFixture _fixture;
-
-    public TimeEntryRepositoryTests(DatabaseFixture fixture)
-    {
-        _fixture = fixture;
-    }
-
-    [Fact]
-    public async Task AddAsync_ShouldPersistEntity()
-    {
-        // Arrange
-        var options = new DbContextOptionsBuilder<TimeTrackingDbContext>()
-            .UseNpgsql(_fixture.ConnectionString)
-            .Options;
-
-        await using var context = new TimeTrackingDbContext(options);
-        var repository = new TimeEntryRepository(context);
-
-        var timeEntry = TimeEntry.Create(
-            Guid.NewGuid(),
-            Guid.NewGuid(),
-            DateTime.UtcNow,
-            DateTime.UtcNow.AddHours(2)
-        ).Value;
-
-        // Act
-        var result = await repository.AddAsync(timeEntry);
-        await context.SaveChangesAsync();
-
-        // Assert
-        var retrieved = await context.TimeEntries
-            .FirstOrDefaultAsync(x => x.Id == result.Id);
-
-        retrieved.Should().NotBeNull();
-        retrieved!.Duration.Should().Be(TimeSpan.FromHours(2));
-    }
-}
-```
-
-## Architecture Tests (NetArchTest)
-
-```csharp
-// tests/Architecture.Tests/ArchitectureTests.cs
-using FluentAssertions;
-using NetArchTest.Rules;
-using Xunit;
-
-namespace Architecture.Tests;
-
-public class ArchitectureTests
-{
-    private const string DomainNamespace = "TimeTracking.Domain";
-    private const string ApplicationNamespace = "TimeTracking.Application";
-    private const string InfrastructureNamespace = "TimeTracking.Infrastructure";
-    private const string WebNamespace = "TimeTracking.Web";
-
-    [Fact]
-    public void Domain_ShouldNotHaveDependencyOnOtherLayers()
-    {
-        // Arrange
-        var assembly = typeof(TimeTracking.Domain.AssemblyReference).Assembly;
-
-        // Act
-        var result = Types.InAssembly(assembly)
-            .ShouldNot()
-            .HaveDependencyOnAny(ApplicationNamespace, InfrastructureNamespace, WebNamespace)
-            .GetResult();
-
-        // Assert
-        result.IsSuccessful.Should().BeTrue();
-    }
-
-    [Fact]
-    public void Application_ShouldNotHaveDependencyOnInfrastructure()
-    {
-        // Arrange
-        var assembly = typeof(TimeTracking.Application.AssemblyReference).Assembly;
-
-        // Act
-        var result = Types.InAssembly(assembly)
-            .ShouldNot()
-            .HaveDependencyOnAny(InfrastructureNamespace, WebNamespace)
-            .GetResult();
-
-        // Assert
-        result.IsSuccessful.Should().BeTrue();
-    }
-
-    [Fact]
-    public void Controllers_ShouldHaveSuffix()
-    {
-        // Arrange
-        var assembly = typeof(TimeTracking.Web.AssemblyReference).Assembly;
-
-        // Act
-        var result = Types.InAssembly(assembly)
-            .That()
-            .ResideInNamespace("TimeTracking.Web.Controllers")
-            .Should()
-            .HaveNameEndingWith("Controller")
-            .GetResult();
-
-        // Assert
-        result.IsSuccessful.Should().BeTrue();
-    }
-
-    [Fact]
-    public void Handlers_ShouldHaveSuffix()
-    {
-        // Arrange
-        var assembly = typeof(TimeTracking.Application.AssemblyReference).Assembly;
-
-        // Act
-        var result = Types.InAssembly(assembly)
-            .That()
-            .ResideInNamespace("TimeTracking.Application")
-            .And()
-            .ImplementInterface(typeof(IRequestHandler<,>))
-            .Should()
-            .HaveNameEndingWith("Handler")
-            .GetResult();
-
-        // Assert
-        result.IsSuccessful.Should().BeTrue();
-    }
-}
-```
+See → [examples/architecture-test.cs](examples/architecture-test.cs) — `MicroserviceConfig` template  
+Real example → `tests/Architecture.Tests.GestionUsuarios/GestionUsuariosArchitectureTests.cs`
 
 ## Test Data Builders
 
-```csharp
-// tests/TimeTracking.UnitTests/Builders/TimeEntryBuilder.cs
-namespace TimeTracking.UnitTests.Builders;
+Fluent builder pattern — each test overrides only what it cares about; everything else defaults.
 
-public class TimeEntryBuilder
-{
-    private Guid _userId = Guid.NewGuid();
-    private Guid _accountId = Guid.NewGuid();
-    private DateTime _startTime = DateTime.UtcNow;
-    private DateTime _endTime = DateTime.UtcNow.AddHours(2);
+See → [examples/test-data-builder.cs](examples/test-data-builder.cs)
 
-    public TimeEntryBuilder WithUserId(Guid userId)
-    {
-        _userId = userId;
-        return this;
-    }
+## Coverage
 
-    public TimeEntryBuilder WithDuration(TimeSpan duration)
-    {
-        _endTime = _startTime.Add(duration);
-        return this;
-    }
+See → [examples/coverlet.runsettings](examples/coverlet.runsettings)
 
-    public TimeEntry Build()
-    {
-        return TimeEntry.Create(_userId, _accountId, _startTime, _endTime).Value;
-    }
-}
-```
-
-## Coverage Configuration
-
-```xml
-<!-- coverlet.runsettings -->
-<?xml version="1.0" encoding="utf-8"?>
-<RunSettings>
-  <DataCollectionRunSettings>
-    <DataCollectors>
-      <DataCollector friendlyName="XPlat code coverage">
-        <Configuration>
-          <Format>cobertura,json,lcov,opencover</Format>
-          <Exclude>[*.Tests]*,[*]*.Migrations.*</Exclude>
-          <Include>[TimeTracking.*]*</Include>
-          <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>
-          <SingleHit>false</SingleHit>
-          <UseSourceLink>true</UseSourceLink>
-        </Configuration>
-      </DataCollector>
-    </DataCollectors>
-  </DataCollectionRunSettings>
-</RunSettings>
-```
+Targets: line ≥ 80% | branch ≥ 75% | excludes migrations and test assemblies.
 
 ## Running Tests
 
 ```bash
-# Run all tests
-dotnet test
-
-# Run with coverage
-dotnet test --settings coverlet.runsettings /p:CollectCoverage=true
-
-# Run specific category
-dotnet test --filter Category=Unit
-dotnet test --filter Category=Integration
-
-# Fail on coverage threshold
+dotnet test Backend.sln
+dotnet test --filter "Category=Unit"
+dotnet test --filter "Category=Architecture"
 dotnet test /p:CollectCoverage=true /p:CoverageThreshold=80 /p:ThresholdType=line
-
-# Generate HTML report
 dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
 reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage-report
 ```
@@ -399,15 +133,16 @@ reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage-report
 - ❌ Don't mock what you don't own
 - ❌ Don't test framework code
 
-### Integration Tests
+### Integration Tests (→ integration-e2e-testing skill)
 
-- ✅ Use Testcontainers for real database
-- ✅ IClassFixture for shared setup
-- ✅ Clean database between tests
-- ✅ Test repository implementations
-- ✅ Test API endpoints end-to-end
-- ❌ Don't share state between tests
-- ❌ Don't use in-memory databases for production-like tests
+- ✅ SQL Server only — never SQLite or in-memory
+- ✅ Use `DatabaseFixture<TContext>` (shared `GlobalTestContainers` container)
+- ✅ Reset database at **start** of each integration test with Respawn
+- ✅ Decorate with `[Trait("Database", "Required")]`
+- ❌ Don't create a new container per test
+- ❌ Don't reset at end of test
+
+See [integration-e2e-testing SKILL.md](../integration-e2e-testing/SKILL.md) for full patterns.
 
 ### Architecture Tests
 
@@ -421,5 +156,8 @@ reportgenerator -reports:coverage.cobertura.xml -targetdir:coverage-report
 
 - [xUnit Documentation](https://xunit.net/)
 - [FluentAssertions](https://fluentassertions.com/)
-- [Testcontainers for .NET](https://dotnet.testcontainers.org/)
+- [Moq documentation](https://github.com/devlooped/moq)
 - [NetArchTest](https://github.com/BenMorris/NetArchTest)
+- [Architecture.Tests.Common rules](../../../tests/Architecture.Tests.Common/Rules/) — shared rule classes
+- [integration-e2e-testing skill](../integration-e2e-testing/SKILL.md) — integration & E2E tests
+- [playwright-e2e skill](../playwright-e2e/SKILL.md) — Playwright POM, locators, assertions

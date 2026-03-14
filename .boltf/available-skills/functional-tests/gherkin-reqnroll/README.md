@@ -1,7 +1,7 @@
 # Gherkin & Reqnroll BDD Testing Skill
 
 Este skill proporciona guías completas y mejores prácticas para escribir tests de aceptación usando
-Gherkin y Reqnroll en proyectos .NET con BOLT.
+Gherkin y Reqnroll en proyectos .NET con AURORA.
 
 ## ¿Por qué este skill?
 
@@ -16,7 +16,7 @@ Gherkin y Reqnroll en proyectos .NET con BOLT.
 
 **Input al Copilot:**
 
-```text
+```
 Genera un archivo Gherkin para el user story US-001 de autenticación
 ```
 
@@ -31,7 +31,7 @@ Genera un archivo Gherkin para el user story US-001 de autenticación
 
 **Input al Copilot:**
 
-```text
+```
 Genera step definitions para el feature Authentication.feature
 ```
 
@@ -46,7 +46,7 @@ Genera step definitions para el feature Authentication.feature
 
 **Input al Copilot:**
 
-```text
+```
 Convierte estos acceptance criteria en un Scenario Outline:
 - Email vacío → Error "Email is required"
 - Email inválido → Error "Invalid email format"
@@ -70,12 +70,12 @@ Scenario Outline: Validate login form fields
     | user@example.com   |             | Password is required  |
 ```
 
-## Integración con BOLT
+## Integración con AURORA
 
 Este skill se integra con:
 
-- **@Bolt Gherkin**: Agente especializado en generar Gherkin
-- **@Bolt Testing**: Agente para ejecutar tests
+- **@Aurora Gherkin**: Agente especializado en generar Gherkin
+- **@Aurora Testing**: Agente para ejecutar tests
 - **Constitution**: Lee reglas de testing del proyecto
 - **Feature Specs**: Extrae acceptance criteria de `specs/*/requirements/`
 
@@ -83,7 +83,7 @@ Este skill se integra con:
 
 - [SKILL.md](./SKILL.md) - Instrucciones principales
 - [../skill-backend-testing-dotnet](../skill-backend-testing-dotnet/) - Testing backend relacionado
-- [../../agents/bolt-gherkin.agent.md](../../agents/bolt-gherkin.agent.md) - Agente Gherkin
+- [../../agents/aurora-gherkin.agent.md](../../agents/aurora-gherkin.agent.md) - Agente Gherkin
 
 ## Referencias
 

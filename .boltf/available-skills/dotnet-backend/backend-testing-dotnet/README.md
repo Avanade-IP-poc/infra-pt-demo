@@ -139,18 +139,18 @@ Este skill ayuda a alcanzar:
 | Branch Coverage | 75%    | 85%         | 100%           |
 | Mutation Score  | 70%    | 80%         | 90%            |
 
-## Integración con BOLT
+## Integración con AURORA
 
 Este skill se integra con:
 
-- **@Bolt Testing**: Agente especializado en generar tests
+- **@Aurora Testing**: Agente especializado en generar tests
 - **Constitution**: Lee frameworks y targets de testing
 - **Feature Specs**: Genera tests basados en acceptance criteria
 - **Quality Gates**: Valida cobertura antes de merge
 
 ## Test Pyramid
 
-```text
+```
       ┌─────────┐
       │   E2E   │  10% - User journeys (Playwright)
       ├─────────┤
@@ -165,7 +165,7 @@ Este skill se integra con:
 - [SKILL.md](./SKILL.md) - Instrucciones principales
 - [../skill-gherkin-reqnroll](../skill-gherkin-reqnroll/) - BDD tests relacionados
 - [../skill-playwright-e2e](../skill-playwright-e2e/) - E2E tests relacionados
-- [../../agents/bolt-testing.agent.md](../../agents/bolt-testing.agent.md) - Agente Testing
+- [../../agents/aurora-testing.agent.md](../../agents/aurora-testing.agent.md) - Agente Testing
 
 ## Referencias
 

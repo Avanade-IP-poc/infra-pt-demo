@@ -1,316 +1,189 @@
 ---
 name: integration-e2e-testing
 description:
-  Comprehensive integration and E2E testing with Testcontainers and Respawn for .NET. Use when
+  Comprehensive integration and E2E testing with Playwright, Aspire, Testcontainers and Respawn for .NET. Use when
   writing integration tests, E2E tests, database tests, or any test requiring real infrastructure.
-  CRITICAL - NEVER use SQLite for integration tests, ALWAYS use Testcontainers with SQL Server. Use
-  Respawn for fast database state management between tests.
 ---
 
-# Integration & E2E Testing with Testcontainers & Respawn
+# Integration & E2E Testing
 
-Complete testing skill for integration and E2E tests using real infrastructure.
+## 🚨 CRITICAL RULES
 
-## 🚨 CRITICAL RULE - NO SQLITE FOR INTEGRATION TESTS
-
-**NEVER use SQLite in-memory databases for integration testing.**
-
-### Why SQLite is Prohibited
-
-1. **SQL Syntax Incompatibility**: SQL Server features not supported by SQLite
-   - `IDENTITY` columns, `MAX()` in specific contexts
-   - `DATEADD()`, `GETUTCDATE()` functions
-   - Window functions, transaction isolation levels differ
-
-2. **False Positives**: Tests pass with SQLite but fail in production
-   - Column types behave differently
-   - Constraints validation differs
-   - Query execution plans differ
-
-3. **Real-World Issues**: Bolt 4 example
-   ```
-   SQLite Error: 'near "max": syntax error'
-   14/15 integration tests FAILED → 0% confidence
-   ```
-
-### ✅ ALWAYS Use Testcontainers + Podman
-
-- **Real SQL Server**: `mcr.microsoft.com/mssql/server:2022-latest`
-- **Podman** (no license): Create `.testcontainers.properties`:
-  ```text
-  docker.host=npipe://./pipe/podman-machine-default
-  ```
-
-### ✅ ALWAYS Use Respawn
-
-- **Do NOT** start/stop SQL per test → start once, **reset state with Respawn**
-- Respawn: ~0.3s reset vs 5s container restart
+- **NEVER use SQLite** for integration tests — SQL Server only.
+- **NEVER reset database at END of test** — always reset at **START**.
+- **NEVER create a new container per test** — use the shared infrastructure.
 
 ---
 
-## When to Activate This Skill
+## Infrastructure Overview
 
-**Triggers**: integration test, E2E test, database test, repository test, testcontainers, respawn,
-reset database, test isolation, SQLite error
+The project has a multi-layer testing infrastructure already in place:
+
+| Layer              | Infrastructure                                          | Source (tests/Tests.Common)          | Example                                                        |
+| ------------------ | ------------------------------------------------------- | ------------------------------------ | -------------------------------------------------------------- |
+| Integration tests  | `DatabaseFixture<TContext>` + `GlobalTestContainers`    | `Infrastructure/DatabaseFixture.cs`  | [examples/DatabaseFixture.cs](./examples/DatabaseFixture.cs)  |
+| Shared container   | `GlobalTestContainers`                                  | `Infrastructure/GlobalTestContainers.cs` | [examples/GlobalTestContainers.cs](./examples/GlobalTestContainers.cs) |
+| E2E (Playwright)   | `E2E.Testing.Api` + `DatabaseHelper` (path-based)      | `src/frontend/e2e/helpers/`          | [examples/database-helper.ts](./examples/database-helper.ts)  |
+| E2E (Aspire full)  | `E2ETestBase` with `Aspire.Hosting.Testing`             | `Infrastructure/E2ETestBase.cs`      | [examples/E2ETestBase.cs](./examples/E2ETestBase.cs)          |
+
+**Database strategy**:
+
+- **Local dev**: LocalDB (no Docker needed)
+- **CI**: `GlobalTestContainers` — ONE shared SQL Server container, `USE_TESTCONTAINERS=true`
+- **Respawn**: ~200-300ms state reset between tests
 
 ---
 
-## Quick Start
+## Integration Tests
 
-### 1. Installation
+### Pattern: DatabaseFixture + GlobalTestContainers
+
+Each test project defines its own `DatabaseCollection` — see
+[examples/database-collection.cs](./examples/database-collection.cs).
+
+Full integration test with fixture lifecycle and test traits — see
+[examples/integration-test.cs](./examples/integration-test.cs).
+
+Infrastructure classes (self-contained copies):
+- [examples/GlobalTestContainers.cs](./examples/GlobalTestContainers.cs) — shared SQL Server container
+- [examples/DatabaseFixture.cs](./examples/DatabaseFixture.cs) — per-suite fixture with migrations + Respawn
+
+Key rules:
+
+- Set `ContextFactory` **before** calling `EnsureMigrationsAsync()` if your DbContext needs extra dependencies.
+- `MultipleActiveResultSets=true` is required by Respawn — handled automatically by `DatabaseFixture`.
+- Do **not** hardcode connection strings; rely on `_fixture.ConnectionString`.
+
+### Required Trait Taxonomy (C#)
+
+Every integration test class **must** include the mandatory traits and **should** include the
+optional ones where applicable:
+
+| Trait        | Required | Values                                                        |
+| ------------ | -------- | ------------------------------------------------------------- |
+| `Category`   | ✅        | `Unit` \| `Integration` \| `E2E` \| `Architecture`           |
+| `Speed`      | ✅        | `Fast` (< 100ms) \| `Medium` (< 5s) \| `Slow` (> 5s)        |
+| `Feature`    | ✅        | Bounded context name: `Auth`, `Clientes`, `Usuarios`, …      |
+| `Layer`      | ✅        | `Domain` \| `Application` \| `Infrastructure`                |
+| `Database`   | ⚠        | `Required` — include whenever the test needs a real DB       |
+| `Type`       | ⚠        | `HealthCheck` \| `Migration` \| `EventHandler` \| `BackgroundJob` \| `Structural` \| `Observability` |
+| `UserStory`  | ⚠        | `US-XXX-NNN` — link to the acceptance criterion under test   |
+
+Run specific subsets:
 
 ```bash
-dotnet add package Testcontainers
-dotnet add package Testcontainers.MsSql
-dotnet add package Respawn --version 6.2.1
-dotnet add package Microsoft.Data.SqlClient
-```
-
-### 2. Base Test Class (with Respawn)
-
-```csharp
-// File: tests/Tests.Shared/IntegrationTestBase.cs
-
-using Respawn;
-using Testcontainers.MsSql;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Data.SqlClient;
-using Xunit;
-
-public abstract class IntegrationTestBase : IAsyncLifetime
-{
-    private MsSqlContainer? _mssqlContainer;
-    private Respawner? _respawner;
-    private string? _connectionString;
-
-    protected DbContextOptions<YourDbContext>? DbContextOptions;
-
-    public async Task InitializeAsync()
-    {
-        // 1. Start SQL Server container ONCE
-        _mssqlContainer = new MsSqlBuilder()
-            .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
-            .WithPassword("YourStrong!Passw0rd")
-            .Build();
-
-        await _mssqlContainer.StartAsync();
-        _connectionString = _mssqlContainer.GetConnectionString();
-
-        // 2. Configure DbContext
-        DbContextOptions = new DbContextOptionsBuilder<YourDbContext>()
-            .UseSqlServer(_connectionString)
-            .Options;
-
-        // 3. Run migrations ONCE
-        await using var context = new YourDbContext(DbContextOptions);
-        await context.Database.MigrateAsync();
-
-        // 4. Initialize Respawn AFTER migrations
-        await using var connection = new SqlConnection(_connectionString);
-        await connection.OpenAsync();
-
-        _respawner = await Respawner.CreateAsync(connection, new RespawnerOptions
-        {
-            DbAdapter = DbAdapter.SqlServer, // REQUIRED
-            SchemasToInclude = new[] { "dbo" },
-            TablesToIgnore = new[]
-            {
-                new Table("__EFMigrationsHistory") // Preserve migrations
-            }
-        });
-    }
-
-    public async Task DisposeAsync()
-    {
-        if (_mssqlContainer != null)
-        {
-            await _mssqlContainer.StopAsync();
-            await _mssqlContainer.DisposeAsync();
-        }
-    }
-
-    protected YourDbContext CreateDbContext() => new YourDbContext(DbContextOptions!);
-
-    /// <summary>
-    /// Resets database to clean state. Call at START of each test.
-    /// </summary>
-    protected async Task ResetDatabaseAsync()
-    {
-        await using var connection = new SqlConnection(_connectionString);
-        await connection.OpenAsync();
-        await _respawner!.ResetAsync(connection);
-    }
-}
-```
-
-### 3. Write Tests
-
-```csharp
-public class UserRepositoryTests : IntegrationTestBase
-{
-    [Fact]
-    public async Task SaveUser_ShouldPersistToDatabase()
-    {
-        // ✅ RESET AT START - Clean state guaranteed
-        await ResetDatabaseAsync();
-
-        await using var context = CreateDbContext();
-        var repository = new UserRepository(context);
-
-        var user = Usuario.Create(
-            new Email("test@example.com"),
-            new FullName("Test", "User"),
-            TenantId.Create(Guid.NewGuid())
-        );
-
-        // Act
-        await repository.SaveAsync(user);
-        await context.SaveChangesAsync();
-
-        // Assert
-        var savedUser = await repository.GetByIdAsync(user.Id);
-        savedUser.Should().NotBeNull();
-        savedUser!.Email.Value.Should().Be("test@example.com");
-    }
-}
+dotnet test --filter "Category=Integration&Feature=Clientes"
+dotnet test --filter "Category=Integration&Database=Required"
+dotnet test --filter "UserStory=US-CLI-001"
 ```
 
 ---
 
-## Performance: Shared Container Pattern
+## E2E Tests (Playwright)
 
-**For test suites with 20+ tests**, use shared container for optimal speed:
+Playwright workers interact with the backend via the **E2E Testing API** (`tests/E2E.Testing.Api`)
+using path-based routing. Each Playwright worker maps to isolated databases:
 
-```csharp
-// File: tests/Tests.Shared/DatabaseFixture.cs
-
-public class DatabaseFixture : IAsyncLifetime
-{
-    private MsSqlContainer? _container;
-    private Respawner? _respawner;
-
-    public string ConnectionString { get; private set; } = string.Empty;
-    public DbContextOptions<YourDbContext> DbContextOptions { get; private set; } = null!;
-
-    public async Task InitializeAsync()
-    {
-        // Container starts ONCE for entire suite
-        _container = new MsSqlBuilder()
-            .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
-            .WithPassword("YourStrong!Passw0rd")
-            .Build();
-
-        await _container.StartAsync();
-        ConnectionString = _container.GetConnectionString();
-
-        DbContextOptions = new DbContextOptionsBuilder<YourDbContext>()
-            .UseSqlServer(ConnectionString)
-            .Options;
-
-        await using var context = new YourDbContext(DbContextOptions);
-        await context.Database.MigrateAsync();
-
-        await using var connection = new SqlConnection(ConnectionString);
-        await connection.OpenAsync();
-
-        _respawner = await Respawner.CreateAsync(connection, new RespawnerOptions
-        {
-            DbAdapter = DbAdapter.SqlServer,
-            SchemasToInclude = new[] { "dbo" },
-            TablesToIgnore = new[] { new Table("__EFMigrationsHistory") }
-        });
-    }
-
-    public async Task DisposeAsync()
-    {
-        if (_container != null)
-        {
-            await _container.StopAsync();
-            await _container.DisposeAsync();
-        }
-    }
-
-    public async Task ResetDatabaseAsync()
-    {
-        await using var connection = new SqlConnection(ConnectionString);
-        await connection.OpenAsync();
-        await _respawner!.ResetAsync(connection);
-    }
-}
-
-[CollectionDefinition("Database")]
-public class DatabaseCollection : ICollectionFixture<DatabaseFixture> { }
+```
+Worker 0 → AuthDb_Worker0, UsuariosDb_Worker0  (port 5002)
+Worker 1 → AuthDb_Worker1, UsuariosDb_Worker1  (port 5002, path /api/testing/1/...)
 ```
 
-**Usage**:
+Full annotated example — see [examples/e2e-playwright.spec.ts](./examples/e2e-playwright.spec.ts).
 
-```csharp
-[Collection("Database")] // Shared container
-public class UserTests
-{
-    private readonly DatabaseFixture _fixture;
+`DatabaseHelper` self-contained copy — see [examples/database-helper.ts](./examples/database-helper.ts).
 
-    public UserTests(DatabaseFixture fixture) => _fixture = fixture;
+### Tag Taxonomy (Playwright)
 
-    [Fact]
-    public async Task Test1()
-    {
-        await _fixture.ResetDatabaseAsync(); // ~0.3s reset
+Include tags in the file-level JSDoc **and** in the `{ tag }` option of `test()` / `test.describe()`.
+Tags are cumulative — a smoke test is also a regression test.
 
-        await using var context = new YourDbContext(_fixture.DbContextOptions);
-        // Test logic
-    }
-}
+| Tag            | Purpose                                                                 | Run in CI? |
+| -------------- | ----------------------------------------------------------------------- | ---------- |
+| `@smoke`       | Critical happy-path; must pass before any deployment                    | pre-deploy |
+| `@regression`  | Full suite; run on every PR / merge to `main`                           | always     |
+| `@integration` | Requires real backend + database (most E2E tests)                       | always     |
+| `@manual`      | Never runs automatically; execute with `--grep @manual`                 | ❌          |
+| `@<feature>`   | Bounded context: `@clientes`, `@usuarios`, `@auth`, `@encargos`, …     | filtered   |
+| `@<action>`    | Specific scenario: `@create`, `@edit`, `@search`, `@delete`, `@login`  | filtered   |
+
+**Classification rules**:
+
+- Login / health / navigation → `@smoke @regression`
+- CRUD happy paths → `@smoke @regression @integration`
+- Edge/validation/error scenarios → `@regression @integration`
+- Debug helpers or WIP → `@manual`
+
+Running subsets:
+
+```bash
+npx playwright test --grep @smoke            # pre-deploy check
+npx playwright test --grep @regression       # full PR suite
+npx playwright test --grep "@clientes"       # single feature
+npx playwright test --grep-invert @manual    # exclude manual (default in CI)
 ```
 
-**Performance: 50 tests**
+### Database Reset in Playwright Tests
 
-- Container per test: ~750s ❌
-- Shared container + Respawn: **~25s** ✅
+Use the existing `DatabaseHelper` in `src/frontend/e2e/helpers/database-helper.ts`:
 
----
+```typescript
+const db = new DatabaseHelper(request); // auto-detects TEST_PARALLEL_INDEX
+await db.resetAndSeed();               // → POST /api/testing/{workerIndex}/reset-and-seed-all
+```
 
-## Reference Documentation
+### Worker Configuration (playwright.config.ts)
 
-**Complete guides** in [`references/`](./references/) folder:
-
-- **[testcontainers-setup.md](./references/testcontainers-setup.md)** - Detailed setup,
-  configuration, timeout handling, CI troubleshooting
-- **[respawn-usage.md](./references/respawn-usage.md)** - Respawn patterns, advanced config, seed
-  data preservation, troubleshooting
-- **[test-patterns.md](./references/test-patterns.md)** - Repository tests, event handler tests, E2E
-  tests, complex scenarios
-- **[ci-cd-integration.md](./references/ci-cd-integration.md)** - GitHub Actions, Azure Pipelines,
-  coverage, quality gates
+- Dev: 2 workers | CI: 4 workers | Debug: 1 worker (`DEBUG_MODE=true`)
+- `TEST_PARALLEL_INDEX` is the stable worker identifier (not `TEST_WORKER_INDEX`)
 
 ---
 
-## Summary
+## E2E Tests (Aspire Full Stack)
 
-### ✅ DO
+For C#-based E2E tests that require the entire Aspire AppHost — see
+[examples/e2e-aspire.cs](./examples/e2e-aspire.cs).
 
-- ✅ Use Testcontainers with SQL Server (NEVER SQLite)
-- ✅ Use Podman (no license) with `.testcontainers.properties`
-- ✅ **Use Respawn to reset database state between tests**
-- ✅ **Call `ResetDatabaseAsync()` at START of each test**
-- ✅ Run migrations on container startup (once)
-- ✅ Preserve `__EFMigrationsHistory` table in Respawn config
-- ✅ Use shared container + Respawn for 20+ tests (optimal performance)
-- ✅ Test SQL Server-specific features confidently
+`E2ETestBase` self-contained copy — see [examples/E2ETestBase.cs](./examples/E2ETestBase.cs).
 
-### ❌ DON'T
-
-- ❌ Use SQLite for integration tests (syntax incompatibility)
-- ❌ **Reset database at END of test** (reset at START instead)
-- ❌ Create new container per test (use Respawn instead)
-- ❌ Forget to specify `DbAdapter.SqlServer` in RespawnerOptions
-- ❌ Skip migrations (schema mismatch)
-- ❌ Share DbContext between tests (not isolated)
-- ❌ Use Respawn on production databases (Testcontainers only!)
+`E2ETestBase` starts the full Aspire AppHost (SQL Server → Migrators → APIs) and waits for health
+checks before tests run. Use `[Trait("Category", "E2E")]` and `[Trait("Speed", "Slow")]`.
 
 ---
 
-**Coverage Target**: >= 80% Infrastructure layer | >= 90% Repository layer
+## Adding a New Service to the E2E Infrastructure
 
-**Keywords**: integration test, E2E test, testcontainers, respawn, database test, SQLite error, test
-isolation
+When a new bounded context requires E2E database isolation:
+
+1. Register a `TestDatabaseManager` for the new service in `tests/E2E.Testing.Api/Program.cs`
+2. Add migration + Respawn reset in `TestingController.GetOrCreateWorkersManagersAsync`
+3. Add the connection string to `appsettings.E2E.json` with `MultipleActiveResultSets=true`
+
+---
+
+## DO / DON'T
+
+| ✅ DO                                                                   | ❌ DON'T                                                                    |
+| ----------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| Use `DatabaseFixture<TContext>` for integration tests                   | Use SQLite or in-memory databases                                           |
+| Call `ResetDatabaseAsync()` at the **START** of each test              | Reset database at end of test                                               |
+| Call `EnsureMigrationsAsync()` after setting `ContextFactory`          | Create new containers per test                                              |
+| Use `[Collection("Database")]` + `GlobalTestContainers` in CI          | Skip `MultipleActiveResultSets=true` in connection strings                  |
+| Use `DatabaseHelper` from `e2e/helpers/` for Playwright DB reset       | Use `TEST_WORKER_INDEX` to identify workers (use `TEST_PARALLEL_INDEX`)     |
+| Use `E2ETestBase` for full Aspire stack E2E tests                      | Share `DbContext` instances between tests                                   |
+| Tag all C# tests with `Category`, `Speed`, `Feature`, `Layer` traits   | Omit `[Trait("Database", "Required")]` on tests that use a real DB         |
+| Tag Playwright tests with `@smoke` and/or `@regression` + `@<feature>` | Use `@manual` for tests intended to run in CI                               |
+| Classify happy-path flows as `@smoke @regression`                      | Mix `@smoke` and `@manual` on the same test                                 |
+
+---
+
+## Related Skills
+
+| Skill                    | Scope                                                                 |
+| ------------------------ | --------------------------------------------------------------------- |
+| `backend-testing-dotnet` | Unit tests, architecture tests (`MicroserviceConfig`), coverage       |
+| `playwright-e2e`         | Playwright POM, locators, assertions, visual regression, accessibility |
+
+---
+
+**Coverage Targets**: Infrastructure layer ≥ 80% | Repository layer ≥ 90%
