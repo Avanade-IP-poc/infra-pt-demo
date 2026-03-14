@@ -101,11 +101,11 @@ Parameters:
                  • green  = Greenfield (new project from scratch)
                  • brown  = Brownfield (migration from existing legacy code)
 
-  --source, -s   Directory containing legacy source code
-                 • Required when: --type is 'brown'
-                 • Optional when: --type is 'green'
+  --source, -s   Source directory — meaning depends on --type:
+                 • green: RFP / functional docs folder (copied to origin/)
+                 • brown: Legacy source code folder (copied to legacy/) — REQUIRED
                  • Accepts: Absolute path (/home/user/legacy) or relative path (./legacy)
-                 • Must exist and contain source files
+                 • Must exist
 
   --help, -h     Show this message
 
@@ -1150,20 +1150,30 @@ EOF
 
 add_demo_content() {
     if [[ "$PROJECT_TYPE" == "green" ]]; then
-        local src="$SCRIPT_DIR/demo/from_rfp"
-        if [[ -d "$src" ]]; then
-            cp -r "$src"/* "$OUTPUT_DIR/origin/" 2>/dev/null || true
-            log_info "Greenfield demo copied to origin/"
+        # ── Greenfield: copy user-provided RFP/functional docs to origin/ ──
+        if [[ -n "$SOURCE_DIR" ]]; then
+            cp -r "$SOURCE_DIR"/* "$OUTPUT_DIR/origin/"
+            log_success "RFP/functional docs copied from $SOURCE_DIR to origin/"
+        else
+            # No real docs supplied — copy demo RFP as illustrative example
+            local src="$SCRIPT_DIR/demo/from_rfp"
+            if [[ -d "$src" ]]; then
+                cp -r "$src"/* "$OUTPUT_DIR/origin/" 2>/dev/null || true
+                log_info "Greenfield demo (RFP example) copied to origin/"
+            fi
         fi
     else
-        local src="$SCRIPT_DIR/demo/from_old_src"
-        if [[ -d "$src" ]]; then
-            cp -r "$src"/* "$OUTPUT_DIR/legacy/" 2>/dev/null || true
-            log_info "Brownfield demo copied to legacy/"
-        fi
+        # ── Brownfield: copy real legacy source to legacy/ ──
         if [[ -n "$SOURCE_DIR" ]]; then
             cp -r "$SOURCE_DIR"/* "$OUTPUT_DIR/legacy/"
-            log_info "Legacy source copied from $SOURCE_DIR"
+            log_success "Legacy source copied from $SOURCE_DIR to legacy/"
+        else
+            # No real source supplied — copy demo legacy code as illustrative example
+            local src="$SCRIPT_DIR/demo/from_old_src"
+            if [[ -d "$src" ]]; then
+                cp -r "$src"/* "$OUTPUT_DIR/legacy/" 2>/dev/null || true
+                log_info "Brownfield demo (legacy example) copied to legacy/"
+            fi
         fi
     fi
 }
@@ -1359,6 +1369,17 @@ main() {
             show_usage
             exit 1
         fi
+        if [[ ! -d "$SOURCE_DIR" ]]; then
+            show_banner
+            log_error "SourceDirectory does not exist: $SOURCE_DIR"
+            echo ""
+            show_usage
+            exit 1
+        fi
+    fi
+
+    # Validate SourceDirectory for greenfield (optional — if provided, must exist)
+    if [[ "$PROJECT_TYPE" == "green" && -n "$SOURCE_DIR" ]]; then
         if [[ ! -d "$SOURCE_DIR" ]]; then
             show_banner
             log_error "SourceDirectory does not exist: $SOURCE_DIR"

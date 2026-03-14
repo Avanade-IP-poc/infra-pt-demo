@@ -59,11 +59,11 @@ Parameters:
                     • green  = Greenfield (new project from scratch)
                     • brown  = Brownfield (migration from existing legacy code)
 
-  -SourceDirectory  Directory containing legacy source code
-                    • Required when: -ProjectType is 'brown'
-                    • Optional when: -ProjectType is 'green'
+  -SourceDirectory  Source directory — meaning depends on -ProjectType:
+                    • green: RFP / functional docs folder (copied to origin/)
+                    • brown: Legacy source code folder (copied to legacy/) — REQUIRED
                     • Accepts: Absolute path (C:\\Legacy\\Code) or relative path (.\\legacy)
-                    • Must exist and contain source files
+                    • Must exist
 
   -Help             Show this message
 
@@ -376,6 +376,9 @@ function Test-Prerequisites {
         Write-Err "SourceDirectory is required for brownfield projects"; exit 1
     }
     if ($ProjectType -eq "brown" -and -not (Test-Path $SourceDirectory)) {
+        Write-Err "Source directory '$SourceDirectory' does not exist"; exit 1
+    }
+    if ($ProjectType -eq "green" -and -not [string]::IsNullOrEmpty($SourceDirectory) -and -not (Test-Path $SourceDirectory)) {
         Write-Err "Source directory '$SourceDirectory' does not exist"; exit 1
     }
     if (Test-Path $OutputDirectory -PathType Leaf) {
@@ -1361,20 +1364,30 @@ function Set-ConstitutionDecisions_DEPRECATED {
 function Add-DemoContent {
     $root = $PSScriptRoot
     if ($ProjectType -eq "green") {
-        $src = "$root\demo\from_rfp"
-        if (Test-Path $src) {
-            Copy-Item "$src\*" "$OutputDirectory\origin\" -Recurse -Force -ErrorAction SilentlyContinue
-            Write-Info "Greenfield demo copied to origin/"
+        # ── Greenfield: copy user-provided RFP/functional docs to origin/ ──
+        if (-not [string]::IsNullOrEmpty($SourceDirectory)) {
+            Copy-Item "$SourceDirectory\*" "$OutputDirectory\origin\" -Recurse -Force
+            Write-Success "RFP/functional docs copied from $SourceDirectory to origin/"
+        } else {
+            # No real docs supplied — copy demo RFP as illustrative example
+            $src = "$root\demo\from_rfp"
+            if (Test-Path $src) {
+                Copy-Item "$src\*" "$OutputDirectory\origin\" -Recurse -Force -ErrorAction SilentlyContinue
+                Write-Info "Greenfield demo (RFP example) copied to origin/"
+            }
         }
     } else {
-        $src = "$root\demo\from_old_src"
-        if (Test-Path $src) {
-            Copy-Item "$src\*" "$OutputDirectory\legacy\" -Recurse -Force -ErrorAction SilentlyContinue
-            Write-Info "Brownfield demo copied to legacy/"
-        }
+        # ── Brownfield: copy real legacy source to legacy/ ──
         if (-not [string]::IsNullOrEmpty($SourceDirectory)) {
             Copy-Item "$SourceDirectory\*" "$OutputDirectory\legacy\" -Recurse -Force
-            Write-Info "Legacy source copied from $SourceDirectory"
+            Write-Success "Legacy source copied from $SourceDirectory to legacy/"
+        } else {
+            # No real source supplied — copy demo legacy code as illustrative example
+            $src = "$root\demo\from_old_src"
+            if (Test-Path $src) {
+                Copy-Item "$src\*" "$OutputDirectory\legacy\" -Recurse -Force -ErrorAction SilentlyContinue
+                Write-Info "Brownfield demo (legacy example) copied to legacy/"
+            }
         }
     }
 }
@@ -1590,6 +1603,17 @@ function Main {
             Show-Usage
             exit 1
         }
+        if (-not (Test-Path $SourceDirectory)) {
+            Show-Banner
+            Write-Err "SourceDirectory does not exist: $SourceDirectory"
+            Write-Host ""
+            Show-Usage
+            exit 1
+        }
+    }
+
+    # Validate SourceDirectory for greenfield (optional — if provided, must exist)
+    if ($ProjectType -eq "green" -and -not [string]::IsNullOrWhiteSpace($SourceDirectory)) {
         if (-not (Test-Path $SourceDirectory)) {
             Show-Banner
             Write-Err "SourceDirectory does not exist: $SourceDirectory"
