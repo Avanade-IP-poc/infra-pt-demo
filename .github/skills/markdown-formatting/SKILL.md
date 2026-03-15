@@ -1,6 +1,9 @@
 ---
 name: markdown-formatting
-description: CommonMark formatting rules and Bolt Framework conventions for .md files including .agent.md and .prompt.md. ALWAYS use when creating or editing any Markdown file. Triggers => 'format markdown', 'markdown style', '.md file', 'markdown conventions', 'CommonMark', 'markdown rules', 'document formatting', 'write readme', 'edit markdown', 'markdown syntax', 'agent.md', 'prompt.md'. Applies to all Markdown in Bolt Framework projects.
+description:
+  When creating, updating or editing Markdown files this skill ensures consistent formatting and
+  adherence to Bolt Framework conventions additionally it will use good practices for readability
+  and maintainability in Markdown files.
 ---
 
 # Markdown Formatting
@@ -28,19 +31,24 @@ Don't skip levels (H2 → H4 is wrong)
 
 Always use fenced blocks with language:
 
-\\\\markdown
-\\\ ypescript
-interface User {
-id: string;
-}
-\\\
+Common languages:
 
-\\\ash
-npm install
-\\\
-\\\\
+- `typescript`
+- `javascript`
+- `python`
+- `bash`
+- `powershell`
+- `json`
+- `yaml`
+- `gherkin`
+- `mermaid`
+- `csharp`
+- `text` (for plain text, logs, or when no language fits)
 
-Common languages: `typescript`, `javascript`, `python`, `bash`, `powershell`, `json`, `yaml`, `gherkin`, `mermaid`
+`````markdown
+````typescript
+
+NEVER write a fenced block with a language. If no language fits, then default to 'text'
 
 ### Lists
 
@@ -55,23 +63,21 @@ Common languages: `typescript`, `javascript`, `python`, `bash`, `powershell`, `j
 
 - [ ] Task not done
 - [x] Task completed
-```
+````
+`````
+
+````
 
 ### Emphasis
 
 ```markdown
-_italic_ or _italic_ (prefer `*`)
-**bold** or **bold** (prefer `**`)
-**_bold italic_**
-`inline code`
+_italic_ or _italic_ (prefer `*`) **bold** or **bold** (prefer `**`) **_bold italic_** `inline code`
 ```
 
 ### Links
 
 ```markdown
-[Link text](https://url.com)
-[Relative link](../path/file.md)
-[Heading link](#heading-id)
+[Link text](https://url.com) [Relative link](../path/file.md) [Heading link](#heading-id)
 ```
 
 ### Tables
@@ -113,3 +119,4 @@ markdownlint --fix README.md
 
 - [CommonMark Spec](https://commonmark.org/)
 - [GitHub Flavored Markdown](https://github.github.com/gfm/)
+````
