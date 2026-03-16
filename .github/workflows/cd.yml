@@ -1,4 +1,4 @@
-# AURORA-IA / AI-DLC Continuous Deployment Pipeline
+# Bolt Framework Continuous Deployment Pipeline
 # This workflow handles deployments to various environments
 
 name: CD Pipeline

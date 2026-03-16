@@ -1,4 +1,4 @@
-# AURORA-IA / AI-DLC Infrastructure Validation Pipeline
+# Bolt Framework Infrastructure Validation Pipeline
 # This workflow validates Infrastructure as Code changes
 
 name: Infrastructure Validation

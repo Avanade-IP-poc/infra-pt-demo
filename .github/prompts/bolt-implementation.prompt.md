@@ -1,6 +1,6 @@
 # BOLT Implementation Prompt
 
-> **Context**: Execute a specific BOLT (micro-iteration) of 2-3 days  
+> **Context**: Execute a specific BOLT (micro-iteration) of 2-3 days
 > **Auto-Actions**: Branch creation, task tracking, quality gates
 
 ## BOLT Branch Auto-Creation
@@ -8,13 +8,15 @@
 **Pattern**: `feature/[feature-name]/bolt-[N]-[description]`
 
 ### Examples:
+
 - `feature/calculator-modernization/bolt-1-domain`
-- `feature/user-management/bolt-2-api-layer`  
+- `feature/user-management/bolt-2-api-layer`
 - `feature/payment-processing/bolt-3-persistence`
 
 ## Automatic Workflow
 
 ### 1. BOLT Branch Setup
+
 ```bash
 # Get current feature branch
 FEATURE_BRANCH=$(git branch --show-current)
@@ -49,6 +51,7 @@ For each BOLT implementation:
 ### 3. Task Tracking
 
 Update `specs/[feature]/planning/tasks.md`:
+
 - [ ] Task → ✅ Task (completed)
 - Update progress counters
 - Add implementation notes
@@ -56,6 +59,7 @@ Update `specs/[feature]/planning/tasks.md`:
 ### 4. Quality Gates (MANDATORY per BOLT)
 
 Run after each significant implementation:
+
 ```bash
 # Lint & format
 npm run lint
@@ -94,6 +98,7 @@ Ensure Clean Architecture compliance:
 ```
 
 **Node.js/TypeScript specific:**
+
 ```bash
 # Validate layer dependencies (domain cannot depend on infrastructure)
 npm run arch:check
@@ -118,6 +123,7 @@ npm run validate:openapi
 
 **Mermaid Architecture Graph:**
 The `arch:graph` generates a dependency diagram that renders everywhere:
+
 ```mermaid
 flowchart LR
     subgraph domain["Domain Layer"]
@@ -136,6 +142,7 @@ flowchart LR
 ### 6. BOLT Completion
 
 When BOLT is complete:
+
 ```bash
 # Final commit
 git add .
@@ -156,7 +163,8 @@ git checkout "$FEATURE_BRANCH"
 
 ## Usage in Agents
 
-**Aurora Implement** should:
+**Bolt Implement** should:
+
 1. **Parse user input** for BOLT number and description
 2. **Auto-execute** branch creation workflow
 3. **Proceed with implementation** on new BOLT branch
@@ -165,9 +173,11 @@ git checkout "$FEATURE_BRANCH"
 ## Examples
 
 ### User Input:
+
 > "Ejecuta BOLT 1 Domain Layer"
 
 ### Agent Actions:
+
 1. ✅ Create `feature/calculator-modernization/bolt-1-domain`
 2. ✅ Read constitution and tasks
 3. ✅ Implement domain layer code
@@ -176,13 +186,15 @@ git checkout "$FEATURE_BRANCH"
 6. ✅ Commit with BOLT completion message
 
 ### User Input:
+
 > "Implement BOLT 2 API"
 
 ### Agent Actions:
+
 1. ✅ Create `feature/calculator-modernization/bolt-2-api`
 2. ✅ Implement API layer
 3. ✅ Continue workflow...
 
 ---
 
-*AURORA BOLT Automation v1.0.0*
+_Bolt Framework Automation v1.0.0_

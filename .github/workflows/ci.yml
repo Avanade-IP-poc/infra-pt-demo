@@ -1,4 +1,4 @@
-# AURORA-IA / AI-DLC Continuous Integration Pipeline
+# Bolt Framework Continuous Integration Pipeline
 # This workflow validates code quality, runs tests, and ensures policy compliance
 
 name: CI Pipeline

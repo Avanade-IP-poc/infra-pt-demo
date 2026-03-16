@@ -1,4 +1,4 @@
-# AURORA-IA / AI-DLC Release Pipeline
+# Bolt Framework Release Pipeline
 # Automated release workflow aligned with Release Orchestrator Agent
 
 name: Release
@@ -258,7 +258,7 @@ jobs:
           
           ### NPM
           ```bash
-          npm install @aurora-ia/dlc@${{ needs.validate.outputs.version }}
+          npm install @Bolt Framework/dlc@${{ needs.validate.outputs.version }}
           ```
           
           ### Docker

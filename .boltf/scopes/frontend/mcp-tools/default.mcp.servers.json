@@ -1,0 +1,57 @@
+{
+    "servers": {
+        "playwright": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "-y",
+                "@playwright/mcp@latest"
+            ]
+        },
+        "chromeDevTools": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "-y",
+                "chrome-devtools-mcp@latest"
+            ]
+        },
+        "context7": {
+            "type": "http",
+            "url": "https://mcp.context7.com/mcp"
+        },
+        "angularCli": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "-y",
+                "@angular/cli@latest",
+                "mcp"
+            ]
+        },
+        "github": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "-y",
+                "@github/github-mcp-server@latest"
+            ]
+        },
+        "vercelNextDevTools": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "-y",
+                "next-devtools-mcp@latest"
+            ]
+        },
+        "primeNg": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "-y",
+                "@primeng/mcp@latest"
+            ]
+        }
+    }
+}
