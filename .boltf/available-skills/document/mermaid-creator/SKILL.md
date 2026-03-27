@@ -1,10 +1,6 @@
 ---
 name: mermaid-creator
-description:
-  Create Mermaid diagrams for technical documentation, system design, and data modeling. Use when
-  creating flowcharts, sequence diagrams, class diagrams, state diagrams, ER diagrams, Gantt charts,
-  git graphs, or any other Mermaid-supported diagram type. Supports both creating new diagrams from
-  descriptions and converting diagrams to SVG format for embedding in presentations or documents.
+description: "Create Mermaid diagrams for technical documentation, system design, and data modeling. ALWAYS use when the user asks to create, draw, visualize, diagram, or document anything — flowcharts, sequence diagrams, class diagrams, state diagrams, ER diagrams, Gantt charts, git graphs, mindmaps, C4 architecture diagrams, user journeys, timelines, or quadrant charts. Also trigger when asked to 'add a diagram', 'make this visual', 'show the flow', 'document the architecture', 'draw the data model', 'show module status', 'create a diagram from this', or convert a diagram to SVG. Use even when the user doesn't say 'Mermaid' — whenever a diagram would help communicate information."
 ---
 
 # Mermaid Creator
@@ -26,7 +22,7 @@ Choose the right diagram type for your use case:
 | Type          | Use Case                                                           | Reference                                                  |
 | ------------- | ------------------------------------------------------------------ | ---------------------------------------------------------- |
 | **C4**        | **Software architecture diagrams** (Context, Container, Component) | [other-types.md](references/other-types.md#c4-diagram)     |
-| **Flowchart** | Processes, workflows, decision trees                               | [flowchart.md](references/flowchart.md)                    |
+| **Flowchart** | Processes, workflows, decision trees, **functional module overviews** | [flowchart.md](references/flowchart.md)                 |
 | **Sequence**  | API interactions, system communications, message flows             | [sequence.md](references/sequence.md)                      |
 | **Class**     | Object-oriented design, data models, relationships                 | [class.md](references/class.md)                            |
 | **State**     | State machines, workflow states, system states                     | [state.md](references/state.md)                            |
@@ -41,13 +37,18 @@ Choose the right diagram type for your use case:
 > **For Architecture Diagrams**: Prefer **C4 diagrams** for system architecture, application
 > architecture, and component design. They provide standard levels of abstraction (Context,
 > Container, Component, Code).
+>
+> **For Functional Module Overviews**: Use **`flowchart TB` + `subgraph`** to show module
+> grouping, implementation status (via `style` colors) and inter-module dependencies in a single
+> diagram. Always use `<br/>` for multiline node labels — **never `\n`**.
+> See the [canonical pattern](references/flowchart.md#functional-module-overview-canonical-pattern).
 
 **Load references as needed**: Each reference file contains syntax, patterns, examples, and best
 practices for that diagram type.
 
-## Quick Start Examples
+## Quick Start
 
-### Flowchart
+The most common starting point — a flowchart with decision logic:
 
 ```mermaid
 flowchart TD
@@ -58,85 +59,14 @@ flowchart TD
     D --> E
 ```
 
-### Sequence Diagram
-
-```mermaid
-sequenceDiagram
-    participant Client
-    participant Server
-    participant DB
-
-    Client->>Server: Request
-    Server->>DB: Query
-    DB-->>Server: Data
-    Server-->>Client: Response
-```
-
-### Class Diagram
-
-```mermaid
-classDiagram
-    class User {
-        +String name
-        +String email
-        +login()
-    }
-
-    class Post {
-        +String title
-        +String content
-        +publish()
-    }
-
-    User "1" --> "*" Post : creates
-```
+For syntax specific to each diagram type, read the reference file linked in the
+[Diagram Type Selection](#diagram-type-selection) table above.
 
 ## Example Files
 
-The skill includes ready-to-use `.mmd` example files in `assets/examples/` that can be copied and
-modified:
-
-```
-assets/examples/
-├── flowchart/          # 10 flowchart examples
-│   ├── basic.mmd
-│   ├── node-shapes.mmd
-│   ├── connections.mmd
-│   ├── process-flow.mmd
-│   ├── decision-tree.mmd
-│   └── ...
-├── sequence/           # 12 sequence diagram examples
-│   ├── basic.mmd
-│   ├── rest-api.mmd
-│   ├── authentication-flow.mmd
-│   └── ...
-├── class/              # 13 class diagram examples
-│   ├── basic.mmd
-│   ├── inheritance.mmd
-│   ├── interface.mmd
-│   └── ...
-├── state/              # 13 state diagram examples
-│   ├── basic.mmd
-│   ├── order-processing.mmd
-│   ├── authentication.mmd
-│   └── ...
-├── er/                 # 10 ER diagram examples
-│   ├── basic.mmd
-│   ├── blog-system.mmd
-│   ├── ecommerce.mmd
-│   └── ...
-└── other/              # 16 other diagram type examples
-    ├── gantt-basic.mmd
-    ├── pie-basic.mmd
-    ├── git-feature-branch.mmd
-    ├── journey-shopping.mmd
-    ├── quadrant-basic.mmd
-    ├── timeline-basic.mmd
-    └── ...
-```
-
-**Usage**: Copy example files as templates for your diagrams. All examples are tested and ready to
-use with the Mermaid CLI.
+74 ready-to-use `.mmd` files live in `assets/examples/`, organized by type (flowchart ×10,
+sequence ×12, class ×13, state ×13, er ×10, other ×16). Copy and modify — all are validated
+with Mermaid CLI.
 
 ## Mermaid CLI
 
@@ -230,6 +160,8 @@ sequenceDiagram
     System-->>User: Response
 ```
 
+**IMPORTANT**: When using sequence diagrams, always include sequence numbers.
+
 ### Data Models
 
 Use ER diagrams for database schemas or class diagrams for object models.
@@ -250,6 +182,8 @@ Common issues:
 - Unclosed quotes in labels
 - Invalid characters in IDs (use alphanumeric + underscore)
 - Wrong diagram type declaration
+- **Multiline labels not rendering** — `\n` does not work in flowchart node labels.
+  Use `<br/>` inside double-quoted labels: `A["Line 1<br/>Line 2"]`
 
 ### Rendering Issues
 
@@ -266,12 +200,13 @@ Common issues:
 
 ## Advanced Features
 
-Most diagram types support:
+Each reference file documents the advanced features for its diagram type:
 
-- **Styling**: Custom colors, fonts, and borders
-- **Subgraphs/Grouping**: Organize related elements
-- **Notes**: Add explanatory text
-- **Direction**: Change layout orientation
-- **Classes**: Reusable style definitions
-
-See individual diagram reference files for syntax and examples.
+| Reference | Advanced features covered |
+| --------- | ------------------------- |
+| [flowchart.md](references/flowchart.md) | Subgraphs, `classDef`, `style` directives, interactive links, functional module pattern |
+| [sequence.md](references/sequence.md) | Autonumber, background `rect`, critical regions, activation bars |
+| [class.md](references/class.md) | Generics, interfaces, notes, namespaces, visibility modifiers |
+| [state.md](references/state.md) | Concurrency, notes, fork/join, composite states |
+| [er.md](references/er.md) | Cardinality notation, attribute types, multi-table schemas |
+| [other-types.md](references/other-types.md) | Gantt, Pie, Git graphs, User Journey, Quadrant, Timeline, Mindmap, C4 |

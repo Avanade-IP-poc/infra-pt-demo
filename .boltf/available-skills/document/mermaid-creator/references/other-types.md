@@ -2,6 +2,18 @@
 
 Additional Mermaid diagram types for specialized use cases.
 
+## Contents
+
+- [Gantt Charts](#gantt-charts) — project timelines and task scheduling
+- [Pie Charts](#pie-charts) — data distribution statistics
+- [Git Graphs](#git-graphs) — commit history and branching strategies
+- [User Journey](#user-journey) — user experience flows with satisfaction scores
+- [Quadrant Chart](#quadrant-chart) — 2D comparison and prioritization matrices
+- [Timeline](#timeline) — chronological event sequences
+- [Mindmap](#mindmap) — hierarchical idea organization
+- [Requirement Diagram](#requirement-diagram) — requirements and their relationships
+- [C4 Diagram](#c4-diagram) — software architecture context diagrams
+
 ## Gantt Charts
 
 Project timelines and task scheduling.

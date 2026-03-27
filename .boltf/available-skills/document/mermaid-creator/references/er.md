@@ -36,11 +36,11 @@ Attribute annotations:
 ## Cardinality
 
 | Syntax | Meaning      |
-| ------ | ------------ | ----------- | ----------- |
-| `      |              | `           | Exactly one |
-| `o     | `            | Zero or one |
+| ------ | ------------ |
+| `\|\|` | Exactly one  |
+| `\|o`  | Zero or one  |
 | `}o`   | Zero or more |
-| `}     | `            | One or more |
+| `}\|`  | One or more  |
 
 Relationship notation: `LEFT RIGHT`
 

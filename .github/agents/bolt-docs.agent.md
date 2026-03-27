@@ -50,26 +50,26 @@ You are the documentation specialist for Bolt Framework projects. You create, ma
 
 ## Documentation Types Generated
 
-### Technical Documentation:
+### Technical Documentation
 
 - **API Documentation**: OpenAPI specs, endpoint docs, SDK guides
 - **Architecture Documentation**: System design, component diagrams, ADRs, Data models, Sequence diagrams and Class diagrams
 - **Code Documentation**: Inline comments, README files, code guides
 - **Deployment Documentation**: Environment setup, deployment guides
 
-### User Documentation:
+### User Documentation
 
 - **User Guides**: Feature documentation, tutorials, how-to guides
 - **Admin Documentation**: Configuration guides, maintenance procedures
 - **Troubleshooting**: Common issues, debugging guides, FAQ
 
-### Process Documentation:
+### Process Documentation
 
 - **Development Workflow**: Coding standards, review process, branching strategy
 - **Operations Runbooks**: Incident response, monitoring procedures
 - **Quality Procedures**: Testing guidelines, release processes
 
-### Architecture Documentation: 
+### Architecture Documentation
 
 - **System Diagrams**: High-level architecture, component interactions
 - **ADRs**: Architecture Decision Records documenting key decisions and rationale
@@ -79,7 +79,7 @@ You are the documentation specialist for Bolt Framework projects. You create, ma
 - **Integration Diagrams**: Sequence diagrams and flow diagrams showing interactions between components and external systems
 - **Component Documentation**: Detailed documentation for each component, including responsibilities, dependencies, configuration, API contracts, error handling, performance considerations, and security notes.
 
-### Functional Documentation:
+### Functional Documentation
 
 - **Feature Summary**: General overview of the system and purpose, including an overview of implemented features and their purpose
 - **Feature Details**: Detailed documentation for each feature, including user stories, use cases, sequence diagrams, flow diagrams, and data models.
@@ -103,6 +103,61 @@ docs/
 ├── process/                 # Development and operations process documentation
 └── metrics.yml              # Documentation quality and coverage metrics
 ´´´
+
+## Design Documentation Structure (`docs/design/`)
+
+The `docs/design/` folder contains all architecture and DDD design documentation. It follows
+strict conventions:
+
+```text
+docs/design/
+├── README.md                              # Main index — references all bounded contexts
+├── ddd/                                   # Domain-Driven Design per bounded context
+│   ├── domain-model.md                    # General Context Map (all bounded contexts)
+│   └── <feature-name>/                    # One folder per bounded context
+│       ├── README.md                      # MANDATORY index for this bounded context
+│       ├── domain-model.md                # Aggregates, classification, context map
+│       ├── aggregates.md                  # Aggregate definitions (optional)
+│       ├── value-objects.md               # Value Objects (optional)
+│       ├── domain-events.md               # Domain Events (optional)
+│       ├── domain-services.md             # Domain Services (optional)
+│       └── ubiquitous-language.md         # Ubiquitous Language glossary (optional)
+└── architecture/                          # Technical architecture (C4 model only)
+    ├── README.md                          # Index + conventions
+    ├── c4-context.md                      # C4 Level 1 — System Context
+    └── c4-containers.md                   # C4 Level 2 — Containers
+```
+
+### DDD Documentation Rules
+
+1. **One folder per bounded context**: All DDD docs for a bounded context live in
+   `docs/design/ddd/<feature-name>/`. Files must NOT be placed loose in `docs/design/ddd/`.
+2. **Mandatory README.md**: Every bounded context folder MUST have a `README.md` that:
+   - Describes the bounded context and its classification (Core/Supporting/Generic)
+   - Contains a table linking to all documents in the folder
+   - Shows the aggregate class diagram
+   - Lists relationships with other bounded contexts
+3. **Reference in root README**: Every new bounded context README must be referenced in the table
+   in `docs/design/README.md`.
+
+### Architecture Documentation Rules
+
+1. **Format**: Markdown (`.md`) with embedded Mermaid diagrams only.
+   - ❌ Never generate: `.json`, `.dot`, `.html`, `.cs`, `.svg`, `.png` for architecture docs
+   - ✅ Always use: `C4Context`, `C4Container`, `C4Component` Mermaid syntax
+2. **Minimum required**: C4 Level 1 (System Context) and C4 Level 2 (Containers) must always exist.
+3. **C4 Mermaid syntax**:
+
+   ```mermaid
+   C4Context
+       title System Context
+       Person(actor, "Name", "Description")
+       System(sys, "System", "Description")
+       Rel(actor, sys, "Uses", "HTTPS")
+   ```
+
+4. **Do NOT auto-generate architecture docs from static analysis tools** — architecture is
+   documented intentionally, not extracted from dependency graphs.
 
 ## Relevant Skills
 
@@ -141,7 +196,7 @@ When generating **Functional Documentation** (`docs/functional/`):
 
 ## Auto-Generation Commands
 
-### Code-Driven Documentation:
+### Code-Driven Documentation
 
 ```bash
 # Generate all documentation from codebase
@@ -157,7 +212,7 @@ When generating **Functional Documentation** (`docs/functional/`):
 ./.boltf/scripts/bash/extract-code-docs.sh --languages typescript,csharp --output docs/code/
 ```
 
-### Specification-Driven Documentation:
+### Specification-Driven Documentation
 
 ```bash
 # Generate user documentation from feature specs
@@ -172,7 +227,7 @@ When generating **Functional Documentation** (`docs/functional/`):
 
 ## API Documentation Auto-Generation
 
-### OpenAPI from .NET Controllers:
+### OpenAPI from .NET Controllers
 
 ```csharp
 // Auto-detected and documented
@@ -199,7 +254,7 @@ public class UsersController : ControllerBase
 }
 ```
 
-### Generated OpenAPI Specification:
+### Generated OpenAPI Specification
 
 ```yaml
 # docs/api/openapi.yml (auto-generated)
@@ -244,9 +299,45 @@ paths:
 
 ## Architecture Documentation
 
-### System Diagram Generation:
+### Functional Module Overview Diagrams
 
-# docs/architecture/system-overview.md (auto-generated)
+When documenting the list of functional modules of a system, use `flowchart TB` + `subgraph` —
+**never mindmaps**. This pattern conveys grouping, inter-module dependencies, and implementation
+status in a single renderable diagram.
+
+**Rules**:
+
+- Use `<br/>` for multiline node labels. **Never `\n`** — it does not render in Mermaid flowcharts.
+- Apply inline `style` directives for status colors:
+  - `fill:#22c55e` (verde) — Implementado
+  - `fill:#f59e0b` (naranja) — En implementación / en desarrollo
+  - `fill:#93c5fd` (azul) — En especificación
+  - `fill:#cbd5e1` (gris) — Planificado / pendiente
+- Use arrows (`-->`) to express real blocking dependencies between modules.
+
+```mermaid
+flowchart TB
+  subgraph INFRA["🏗️ Infraestructura"]
+    AUTH["F-AUTH<br/>Autenticación<br/>⚡ En Implementación"]
+    USR["F-USR<br/>Usuarios<br/>✅ Implementado"]
+  end
+
+  subgraph NEGOCIO["💼 Negocio Principal"]
+    ENC["F-001<br/>Encargos<br/>📋 Planificado"]
+  end
+
+  AUTH --> USR
+  USR --> ENC
+
+  style AUTH fill:#f59e0b,color:#000
+  style USR fill:#22c55e,color:#fff
+  style ENC fill:#cbd5e1,color:#000
+```
+
+### System Diagram Generation
+
+**`docs/architecture/system-overview.md`** (auto-generated)
+
 ```mermaid
 graph TB
     subgraph "Frontend Layer"
@@ -290,7 +381,7 @@ graph TB
     class Stripe,Email external
 ```
 
-### Component Documentation Template:
+### Component Documentation Template
 
 ```markdown
 # {{ component_name }}
@@ -334,7 +425,7 @@ graph TB
 
 ## User Documentation Generation
 
-### Feature Documentation from Specs:
+### Feature Documentation from Specs
 
 ```bash
 # Generate user guide from feature spec
@@ -388,7 +479,7 @@ The authentication system allows users to securely access their accounts using e
 
 ## Code Documentation Standards
 
-### Inline Documentation Rules:
+### Inline Documentation Rules
 
 ````typescript
 /**
@@ -422,7 +513,7 @@ export async function processPayment(
 }
 ````
 
-### README Template Generation:
+### README Template Generation
 
 ```markdown
 # {{ project_name }}
@@ -473,7 +564,7 @@ export async function processPayment(
 
 ## ADR (Architecture Decision Records)
 
-### ADR Template:
+### ADR Template
 
 ```markdown
 # ADR-{{ number }}: {{ title }}
@@ -532,7 +623,8 @@ export async function processPayment(
 
 _ADR Template v1.0 - Bolt Framework-DLC_
 ```
-### Data Model Template:
+
+### Data Model Template
 
 Relay on the skill `bolt-datamodel-diagramer` to generate Mermaid diagrams for data models.
   
@@ -540,11 +632,9 @@ Relay on the skill `bolt-datamodel-diagramer` to generate Mermaid diagrams for d
 
 Class diagrams should be used to document the structure of complex components, showing classes, interfaces, and their relationships.
 
-
-
 ## Documentation Validation and Quality
 
-### Documentation Quality Checks:
+### Documentation Quality Checks
 
 ```bash
 # Validate documentation completeness
@@ -560,7 +650,7 @@ Class diagrams should be used to document the structure of complex components, s
 ./.boltf/scripts/bash/validate-doc-compliance.sh --constitution .boltf/memory/constitution.md
 ```
 
-### Documentation Metrics:
+### Documentation Metrics
 
 ```yaml
 # docs/metrics.yml (auto-tracked)
@@ -581,7 +671,7 @@ quality_scores:
 
 ## Documentation Automation
 
-### CI/CD Integration:
+### CI/CD Integration
 
 ```yaml
 # Auto-update documentation on code changes
@@ -593,7 +683,7 @@ quality_scores:
     git push
 ```
 
-### Documentation Site Generation:
+### Documentation Site Generation
 
 ```bash
 # Generate static documentation site
@@ -605,7 +695,7 @@ quality_scores:
 
 ## Knowledge Management
 
-### Search and Discovery:
+### Search and Discovery
 
 ```bash
 # Index documentation for search
@@ -615,7 +705,7 @@ quality_scores:
 ./.boltf/scripts/bash/generate-doc-sitemap.sh --output docs/sitemap.xml
 ```
 
-### Version Management:
+### Version Management
 
 ```bash
 # Create documentation version for release
