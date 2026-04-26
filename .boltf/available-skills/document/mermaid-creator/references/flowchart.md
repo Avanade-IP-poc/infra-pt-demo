@@ -70,9 +70,25 @@ Refer to example files for complete implementations:
 - **Workflow with Subprocesses**: `assets/examples/flowchart/workflow-subprocess.mmd` Order
   processing with validation and payment
 
+## Multiline Node Labels
+
+Use `<br/>` inside quoted labels to break lines. **Never use `\n`** — it is not rendered by
+Mermaid in flowcharts and will appear as a literal backslash-n:
+
+```mermaid
+flowchart TD
+    A["Module ID<br/>Module Name<br/>🔧 Status"]
+    B["Another<br/>Module"]
+    A --> B
+```
+
+> ❌ Wrong: `A["Title\nSubtitle"]`
+> ✅ Correct: `A["Title<br/>Subtitle"]`
+
 ## Best Practices
 
 - Use descriptive labels for nodes and connections
+- Use `<br/>` for multiline labels — **never `\n`**
 - Keep flows top-to-bottom or left-to-right for readability
 - Use consistent node shapes (rectangles for processes, diamonds for decisions)
 - Limit complexity - split large flows into multiple diagrams
@@ -97,6 +113,37 @@ flowchart TD
 ```
 
 **Example**: `assets/examples/flowchart/subgraph.mmd`
+
+### Functional Module Overview (canonical pattern)
+
+Use `flowchart TB` + `subgraph` to document a system's functional modules with status, grouping and
+dependencies in a single diagram. Apply `style` for status colors and `<br/>` for multiline labels:
+
+```mermaid
+flowchart TB
+  subgraph INFRA["🏗️ Infraestructura"]
+    AUTH["F-AUTH<br/>Autenticación<br/>✅ Implementado"]
+    USR["F-USR<br/>Usuarios<br/>✅ Implementado"]
+  end
+
+  subgraph NEGOCIO["💼 Negocio"]
+    ENC["F-001<br/>Encargos<br/>📋 Planificado"]
+  end
+
+  AUTH --> USR
+  USR --> ENC
+
+  style AUTH fill:#22c55e,color:#fff
+  style USR fill:#22c55e,color:#fff
+  style ENC fill:#cbd5e1,color:#000
+```
+
+**Color convention**:
+
+- `#22c55e` (verde) — Implementado
+- `#f59e0b` (naranja) — En implementación / en desarrollo
+- `#93c5fd` (azul) — En especificación
+- `#cbd5e1` (gris) — Planificado / pendiente
 
 ### Styling
 
