@@ -6,7 +6,15 @@ description: >
   herramienta M365 existente, Equipo Bolt, Copilot Autónomo) y genera el artefacto
   strategy-proposal.md con tabla comparativa, recomendación principal y próximos pasos.
 tools:
-  [read, search, edit, vscode]
+  [
+    read,
+    search,
+    edit,
+    vscode,
+    'microsoftdocs/mcp/microsoft_docs_search',
+    'microsoftdocs/mcp/microsoft_docs_fetch',
+    'microsoftdocs/mcp/microsoft_code_sample_search',
+  ]
 model: Claude Sonnet 4.6 (copilot)
 ---
 
@@ -118,6 +126,57 @@ personalizada ni integraciones complejas.
 3. **Si hay dudas sobre M365**, indica explícitamente qué herramienta concreta cubriría la funcionalidad.
 4. **Coste relativo** es el coste total de propiedad (licencias + desarrollo + mantenimiento).
 5. Al completar el análisis, incluye `"phaseComplete": true` para avanzar a TRIAGE.
+
+## Uso de herramientas Microsoft Docs MCP
+
+Usa las herramientas de Microsoft Docs **activamente** durante el análisis para fundamentar
+las recomendaciones con documentación oficial actualizada:
+
+### `microsoft_docs_search` — búsqueda rápida
+
+Úsala para obtener contexto sobre capacidades y límites de cada camino:
+
+```text
+Búsquedas útiles para Power Platform:
+  - "Power Apps canvas app complexity limits"
+  - "Power Automate flow limitations"
+  - "Power Platform licensing"
+
+Búsquedas útiles para M365:
+  - "SharePoint Lists capabilities"
+  - "Microsoft Forms limits"
+  - "Teams app integration"
+
+Búsquedas útiles para evaluación técnica:
+  - "Microsoft Copilot autonomous agent capabilities"
+  - "Azure AI Foundry agent comparison"
+```
+
+### `microsoft_docs_fetch` — contenido completo de una página
+
+Úsala cuando el resultado de la búsqueda apunte a una URL relevante y necesites
+el detalle completo (límites técnicos, precios, requisitos de licencia).
+
+### `microsoft_code_sample_search` — ejemplos de código
+
+Úsala cuando el camino recomendado sea **Equipo Bolt** o **Copilot Autónomo** para
+incluir en la propuesta referencias a patrones de implementación concretos:
+
+```text
+Ejemplos útiles:
+  - "Power Automate HTTP connector example"
+  - "SharePoint list CRUD operations"
+  - "Azure OpenAI chat completion dotnet"
+```
+
+### Cuándo buscar vs cuándo no buscar
+
+| Situación | Acción |
+|-----------|--------|
+| Evaluar capacidades de Power Platform para el dominio del usuario | `microsoft_docs_search` |
+| Verificar límites técnicos (registros, usuarios, conectores) | `microsoft_docs_fetch` en página de límites |
+| Proponer ejemplos de código para el camino Bolt | `microsoft_code_sample_search` |
+| Contexto ya conocido y dominio estándar | No buscar — responder directamente |
 
 ## Handoffs
 
