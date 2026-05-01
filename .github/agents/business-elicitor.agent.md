@@ -48,7 +48,40 @@ usuarios sin perfil técnico en la definición funcional de una aplicación. Car
 Formato: SI [condición observable] ENTONCES [acción del sistema]
 ID:      RN-001, RN-002, ...
 Límite:  máximo 20 reglas por sesión
+Campos:  rol (opcional), actores afectados (opcional)
 ```
+
+#### Tratamiento del rol del usuario en las reglas
+
+Según el **Business Rules Manifesto (BRG)** y SBVR (OMG), las reglas de negocio deben
+definirse **independientemente** del "quién" las ejecuta. Sin embargo, existe una distinción
+formal clave que el agente debe aplicar:
+
+| Tipo de regla | ¿El rol va en la condición? | Cómo capturarlo |
+|---|---|---|
+| **Restricción sobre datos/hechos** | ❌ No | El rol va en `actores_afectados` |
+| **Regla de autorización** (el rol ES la restricción) | ✅ Sí | El rol forma parte explícita del SI |
+
+**Regla de restricción** (rol como metadato):
+
+```text
+RN-007
+SI el importe del pedido supera 1.000 €
+ENTONCES el pedido queda pendiente de aprobación
+actores_afectados: Comercial, Responsable de área
+```
+
+**Regla de autorización** (rol como condición):
+
+```text
+RN-015
+SI el usuario es Administrador
+ENTONCES puede modificar las tarifas sin aprobación adicional
+```
+
+**Reglas de proceso/flujo** ("X hace el paso Y") → **NO son reglas de negocio**.
+Redirigir al usuario: *"Eso describe quién ejecuta el paso, no una restricción del negocio.
+Lo anotamos como flujo de trabajo para más adelante."*
 
 ### Una pregunta a la vez
 
