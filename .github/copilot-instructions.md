@@ -107,6 +107,10 @@ Bolt Framework includes specialized **skills** that are auto-discovered from `.g
 | [bolt-adr](.github/skills/bolt-adr/)                       | Architecture Decision Records | Documenting architectural decisions, technology selections, or design patterns using MADR format |
 | [new-skill](.github/skills/new-skill/)                     | Skill Creation                | Creating or improving Copilot skills                                                             |
 | [markdown-formatting](.github/skills/markdown-formatting/) | Markdown Best Practices       | Writing or editing any Markdown document (.md, .agent.md, .prompt.md)                            |
+| [interface-design](.github/skills/interface-design/)       | Interface Design              | Building dashboards, admin panels, SaaS apps, tools, settings pages, and data interfaces         |
+| [mermaid-creator](.github/skills/mermaid-creator/)         | Mermaid Diagrams              | Creating any diagram — flowchart, sequence, class, state, ER, C4, and more                       |
+| [mermaid-diagrams](.github/skills/mermaid-diagrams/)       | Mermaid Diagrams (alt)        | Alternative Mermaid reference with class, sequence, flowchart, ERD, and C4 examples              |
+| [tailwind-design-system](.github/skills/tailwind-design-system/) | Tailwind Design System  | Building scalable design systems with Tailwind CSS v4, design tokens, component libraries        |
 
 ### Creating Custom Skills
 
