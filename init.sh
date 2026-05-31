@@ -22,6 +22,7 @@ OUTPUT_DIR=""
 PROJECT_TYPE=""
 SOURCE_DIR=""
 SKIP_GIT_GOVERNANCE="false"
+D_AI_CLIENT="copilot"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # --- Decision variables -------------------------------------------------------
@@ -360,6 +361,18 @@ test_copilot_cli_version() {
         # npm not available, can't check latest - assume current is ok
         CLI_VERSION_CHECK_RESULT="up-to-date"
     fi
+}
+
+# --- AI client selection ------------------------------------------------------
+select_ai_client() {
+    read_choice \
+        "¿Qué agente de IA vas a utilizar en este proyecto?" \
+        1 \
+        "GitHub Copilot (VS Code)" "Claude Code" \
+        --- \
+        "copilot" "claude"
+    D_AI_CLIENT="$REPLY_CHOICE"
+    log_success "AI client seleccionado: $D_AI_CLIENT"
 }
 
 # --- Prerequisite checks -----------------------------------------------------
@@ -854,16 +867,32 @@ collect_all_decisions() {
 copy_bolt_framework() {
     log_step "Copying Bolt Framework..."
 
-    [[ -d "$SCRIPT_DIR/.github" ]] && cp -r "$SCRIPT_DIR/.github" "$OUTPUT_DIR/.github"
+    log_info "Configurando para AI client: $D_AI_CLIENT"
+
+    # .boltf — payload del framework (siempre)
     [[ -d "$SCRIPT_DIR/.boltf" ]] && cp -r "$SCRIPT_DIR/.boltf" "$OUTPUT_DIR/.boltf"
 
-    # .claude (dual-client: agents + skills — fuente única de metodología).
-    # settings.local.json es local/gitignored y NO se distribuye.
-    if [[ -d "$SCRIPT_DIR/.claude" ]]; then
-        mkdir -p "$OUTPUT_DIR/.claude"
-        for sub in agents skills; do
-            [[ -d "$SCRIPT_DIR/.claude/$sub" ]] && cp -r "$SCRIPT_DIR/.claude/$sub" "$OUTPUT_DIR/.claude/$sub"
+    # .github — gobernanza/CI compartida (siempre) + assets de Copilot (solo si copilot).
+    mkdir -p "$OUTPUT_DIR/.github"
+    for d in workflows actions ISSUE_TEMPLATE evals; do
+        [[ -d "$SCRIPT_DIR/.github/$d" ]] && cp -r "$SCRIPT_DIR/.github/$d" "$OUTPUT_DIR/.github/$d"
+    done
+    for f in labels.yml CODEOWNERS skills-lock.json copilot-instructions.md; do
+        [[ -f "$SCRIPT_DIR/.github/$f" ]] && cp "$SCRIPT_DIR/.github/$f" "$OUTPUT_DIR/.github/$f"
+    done
+    if [[ "$D_AI_CLIENT" == "copilot" ]]; then
+        for d in agents prompts instructions; do
+            [[ -d "$SCRIPT_DIR/.github/$d" ]] && cp -r "$SCRIPT_DIR/.github/$d" "$OUTPUT_DIR/.github/$d"
         done
+    fi
+
+    # .claude — skills compartidas (siempre) + shells de Claude (solo si claude).
+    # settings.local.json es local/gitignored y NO se distribuye.
+    mkdir -p "$OUTPUT_DIR/.claude"
+    [[ -d "$SCRIPT_DIR/.claude/skills" ]] && cp -r "$SCRIPT_DIR/.claude/skills" "$OUTPUT_DIR/.claude/skills"
+    if [[ "$D_AI_CLIENT" == "claude" ]]; then
+        [[ -d "$SCRIPT_DIR/.claude/agents" ]] && cp -r "$SCRIPT_DIR/.claude/agents" "$OUTPUT_DIR/.claude/agents"
+        [[ -f "$SCRIPT_DIR/CLAUDE.md" ]] && cp "$SCRIPT_DIR/CLAUDE.md" "$OUTPUT_DIR/CLAUDE.md"
     fi
 
     for f in README.md CHANGELOG.md CONTRIBUTING.md LICENSE PENDIENTES.md; do
@@ -1260,7 +1289,7 @@ show_summary() {
     fi
     log_info "✓ Basic constitution created in .boltf/memory/constitution.md"
     log_info "✓ Scopes configuration saved to .boltf/scopes.yaml"
-    log_info "✓ Bolt Framework agents copied to .github/ and .claude/; skills to .claude/skills/"
+    log_info "✓ Bolt Framework configured for AI client: $D_AI_CLIENT (skills in .claude/skills/)"
 
     # Python environment status
     if [[ "$D_PYTHON_CONFIGURED" == "true" ]]; then
@@ -1280,6 +1309,31 @@ show_summary() {
     echo -e "  ${CYAN}AUTOMATED SETUP (Phase 2 of 2):${NC}"
     echo ""
 
+    if [[ "$D_AI_CLIENT" == "claude" ]]; then
+        # ── Claude Code CLI ──
+        if command -v claude &> /dev/null; then
+            echo -e "  ${GREEN}✓ Claude Code CLI detected${NC}"
+            echo -e "  ${YELLOW}🤖 Invoking bolt-constitution agent (Claude Code)...${NC}"
+            echo ""
+            if (cd "$OUTPUT_DIR" && claude "Usa el subagente bolt-constitution para configurar e integrar la constitución del proyecto (setup constitution)."); then
+                echo ""
+                echo -e "  ${GREEN}✓ bolt-constitution (Claude) completed${NC}"
+            else
+                log_warn "Failed to invoke Claude"
+                echo -e "  ${YELLOW}📝 MANUAL FALLBACK:${NC}"
+                echo -e "     ${WHITE}1. cd $OUTPUT_DIR${NC}"
+                echo -e "     ${WHITE}2. Run: claude${NC}"
+                echo -e "     ${WHITE}3. Prompt: Usa el subagente bolt-constitution para configurar la constitución${NC}"
+            fi
+        else
+            echo -e "  ${YELLOW}⚠ Claude Code CLI not detected${NC}"
+            echo -e "  ${CYAN}📝 MANUAL STEP REQUIRED:${NC}"
+            echo -e "     ${WHITE}1. cd $OUTPUT_DIR${NC}"
+            echo -e "     ${WHITE}2. Install Claude Code: https://claude.com/claude-code${NC}"
+            echo -e "     ${WHITE}3. Run: claude${NC}"
+            echo -e "     ${WHITE}4. Prompt: Usa el subagente bolt-constitution para configurar la constitución${NC}"
+        fi
+    else
     # Check if GitHub Copilot CLI is available and up-to-date
     if command -v copilot &> /dev/null; then
         # Check if there's a newer version available
@@ -1342,6 +1396,7 @@ show_summary() {
         echo -e "     ${WHITE}4. Prompt: Use Bolt Constitution agent to setup constitution${NC}"
         echo ""
         echo -e "  ${WHITE}💡 After CLI installation, the agent will auto-invoke on next init${NC}"
+    fi
     fi
 
     echo ""
@@ -1469,6 +1524,9 @@ main() {
 
     show_banner
     check_prerequisites
+
+    # AI client selection (drives configuration + CLI delegation)
+    select_ai_client
 
     collect_all_decisions
 

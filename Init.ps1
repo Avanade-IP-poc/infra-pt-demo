@@ -376,6 +376,17 @@ function Test-CopilotCliVersion {
     return $result
 }
 
+# ─── AI client selection ─────────────────────────────────────────────────────
+
+function Select-AIClient {
+    $script:AIClient = Read-Choice `
+        -Title "¿Qué agente de IA vas a utilizar en este proyecto?" `
+        -Options @("GitHub Copilot (VS Code)", "Claude Code") `
+        -Values  @("copilot", "claude") `
+        -Default 1
+    Write-Success "AI client seleccionado: $script:AIClient"
+}
+
 # ─── Prerequisite checks ────────────────────────────────────────────────────
 function Test-Prerequisites {
     if ($ProjectType -eq "brown" -and [string]::IsNullOrEmpty($SourceDirectory)) {
@@ -861,24 +872,41 @@ function Copy-BoltFramework {
     Write-Step "Copying Bolt Framework..."
 
     $root = $PSScriptRoot
+    $client = if ($script:AIClient) { $script:AIClient } else { 'copilot' }
+    Write-Info "Configurando para AI client: $client"
 
-    # .github
-    if (Test-Path "$root\.github") {
-        Copy-Item "$root\.github" "$OutputDirectory\.github" -Recurse -Force
-    }
-    # .boltf
+    # .boltf — payload del framework (siempre)
     if (Test-Path "$root\.boltf") {
         Copy-Item "$root\.boltf" "$OutputDirectory\.boltf" -Recurse -Force
     }
-    # .claude (dual-client: agents + skills — fuente única de metodología).
-    # settings.local.json es local/gitignored y NO se distribuye.
-    if (Test-Path "$root\.claude") {
-        New-Item -ItemType Directory -Path "$OutputDirectory\.claude" -Force | Out-Null
-        foreach ($sub in @("agents", "skills")) {
-            if (Test-Path "$root\.claude\$sub") {
-                Copy-Item "$root\.claude\$sub" "$OutputDirectory\.claude\$sub" -Recurse -Force
-            }
+
+    # .github — gobernanza/CI compartida (siempre) + assets de Copilot (solo si copilot)
+    New-Item -ItemType Directory -Path "$OutputDirectory\.github" -Force | Out-Null
+    # Compartido: workflows, actions, issue templates, labels, CODEOWNERS, evals, skills-lock,
+    # y copilot-instructions.md (referencia de metodología, también usada por CLAUDE.md).
+    foreach ($d in @("workflows", "actions", "ISSUE_TEMPLATE", "evals")) {
+        if (Test-Path "$root\.github\$d") { Copy-Item "$root\.github\$d" "$OutputDirectory\.github\$d" -Recurse -Force }
+    }
+    foreach ($f in @("labels.yml", "CODEOWNERS", "skills-lock.json", "copilot-instructions.md")) {
+        if (Test-Path "$root\.github\$f") { Copy-Item "$root\.github\$f" "$OutputDirectory\.github\$f" -Force }
+    }
+    if ($client -eq 'copilot') {
+        # Shells/prompts/instructions específicos de Copilot
+        foreach ($d in @("agents", "prompts", "instructions")) {
+            if (Test-Path "$root\.github\$d") { Copy-Item "$root\.github\$d" "$OutputDirectory\.github\$d" -Recurse -Force }
         }
+    }
+
+    # .claude — skills compartidas (siempre) + shells de Claude (solo si claude)
+    New-Item -ItemType Directory -Path "$OutputDirectory\.claude" -Force | Out-Null
+    if (Test-Path "$root\.claude\skills") {
+        Copy-Item "$root\.claude\skills" "$OutputDirectory\.claude\skills" -Recurse -Force
+    }
+    if ($client -eq 'claude') {
+        if (Test-Path "$root\.claude\agents") {
+            Copy-Item "$root\.claude\agents" "$OutputDirectory\.claude\agents" -Recurse -Force
+        }
+        if (Test-Path "$root\CLAUDE.md") { Copy-Item "$root\CLAUDE.md" "$OutputDirectory\CLAUDE.md" -Force }
     }
     # Root docs
     @("README.md","CHANGELOG.md","CONTRIBUTING.md","LICENSE","PENDIENTES.md") | ForEach-Object {
@@ -1540,7 +1568,7 @@ function Show-Summary {
     }
     Write-Host "  ✓ Basic constitution created in .boltf/memory/constitution.md" -ForegroundColor Green
     Write-Host "  ✓ Scopes configuration saved to .boltf/scopes.yaml" -ForegroundColor Green
-    Write-Host "  ✓ Bolt Framework agents copied to .github/ and .claude/; skills to .claude/skills/" -ForegroundColor Green
+    Write-Host "  ✓ Bolt Framework configured for AI client: $script:AIClient (skills in .claude/skills/)" -ForegroundColor Green
     Write-Host ""
     Write-Host "  ⚠ IMPORTANT: Two-Step Initialization" -ForegroundColor Yellow
     Write-Host "     Phase 1: Init.ps1 (completed) — Basic configuration" -ForegroundColor DarkGray
@@ -1549,6 +1577,40 @@ function Show-Summary {
     Write-Host "  AUTOMATED SETUP (Phase 2 of 2):" -ForegroundColor Cyan
     Write-Host ""
 
+    if ($script:AIClient -eq 'claude') {
+        # ── Claude Code CLI ──
+        $claudeAvailable = Get-Command claude -ErrorAction SilentlyContinue
+        if ($null -ne $claudeAvailable) {
+            Write-Host "  ✓ Claude Code CLI detected" -ForegroundColor Green
+            Write-Host "  🤖 Invoking bolt-constitution agent (Claude Code)..." -ForegroundColor Yellow
+            Write-Host ""
+            try {
+                Push-Location $OutputDirectory
+                try {
+                    & claude "Usa el subagente bolt-constitution para configurar e integrar la constitución del proyecto (setup constitution)."
+                    Write-Host ""
+                    Write-Host "  ✓ bolt-constitution (Claude) completed" -ForegroundColor Green
+                }
+                finally { Pop-Location }
+            }
+            catch {
+                Write-Warn "Failed to invoke Claude: $_"
+                Write-Host "  📝 MANUAL FALLBACK:" -ForegroundColor Yellow
+                Write-Host "     1. cd $OutputDirectory" -ForegroundColor White
+                Write-Host "     2. Run: claude" -ForegroundColor White
+                Write-Host "     3. Prompt: Usa el subagente bolt-constitution para configurar la constitución" -ForegroundColor White
+            }
+        }
+        else {
+            Write-Host "  ⚠ Claude Code CLI not detected" -ForegroundColor Yellow
+            Write-Host "  📝 MANUAL STEP REQUIRED:" -ForegroundColor Cyan
+            Write-Host "     1. cd $OutputDirectory" -ForegroundColor White
+            Write-Host "     2. Install Claude Code: https://claude.com/claude-code" -ForegroundColor White
+            Write-Host "     3. Run: claude" -ForegroundColor White
+            Write-Host "     4. Prompt: Usa el subagente bolt-constitution para configurar la constitución" -ForegroundColor White
+        }
+    }
+    else {
     # Check if GitHub Copilot CLI is available and up-to-date
     $cliAvailable = Get-Command copilot -ErrorAction SilentlyContinue
 
@@ -1623,6 +1685,7 @@ function Show-Summary {
         Write-Host ""
         Write-Host "  💡 After CLI installation, the agent will auto-invoke on next init" -ForegroundColor DarkGray
     }
+    }
 
     Write-Host ""
     Write-Host "  📚 Documentation:" -ForegroundColor Cyan
@@ -1689,6 +1752,9 @@ function Main {
 
     Show-Banner
     Test-Prerequisites
+
+    # AI client selection (drives configuration + CLI delegation)
+    Select-AIClient
 
     # Interactive wizard
     $decisions = Get-AllDecisions
