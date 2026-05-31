@@ -1,133 +1,92 @@
 # Brownfield Workflow — Legacy Modernization
 
-> Workflow example for migrating legacy code (e.g., COBOL) to a modern stack.
+> Workflow para modernizar código legacy (p. ej. COBOL, .NET Framework, Java antiguo) a un
+> stack moderno, con tests de equivalencia y gobierno Bolt. Cliente: Copilot o Claude.
 
 ---
 
 ## Overview
 
 ```text
-Init (brownfield) → Constitution → Analyze Legacy → Feature Map → Plan → [Bolt Loop with Parity Tests] → Release
+Init (brownfield) → Constitution → Legacy Analyst (assess/map/rules)
+  → Feature/Gherkin (desde reglas) → Plan → [Bolt Loop con tests de equivalencia + gate] → Release → Retire
 ```
 
 ## Step-by-Step
 
-### 1. Initialize with Legacy Source
-
-**Bash**:
+### 1. Inicializar con el legacy
 
 ```bash
-./init.sh my-modern-app brown --source ./legacy-cobol --scope full-stack --backend csharp
+./init.sh --type brown --source ./legacy-cobol     # wizard → AI client (Copilot/Claude)
 ```
-
-**PowerShell**:
-
 ```powershell
-.\Init.ps1 -ProjectName "my-modern-app" -Type brownfield -SourceDir "./legacy-cobol"
+.\Init.ps1 -ProjectType brown -SourceDirectory .\legacy-cobol -OutputDirectory .\my-modern-app
 ```
 
-This creates:
+Crea `legacy/` (código viejo, para análisis — **no se modifica**), `migration/`, `.boltf/`,
+`.claude/`/`.github` (según cliente), e inicializa la gobernanza git (subtree + `bolt-upstream`).
+
+### 2. Constitution moderna — `@Bolt Constitution`
+Define stack destino, estándares y constraints en `.boltf/memory/constitution.md`. DEBE incluir:
+- Stack moderno y arquitectura objetivo.
+- **Requisito de equivalencia**: todo comportamiento P0 del legacy debe quedar caracterizado.
+- Estrategia de migración (strangler fig recomendada).
+
+### 3. Discovery del legacy — `@Bolt Legacy Analyst`
+Lee `legacy/` y produce (citando `fichero:línea`):
+- `ASSESSMENT.md` (inventario, complejidad, deuda, dead code, esfuerzo) → `.boltf/analysis/<sistema>/`
+- `TOPOLOGY.md` (call graph, data lineage, ruta crítica) → `docs/<sistema>/`
+- `BUSINESS_RULES.md` + `DATA_OBJECTS.md` (reglas `RULE-NNN` en Given/When/Then) → `.boltf/analysis/<sistema>/`
+
+> Si usas Claude con el plugin `code-modernization`, este agente puede delegar en
+> `modernize-assess`/`modernize-map`/`modernize-extract-rules`. Si no, lo hace de forma nativa.
+
+### 4. Mapa de features — `@Bolt Feature` → `@Bolt Specify` → `@Bolt Gherkin`
+Convierte `BUSINESS_RULES.md` en specs versionados en `specs/<feature>/`, con los escenarios
+Given/When/Then como criterios de aceptación (las reglas alimentan directamente Gherkin).
+
+### 5. Plan de migración — `@Bolt Plan` (+ `@Bolt Architect`, `@Bolt ADR`)
+Plan técnico, data model, contratos y **desglose en Bolts** (strangler fig), usando
+`ASSESSMENT.md`/`TOPOLOGY.md` como contexto.
+
+### 6. Implementar con equivalencia — por cada Bolt
+1. **Tests de caracterización** (skill `skill-characterization-testing`, `@Bolt Testing` modo
+   oráculo): fija el comportamiento legacy (golden master / parity) sobre las reglas P0.
+2. `@Bolt Implement` escribe el equivalente moderno (idiomático, no port estructural).
+3. **Gate de equivalencia** (`skill-bolt-quality-gates`): equivalence pass rate ≥ 95% (100% P0),
+   100% de comportamiento P0 caracterizado, 0 discrepancias sin decidir.
 
 ```text
-my-modern-app/
-├── memory/
-│   └── constitution.md
-├── legacy/                  # ← Legacy code copied here for analysis
-│   ├── CALCMAIN.cbl
-│   └── CALCENGN.cbl
-├── specs/
-├── src/
-└── scripts/
+# Equivalencia (pseudo)
+Given input X   When legacy(X) = 42.50   Then modern(X) ≈ 42.50  (RULE-007)
 ```
 
-### 2. Define Modern Constitution
-
-Invoke `@Bolt Constitution`:
-
-```text
-"Define constitution for modernizing a COBOL calculator application to
-.NET 8 Web API with React frontend. Must maintain functional parity
-with the legacy COBOL code in the legacy/ folder."
-```
-
-The constitution MUST include:
-
-- Modern tech stack
-- **Parity testing requirement** — all legacy functions must have equivalent modern tests
-- Migration strategy (strangler fig, big bang, etc.)
-
-### 3. Analyze Legacy Code
-
-Invoke `@Bolt Analyze`:
-
-```text
-"Analyze the legacy COBOL code in legacy/ folder. Identify:
-- All business functions and calculations
-- Data structures and record layouts
-- Control flow and decision logic
-- External dependencies
-Map each to a modern equivalent."
-```
-
-**Output**: Analysis document with legacy function inventory.
-
-### 4. Create Feature Map
-
-Invoke `@Bolt Feature`:
-
-```text
-"Create feature specifications that map each legacy COBOL function to a
-modern feature. Include parity acceptance criteria."
-```
-
-**Output**: Feature specs with:
-
-- Each legacy function → modern user story
-- Parity acceptance criteria (same inputs → same outputs)
-- Edge cases from legacy code
-
-### 5. Plan Migration
-
-Invoke `@Bolt Plan`:
-
-```text
-"Create migration plan. Use strangler fig pattern — implement modern
-features alongside legacy, with parity tests validating equivalence."
-```
-
-### 6. Implement with Parity Tests
-
-For each Bolt, `@Bolt Implement` will:
-
-1. Read legacy code for reference
-2. Implement modern equivalent
-3. Write **parity tests** — same inputs/outputs as legacy
-4. Validate functional equivalence
-
-```bash
-# Example parity test
-test("legacy COBOL calculation matches modern", () => {
-  const legacyResult = 42.50;  // Known COBOL output for input X
-  const modernResult = calculator.compute(inputX);
-  expect(modernResult).toBeCloseTo(legacyResult, 2);
-});
-```
-
-### 7. Validate & Release
-
-- `@Bolt Testing` — Ensure 100% parity with legacy functions
-- `@Bolt Review` — Verify no legacy behavior lost
-- `@Bolt Release` — Deploy modern replacement
+### 7. Validar, liberar, retirar
+- `@Bolt Review` (+ verificar que no se pierde comportamiento) → `@Bolt Documentation`/`@Bolt ADR`.
+- `@Bolt Release` despliega el reemplazo moderno.
+- `@Bolt Retire` desmantela el módulo legacy (usa los candidatos a dead code del assessment).
 
 ---
 
-## Key Differences from Greenfield
+## Contrato de handoff (qué alimenta a qué)
 
-| Aspect | Greenfield | Brownfield |
+| Artefacto (Legacy Analyst / plugin) | Consumidor Bolt | Destino |
+|---|---|---|
+| `ASSESSMENT.md`, `TOPOLOGY.md` | `bolt-plan` / `bolt-architect`; dead code → `bolt-retire` | `.boltf/analysis/`, `docs/` |
+| `BUSINESS_RULES.md` (Given/When/Then) | `bolt-feature` → `bolt-specify` → `bolt-gherkin` | `specs/<feature>/` |
+| `DATA_OBJECTS.md` | `bolt-ddd` / data model de `bolt-plan` | `specs/`, `docs/` |
+| `RULE-NNN` (P0) | `skill-characterization-testing` + **gate de equivalencia** | tests del módulo |
+| Código modernizado | quality gates de Bolt **+ equivalencia** | `src/` |
+
+Crea/actualiza un **issue de GitHub por feature/bolt** (ver `CLAUDE.md` / `copilot-instructions.md`).
+
+## Diferencias con greenfield
+
+| Aspecto | Greenfield | Brownfield |
 |--------|-----------|------------|
-| Init type | `green` | `brown --source` |
-| Legacy folder | None | `legacy/` with source code |
-| Tests focus | New features | Parity with legacy |
-| Constitution | Defines new stack | Defines modern stack + migration strategy |
-| Feature specs | New user stories | Mapped from legacy functions |
-| Risk | Lower | Higher — must maintain equivalence |
+| Init | `--type green` | `--type brown --source` |
+| Carpeta legacy | — | `legacy/` (solo lectura) |
+| Discovery | — | `@Bolt Legacy Analyst` (assess/map/rules) |
+| Tests | features nuevas | **caracterización + equivalencia** |
+| Gate extra | — | **gate de equivalencia** |
+| Riesgo | menor | mayor — hay que preservar comportamiento |

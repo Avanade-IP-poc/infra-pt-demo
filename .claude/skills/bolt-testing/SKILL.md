@@ -107,6 +107,23 @@ Every P1 user story must have at least one `@smoke` test.
 | Bug fix | **TDD** | Use `bolt-testing` (tdd) |
 | API endpoint | **BDD + Contract** | Use `bolt-gherkin` |
 | Domain entity | **TDD** | Use `bolt-testing` (tdd) |
+| **Legacy a modernizar (brownfield)** | **Caracterización / Equivalencia (modo oráculo)** | Use `skill-characterization-testing` |
+
+### Modo oráculo legacy (brownfield)
+
+Cuando el objetivo es **modernizar código legacy**, el flujo TDD forward NO basta: hay que
+**fijar el comportamiento del legacy** y probar la equivalencia del código nuevo.
+
+- **El legacy es el oráculo**: captura sus salidas reales (golden master) o monta un arnés de
+  parity que ejecute legacy y moderno con el mismo input y compare.
+- Toma las reglas `RULE-NNN` de `bolt-legacy-analyst` (las P0 = behavior contract).
+- Genera la suite con la skill **`skill-characterization-testing`** y reporta cobertura de
+  comportamiento legacy + equivalence pass rate → alimenta el **gate de equivalencia** de
+  `skill-bolt-quality-gates`.
+- Discrepancias = defectos sospechosos: escalar a SME, no replicar a ciegas.
+
+> Equivalente Claude (plugin `code-modernization`): agente `test-engineer`. Esta capacidad es
+> nativa y dual-client en Bolt vía `skill-characterization-testing`.
 
 ### Test category examples
 

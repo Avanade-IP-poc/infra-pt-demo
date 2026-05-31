@@ -12,7 +12,7 @@ Agents are conversational AI assistants specialized for specific tasks. Each age
 - **Model**: AI model used (Claude Sonnet 4.5)
 - **Handoffs**: Ability to delegate to other agents
 
-## Available Agents (31 Total)
+## Available Agents (32 Total)
 
 ### 🌌 Orchestrator
 
@@ -22,8 +22,9 @@ Agents are conversational AI assistants specialized for specific tasks. Each age
 
 ### 📋 Discovery & Requirements
 
-| Agent         | File                    | Purpose                                        |
-| ------------- | ----------------------- | ---------------------------------------------- |
+| Agent              | File                          | Purpose                                        |
+| ------------------ | ----------------------------- | ---------------------------------------------- |
+| Bolt Legacy Analyst | `bolt-legacy-analyst.agent.md` | Brownfield discovery: assess, map (call graph/data lineage), extract business rules |
 | Bolt Feature  | `bolt-feature.agent.md` | Create comprehensive feature specifications    |
 | Bolt Specify  | `bolt-specify.agent.md` | Transform natural language to structured specs |
 | Bolt Clarify  | `bolt-clarify.agent.md` | Clarify ambiguous requirements                 |

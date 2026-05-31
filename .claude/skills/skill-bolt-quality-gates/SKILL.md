@@ -21,6 +21,29 @@ description: Per-Bolt quality gates with code coverage, mutation testing, and li
 | Linting Errors  | 0       | 0           | 0              |
 | Test Pass Rate  | 100%    | 100%        | 100%           |
 
+## Equivalence Gate (Brownfield / Modernización)
+
+**Aplica SOLO a proyectos brownfield / migración.** Garantiza que el código modernizado
+**preserva el comportamiento del legacy** antes de aceptar un Bolt. Se apoya en la skill
+`skill-characterization-testing` y en las reglas `RULE-NNN` de `bolt-legacy-analyst`.
+
+| Métrica | Mínimo | Crítico (rutas P0) |
+| --- | --- | --- |
+| Equivalence pass rate (legacy ↔ moderno) | 95% | 100% |
+| Legacy behavior coverage (comportamientos P0 caracterizados) | 100% P0 | 100% |
+| Discrepancias sin decidir (replicar vs. corregir, con SME) | 0 | 0 |
+
+**Tareas obligatorias del Bolt (brownfield):**
+
+| Task ID | Descripción | Umbral |
+| --- | --- | --- |
+| TXX-EQ | Tests de caracterización para reglas P0 del módulo | 100% P0 cubiertas |
+| TXX-EQ | Ejecutar suite de equivalencia (golden master / parity) | pass ≥ 95% |
+| TXX-EQ | Revisar discrepancias vs. legacy (defectos sospechosos) | 0 sin decidir |
+
+> Regla: **ningún Bolt de migración pasa** si la equivalence pass rate < umbral o hay
+> comportamientos P0 sin caracterizar. Las discrepancias se escalan a SME, no se "arreglan" en silencio.
+
 ## MANDATORY Quality Gate Tasks
 
 **Each BOLT MUST include these trackable tasks:**

@@ -8,10 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- N/A
+- Agente `bolt-legacy-analyst` (dual-client) — discovery de brownfield: assess ligero, mapa
+  (call graph/data lineage) y extracción de reglas de negocio (Given/When/Then).
+- Skill `skill-characterization-testing` — caracterización/equivalencia (legacy como oráculo,
+  golden master / parity) para demostrar preservación de comportamiento.
+- **Gate de equivalencia** en `skill-bolt-quality-gates` (brownfield): equivalence pass rate y
+  cobertura de comportamiento legacy P0.
 
 ### Changed
-- N/A
+- `bolt-testing`: modo oráculo legacy (caracterización/equivalencia) en la matriz de decisión.
+- `brownfield-workflow.md`: flujo actualizado con `bolt-legacy-analyst`, gate de equivalencia y
+  **contrato de handoff** explícito (qué artefacto alimenta a qué agente Bolt).
+- `/modernize-legacy` (Claude + Copilot): referencian el agente nativo y el gate de equivalencia.
 
 ### Deprecated
 - N/A

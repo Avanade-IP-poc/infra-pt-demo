@@ -41,8 +41,8 @@ specs, quality gates). Toda interacción y documentación en IDIOMA.
    ⏸ **CHECKPOINT 1**.
 
 ### Fase 2 — DISCOVERY
-3. `@Bolt Analyze` (lectura del legacy: inventario, complejidad, deuda, dead code, esfuerzo).
-   Informe en `.boltf/analysis/`.  · *Claude: `modernize-assess` + `legacy-analyst`*.
+3. `@Bolt Legacy Analyst` (lectura del legacy: inventario, complejidad, deuda, dead code,
+   esfuerzo + mapa + reglas). Informe en `.boltf/analysis/`.  · *Claude: `modernize-assess`/`map`/`extract-rules`*.
 4. Si ALCANCE="un-modulo": propón módulo según RIESGO. ⏸ **CHECKPOINT 2**.
 5. `@Bolt Architect` + skills `mermaid-creator` / `bolt-datamodel-diagramer` (call graphs,
    data lineage → diagramas en `docs/`).  · *Claude: `modernize-map`*.
@@ -59,11 +59,12 @@ specs, quality gates). Toda interacción y documentación en IDIOMA.
 
 ### Fase 4 — CONSTRUCTION (por cada Bolt)
 9. Tests de **caracterización/equivalencia** que fijan el comportamiento legacy
-   (`@Bolt Testing`, skills `skill-tdd-red-green-refactor`, `skill-playwright-e2e`).
-   · *Claude: agente `test-engineer`*.
+   (`@Bolt Testing` modo oráculo + skill `skill-characterization-testing`; `skill-tdd-red-green-refactor`,
+   `skill-playwright-e2e`). · *Claude: agente `test-engineer`*.
 10. `@Bolt Implement` + disciplina TDD (`tdd-red`/`tdd-green`/`tdd-refactor`).
     · *Claude: `modernize-transform` (módulo) o `modernize-reimagine` (greenfield)*.
-11. Quality gates (cobertura, mutación, arquitectura) + `@Bolt Review`.
+11. Quality gates (cobertura, mutación, arquitectura) **+ gate de equivalencia** (pass ≥ 95%,
+    100% comportamiento P0 caracterizado) + `@Bolt Review`.
     · *Claude: `architecture-critic`*.  ⏸ **CHECKPOINT 5** (por Bolt).
 
 ### Fase 5 — TRANSITION

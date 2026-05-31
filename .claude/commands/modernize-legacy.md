@@ -39,7 +39,8 @@ agentes `legacy-analyst`, `business-rules-extractor`, `security-auditor`, `test-
    ⏸ **CHECKPOINT 1**: muéstrame la constitution y espera OK.
 
 ### Fase 2 — DISCOVERY
-3. Skill `modernize-assess` (+ agente `legacy-analyst`): inventario, complejidad, deuda,
+3. Skill `modernize-assess` (+ agente `legacy-analyst`); si el plugin no está disponible, usa
+   el agente nativo `bolt-legacy-analyst`. Inventario, complejidad, deuda,
    dead code y estimación. Guarda el informe en `.boltf/analysis/`.
 4. Si ALCANCE = "un-modulo": propón el módulo según RIESGO y justifícalo.
    ⏸ **CHECKPOINT 2**: confírmame el módulo (o el alcance completo).
@@ -63,7 +64,9 @@ agentes `legacy-analyst`, `business-rules-extractor`, `security-auditor`, `test-
 11. `bolt-implement` + (`modernize-transform` si ESTRATEGIA=transform, o `modernize-reimagine`
     si greenfield) + disciplina TDD (`tdd-red`/`tdd-green`/`tdd-refactor`, skill
     `skill-tdd-red-green-refactor`). E2E con `skill-playwright-e2e` si aplica.
-12. Quality gates (cobertura, mutación, arquitectura). `bolt-review` + `architecture-critic`
+12. Quality gates (cobertura, mutación, arquitectura) **+ gate de equivalencia**
+    (`skill-bolt-quality-gates`: pass ≥ 95%, 100% comportamiento P0 caracterizado).
+    `bolt-review` + `architecture-critic`
     (revisión adversarial).
     ⏸ **CHECKPOINT 5** (por Bolt): resultados de tests de equivalencia + review.
 

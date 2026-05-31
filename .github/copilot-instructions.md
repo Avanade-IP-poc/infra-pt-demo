@@ -39,6 +39,7 @@ Invoke Bolt Framework workflows via agents:
 
 - `@Bolt Framework` - Main orchestrator
 - `@Bolt Feature` - Create feature
+- `@Bolt Legacy Analyst` - Analyze legacy code in brownfield (assess / map / rules)
 - `@Bolt Mockup` - Generate low-fi UI mockups (DISCOVERY, frontend)
 - `@Bolt Implement` - Implement code
 - `@Bolt Testing` - Generate tests
@@ -85,11 +86,12 @@ project/
 
 ## Specialized Agents
 
-Bolt Framework includes 31 specialized AI agents. Invoke them with `@AgentName`:
+Bolt Framework includes 32 specialized AI agents. Invoke them with `@AgentName`:
 
 | Topic           | Agent                 |
 | --------------- | --------------------- |
 | Orchestration   | `@Bolt Framework`     |
+| Legacy analysis | `@Bolt Legacy Analyst`|
 | Architecture    | `@Bolt Architect`     |
 | Domain modeling | `@Bolt DDD`           |
 | Testing         | `@Bolt Testing`       |
@@ -120,6 +122,8 @@ Bolt Framework includes specialized **skills** (single source for both clients) 
 | [skill-tdd-red-green-refactor](../.claude/skills/skill-tdd-red-green-refactor/) | TDD Discipline | Driving development through the Red-Green-Refactor cycle |
 | [skill-playwright-e2e](../.claude/skills/skill-playwright-e2e/) | Playwright E2E | Browser automation, Page Object Model, E2E fixtures |
 | [bolt-ui-mockups](../.claude/skills/bolt-ui-mockups/)         | UI Mockups (low-fi)           | Generating/refining static low-fi HTML mockups in DISCOVERY before planning                       |
+| [bolt-legacy-analyst](../.claude/skills/bolt-legacy-analyst/) | Legacy Discovery (brownfield) | Reading legacy code: assess, map (call graph/data lineage), extract business rules (G/W/T) |
+| [skill-characterization-testing](../.claude/skills/skill-characterization-testing/) | Equivalence Testing | Pinning legacy behavior (golden master / parity) to prove the modernized code is equivalent |
 
 ### Creating Custom Skills
 
