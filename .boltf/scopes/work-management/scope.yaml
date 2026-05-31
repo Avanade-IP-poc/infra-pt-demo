@@ -11,7 +11,7 @@ items:
       type: local_folder
       path: scopes/common/skills/skill-cicd-pipeline-azure
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: skill-cicd-pipeline-azure
 
   - id: work-management-github-actions-templates-skill
@@ -24,7 +24,7 @@ items:
       type: local_folder
       path: available-skills/github/github-actions-templates
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: github-actions-templates
 
   - id: work-management-azdo-pipeline-templates-skill
@@ -37,7 +37,7 @@ items:
       type: local_folder
       path: available-skills/azdo/skill-azdo-pipeline-templates
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: skill-azdo-pipeline-templates
 
   - id: work-management-mcp-settings-local
@@ -70,7 +70,7 @@ items:
       type: local_folder
       path: available-skills/azdo/azdo-sync
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: azdo-sync
 
   - id: work-management-azure-boards-context7
@@ -144,7 +144,7 @@ items:
       fetched_at: ''
       license: MIT
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: planning-with-files
 
   - id: work-management-constitution

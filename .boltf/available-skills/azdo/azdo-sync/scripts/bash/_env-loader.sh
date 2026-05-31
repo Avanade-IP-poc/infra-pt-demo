@@ -68,7 +68,7 @@ _validate_env() {
     echo "Set them in .env at project root or export them:" >&2
     echo "  export AZURE_DEVOPS_EXT_PAT=\"your-pat-token\"" >&2
     echo "" >&2
-    echo "See template: .github/skills/azure-devops-sync/templates/template.env" >&2
+    echo "See template: .claude/skills/azure-devops-sync/templates/template.env" >&2
     return 1
   fi
 }

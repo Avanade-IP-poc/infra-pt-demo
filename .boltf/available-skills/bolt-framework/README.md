@@ -78,7 +78,7 @@ Each skill contains:
 
 - **Main Documentation**: [bolt-framework/SKILL.md](bolt-framework/SKILL.md)
 - **Agents**: `.github/agents/` - All Bolt Framework agents
-- **Skills**: `.github/skills/` - Currently active skills
+- **Skills**: `.claude/skills/` - Currently active skills
 - **Scopes**: `.boltf/scopes/` - Skill activation rules
 
 ---

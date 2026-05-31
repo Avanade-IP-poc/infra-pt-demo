@@ -13,4 +13,4 @@ Sin contenido sugerido por ahora, hasta disponer de evidencia concreta en el pro
 - `.boltf/docs/templates/requirements-template.md`
 - `.github/prompts/bolt-domain-modeling.prompt.md`
 - `.boltf/scripts/powershell/Validate-Specs.ps1`
-- `.github/skills/bolt-adr/SKILL.md`
+- `.claude/skills/bolt-adr/SKILL.md`

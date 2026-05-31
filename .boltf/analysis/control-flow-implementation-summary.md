@@ -180,7 +180,7 @@ FOR EACH decision:
 
 ---
 
-### 3. **`.github/skills/skill-bolt-setup-constitution/SKILL.md`** (ACTUALIZADO)
+### 3. **`.claude/skills/skill-bolt-setup-constitution/SKILL.md`** (ACTUALIZADO)
 
 **Cambios Principales**:
 
@@ -224,7 +224,7 @@ def ask_and_save(question, state_file):
 
 - "**Resuming interrupted refinement** - detect and restore from `refinement-state.yaml`"
 
-**Ubicación**: [.github/skills/skill-bolt-setup-constitution/SKILL.md](f:/repos/aurora-ai/.github/skills/skill-bolt-setup-constitution/SKILL.md)
+**Ubicación**: [.claude/skills/skill-bolt-setup-constitution/SKILL.md](f:/repos/aurora-ai/.claude/skills/skill-bolt-setup-constitution/SKILL.md)
 
 ---
 

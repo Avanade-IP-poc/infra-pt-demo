@@ -163,5 +163,5 @@ if (Test-Path $PythonExe) {
 Write-Host "`n✅ Python environment is ready for use!`n" -ForegroundColor Green
 
 Write-Host "Try these commands:" -ForegroundColor Cyan
-Write-Host "  npm run skill:validate .github/skills/skill-creator/" -ForegroundColor White
-Write-Host "  .\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\quick_validate.py .github\skills\skill-creator\`n" -ForegroundColor White
+Write-Host "  npm run skill:validate .claude/skills/skill-creator/" -ForegroundColor White
+Write-Host "  .\Invoke-PythonScript.ps1 .claude\skills\skill-creator\scripts\quick_validate.py .claude\skills\skill-creator\`n" -ForegroundColor White

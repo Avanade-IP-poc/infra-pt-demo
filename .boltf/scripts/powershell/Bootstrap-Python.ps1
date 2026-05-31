@@ -26,8 +26,8 @@ function Write-Err     { param([string]$M) Write-Host "[ERR]  $M" -ForegroundCol
 # ─── Configuration ───────────────────────────────────────────────────────────
 $VenvPath = Join-Path $ProjectRoot ".bolt-venv"
 $RequirementsFiles = @(
-    ".github/skills/skill-creator/requirements.txt"
-    ".github/skills/skill-bolt-setup-constitution/requirements.txt"
+    ".claude/skills/skill-creator/requirements.txt"
+    ".claude/skills/skill-bolt-setup-constitution/requirements.txt"
     # Add more requirements.txt paths here as needed
 )
 
@@ -155,7 +155,7 @@ Write-Host @"
 ║                                                                          ║
 ║  To use Python scripts in this project:                                 ║
 ║    1. Activate: .\.bolt-venv\Scripts\Activate.ps1                       ║
-║    2. Run script: python .github\skills\skill-creator\scripts\...       ║
+║    2. Run script: python .claude\skills\skill-creator\scripts\...       ║
 ║    3. Deactivate: deactivate                                            ║
 ║                                                                          ║
 ║  Or use the helper: .\Invoke-PythonScript.ps1 <script-path>             ║

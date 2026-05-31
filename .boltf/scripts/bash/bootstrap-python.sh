@@ -102,8 +102,8 @@ source "$VENV_PATH/bin/activate"
 # ─── Install Dependencies ────────────────────────────────────────────────────
 if [[ "$SKIP_INSTALL" != "true" ]]; then
     REQUIREMENTS_FILES=(
-        ".github/skills/skill-creator/requirements.txt"
-        ".github/skills/skill-bolt-setup-constitution/requirements.txt"
+        ".claude/skills/skill-creator/requirements.txt"
+        ".claude/skills/skill-bolt-setup-constitution/requirements.txt"
     )
 
     INSTALLED=false
@@ -140,6 +140,6 @@ echo "║  Location: $VENV_PATH"
 echo "║                                                                          ║"
 echo "║  To use Python scripts in this project:                                 ║"
 echo "║    1. Activate: source .bolt-venv/bin/activate                          ║"
-echo "║    2. Run script: python .github/skills/skill-creator/scripts/...       ║"
+echo "║    2. Run script: python .claude/skills/skill-creator/scripts/...       ║"
 echo "║    3. Deactivate: deactivate                                            ║"
 echo "╚══════════════════════════════════════════════════════════════════════════╝"

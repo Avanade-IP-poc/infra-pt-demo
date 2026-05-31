@@ -85,7 +85,7 @@ skills:
     playwright-skill:
       id: playwright-skill
       source: available-skills/ui-common/playwright-skill
-      destination: .github/skills/playwright-skill
+      destination: .claude/skills/playwright-skill
       trigger: ui_testing
 ```
 

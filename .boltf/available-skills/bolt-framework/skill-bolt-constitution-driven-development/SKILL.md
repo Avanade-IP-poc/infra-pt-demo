@@ -34,7 +34,7 @@ The Constitution is the **project's DNA** — a single source of truth defining:
 │   constitution.md)          │
 ├─────────────────────────────┤
 │     2. SKILLS               │  ← Domain-specific practices
-│  (.github/skills/*)        │
+│  (.claude/skills/*)        │
 ├─────────────────────────────┤
 │     3. AGENTS               │  ← Specialized assistants
 │  (.github/agents/*)        │

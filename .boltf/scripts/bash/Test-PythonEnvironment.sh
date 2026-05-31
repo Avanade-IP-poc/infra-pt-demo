@@ -125,5 +125,5 @@ echo ""
 
 echo -e "${CYAN}Try these commands:${NC}"
 echo -e "  source .bolt-venv/bin/activate"
-echo -e "  python .github/skills/skill-creator/scripts/quick_validate.py .github/skills/skill-creator/"
+echo -e "  python .claude/skills/skill-creator/scripts/quick_validate.py .claude/skills/skill-creator/"
 echo ""

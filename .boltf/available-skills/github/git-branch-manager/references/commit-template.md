@@ -240,7 +240,7 @@ Para usar este template automáticamente:
 
 ```bash
 # Crear archivo template local
-git config commit.template .github/skills/git-branch-manager/references/commit-template.txt
+git config commit.template .claude/skills/git-branch-manager/references/commit-template.txt
 
 # O global para todos los repos
 git config --global commit.template ~/.gitmessage

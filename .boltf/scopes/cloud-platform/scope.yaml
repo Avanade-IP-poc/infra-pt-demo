@@ -15,7 +15,7 @@ items:
       type: local_folder
       path: available-skills/cloud-platform/skill-senior-devops
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: skill-senior-devops
     description: >
       Complete DevOps toolkit with CI/CD, IaC (Terraform/Bicep), containers, and monitoring.
@@ -136,7 +136,7 @@ items:
       fetched_at: ''
       license: MPL-2.0
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: terraform-style-guide
 
   - id: cloud-platform-constitution

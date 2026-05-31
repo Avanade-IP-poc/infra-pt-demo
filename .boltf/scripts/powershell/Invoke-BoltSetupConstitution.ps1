@@ -619,9 +619,9 @@ function Copy-ProvisionedFiles {
                 }
 
                 # Copy file or directory
-                # IMPORTANT: Skills are copied in FLAT structure to .github/skills/
+                # IMPORTANT: Skills are copied in FLAT structure to .claude/skills/
                 # - Source: .boltf/available-skills/<category>/<skill-name>/
-                # - Dest:   .github/skills/<skill-name>/
+                # - Dest:   .claude/skills/<skill-name>/
                 # Category folders (github/, azure/, etc.) are NOT copied, only individual skills
                 if (Test-Path $sourcePath -PathType Container) {
                     Copy-Item -Path $sourcePath -Destination $destPath -Recurse -Force
@@ -678,7 +678,7 @@ function Copy-CoreSkills {
     $provisionedCore = @()
 
     # Core skills split into two categories:
-    # 1. Already in .github/skills (from Init.ps1 copy)
+    # 1. Already in .claude/skills (from Init.ps1 copy)
     $githubSkills = @('new-skill', 'markdown-formatting')
     # 2. From .boltf/available-skills/bolt-framework/ (ALL skills auto-discovered)
     $boltFrameworkPath = Join-Path $ProjectPath ".boltf\available-skills\bolt-framework"
@@ -692,7 +692,7 @@ function Copy-CoreSkills {
 
     # Check skills that came from .github (already provisioned by Init.ps1)
     foreach ($skillName in $githubSkills) {
-        $destPath = Join-Path $ProjectPath ".github\skills\$skillName"
+        $destPath = Join-Path $ProjectPath ".claude\skills\$skillName"
 
         if (Test-Path $destPath) {
             Write-Info "Core skill already exists: $skillName (from .github)"
@@ -706,7 +706,7 @@ function Copy-CoreSkills {
     # Provision skills from .boltf/available-skills
     foreach ($skillName in $boltSkills) {
         $sourcePath = Join-Path $ProjectPath ".boltf\available-skills\bolt-framework\$skillName"
-        $destPath = Join-Path $ProjectPath ".github\skills\$skillName"
+        $destPath = Join-Path $ProjectPath ".claude\skills\$skillName"
 
         if (-not (Test-Path $sourcePath)) {
             Write-Warn "Core skill not found: $skillName (skipping)"
@@ -720,14 +720,14 @@ function Copy-CoreSkills {
         }
 
         if (-not $DryRun) {
-            # Create .github/skills directory if needed
-            $skillsDir = Join-Path $ProjectPath ".github\skills"
+            # Create .claude/skills directory if needed
+            $skillsDir = Join-Path $ProjectPath ".claude\skills"
             if (-not (Test-Path $skillsDir)) {
                 New-Item -ItemType Directory -Path $skillsDir -Force | Out-Null
             }
 
             # Copy skill recursively in FLAT structure
-            # This copies individual skill folders directly to .github/skills/
+            # This copies individual skill folders directly to .claude/skills/
             # NOT the parent bolt-framework/ category folder
             Copy-Item -Path $sourcePath -Destination $destPath -Recurse -Force
             Write-Success "Core skill provisioned: $skillName"
@@ -812,7 +812,7 @@ function Copy-AspireResources {
     # 1. Provision Aspire skill
     $skillName = "skill-bolt-aspire-orchestration"
     $skillSourcePath = Join-Path $ProjectPath ".boltf\available-skills\aspire\$skillName"
-    $skillDestPath = Join-Path $ProjectPath ".github\skills\$skillName"
+    $skillDestPath = Join-Path $ProjectPath ".claude\skills\$skillName"
 
     if (Test-Path $skillSourcePath) {
         if ((Test-Path $skillDestPath) -and -not $Force) {
@@ -890,7 +890,7 @@ function New-ProvisionReport {
 $aspireList
 
 ✅ **Aspire Enabled**: Service orchestration with AppHost pattern
-📂 **Skill Location**: `.github/skills/skill-bolt-aspire-orchestration/`
+📂 **Skill Location**: `.claude/skills/skill-bolt-aspire-orchestration/`
 📂 **Templates Location**: `.github/templates/aspire/`
 📖 **Documentation**: See Article XX in constitution.md
 
@@ -952,7 +952,7 @@ $scopeConstitutions
 
 $coreSkillsList
 
-📂 **Location**: `.github/skills/`
+📂 **Location**: `.claude/skills/`
 $aspireSection
 
 ### Prompts
@@ -971,7 +971,7 @@ $instructionsList
 
 $scopeSkillsList
 
-📂 **Location**: `.github/skills/`
+📂 **Location**: `.claude/skills/`
 
 ### Templates
 
@@ -1013,7 +1013,7 @@ $skippedList
 ## Next Steps
 
 1. **Review Constitution**: Open `.boltf/memory/constitution.md` to see your complete project constitution
-2. **Explore Skills**: Browse `.github/skills/` to see available Copilot skills
+2. **Explore Skills**: Browse `.claude/skills/` to see available Copilot skills
 3. **Check Prompts**: Review `.github/prompts/` for reusable prompt templates
 4. **Start Development**: Use **@Bolt Framework** to begin the AI-DLC workflow
 

@@ -246,7 +246,7 @@ steps:
     displayName: 'Sync Task Statuses from DevOps'
     inputs:
       targetType: 'filePath'
-      filePath: '.github/skills/azure-devops-sync/scripts/powershell/Sync-DevOpsStatus.ps1'
+      filePath: '.claude/skills/azure-devops-sync/scripts/powershell/Sync-DevOpsStatus.ps1'
       arguments: '-AutoCommit'
     env:
       AZURE_DEVOPS_EXT_PAT: $(DevOpsPAT) # Variable segura en pipeline
@@ -255,7 +255,7 @@ steps:
     displayName: 'Push New Features to DevOps'
     inputs:
       targetType: 'filePath'
-      filePath: '.github/skills/azure-devops-sync/scripts/powershell/Sync-BoltToDevOps.ps1'
+      filePath: '.claude/skills/azure-devops-sync/scripts/powershell/Sync-BoltToDevOps.ps1'
       arguments: '-Mode Incremental'
     env:
       AZURE_DEVOPS_EXT_PAT: $(DevOpsPAT)
@@ -312,7 +312,7 @@ az devops login --organization https://dev.azure.com/<your-org>
 
 ## Referencias
 
-- **Skill Completo**: [.github/skills/azure-devops-sync/SKILL.md](../../.github/skills/azure-devops-sync/SKILL.md)
+- **Skill Completo**: [.claude/skills/azure-devops-sync/SKILL.md](../../.claude/skills/azure-devops-sync/SKILL.md)
 - **Agente**: [@bolt-az-devops-sync](../../.github/agents/bolt-az-devops-sync.agent.md)
 - **Constitution**: [memory/constitution.md](../../memory/constitution.md) - Article XI (CI/CD)
 - **Azure DevOps CLI Docs**: https://learn.microsoft.com/en-us/cli/azure/devops

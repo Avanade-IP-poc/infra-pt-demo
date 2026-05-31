@@ -15,7 +15,7 @@ items:
       type: local_folder
       path: available-skills/ui-common/frontend-design
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: frontend-design
     description: >
       Distinctive frontend design for Angular/React/Vue with Tailwind CSS.
@@ -30,7 +30,7 @@ items:
       type: local_folder
       path: available-skills/ui-common/tailwind-design-system
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: tailwind-design-system
     description: >
       Tailwind v4 design systems with CSS-first config, design tokens, and OKLCH colors.
@@ -45,7 +45,7 @@ items:
       type: local_folder
       path: available-skills/ui-common/web-design-reviewer
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: web-design-reviewer
     description: >
       Visual inspection and design validation with browser automation.
@@ -60,7 +60,7 @@ items:
       type: local_folder
       path: available-skills/frontend/senior-frontend
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: senior-frontend
     description: >
       Complete frontend toolkit (React/Next/TypeScript) with component generator and bundle analyzer.
@@ -79,7 +79,7 @@ items:
       type: local_folder
       path: available-skills/aspire/skill-aspire-opentelemetry-frontend
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: aspire-opentelemetry-frontend
     description: >
       OpenTelemetry instrumentation for frontend apps (Angular/React) with .NET Aspire dashboard integration.
@@ -201,7 +201,7 @@ items:
       fetched_at: ''
       license: repository-defined
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: frontend-design
 
   # Vue.js Skills (organizados por tecnología)
@@ -213,7 +213,7 @@ items:
       type: local_folder
       path: available-skills/vue/vue-best-practices
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: vue-best-practices
 
   - id: frontend-vue-debug-guides-skill
@@ -224,7 +224,7 @@ items:
       type: local_folder
       path: available-skills/vue/vue-debug-guides
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: vue-debug-guides
 
   - id: frontend-vue-pinia-skill
@@ -235,7 +235,7 @@ items:
       type: local_folder
       path: available-skills/vue/vue-pinia-best-practices
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: vue-pinia-best-practices
 
   - id: frontend-vue-router-skill
@@ -246,7 +246,7 @@ items:
       type: local_folder
       path: available-skills/vue/vue-router-best-practices
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: vue-router-best-practices
 
   - id: frontend-vue-testing-skill
@@ -257,7 +257,7 @@ items:
       type: local_folder
       path: available-skills/vue/vue-testing-best-practices
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: vue-testing-best-practices
 
   - id: frontend-vue-composable-skill
@@ -268,7 +268,7 @@ items:
       type: local_folder
       path: available-skills/vue/create-adaptable-composable
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: create-adaptable-composable
 
   - id: frontend-vue-jsx-skill
@@ -279,7 +279,7 @@ items:
       type: local_folder
       path: available-skills/vue/vue-jsx-best-practices
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: vue-jsx-best-practices
 
   - id: frontend-vue-options-api-skill
@@ -290,7 +290,7 @@ items:
       type: local_folder
       path: available-skills/vue/vue-options-api-best-practices
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: vue-options-api-best-practices
 
   - id: frontend-constitution

@@ -95,7 +95,7 @@ items:
       fetched_at: ''
       license: repository-defined
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: internal-comms
 
   - id: crm-constitution

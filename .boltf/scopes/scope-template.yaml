@@ -105,5 +105,5 @@ items:
       fetched_at: <YYYY-MM-DDTHH:MM:SSZ>
       license: <license-or-terms>
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: <target-skill-folder>

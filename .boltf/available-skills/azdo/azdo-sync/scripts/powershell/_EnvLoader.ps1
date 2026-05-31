@@ -85,7 +85,7 @@ if (-not $env:AZURE_DEVOPS_EXT_PAT) {
     Write-Host '  $env:AZURE_DEVOPS_EXT_PAT = "your-pat-token"' -ForegroundColor Cyan
     Write-Host ""
     Write-Host "Or add it to .env at the project root (never commit this file)." -ForegroundColor Yellow
-    Write-Host "See template: .github/skills/azure-devops-sync/templates/template.env" -ForegroundColor Yellow
+    Write-Host "See template: .claude/skills/azure-devops-sync/templates/template.env" -ForegroundColor Yellow
     throw "AZURE_DEVOPS_EXT_PAT is not set. Cannot continue."
 }
 

@@ -57,7 +57,7 @@ az devops configure -d project="Registro Horario"
 ## Documentation Structure
 
 ```
-.github/skills/azure-wiki-agent/
+.claude/skills/azure-wiki-agent/
 ├── SKILL.md                          # Complete skill documentation
 ├── README.md                         # This file
 ├── examples/
@@ -310,9 +310,9 @@ await mcp_azure_devops_wiki_create_or_update_page({
 
 ### Related Skills
 
-- [bolt-framework](.github/skills/bolt-framework/SKILL.md) - Bolt Framework Methodology
-- [azure-devops-sync](.github/skills/azure-devops-sync/SKILL.md) - Work item sync
-- [markdown-formatting](.github/skills/markdown-formatting/SKILL.md) - Markdown standards
+- [bolt-framework](.claude/skills/bolt-framework/SKILL.md) - Bolt Framework Methodology
+- [azure-devops-sync](.claude/skills/azure-devops-sync/SKILL.md) - Work item sync
+- [markdown-formatting](.claude/skills/markdown-formatting/SKILL.md) - Markdown standards
 
 ## Contributing
 

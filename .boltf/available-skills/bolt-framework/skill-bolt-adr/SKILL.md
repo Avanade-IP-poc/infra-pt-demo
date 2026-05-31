@@ -15,7 +15,7 @@ description: Create Architecture Decision Records (ADRs) using MADR (Markdown An
 
 ```powershell
 # Get next ADR number
-$Num = .\.github\skills\bolt-adr\scripts\Get-NextAdrNumber.ps1
+$Num = .\.claude\skills\bolt-adr\scripts\Get-NextAdrNumber.ps1
 
 # Create ADR file
 $Path = "docs/adr/ADR-$('{0:D4}' -f $Num)-adopt-postgresql.md"
@@ -85,5 +85,5 @@ Types: `graph`, `sequenceDiagram`, `classDiagram`, `erDiagram`
 ## References
 
 - [MADR Format](https://adr.github.io/madr/)
-- Templates: `.github/skills/bolt-adr/templates/`
-- Scripts: `.github/skills/bolt-adr/scripts/`
+- Templates: `.claude/skills/bolt-adr/templates/`
+- Scripts: `.claude/skills/bolt-adr/scripts/`

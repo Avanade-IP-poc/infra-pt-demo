@@ -130,7 +130,7 @@ Para activar todos los skills de Vue.js, cambiar `enabled: true` en cada entrada
     type: local_folder
     path: available-skills/vue/vue-best-practices
   destination:
-    folder: .github/skills
+    folder: .claude/skills
     name: vue-best-practices
 
 # Debugging
@@ -142,7 +142,7 @@ Para activar todos los skills de Vue.js, cambiar `enabled: true` en cada entrada
     type: local_folder
     path: available-skills/vue/vue-debug-guides
   destination:
-    folder: .github/skills
+    folder: .claude/skills
     name: vue-debug-guides
 
 # Ecosistema (activar según necesidad)

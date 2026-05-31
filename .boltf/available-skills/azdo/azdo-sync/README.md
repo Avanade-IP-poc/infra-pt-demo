@@ -49,10 +49,10 @@ az devops project show --project "<your-project>"
 
 ```powershell
 # After creating a feature with @Bolt Feature
-.\.github\skills\azure-devops-sync\scripts\powershell\Sync-BoltToDevOps.ps1 -FeaturePath "specs/001-time-tracking" -DryRun
+.\.claude\skills\azure-devops-sync\scripts\powershell\Sync-BoltToDevOps.ps1 -FeaturePath "specs/001-time-tracking" -DryRun
 
 # If preview looks good, execute:
-.\.github\skills\azure-devops-sync\scripts\powershell\Sync-BoltToDevOps.ps1 -FeaturePath "specs/001-time-tracking"
+.\.claude\skills\azure-devops-sync\scripts\powershell\Sync-BoltToDevOps.ps1 -FeaturePath "specs/001-time-tracking"
 ```
 
 **Result**: Creates Feature work item with child User Stories and Tasks, generates `.metadata/devops-sync.json`
@@ -61,10 +61,10 @@ az devops project show --project "<your-project>"
 
 ```powershell
 # Sync task completion states (run in CI/CD or manually)
-.\.github\skills\azure-devops-sync\scripts\powershell\Sync-DevOpsStatus.ps1 -FeaturePath "specs/001-time-tracking"
+.\.claude\skills\azure-devops-sync\scripts\powershell\Sync-DevOpsStatus.ps1 -FeaturePath "specs/001-time-tracking"
 
 # Auto-commit changes
-.\.github\skills\azure-devops-sync\scripts\powershell\Sync-DevOpsStatus.ps1 -AutoCommit
+.\.claude\skills\azure-devops-sync\scripts\powershell\Sync-DevOpsStatus.ps1 -AutoCommit
 ```
 
 **Result**: Updates checkboxes in `planning/tasks.md` based on DevOps task states
@@ -78,7 +78,7 @@ az boards work-item query `
   --output table
 
 # Import Feature #12345
-.\.github\skills\azure-devops-sync\scripts\powershell\Import-DevOpsToBolt.ps1 `
+.\.claude\skills\azure-devops-sync\scripts\powershell\Import-DevOpsToBolt.ps1 `
   -WorkItemId 12345 `
   -OutputPath "specs/001-time-tracking" `
   -IncludeChildren
@@ -150,7 +150,7 @@ specs/001-time-tracking/
 **Example**:
 
 ```powershell
-.\.github\skills\azure-devops-sync\scripts\powershell\Sync-BoltToDevOps.ps1 `
+.\.claude\skills\azure-devops-sync\scripts\powershell\Sync-BoltToDevOps.ps1 `
   -FeaturePath "specs/001-time-tracking" `
   -Mode Incremental `
   -DryRun
@@ -170,7 +170,7 @@ specs/001-time-tracking/
 **Example**:
 
 ```powershell
-.\.github\skills\azure-devops-sync\scripts\powershell\Import-DevOpsToBolt.ps1 `
+.\.claude\skills\azure-devops-sync\scripts\powershell\Import-DevOpsToBolt.ps1 `
   -WorkItemId 12345 `
   -OutputPath "specs/001-time-tracking" `
   -IncludeChildren
@@ -189,10 +189,10 @@ specs/001-time-tracking/
 
 ```powershell
 # Sync all features
-.\.github\skills\azure-devops-sync\scripts\powershell\Sync-DevOpsStatus.ps1 -AutoCommit
+.\.claude\skills\azure-devops-sync\scripts\powershell\Sync-DevOpsStatus.ps1 -AutoCommit
 
 # Sync specific feature
-.\.github\skills\azure-devops-sync\scripts\powershell\Sync-DevOpsStatus.ps1 -FeaturePath "specs/001-time-tracking"
+.\.claude\skills\azure-devops-sync\scripts\powershell\Sync-DevOpsStatus.ps1 -FeaturePath "specs/001-time-tracking"
 ```
 
 ## Best Practices
@@ -236,10 +236,10 @@ Related: specs/001-time-tracking/"
 
 ```powershell
 # Preview
-.\.github\skills\azure-devops-sync\scripts\powershell\Sync-BoltToDevOps.ps1 -FeaturePath "specs/001-time-tracking" -DryRun
+.\.claude\skills\azure-devops-sync\scripts\powershell\Sync-BoltToDevOps.ps1 -FeaturePath "specs/001-time-tracking" -DryRun
 
 # Review output, then execute if correct
-.\.github\skills\azure-devops-sync\scripts\powershell\Sync-BoltToDevOps.ps1 -FeaturePath "specs/001-time-tracking"
+.\.claude\skills\azure-devops-sync\scripts\powershell\Sync-BoltToDevOps.ps1 -FeaturePath "specs/001-time-tracking"
 ```
 
 ## CI/CD Integration
@@ -265,7 +265,7 @@ steps:
     displayName: 'Sync Task Statuses from DevOps'
     inputs:
       targetType: 'filePath'
-      filePath: '.github/skills/azure-devops-sync/scripts/powershell/Sync-DevOpsStatus.ps1'
+      filePath: '.claude/skills/azure-devops-sync/scripts/powershell/Sync-DevOpsStatus.ps1'
       arguments: '-AutoCommit'
     env:
       AZURE_DEVOPS_EXT_PAT: $(DevOpsPAT) # Secure variable
@@ -274,7 +274,7 @@ steps:
     displayName: 'Push New Features to DevOps'
     inputs:
       targetType: 'filePath'
-      filePath: '.github/skills/azure-devops-sync/scripts/powershell/Sync-BoltToDevOps.ps1'
+      filePath: '.claude/skills/azure-devops-sync/scripts/powershell/Sync-BoltToDevOps.ps1'
       arguments: '-Mode Incremental'
     env:
       AZURE_DEVOPS_EXT_PAT: $(DevOpsPAT)
@@ -335,7 +335,7 @@ Both BOLT and DevOps modified simultaneously
 
 ## References
 
-- [SKILL.md](.github/skills/azure-devops-sync/SKILL.md) - Complete documentation
+- [SKILL.md](.claude/skills/azure-devops-sync/SKILL.md) - Complete documentation
 - [Constitution Article XI](memory/constitution.md#article-xi-cicd) - DevOps configuration
 - [Azure DevOps CLI Docs](https://learn.microsoft.com/en-us/cli/azure/devops)
 - [Work Items REST API](https://learn.microsoft.com/en-us/rest/api/azure/devops/wit/work-items)

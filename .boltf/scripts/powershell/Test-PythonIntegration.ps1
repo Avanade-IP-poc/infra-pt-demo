@@ -67,8 +67,8 @@ $requiredFiles = @(
     ".boltf\scripts\powershell\Bootstrap-Python.ps1",
     "Invoke-PythonScript.ps1",
     ".boltf\scripts\powershell\Test-PythonEnvironment.ps1",
-    ".github\skills\skill-creator\requirements.txt",
-    ".github\skills\skill-creator\scripts\quick_validate.py",
+    ".claude\skills\skill-creator\requirements.txt",
+    ".claude\skills\skill-creator\scripts\quick_validate.py",
     "docs\python-integration.md",
     "examples\python-scripts-usage.ps1"
 )
@@ -211,8 +211,8 @@ Write-TestStep "Step 9: Test skill-creator quick_validate.py"
 
 Push-Location $TestRoot
 try {
-    $validateScript = ".github\skills\skill-creator\scripts\quick_validate.py"
-    $skillPath = ".github\skills\skill-creator"
+    $validateScript = ".claude\skills\skill-creator\scripts\quick_validate.py"
+    $skillPath = ".claude\skills\skill-creator"
 
     $output = & ".\Invoke-PythonScript.ps1" $validateScript $skillPath 2>&1
     $exitCode = $LASTEXITCODE

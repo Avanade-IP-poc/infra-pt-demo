@@ -57,7 +57,7 @@ Para activar, editar el scope y cambiar `enabled: true`:
     type: local_folder
     path: available-skills/azdo/azdo-sync
   destination:
-    folder: .github/skills
+    folder: .claude/skills
     name: azdo-sync
 ```
 

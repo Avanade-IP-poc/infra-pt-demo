@@ -252,8 +252,8 @@ Template versions of the core sync scripts are preserved as `*.template.ps1` for
 ## References
 
 - [Azure DevOps CLI Docs](https://learn.microsoft.com/en-us/cli/azure/devops)
-- PowerShell scripts: `.github/skills/azure-devops-sync/scripts/powershell/`
-- Bash scripts: `.github/skills/azure-devops-sync/scripts/bash/`
-- Environment template: `.github/skills/azure-devops-sync/templates/template.env`
-- Mappings: `.github/skills/azure-devops-sync/mappings/`
+- PowerShell scripts: `.claude/skills/azure-devops-sync/scripts/powershell/`
+- Bash scripts: `.claude/skills/azure-devops-sync/scripts/bash/`
+- Environment template: `.claude/skills/azure-devops-sync/templates/template.env`
+- Mappings: `.claude/skills/azure-devops-sync/mappings/`
 - [Link Types References](https://learn.microsoft.com/en-us/azure/devops/boards/queries/link-type-reference?view=azure-devops&source=recommendations)

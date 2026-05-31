@@ -32,7 +32,7 @@ items:
       type: local_folder
       path: available-skills/azdo/azdo-sync
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: azdo-sync
 
   - id: integration-azure-wiki-agent-skill
@@ -43,7 +43,7 @@ items:
       type: local_folder
       path: available-skills/azdo/azdo-wiki
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: azdo-wiki
 
   - id: integration-azure-devops-pipelines-context7
@@ -99,7 +99,7 @@ items:
       fetched_at: ''
       license: MIT
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: planning-with-files
 
   - id: integration-constitution

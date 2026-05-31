@@ -217,7 +217,7 @@ license: repository-defined
     repository: https://github.com/hashicorp/agent-skills
     skill_path: terraform/code-generation/skills/terraform-style-guide
   destination:
-    folder: .github/skills
+    folder: .claude/skills
     name: terraform-style-guide
 ```
 
@@ -231,7 +231,7 @@ license: repository-defined
 **Directorio generado**:
 
 ```
-.github/skills/terraform-style-guide/
+.claude/skills/terraform-style-guide/
 ├── SKILL.md
 ├── examples/
 ├── templates/
@@ -263,7 +263,7 @@ license: MPL-2.0
 2. Mapear folders a scopes/tech stack activos
 3. Para cada skill relevante:
    - Verificar que SKILL.md existe
-   - Copiar recursivamente a `.github/skills/`
+   - Copiar recursivamente a `.claude/skills/`
    - Añadir a provision report
 
 ### Ejemplo Concreto
@@ -274,7 +274,7 @@ license: MPL-2.0
 **Skills auto-copiados**:
 
 ```
-.github/skills/
+.claude/skills/
 ├── bolt-framework/              ← Core (siempre)
 ├── bolt-adr/                    ← Core (siempre)
 ├── new-skill/                   ← Core (siempre)
@@ -418,7 +418,7 @@ Usuario abre Copilot chat y escribe:
 ```
 Scanning .boltf/available-skills/...
 ✓ Found 14 relevant skills
-✓ Copying to .github/skills/
+✓ Copying to .claude/skills/
 ```
 
 **Step 3**: Download Context7
@@ -469,7 +469,7 @@ Scanning .boltf/available-skills/...
 **Next Steps**:
 
 1. Review constitution: `.boltf/memory/constitution.md`
-2. Explore skills: `.github/skills/` (26 total)
+2. Explore skills: `.claude/skills/` (26 total)
 3. Start building: `@Bolt Framework`
 ```
 

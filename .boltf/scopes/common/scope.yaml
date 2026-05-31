@@ -15,7 +15,7 @@ items:
       type: local_folder
       path: available-skills/document/markdown-formatting
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: markdown-formatting
     description: >
       CommonMark formatting rules and BOLT Framework conventions for .md files.
@@ -30,7 +30,7 @@ items:
       type: local_folder
       path: available-skills/tdd/tdd-comprehensive
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: tdd-comprehensive
     description: >
       Test-Driven Development methodology with Red-Green-Refactor cycle.
@@ -45,7 +45,7 @@ items:
       type: local_folder
       path: available-skills/functional-tests/gherkin-reqnroll
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: gherkin-reqnroll
     description: >
       BDD with Gherkin syntax and Reqnroll for .NET acceptance testing.
@@ -65,7 +65,7 @@ items:
       type: local_folder
       path: available-skills/github/git-branch-manager
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: git-branch-manager
     description: >
       Git branch/commit/PR management with BOLT Framework compliance and naming conventions.
@@ -80,7 +80,7 @@ items:
       type: local_folder
       path: available-skills/github/issue-formatter
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: issue-formatter
     description: >
       Convert logs/notes/screenshots to GitHub-flavored markdown issues.
@@ -99,7 +99,7 @@ items:
       type: local_folder
       path: available-skills/document/mermaid-creator
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: mermaid-creator
     description: >
       Create comprehensive Mermaid diagrams (C4, flowcharts, sequence, ER, Gantt, etc.).
@@ -114,7 +114,7 @@ items:
       type: local_folder
       path: available-skills/document/planning-with-files
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: planning-with-files
     description: >
       Manus-style workflow with task_plan.md, notes.md, and deliverable.md patterns.
@@ -129,7 +129,7 @@ items:
       type: local_folder
       path: available-skills/document/api-contracts-doc
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: api-contracts-doc
     description: >
       Documents REST API contracts from source code: extracts endpoints, schemas and examples.
@@ -144,7 +144,7 @@ items:
       type: local_folder
       path: available-skills/document/architect-diagramer
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: architect-diagramer
     description: >
       Create architecture, application, flow and any other diagrams for documentation markdowns.
@@ -159,7 +159,7 @@ items:
       type: local_folder
       path: available-skills/document/user-journey-doc
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: user-journey-doc
     description: >
       Documents user journeys and personas with structured narrative and Mermaid journey diagrams.
@@ -178,7 +178,7 @@ items:
       type: local_folder
       path: available-skills/functional-tests/integration-e2e-testing
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: integration-e2e-testing
     description: >
       Comprehensive integration and E2E testing with Playwright, Aspire, Testcontainers and Respawn.
@@ -193,7 +193,7 @@ items:
       type: local_folder
       path: available-skills/functional-tests/playwright-e2e
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: playwright-e2e
     description: >
       Playwright E2E testing: Page Object Model, locators, assertions, visual regression,

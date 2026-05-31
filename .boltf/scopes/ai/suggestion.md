@@ -12,6 +12,6 @@ Sin contenido sugerido por ahora, hasta disponer de evidencia concreta en el pro
 
 - `.github/agents/README.md`
 - `.github/prompts/README.md`
-- `.github/skills/README.md`
+- `.claude/skills/README.md`
 - `README.md`
 - `.boltf/README.md`

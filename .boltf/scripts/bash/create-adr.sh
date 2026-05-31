@@ -5,8 +5,8 @@
 # Creates a new Architectural Decision Record from template.
 # Follows MADR format as defined in bolt-adr.
 #
-# Reference: .github/skills/bolt-adr/SKILL.md
-# Templates: .github/skills/bolt-adr/templates/
+# Reference: .claude/skills/bolt-adr/SKILL.md
+# Templates: .claude/skills/bolt-adr/templates/
 #
 # Usage:
 #   ./create-adr.sh <adr-title>

@@ -15,7 +15,7 @@ items:
       type: local_folder
       path: available-skills/functional-tests/integration-e2e-testing
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: integration-e2e-testing
     description: >
       .NET integration testing with Testcontainers and Respawn for SQL Server.
@@ -34,7 +34,7 @@ items:
       type: local_folder
       path: available-skills/aspire/skill-aspire-opentelemetry-frontend
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: aspire-opentelemetry-frontend
     description: >
       OpenTelemetry instrumentation for frontend apps with Aspire dashboard.
@@ -156,7 +156,7 @@ items:
       fetched_at: ''
       license: CC-BY-SA-4.0
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: trailofbits-static-analysis
 
   - id: backend-constitution

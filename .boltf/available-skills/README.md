@@ -1,6 +1,6 @@
 # Available Skills - Specialized Knowledge for Bolt Framework projects
 
-Este directorio contiene **skills especializados** organizados por tecnología. Estos skills se copian a `.github/skills/` cuando el sistema de scopes detecta que son necesarios para el proyecto.
+Este directorio contiene **skills especializados** organizados por tecnología. Estos skills se copian a `.claude/skills/` cuando el sistema de scopes detecta que son necesarios para el proyecto.
 
 ## 📁 Estructura Organizativa por Tecnología
 
@@ -58,7 +58,7 @@ Los skills están organizados en subcarpetas por dominio tecnológico:
 
 ### 1. Almacenamiento en `.boltf/available-skills/`
 
-Los skills especializados se mantienen aquí organizados por tecnología. **No se copian automáticamente** a `.github/skills/`.
+Los skills especializados se mantienen aquí organizados por tecnología. **No se copian automáticamente** a `.claude/skills/`.
 
 ### 2. Activación por Scopes
 
@@ -75,29 +75,29 @@ resources:
       type: local_folder
       path: available-skills/vue/vue-best-practices
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: vue-best-practices
 ```
 
-### 3. Copia a `.github/skills/`
+### 3. Copia a `.claude/skills/`
 
 Cuando se activa un scope:
 
 - El skill se copia desde `.boltf/available-skills/<tech>/<skill>`
-- Se coloca en `.github/skills/<skill>/`
+- Se coloca en `.claude/skills/<skill>/`
 - GitHub Copilot lo detecta automáticamente
 
-> **⚠️ IMPORTANTE**: Los skills se copian en **estructura plana** (flat) directamente bajo `.github/skills/`.
+> **⚠️ IMPORTANTE**: Los skills se copian en **estructura plana** (flat) directamente bajo `.claude/skills/`.
 > Las carpetas de categoría (`github/`, `azure/`, `vue/`, etc.) **NO** se copian, solo los skills individuales.
 >
 > **✅ Correcto**:
 >
-> - `.boltf/available-skills/github/gh-fix-ci/` → `.github/skills/gh-fix-ci/`
-> - `.boltf/available-skills/azure/azure-identity-dotnet/` → `.github/skills/azure-identity-dotnet/`
+> - `.boltf/available-skills/github/gh-fix-ci/` → `.claude/skills/gh-fix-ci/`
+> - `.boltf/available-skills/azure/azure-identity-dotnet/` → `.claude/skills/azure-identity-dotnet/`
 >
 > **❌ Incorrecto**:
 >
-> - `.boltf/available-skills/github/` → `.github/skills/github/` ← NUNCA hacer esto
+> - `.boltf/available-skills/github/` → `.claude/skills/github/` ← NUNCA hacer esto
 
 ## 📦 Skills por Tecnología
 
@@ -199,7 +199,7 @@ resources:
       type: local_folder
       path: available-skills/<technology>/<skill-name>
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: <skill-name>
 ```
 
@@ -209,13 +209,13 @@ Cuando el proyecto necesite esa tecnología:
 
 - Cambiar `enabled: true` en el scope
 - Ejecutar script de aprovisionamiento de scopes
-- El skill se copiará automáticamente a `.github/skills/`
+- El skill se copiará automáticamente a `.claude/skills/`
 
 ## 📚 Referencias
 
 - **Scopes**: `.boltf/scopes/README.md`
-- **Skills activos**: `.github/skills/README.md`
-- **Bolt Framework**: `.github/skills/bolt-framework/SKILL.md`
+- **Skills activos**: `.claude/skills/README.md`
+- **Bolt Framework**: `.claude/skills/bolt-framework/SKILL.md`
 
 ---
 

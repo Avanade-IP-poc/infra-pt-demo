@@ -156,7 +156,7 @@ items:
       type: local_file
       path: scopes/backend/skills/testing-strategy
     destination:
-      folder: .github/skills
+      folder: .claude/skills
       name: backend-testing-strategy
 
   # Item Context7 (manejado por agente vía MCP)
@@ -190,13 +190,13 @@ Para verificar que el provisioning funcionó correctamente:
 
 ```bash
 # 1. Verificar core skills
-ls .github/skills/
+ls .claude/skills/
 # Debe incluir: bolt-framework, bolt-adr, new-skill, markdown-formatting
 
 # 2. Verificar recursos de scopes
 ls .github/prompts/
 ls .github/instructions/
-ls .github/skills/
+ls .claude/skills/
 
 # 3. Ver reporte de provisioning
 cat .boltf/memory/provision-report.md

@@ -271,7 +271,7 @@ transversal-scopes:
         Assert-FileContains $reportPath "Practice.*Apps & Infra" "Report contains Practice"
 
         # Check core skills provisioned
-        $skillsDir = Join-Path $projectPath ".github\skills"
+        $skillsDir = Join-Path $projectPath ".claude\skills"
         Assert-FileExists $skillsDir "Skills directory"
 
         $boltFrameworkSkill = Join-Path $skillsDir "bolt-framework\SKILL.md"
@@ -580,7 +580,7 @@ decisions:
                         Write-TestStep "Running provisioning for $($case.Platform)..."
                         & $setupScript -ProjectPath $projectPath -Provision | Out-Null
 
-                        $skillsDir = Join-Path $projectPath '.github\skills'
+                        $skillsDir = Join-Path $projectPath '.claude\skills'
                         Assert-FileExists (Join-Path $skillsDir 'skill-cicd-pipeline-azure\SKILL.md') "CI/CD orchestrator skill for $($case.Platform)"
                         Assert-FileExists (Join-Path $skillsDir "$($case.Expected)\SKILL.md") "Expected provider skill for $($case.Platform)"
                         Assert-FileNotExists (Join-Path $skillsDir "$($case.Unexpected)\SKILL.md") "Unexpected provider skill for $($case.Platform)"

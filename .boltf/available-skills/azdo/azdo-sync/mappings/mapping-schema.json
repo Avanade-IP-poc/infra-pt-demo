@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://github.com/jdmveira/registro-horas/blob/main/.github/skills/azure-devops-sync/mappings/mapping-schema.json",
+  "$id": "https://github.com/jdmveira/registro-horas/blob/main/.claude/skills/azure-devops-sync/mappings/mapping-schema.json",
   "title": "BOLT-Azure DevOps Work Item Mapping Schema",
   "description": "Schema defining how BOLT artifacts map to Azure DevOps work item fields",
   "type": "object",

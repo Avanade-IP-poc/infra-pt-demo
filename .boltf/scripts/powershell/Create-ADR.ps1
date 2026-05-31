@@ -6,8 +6,8 @@
     Creates a new Architectural Decision Record from template.
     Follows MADR format as defined in skill-bolt-adr.
 
-    Reference: .github/skills/skill-bolt-adr/SKILL.md
-    Templates: .github/skills/skill-bolt-adr/templates/
+    Reference: .claude/skills/skill-bolt-adr/SKILL.md
+    Templates: .claude/skills/skill-bolt-adr/templates/
     The title of the ADR decision.
 
 .EXAMPLE

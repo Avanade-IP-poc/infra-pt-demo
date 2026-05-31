@@ -128,21 +128,21 @@ Use the provided merge scripts to automatically combine all refinement files:
 
 ```powershell
 # From project root
-.\.github\skills\skill-bolt-setup-constitution\scripts\Merge-RefinementYamls.ps1 -ProjectPath . [-Force]
+.\.claude\skills\skill-bolt-setup-constitution\scripts\Merge-RefinementYamls.ps1 -ProjectPath . [-Force]
 ```
 
 **Bash:**
 
 ```bash
 # From project root
-.github/skills/skill-bolt-setup-constitution/scripts/merge-refinement-yamls.sh . [--force]
+.claude/skills/skill-bolt-setup-constitution/scripts/merge-refinement-yamls.sh . [--force]
 ```
 
 **Python:**
 
 ```bash
 # From project root
-python .github/skills/skill-bolt-setup-constitution/scripts/merge_refinement_yamls.py . [--force]
+python .claude/skills/skill-bolt-setup-constitution/scripts/merge_refinement_yamls.py . [--force]
 ```
 
 #### Option B: Manual Merge (For Custom Processing)
@@ -336,7 +336,7 @@ IF exists(.boltf/memory/refinement-states/{scope}-refinement.yaml):
 - [ ] Each scope has a corresponding refinement YAML
 - [ ] All HIGH criticality articles have explicit decisions
 - [ ] Merge script executed successfully to create `merged-refinement.yaml`
-  - **Recommended**: Use `python .github/skills/skill-bolt-setup-constitution/scripts/merge_refinement_yamls.py .`
+  - **Recommended**: Use `python .claude/skills/skill-bolt-setup-constitution/scripts/merge_refinement_yamls.py .`
   - Alternative: Manual merge following Phase 3 instructions
 - [ ] All conflicts are resolved (check `conflicts:` section in merged-refinement.yaml)
 - [ ] Final `constitution.md` generated successfully
