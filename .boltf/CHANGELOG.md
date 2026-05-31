@@ -15,6 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 14 Slash Commands with embedded templates
 - Automation scripts (Bash + PowerShell)
 - Project documentation (README, CONTRIBUTING, LICENSE)
+- Modelo de gobierno: git subtree + PowerShell CLI (`BoltFramework.psm1`)
+- `bolt-manifest.yaml` — metadata de versión del framework y scopes
+- `CODEOWNERS` — governance por scope y categoría de skills
+- Documentación completa de contribución (`CONTRIBUTING.md`)
+- Workflow `bolt-update-check.yml` — aviso semanal de nuevas versiones upstream
 
 ### Changed
 - N/A

@@ -1,0 +1,51 @@
+# Bolt Framework — Code Owners
+# Cada PR requiere aprobación del owner correspondiente.
+# Documentación: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+#
+# NOTA: Sustituye `@your-org` por la organización real del repositorio canónico
+# y crea los equipos referenciados (bolt-core-team, bolt-*-owners) antes de
+# activar la protección de ramas con CODEOWNERS.
+# Las rutas están ancladas a la raíz del repositorio canónico y prefijadas con
+# `.boltf/`, que es el payload del framework distribuido por subtree.
+
+# === Framework Core ===
+/.boltf/scripts/                           @your-org/bolt-core-team
+/.boltf/bolt-manifest.yaml                 @your-org/bolt-core-team
+/.boltf/CHANGELOG.md                       @your-org/bolt-core-team
+/.boltf/CONTRIBUTING.md                    @your-org/bolt-core-team
+/.github/CODEOWNERS                        @your-org/bolt-core-team
+/.boltf/scopes.yaml                        @your-org/bolt-core-team
+
+# === Scopes ===
+/.boltf/scopes/backend/                    @your-org/bolt-backend-owners
+/.boltf/scopes/frontend/                   @your-org/bolt-frontend-owners
+/.boltf/scopes/cloud-platform/             @your-org/bolt-platform-owners
+/.boltf/scopes/common/                     @your-org/bolt-core-team
+/.boltf/scopes/ai/                         @your-org/bolt-ai-owners
+/.boltf/scopes/integration/                @your-org/bolt-backend-owners
+/.boltf/scopes/data/                       @your-org/bolt-data-owners
+/.boltf/scopes/work-management/            @your-org/bolt-core-team
+/.boltf/scopes/crm/                        @your-org/bolt-core-team
+
+# === Available Skills por categoría ===
+/.boltf/available-skills/bolt-framework/   @your-org/bolt-core-team
+/.boltf/available-skills/dotnet-backend/   @your-org/bolt-backend-owners
+/.boltf/available-skills/angular/          @your-org/bolt-frontend-owners
+/.boltf/available-skills/vue/              @your-org/bolt-frontend-owners
+/.boltf/available-skills/frontend/         @your-org/bolt-frontend-owners
+/.boltf/available-skills/ui-common/        @your-org/bolt-frontend-owners
+/.boltf/available-skills/azure/            @your-org/bolt-platform-owners
+/.boltf/available-skills/cloud-platform/   @your-org/bolt-platform-owners
+/.boltf/available-skills/aspire/           @your-org/bolt-backend-owners
+/.boltf/available-skills/github/           @your-org/bolt-core-team
+/.boltf/available-skills/azdo/             @your-org/bolt-core-team
+/.boltf/available-skills/browser-testing/  @your-org/bolt-backend-owners
+/.boltf/available-skills/functional-tests/ @your-org/bolt-backend-owners
+/.boltf/available-skills/tdd/              @your-org/bolt-core-team
+/.boltf/available-skills/document/         @your-org/bolt-core-team
+/.boltf/available-skills/contributed/      @your-org/bolt-core-team
+
+# === Documentación ===
+/.boltf/docs/                              @your-org/bolt-core-team
+/.boltf/memory/                            @your-org/bolt-core-team
+/.boltf/analysis/                          @your-org/bolt-core-team

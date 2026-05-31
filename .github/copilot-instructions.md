@@ -13,9 +13,14 @@ Bolt Framework (AI-Driven Development Lifecycle) is an AI-powered software devel
 5. **PRODUCTION** - Operations and continuous improvement
 6. **RETIREMENT** - Decommissioning and archival
 
+## Interaction Language
+
+Agent interaction and generated documentation use the **project's configured language**
+(set it in the constitution / `CLAUDE.md`). The framework does not impose a language.
+
 ## Key Concepts
 
-### Constitution (`memory/constitution.md`)
+### Constitution (`.boltf/memory/constitution.md`)
 
 The project's DNA - defines tech stack, standards, and constraints. **ALWAYS read this first** before generating code.
 
@@ -34,6 +39,7 @@ Invoke Bolt Framework workflows via agents:
 
 - `@Bolt Framework` - Main orchestrator
 - `@Bolt Feature` - Create feature
+- `@Bolt Mockup` - Generate low-fi UI mockups (DISCOVERY, frontend)
 - `@Bolt Implement` - Implement code
 - `@Bolt Testing` - Generate tests
 - `@Bolt Status` - Project status
@@ -42,7 +48,7 @@ Invoke Bolt Framework workflows via agents:
 
 When generating code in a Bolt Framework project:
 
-1. **Check Constitution First** - Read `memory/constitution.md` for:
+1. **Check Constitution First** - Read `.boltf/memory/constitution.md` for:
    - Allowed languages/frameworks
    - Coding standards
    - Architecture patterns
@@ -111,6 +117,9 @@ Bolt Framework includes specialized **skills** that are auto-discovered from `.g
 | [mermaid-creator](.github/skills/mermaid-creator/)         | Mermaid Diagrams              | Creating any diagram — flowchart, sequence, class, state, ER, C4, and more                       |
 | [mermaid-diagrams](.github/skills/mermaid-diagrams/)       | Mermaid Diagrams (alt)        | Alternative Mermaid reference with class, sequence, flowchart, ERD, and C4 examples              |
 | [tailwind-design-system](.github/skills/tailwind-design-system/) | Tailwind Design System  | Building scalable design systems with Tailwind CSS v4, design tokens, component libraries        |
+| [skill-tdd-red-green-refactor](.github/skills/skill-tdd-red-green-refactor/) | TDD Discipline | Driving development through the Red-Green-Refactor cycle |
+| [skill-playwright-e2e](.github/skills/skill-playwright-e2e/) | Playwright E2E | Browser automation, Page Object Model, E2E fixtures |
+| [bolt-ui-mockups](.github/skills/bolt-ui-mockups/)         | UI Mockups (low-fi)           | Generating/refining static low-fi HTML mockups in DISCOVERY before planning                       |
 
 ### Creating Custom Skills
 
@@ -121,6 +130,50 @@ Want to add a new skill? Ask Copilot:
 ```
 
 Copilot will guide you through the process using the new-skill guidelines.
+
+## GitHub Issues Synchronization
+
+### Commit message format
+
+Commit messages **MUST** reference the issue ID as primary identifier:
+
+```text
+feat(#128): descripción breve del cambio
+
+Detalle de los cambios...
+
+Closes #128
+```
+
+- **ID first**: always use `#<issue-number>` as the scope, not feature/bolt names.
+- **Closing keyword**: include `Closes #<id>` in the body so GitHub auto-closes the issue on merge.
+- **Conventional Commits type**: `feat`, `fix`, `test`, `refactor`, `docs`, `chore`.
+- **If ID is not known**: use `<feature name|bolt name>` and WARN the user.
+
+### Creating features, bolts, specs and tests
+
+**WHENEVER** a new feature, bolt, spec or test is created by Bolt Framework agents, ALSO create a
+corresponding GitHub issue:
+
+1. Use the project's GitHub Project board.
+1. Understand the project's custom fields to properly categorize the issue.
+1. Use sub-issues for a feature's bolts, and a bolt's tasks.
+1. Prefer MCP tools when available.
+1. **Store the issue ID** in the corresponding spec/planning file (`issue: #<id>`).
+1. Issue dependencies must reflect feature/bolt dependencies and be documented as sub-issues.
+1. Feature branches are named `feature/<feature-name>`.
+1. Bolt branches are named `bolt/<feature-name>-<bolt-name>`.
+
+### Updating features, bolts, specs and tests
+
+**WHENEVER** an existing feature, bolt, spec or test is updated by Bolt Framework agents, ALSO
+update the corresponding GitHub issue:
+
+1. Locate the issue ID from the spec/planning file (`issue: #<id>`).
+1. Update the issue description, status, and custom fields to reflect the changes.
+1. Review the issue comments for additional context or feedback.
+1. Keep issue dependencies in sync with feature/bolt dependencies (sub-issues).
+1. Prefer MCP tools when available.
 
 ## Remember
 
