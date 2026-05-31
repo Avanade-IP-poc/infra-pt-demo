@@ -8,11 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Initial project structure with AURORA-IA / AI-DLC methodology
-- 18 AI Agent documentation files
-- 15 GitHub Copilot prompt files with Agent References
+- N/A
+
+---
+
+## [0.1.0] - 2026-05-31
+
+### Added
+- Initial project structure with Bolt Framework / AI-DLC methodology
+- Dual-client AI agents (GitHub Copilot `.github/agents/` + Claude `.claude/agents/`)
+- GitHub Copilot prompt files with Agent References
 - CI/CD workflows for GitHub Actions
-- 14 Slash Commands with embedded templates
+- Slash Commands with embedded templates
 - Automation scripts (Bash + PowerShell)
 - Project documentation (README, CONTRIBUTING, LICENSE)
 - Modelo de gobierno: git subtree + PowerShell CLI (`BoltFramework.psm1`)
@@ -20,32 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CODEOWNERS` — governance por scope y categoría de skills
 - Documentación completa de contribución (`CONTRIBUTING.md`)
 - Workflow `bolt-update-check.yml` — aviso semanal de nuevas versiones upstream
-
-### Changed
-- N/A
-
-### Deprecated
-- N/A
-
-### Removed
-- N/A
-
-### Fixed
-- N/A
-
-### Security
-- N/A
-
----
-
-## [1.0.0] - YYYY-MM-DD
-
-### Added
-- Complete AURORA-IA methodology implementation
-- AI-DLC lifecycle with Bolts support
-- Full agent documentation suite
-- Production-ready CI/CD pipelines
-- Comprehensive specification templates
+- Skills como **fuente única** en `.claude/skills/` (modelo shell+skill dual-client)
+- `Init.ps1` / `init.sh`: selección de agente (Copilot/Claude), copia selectiva e
+  inicialización de la gobernanza git (subtree + remote `bolt-upstream`)
 
 ---
 
@@ -81,12 +65,12 @@ Use this template for new versions:
 
 | Version | Date | Description |
 |---------|------|-------------|
-| 1.0.0 | TBD | Initial release |
+| 0.1.0 | 2026-05-31 | Initial release |
 
 ---
 
 ## Links
 
-- [Releases](https://github.com/your-org/your-project/releases)
-- [Milestones](https://github.com/your-org/your-project/milestones)
-- [Compare Versions](https://github.com/your-org/your-project/compare)
+- [Releases](https://github.com/ava-group-iberiademos/bolt-framework/releases)
+- [Milestones](https://github.com/ava-group-iberiademos/bolt-framework/milestones)
+- [Compare Versions](https://github.com/ava-group-iberiademos/bolt-framework/compare)

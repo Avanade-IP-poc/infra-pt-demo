@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# AURORA-IA / AI-DLC - Architecture Quality Gates Script
+# Bolt Framework / AI-DLC - Architecture Quality Gates Script
 # =============================================================================
 # Validates architectural rules: dependency boundaries, contracts, complexity.
 #

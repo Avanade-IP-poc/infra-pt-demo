@@ -5,7 +5,7 @@
 
 .DESCRIPTION
     Analyzes alignment between RFP requirements, legacy code, implementation,
-    and AURORA methodology compliance. Detects gaps and generates reports.
+    and Bolt Framework methodology compliance. Detects gaps and generates reports.
 
 .PARAMETER Full
     Run complete alignment analysis (all dimensions)
@@ -17,7 +17,7 @@
     Analyze legacy code migration only
 
 .PARAMETER MethodologyOnly
-    Analyze AURORA methodology compliance only
+    Analyze Bolt Framework methodology compliance only
 
 .PARAMETER GapsOnly
     Show gap summary only
@@ -692,7 +692,7 @@ function Show-SummaryReport {
     $dimensions = @(
         @{ Key = "rfp"; Label = "RFP Coverage"; ShowIf = $ProjectContext.HasRfp }
         @{ Key = "legacy"; Label = "Legacy Migration"; ShowIf = $ProjectContext.HasLegacy }
-        @{ Key = "methodology"; Label = "AURORA Methodology"; ShowIf = $true }
+        @{ Key = "methodology"; Label = "Bolt Framework Methodology"; ShowIf = $true }
         @{ Key = "testing"; Label = "Testing"; ShowIf = $true }
         @{ Key = "documentation"; Label = "Documentation"; ShowIf = $true }
         @{ Key = "infrastructure"; Label = "Infrastructure"; ShowIf = $true }
@@ -795,7 +795,7 @@ function Show-FullReport {
         Write-Host ""
     }
 
-    Write-Section "📋 AURORA Methodology Compliance"
+    Write-Section "📋 Bolt Framework Methodology Compliance"
 
     Write-Host "| Phase     | Artifacts           | Compliance |"
     Write-Host "|-----------|---------------------|------------|"

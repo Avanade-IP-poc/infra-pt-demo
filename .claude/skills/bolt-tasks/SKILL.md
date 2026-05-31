@@ -259,4 +259,4 @@ completa (Azure DevOps/Jira) a `bolt-az-devops-sync`.
 
 ## References
 
-- `.github/prompts/aurora-planning.prompt.md`
+- `.github/prompts/bolt-planning.prompt.md`

@@ -106,7 +106,7 @@ function Get-FeatureMetadata {
     # Return empty metadata structure
     return @{
         version          = "1.0.0"
-        auroraFeatureId  = (Split-Path $FeaturePath -Leaf)
+        boltFeatureId  = (Split-Path $FeaturePath -Leaf)
         azureDevOps      = @{
             organization          = $script:Config.Organization
             project               = $script:Config.Project
@@ -357,7 +357,7 @@ function Sync-UserStories {
 
         $createdStories += @{
             workItemId     = $workItem.id
-            auroraStoryId  = $storyId
+            boltStoryId  = $storyId
             title          = "$storyId - $storyTitle"
             state          = "New"
         }
@@ -437,14 +437,14 @@ function Sync-Tasks {
         $workItem = New-AzureDevOpsWorkItem `
             -Type "Task" `
             -Title $taskTitle `
-            -Description "AURORA Bolt task from $FeaturePath/planning/tasks.md" `
+            -Description "Bolt Framework Bolt task from $FeaturePath/planning/tasks.md" `
             -ParentId $defaultParent `
             -Tags $tags `
             -RemainingWork $estimatedHours
 
         $createdTasks += @{
             workItemId   = $workItem.id
-            auroraBoltId = $tags[2]
+            boltBoltId = $tags[2]
             title        = $taskTitle
             state        = if ($isCompleted) { "Completed" } else { "To Do" }
         }
@@ -461,7 +461,7 @@ function Sync-Tasks {
 
 Write-Host @"
 ╔═══════════════════════════════════════════════════════════════════════════╗
-║                 AURORA → Azure DevOps Synchronization                    ║
+║                 Bolt Framework → Azure DevOps Synchronization                    ║
 ║                                                                           ║
 ║  Feature Path: $($FeaturePath.PadRight(58)) ║
 ║  Mode: $($Mode.PadRight(68)) ║

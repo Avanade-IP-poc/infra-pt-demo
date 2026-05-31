@@ -1,14 +1,14 @@
 <#
 .SYNOPSIS
-    Synchronize work item status updates from Azure DevOps to AURORA specs
+    Synchronize work item status updates from Azure DevOps to Bolt Framework specs
 
 .DESCRIPTION
     Queries Azure DevOps for task status changes and updates the corresponding
-    planning/tasks.md file in AURORA specs. Maintains bidirectional sync by
+    planning/tasks.md file in Bolt Framework specs. Maintains bidirectional sync by
     pulling DevOps as source of truth for status.
 
 .PARAMETER FeaturePath
-    Path to the AURORA feature (e.g., "specs/001-time-tracking")
+    Path to the Bolt Framework feature (e.g., "specs/001-time-tracking")
     If omitted, syncs all features in specs/ folder
 
 .PARAMETER AutoCommit

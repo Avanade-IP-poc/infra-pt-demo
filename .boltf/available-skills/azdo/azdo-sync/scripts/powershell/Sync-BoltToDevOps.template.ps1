@@ -65,7 +65,7 @@ $script:Config = @{
     Project      = "Registro Horario"
     AreaPath     = "Registro Horario"
     Iteration    = "Registro Horario\Sprint 1"  # TODO: Read from constitution or parameter
-    TagPrefix    = "AURORA"
+    TagPrefix    = "Bolt Framework"
     MappingsPath = Join-Path $PSScriptRoot "..\mappings"  # Path to mapping files
 }
 
@@ -107,12 +107,12 @@ function Get-WorkItemMapping {
     return $mapping
 }
 
-function Get-FieldValueFromAurora {
+function Get-FieldValueFromBolt {
     <#
     .SYNOPSIS
-        Extract field value from AURORA artifact based on mapping definition
+        Extract field value from Bolt Framework artifact based on mapping definition
     .PARAMETER FilePath
-        Path to AURORA artifact file
+        Path to Bolt Framework artifact file
     .PARAMETER FieldMapping
         Field mapping configuration from mapping file
     .PARAMETER Context
@@ -129,27 +129,27 @@ function Get-FieldValueFromAurora {
         [hashtable]$Context = @{}
     )
 
-    $auroraSource = $FieldMapping.boltfSource
+    $boltSource = $FieldMapping.boltfSource
 
     # Handle null/empty source
-    if ([string]::IsNullOrWhiteSpace($auroraSource)) {
+    if ([string]::IsNullOrWhiteSpace($boltSource)) {
         return $FieldMapping.defaultValue
     }
 
     # Handle computed values
-    if ($auroraSource -like "computed:*") {
-        $computation = $auroraSource -replace "^computed:", ""
+    if ($boltSource -like "computed:*") {
+        $computation = $boltSource -replace "^computed:", ""
         return Invoke-ComputedValue -Computation $computation -Context $Context
     }
 
     # Handle inherited values
-    if ($auroraSource -like "inherited:*") {
-        $inheritSource = $auroraSource -replace "^inherited:", ""
+    if ($boltSource -like "inherited:*") {
+        $inheritSource = $boltSource -replace "^inherited:", ""
         return $Context[$inheritSource]
     }
 
     # Handle file-based extraction
-    if ($auroraSource -match "(.+?)#(.+)") {
+    if ($boltSource -match "(.+?)#(.+)") {
         $fileName = $Matches[1]
         $fieldName = $Matches[2]
 
@@ -261,9 +261,9 @@ function Invoke-ComputedValue {
     )
 
     switch ($Computation) {
-        "aurora-phase" {
-            # Map AURORA phase to DevOps state
-            $phase = $Context["auroraPhase"]
+        "bolt-phase" {
+            # Map Bolt Framework phase to DevOps state
+            $phase = $Context["boltPhase"]
             $stateMapping = @{
                 "DISCOVERY"    = "New"
                 "PLANNING"     = "Active"
@@ -362,7 +362,7 @@ function Get-FeatureMetadata {
     # Return empty metadata structure
     return @{
         version          = "1.0.0"
-        auroraFeatureId  = (Split-Path $FeaturePath -Leaf)
+        boltFeatureId  = (Split-Path $FeaturePath -Leaf)
         azureDevOps      = @{
             organization          = $script:Config.Organization
             project               = $script:Config.Project
@@ -553,7 +553,7 @@ function Sync-UserStories {
 
         $createdStories += @{
             workItemId     = $workItem.id
-            auroraStoryId  = $tags[2]
+            boltStoryId  = $tags[2]
             title          = $storyTitle
             state          = "New"
         }
@@ -605,14 +605,14 @@ function Sync-Tasks {
         $workItem = New-AzureDevOpsWorkItem `
             -Type "Task" `
             -Title $taskTitle `
-            -Description "AURORA Bolt task from $FeaturePath/planning/tasks.md" `
+            -Description "Bolt Framework Bolt task from $FeaturePath/planning/tasks.md" `
             -ParentId $defaultParent `
             -Tags $tags `
             -RemainingWork $estimatedHours
 
         $createdTasks += @{
             workItemId   = $workItem.id
-            auroraBoltId = $tags[2]
+            boltBoltId = $tags[2]
             title        = $taskTitle
             state        = if ($isCompleted) { "Completed" } else { "To Do" }
         }
@@ -629,7 +629,7 @@ function Sync-Tasks {
 
 Write-Host @"
 ╔═══════════════════════════════════════════════════════════════════════════╗
-║                 AURORA → Azure DevOps Synchronization                    ║
+║                 Bolt Framework → Azure DevOps Synchronization                    ║
 ║                                                                           ║
 ║  Feature Path: $($FeaturePath.PadRight(58)) ║
 ║  Mode: $($Mode.PadRight(68)) ║

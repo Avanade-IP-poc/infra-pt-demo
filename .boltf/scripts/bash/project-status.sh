@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# project-status.sh - AURORA-IA Project Status Analyzer
+# project-status.sh - Bolt Framework Project Status Analyzer
 # Analyzes project state and generates status report for continuity
 #
 # Usage:
@@ -73,7 +73,7 @@ print_info() {
 
 show_help() {
     cat << EOF
-AURORA-IA Project Status Analyzer
+Bolt Framework Project Status Analyzer
 
 Usage: $(basename "$0") [options]
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# AURORA-IA / AI-DLC - Generate Gherkin Script
+# Bolt Framework / AI-DLC - Generate Gherkin Script
 # =============================================================================
 # Generates Gherkin feature file structure from specifications.
 #

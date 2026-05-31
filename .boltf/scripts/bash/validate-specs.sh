@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# AURORA-IA / AI-DLC - Validate Specifications Script
+# Bolt Framework / AI-DLC - Validate Specifications Script
 # =============================================================================
 # Validates specification files for completeness and consistency.
 #

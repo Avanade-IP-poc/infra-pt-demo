@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# AURORA-IA / AI-DLC - Validate Scopes Script
+# Bolt Framework / AI-DLC - Validate Scopes Script
 # =============================================================================
 # Validates .boltf/scopes/*/scope.yaml files for structure, external source
 # rules, and tags constraints.

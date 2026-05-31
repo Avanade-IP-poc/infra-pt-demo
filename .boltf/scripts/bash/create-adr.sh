@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# AURORA-IA / AI-DLC - Create ADR Script
+# Bolt Framework / AI-DLC - Create ADR Script
 # =============================================================================
 # Creates a new Architectural Decision Record from template.
 # Follows MADR format as defined in bolt-adr.

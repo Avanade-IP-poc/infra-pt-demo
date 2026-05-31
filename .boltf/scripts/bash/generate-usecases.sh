@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# AURORA-IA / AI-DLC - Generate Use Cases Script
+# Bolt Framework / AI-DLC - Generate Use Cases Script
 # =============================================================================
 # Generates use case document structure from a feature specification.
 #
@@ -39,7 +39,7 @@ UC_DIR="${SPEC_DIR}/use-cases"
 # Check spec exists
 if [ ! -f "${SPEC_DIR}/spec.md" ]; then
     log_error "Specification not found: ${SPEC_DIR}/spec.md"
-    echo "Run /aurora.feature first to create the feature specification"
+    echo "Run /bolt.feature first to create the feature specification"
     exit 1
 fi
 
@@ -155,4 +155,4 @@ echo ""
 echo "Next steps:"
 echo "  1. Edit UC-001-template.md with first use case"
 echo "  2. Duplicate for additional use cases"
-echo "  3. Run /aurora.gherkin to generate BDD scenarios"
+echo "  3. Run /bolt.gherkin to generate BDD scenarios"

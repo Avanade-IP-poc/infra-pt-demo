@@ -4,8 +4,8 @@
 
 framework:
   name: bolt-framework
-  version: 1.0.0
-  minimum-compatible: 1.0.0
+  version: 0.1.0
+  minimum-compatible: 0.1.0
   released: 2026-05-31
   repository: https://github.com/ava-group-iberiademos/bolt-framework
   license: UNLICENSED
@@ -17,15 +17,15 @@ versioning:
   patch: "Correcciones en scripts, typos, mejoras documentación"
 
 scopes:
-  ai: { version: 1.0.0, last-changed: 2026-05-31 }
-  backend: { version: 1.0.0, last-changed: 2026-05-31 }
-  cloud-platform: { version: 1.0.0, last-changed: 2026-05-31 }
-  common: { version: 1.0.0, last-changed: 2026-05-31 }
-  crm: { version: 1.0.0, last-changed: 2026-05-31 }
-  data: { version: 1.0.0, last-changed: 2026-05-31 }
-  frontend: { version: 1.0.0, last-changed: 2026-05-31 }
-  integration: { version: 1.0.0, last-changed: 2026-05-31 }
-  work-management: { version: 1.0.0, last-changed: 2026-05-31 }
+  ai: { version: 0.1.0, last-changed: 2026-05-31 }
+  backend: { version: 0.1.0, last-changed: 2026-05-31 }
+  cloud-platform: { version: 0.1.0, last-changed: 2026-05-31 }
+  common: { version: 0.1.0, last-changed: 2026-05-31 }
+  crm: { version: 0.1.0, last-changed: 2026-05-31 }
+  data: { version: 0.1.0, last-changed: 2026-05-31 }
+  frontend: { version: 0.1.0, last-changed: 2026-05-31 }
+  integration: { version: 0.1.0, last-changed: 2026-05-31 }
+  work-management: { version: 0.1.0, last-changed: 2026-05-31 }
 
 distribution:
   mechanism: git-subtree

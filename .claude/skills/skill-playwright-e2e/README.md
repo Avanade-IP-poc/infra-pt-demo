@@ -180,11 +180,11 @@ projects: [
 ]
 ```
 
-## Integración con AURORA
+## Integración con Bolt Framework
 
 Este skill se integra con:
 
-- **@Aurora Testing**: Agente para generar tests E2E
+- **@Bolt Framework Testing**: Agente para generar tests E2E
 - **Constitution**: Lee configuración de browsers y targets
 - **CI/CD**: Genera configuración para GitHub Actions
 - **Reporting**: Integración con HTML reporter y screenshots
@@ -202,7 +202,7 @@ Enfocado en el **10% superior** de la pirámide de testing:
 - [SKILL.md](./SKILL.md) - Instrucciones principales
 - [../skill-backend-testing-dotnet](../skill-backend-testing-dotnet/) - Integration tests relacionados
 - [../skill-gherkin-reqnroll](../skill-gherkin-reqnroll/) - BDD specs que pueden automatizarse
-- [../../agents/aurora-testing.agent.md](../../agents/aurora-testing.agent.md) - Agente Testing
+- [../../agents/bolt-testing.agent.md](../../agents/bolt-testing.agent.md) - Agente Testing
 
 ## Referencias
 

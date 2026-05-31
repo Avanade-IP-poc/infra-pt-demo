@@ -15,7 +15,7 @@ Invoke this skill when:
 - Adding new functionality to existing codebase
 - Refactoring legacy code with test coverage
 - Working on critical business logic that requires confidence
-- Collaborating with **Aurora Implement**, **Aurora Testing**, or **Aurora Review** agents
+- Collaborating with **Bolt Framework Implement**, **Bolt Framework Testing**, or **Bolt Framework Review** agents
 - User explicitly requests TDD approach
 - Working on code that needs to be maintainable long-term
 
@@ -258,13 +258,13 @@ npm test -- --watch
 
 ---
 
-## Integration with AURORA
+## Integration with Bolt Framework
 
-### Aurora Agents
+### Bolt Framework Agents
 
-- **@Aurora Testing tdd** - Generates tests following TDD
-- **@Aurora Implement** - Implements code following TDD green phase
-- **@Aurora Review** - Reviews refactoring quality
+- **@Bolt Framework Testing tdd** - Generates tests following TDD
+- **@Bolt Framework Implement** - Implements code following TDD green phase
+- **@Bolt Framework Review** - Reviews refactoring quality
 
 ### Constitution
 

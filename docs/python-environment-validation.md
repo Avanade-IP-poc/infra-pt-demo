@@ -6,7 +6,7 @@
 
 ```text
 ┌─────────────────────────────────────────────────────────────┐
-│  REPO ORIGEN (aurora-ai)                                    │
+│  REPO ORIGEN (bolt-framework)                                    │
 │  - Scripts Python están aquí                                │
 │  - NO se crea .bolt-venv aquí                              │
 └─────────────────────────────────────────────────────────────┘
@@ -82,7 +82,7 @@ $VenvPath = Join-Path $ProjectRoot ".bolt-venv"  # ← Crea en proyecto actual
 
 - Si usuario ejecuta desde `C:\projects\my-app\`, PWD será `C:\projects\my-app\`
 - `.bolt-venv` se creará en `C:\projects\my-app\.bolt-venv\`
-- NO en `F:\repos\aurora-ai\.bolt-venv\`
+- NO en `F:\repos\bolt-framework\.bolt-venv\`
 
 ### 3. Invoke-PythonScript.ps1 Busca en Proyecto Destino
 
@@ -119,7 +119,7 @@ $VenvPath = Join-Path $ProjectRoot ".bolt-venv"
 
 ```powershell
 # Paso 1: Usuario inicializa proyecto
-cd F:\repos\aurora-ai
+cd F:\repos\bolt-framework
 .\Init.ps1 -OutputDirectory "C:\projects\my-ecommerce" -ProjectType green
 
 # Paso 2: Usuario va al nuevo proyecto
@@ -156,8 +156,8 @@ cd C:\projects\my-ecommerce
 
 #### Init.ps1 NO copiaba scripts Python a proyecto destino
 
-- Usuario ejecutaba Invoke-PythonScript.ps1 desde aurora-ai
-- .bolt-venv se creaba en aurora-ai en vez del proyecto nuevo
+- Usuario ejecutaba Invoke-PythonScript.ps1 desde bolt-framework
+- .bolt-venv se creaba en bolt-framework en vez del proyecto nuevo
 
 ### ✅ Solución Implementada
 
@@ -170,7 +170,7 @@ cd C:\projects\my-ecommerce
 1. **Probar el flujo completo** en un proyecto real:
 
    ```powershell
-   # Desde aurora-ai
+   # Desde bolt-framework
    .\Init.ps1 -OutputDirectory "..\test-python-integration" -ProjectType green
 
    # Desde proyecto nuevo
@@ -198,7 +198,7 @@ cd C:\projects\my-ecommerce
 
 ## ✅ Conclusión
 
-**El entorno Python SE CREA en el proyecto destino, NO en aurora-ai.**
+**El entorno Python SE CREA en el proyecto destino, NO en bolt-framework.**
 
 Todos los paths y scripts están configurados correctamente para que:
 

@@ -225,17 +225,17 @@ See `.claude/skills/bolt-framework/examples/TOOLSETS.md` for the complete refere
 
 ## Migration from Commands
 
-The previous `/aurora.*` slash commands have been replaced by agents:
+The previous `/bolt.*` slash commands have been replaced by agents:
 
 | Old Command            | New Agent            |
 | ---------------------- | -------------------- |
-| `/aurora.feature`      | `@Bolt Feature`      |
-| `/aurora.implement`    | `@Bolt Implement`    |
-| `/aurora.test`         | `@Bolt Testing`      |
-| `/aurora.plan`         | `@Bolt Plan`         |
-| `/aurora.constitution` | `@Bolt Constitution` |
-| `/aurora.status`       | `@Bolt Status`       |
-| `/aurora`              | `@Bolt Framework`    |
+| `/bolt.feature`      | `@Bolt Feature`      |
+| `/bolt.implement`    | `@Bolt Implement`    |
+| `/bolt.test`         | `@Bolt Testing`      |
+| `/bolt.plan`         | `@Bolt Plan`         |
+| `/bolt.constitution` | `@Bolt Constitution` |
+| `/bolt.status`       | `@Bolt Status`       |
+| `/Bolt Framework`              | `@Bolt Framework`    |
 
 ## Best Practices
 

@@ -438,7 +438,7 @@ function Test-TestQuality {
 # =============================================================================
 # Main Execution
 # =============================================================================
-Write-Host "`n🏗️  AURORA Architecture Quality Gates" -ForegroundColor Magenta
+Write-Host "`n🏗️  Bolt Framework Architecture Quality Gates" -ForegroundColor Magenta
 Write-Host "======================================`n" -ForegroundColor Magenta
 
 $projectType = Get-ProjectType

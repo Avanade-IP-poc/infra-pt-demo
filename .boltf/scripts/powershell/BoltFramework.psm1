@@ -397,7 +397,7 @@ function Initialize-BoltSubtree {
             $Version = "v$($manifest.Version)"
         }
         else {
-            $Version = "v1.0.0"
+            $Version = "v0.1.0"
             Write-Host "[Bolt] No se encontró bolt-manifest.yaml. Asumiendo $Version" -ForegroundColor Yellow
         }
     }

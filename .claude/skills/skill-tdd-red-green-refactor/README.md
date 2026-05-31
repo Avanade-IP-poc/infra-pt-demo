@@ -149,12 +149,12 @@ function validateHours(hours: number) {
 | API endpoint       | BDD         | Gherkin + integration tests |
 | Utilidades/helpers | TDD         | xUnit/Vitest                |
 
-## Integración con AURORA
+## Integración con Bolt Framework
 
-### Con @Aurora Testing
+### Con @Bolt Framework Testing
 
 ```
-@Aurora Testing usa TDD para implementar AccountService
+@Bolt Framework Testing usa TDD para implementar AccountService
 ```
 
 → Generará tests RED → GREEN → REFACTOR automáticamente
@@ -294,15 +294,15 @@ La carpeta `examples/` contiene ejemplos completos con código de contexto:
 - [refactor-phase-examples.md](./examples/refactor-phase-examples.md) - Ejemplos before/after de refactoring
 - [anti-patterns.md](./examples/anti-patterns.md) - Anti-patrones detallados y cómo evitarlos
 
-### Otros Skills AURORA
+### Otros Skills Bolt Framework
 
 - [../skill-backend-testing-dotnet](../skill-backend-testing-dotnet/) - Herramientas para backend
 - [../skill-gherkin-reqnroll](../skill-gherkin-reqnroll/) - Alternativa BDD approach
 - [../skill-playwright-e2e](../skill-playwright-e2e/) - Testing E2E frontend
 
-### Agentes AURORA
+### Agentes Bolt Framework
 
-- [../../agents/aurora-testing.agent.md](../../agents/aurora-testing.agent.md) - Agente Testing
+- [../../agents/bolt-testing.agent.md](../../agents/bolt-testing.agent.md) - Agente Testing
 
 ## Referencias
 

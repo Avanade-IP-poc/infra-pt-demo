@@ -123,7 +123,7 @@ get_metadata() {
     cat <<EOF
 {
   "version": "1.0.0",
-  "auroraFeatureId": "$feature_id",
+  "boltFeatureId": "$feature_id",
   "azureDevOps": {
     "organization": "$ORG",
     "project": "$PROJECT",
@@ -379,7 +379,7 @@ sync_user_stories() {
         --arg id "${wi_id:-0}" \
         --arg sid "$story_id" \
         --arg title "$story_id - $story_title" \
-        '. + [{"workItemId": ($id | tonumber), "auroraStoryId": $sid, "title": $title, "state": "New"}]')
+        '. + [{"workItemId": ($id | tonumber), "boltStoryId": $sid, "title": $title, "state": "New"}]')
 
       story_count=$((story_count + 1))
     fi
@@ -445,7 +445,7 @@ sync_tasks() {
 
       local wi_id
       wi_id=$(create_work_item "Task" "$task_title" \
-        "AURORA Bolt task from $FEATURE_PATH/planning/tasks.md" "" \
+        "Bolt Framework Bolt task from $FEATURE_PATH/planning/tasks.md" "" \
         "$default_parent" "$tags" "$hours")
 
       local state="To Do"
@@ -456,7 +456,7 @@ sync_tasks() {
         --arg bid "$task_id" \
         --arg title "$task_title" \
         --arg state "$state" \
-        '. + [{"workItemId": ($id | tonumber), "auroraBoltId": $bid, "title": $title, "state": $state}]')
+        '. + [{"workItemId": ($id | tonumber), "boltBoltId": $bid, "title": $title, "state": $state}]')
     fi
   done < "$tasks_path"
 
@@ -472,7 +472,7 @@ sync_tasks() {
 
 echo -e "\033[36m"
 echo "╔═══════════════════════════════════════════════════════════════════════════╗"
-echo "║                 AURORA → Azure DevOps Synchronization                    ║"
+echo "║                 Bolt Framework → Azure DevOps Synchronization                    ║"
 echo "║                                                                           ║"
 printf "║  Feature Path: %-58s ║\n" "$FEATURE_PATH"
 printf "║  Mode: %-68s ║\n" "$MODE"
@@ -485,8 +485,8 @@ check_auth || exit 1
 
 # Step 2: Load metadata
 metadata=$(get_metadata)
-feature_aurora_id=$(echo "$metadata" | jq -r '.boltfFeatureId')
-info "Feature ID: $feature_aurora_id"
+feature_bolt_id=$(echo "$metadata" | jq -r '.boltfFeatureId')
+info "Feature ID: $feature_bolt_id"
 
 # Step 3: Check sync mode
 existing_feature_id=$(echo "$metadata" | jq -r '.azureDevOps.featureWorkItemId // empty')

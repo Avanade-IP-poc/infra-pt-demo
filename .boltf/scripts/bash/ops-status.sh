@@ -2,7 +2,7 @@
 
 # ==============================================================================
 # ops-status.sh - Operations Status and Runbook Generator
-# Part of AURORA-IA / AI-DLC methodology
+# Part of Bolt Framework / AI-DLC methodology
 # Phase: Block 6 - Operations
 # ==============================================================================
 
@@ -349,7 +349,7 @@ EOF
 
 # Main
 main() {
-    echo -e "\n${MAGENTA}🔧 AURORA-IA Operations Status${NC}"
+    echo -e "\n${MAGENTA}🔧 Bolt Framework Operations Status${NC}"
     echo -e "${MAGENTA}==================================${NC}\n"
 
     local show_status=false

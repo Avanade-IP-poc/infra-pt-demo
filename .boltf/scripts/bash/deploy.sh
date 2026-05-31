@@ -1,5 +1,5 @@
 #!/bin/bash
-# AURORA Deployment Script - Multi-environment deployment with validation
+# Bolt Framework Deployment Script - Multi-environment deployment with validation
 
 set -e
 
@@ -111,7 +111,7 @@ case $ENVIRONMENT in
         ;;
 esac
 
-log "🚀 AURORA Deployment to $ENVIRONMENT"
+log "🚀 Bolt Framework Deployment to $ENVIRONMENT"
 echo "========================================"
 echo "Strategy: $DEPLOYMENT_STRATEGY"
 echo "Dry Run: $([ $DRY_RUN == true ] && echo 'YES' || echo 'NO')"
@@ -333,7 +333,7 @@ deploy_to_development() {
         fi
         
         log "🔄 Restarting development services..."
-        # ssh user@dev-server "sudo systemctl restart aurora-api && sudo systemctl restart nginx"
+        # ssh user@dev-server "sudo systemctl restart bolt-api && sudo systemctl restart nginx"
     fi
     
     success "Development deployment completed"

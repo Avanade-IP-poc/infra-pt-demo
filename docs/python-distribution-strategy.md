@@ -10,11 +10,11 @@ Esta estrategia permite distribuir Bolt Framework con scripts Python **sin reque
 
 ### ✅ VALIDADO: Entorno en Proyecto Destino
 
-**CRÍTICO**: El entorno virtual Python (`.bolt-venv/`) se crea en el **proyecto destino**, NO en el repositorio aurora-ai.
+**CRÍTICO**: El entorno virtual Python (`.bolt-venv/`) se crea en el **proyecto destino**, NO en el repositorio bolt-framework.
 
 ```text
 ┌─────────────────────────────────────────────────────────────┐
-│  REPO ORIGEN (aurora-ai)                                    │
+│  REPO ORIGEN (bolt-framework)                                    │
 │  - Contiene scripts Python source                           │
 │  - NO contiene .bolt-venv/                                  │
 │  - Solo se usa para inicialización                          │
@@ -48,7 +48,7 @@ Esta estrategia permite distribuir Bolt Framework con scripts Python **sin reque
 ### Componentes Implementados
 
 ```text
-aurora-ai/
+bolt-framework/
 ├── 📁 .bolt-venv/                           # Virtual environment (gitignored)
 │   ├── Scripts/python.exe                   # Python isolado (Windows)
 │   └── bin/python                          # Python isolado (Linux/macOS)
@@ -98,8 +98,8 @@ aurora-ai/
 #### 1️⃣ Clonar el Repositorio
 
 ```powershell
-git clone https://github.com/your-org/aurora-ai.git
-cd aurora-ai
+git clone https://github.com/your-org/bolt-framework.git
+cd bolt-framework
 ```
 
 #### 2️⃣ Bootstrap Automático (Una sola vez)

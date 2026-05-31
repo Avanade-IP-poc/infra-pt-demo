@@ -2,7 +2,7 @@
 
 # ==============================================================================
 # plan-retirement.sh - System Retirement Planning Tool
-# Part of AURORA-IA / AI-DLC methodology
+# Part of Bolt Framework / AI-DLC methodology
 # Phase: Block 8 - Retirement
 # ==============================================================================
 

@@ -139,11 +139,11 @@ Este skill ayuda a alcanzar:
 | Branch Coverage | 75%    | 85%         | 100%           |
 | Mutation Score  | 70%    | 80%         | 90%            |
 
-## Integración con AURORA
+## Integración con Bolt Framework
 
 Este skill se integra con:
 
-- **@Aurora Testing**: Agente especializado en generar tests
+- **@Bolt Framework Testing**: Agente especializado en generar tests
 - **Constitution**: Lee frameworks y targets de testing
 - **Feature Specs**: Genera tests basados en acceptance criteria
 - **Quality Gates**: Valida cobertura antes de merge
@@ -165,7 +165,7 @@ Este skill se integra con:
 - [SKILL.md](./SKILL.md) - Instrucciones principales
 - [../skill-gherkin-reqnroll](../skill-gherkin-reqnroll/) - BDD tests relacionados
 - [../skill-playwright-e2e](../skill-playwright-e2e/) - E2E tests relacionados
-- [../../agents/aurora-testing.agent.md](../../agents/aurora-testing.agent.md) - Agente Testing
+- [../../agents/bolt-testing.agent.md](../../agents/bolt-testing.agent.md) - Agente Testing
 
 ## Referencias
 

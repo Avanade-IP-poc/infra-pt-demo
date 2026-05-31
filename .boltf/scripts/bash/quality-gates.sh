@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# AURORA-IA / AI-DLC - Quality Gates Script
+# Bolt Framework / AI-DLC - Quality Gates Script
 # =============================================================================
 # Runs quality checks including linting, testing, and security scanning.
 #
@@ -511,11 +511,11 @@ case $PROJECT_TYPE in
 esac
 
 # =============================================================================
-# Quality Gate 7: Security Analysis (Aurora Security Agent)
+# Quality Gate 7: Security Analysis (Bolt Framework Security Agent)
 # =============================================================================
 run_security_analysis() {
     if [[ "$FULL_SUITE" == "true" ]] && [[ -f "scripts/bash/security-analysis.sh" ]]; then
-        log_section "Security Analysis (Aurora Security Agent)"
+        log_section "Security Analysis (Bolt Framework Security Agent)"
         
         chmod +x scripts/bash/security-analysis.sh
         
@@ -531,7 +531,7 @@ run_security_analysis() {
     elif [[ "$FULL_SUITE" == "true" ]]; then
         log_section "Fallback Security Scan"
         
-        # Fallback to basic security checks if Aurora Security Agent not available
+        # Fallback to basic security checks if Bolt Framework Security Agent not available
         case $PROJECT_TYPE in
             node|node-ts)
                 run_check "NPM Audit" "npm audit --audit-level=high" || true
@@ -626,7 +626,7 @@ echo -e "  ${GREEN}Passed:${NC}   ${PASSED}"
 echo -e "  ${RED}Failed:${NC}   ${FAILED}"
 echo -e "  ${YELLOW}Warnings:${NC} ${WARNINGS}"
 if [[ "$SECURITY_ENABLED" == "true" ]]; then
-    echo -e "  ${BLUE}Security:${NC} Aurora Security Agent executed"
+    echo -e "  ${BLUE}Security:${NC} Bolt Framework Security Agent executed"
 fi
 echo ""
 

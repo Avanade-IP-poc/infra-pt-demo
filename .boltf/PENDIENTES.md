@@ -76,7 +76,7 @@ En lugar de los comandos slash obsoletos.
 ## ✅ Acciones Inmediatas COMPLETADAS para `init.sh` / `Init.ps1`
 
 ### ✅ Prioridad 1: Actualizar README generado - RESUELTO
-**Completado:** Referencias cambiadas de `/aurora.xxx` a `@Bolt Xxx` (agentes).
+**Completado:** Referencias cambiadas de `/bolt.xxx` a `@Bolt Xxx` (agentes).
 
 ### ✅ Prioridad 2: Enfoque Agnóstico de Configuraciones - RESUELTO
 **Completado:** Scripts adaptados por stack detectado:
@@ -127,8 +127,8 @@ Bolt Framework es un framework maduro con 29 agentes, 19 prompts, 36+ scripts y 
 
 ### 4. **Versionado del Framework**
 - [ ] El `package.json` del framework no existe (solo del proyecto demo)
-- [ ] No hay forma de actualizar AURORA cuando sale una nueva versión
-- [ ] Falta mecanismo de "aurora update" o similar
+- [ ] No hay forma de actualizar Bolt Framework cuando sale una nueva versión
+- [ ] Falta mecanismo de "Bolt Framework update" o similar
 
 ---
 
@@ -142,7 +142,7 @@ Bolt Framework es un framework maduro con 29 agentes, 19 prompts, 36+ scripts y 
 - [ ] Falta: template Go pre-configurado
 
 ### 6. **Agente de Seguridad Dedicado** ✅ COMPLETADO
-- [x] ✅ `aurora-security.agent.md` creado con capacidades comprehensivas
+- [x] ✅ `bolt-security.agent.md` creado con capacidades comprehensivas
 - [x] ✅ Security gates consolidados en `scripts/bash/security-analysis.sh` y PowerShell equivalente
 - [x] ✅ OWASP Top 10 checks integrados con mapeo automático
 - [x] ✅ SAST/DAST automation con GitHub Actions workflow completo
@@ -164,7 +164,7 @@ Bolt Framework es un framework maduro con 29 agentes, 19 prompts, 36+ scripts y 
 - [ ] Falta: burndown/burnup por feature
 
 ### 9. **Gestión de Dependencias**
-- [ ] `aurora-deps.agent.md` existe pero no tiene scripts asociados
+- [ ] `bolt-deps.agent.md` existe pero no tiene scripts asociados
 - [ ] No hay `check-deps.sh` o `Update-Dependencies.ps1`
 - [ ] Falta: Renovate/Dependabot config template
 
@@ -178,10 +178,10 @@ Bolt Framework es un framework maduro con 29 agentes, 19 prompts, 36+ scripts y 
 
 ## 🟢 Nice to Have / Futuro
 
-### 11. **CLI de AURORA**
-- [ ] No hay CLI propio (`aurora init`, `Bolt Feature`, `aurora bolt`)
+### 11. **CLI de Bolt Framework**
+- [ ] No hay CLI propio (`Bolt Framework init`, `Bolt Feature`, `Bolt Framework bolt`)
 - [ ] Los scripts bash/powershell son verbose
-- [ ] Sería útil: `npx aurora-cli init`
+- [ ] Sería útil: `npx bolt-cli init`
 
 ### 12. **Modo Interactivo**
 - [ ] Los scripts no tienen modo interactivo con menús
@@ -199,7 +199,7 @@ Bolt Framework es un framework maduro con 29 agentes, 19 prompts, 36+ scripts y 
 - [ ] Falta: arquitectura del framework en C4/Mermaid
 
 ### 15. **Plugins/Extensiones**
-- [ ] No hay mecanismo de plugins para extender AURORA
+- [ ] No hay mecanismo de plugins para extender Bolt Framework
 - [ ] No se pueden añadir agentes custom fácilmente
 - [ ] No hay marketplace de templates
 
@@ -230,7 +230,7 @@ Bolt Framework es un framework maduro con 29 agentes, 19 prompts, 36+ scripts y 
 | 6 | Agente de Seguridad | Alto | Medio | ✅ COMPLETADO |
 | 9 | Gestión de Dependencias | Medio | Bajo | 🟡 P1 |
 | 2 | Testing del Framework | Alto | Alto | 🟡 P1 |
-| 11 | CLI de AURORA | Alto | Alto | 🟢 P2 |
+| 11 | CLI de Bolt Framework | Alto | Alto | 🟢 P2 |
 | 4 | Versionado del Framework | Medio | Medio | 🟢 P2 |
 | 10 | Configuración IDEs | Bajo | Bajo | 🟢 P2 |
 | 7 | Integraciones Externas | Medio | Alto | 🟢 P3 |
@@ -243,12 +243,12 @@ Bolt Framework es un framework maduro con 29 agentes, 19 prompts, 36+ scripts y 
 Bolt Framework/
 ├── .editorconfig                    # ❌ No existe
 ├── .nvmrc                           # ❌ No existe (Node version)
-├── aurora.json                      # ❌ Config del framework
+├── bolt.json                      # ❌ Config del framework
 ├── package.json                     # ❌ Del framework (no demo)
 │
 ├── .github/
 │   ├── agents/
-│   │   └── aurora-security.agent.md # ✅ Creado y completamente integrado
+│   │   └── bolt-security.agent.md # ✅ Creado y completamente integrado
 │   └── ISSUE_TEMPLATE/              # ❌ Templates de issues
 │       ├── bug_report.md
 │       ├── feature_request.md
@@ -259,7 +259,7 @@ Bolt Framework/
 │   ├── src/
 │   │   ├── commands/
 │   │   └── index.ts
-│   └── bin/aurora
+│   └── bin/Bolt Framework
 │
 ├── docs/
 │   ├── getting-started/             # ❌ Guía paso a paso
@@ -277,7 +277,7 @@ Bolt Framework/
 │   │   ├── dotnet-api/
 │   │   └── python-fastapi/
 │   └── diagrams/                    # ❌ Diagramas del framework
-│       ├── aurora-flow.mmd
+│       ├── bolt-flow.mmd
 │       ├── agent-interactions.mmd
 │       └── bolt-lifecycle.mmd
 │
@@ -290,11 +290,11 @@ Bolt Framework/
 │   ├── bash/
 │   │   ├── check-deps.sh            # ❌ Check dependencies
 │   │   ├── validate-constitution.sh # ❌ Validar constitution
-│   │   └── aurora-doctor.sh         # ❌ Diagnóstico del setup
+│   │   └── bolt-doctor.sh         # ❌ Diagnóstico del setup
 │   └── powershell/
 │       ├── Check-Dependencies.ps1   # ❌
 │       ├── Validate-Constitution.ps1# ❌
-│       └── Get-AuroraDiagnostics.ps1# ❌
+│       └── Get-BoltDiagnostics.ps1# ❌
 │
 ├── templates/                       # ❌ Templates por stack
 │   ├── node-nestjs/
@@ -323,7 +323,7 @@ Bolt Framework/
 ### Fase 1: Fundamentos (1-2 semanas)
 1. Crear `schemas/constitution.schema.json` para validación
 2. Crear `scripts/bash/validate-constitution.sh`
-3. Crear `aurora-security.agent.md`
+3. Crear `bolt-security.agent.md`
 4. Añadir `.editorconfig` y `.nvmrc`
 
 ### Fase 2: Documentación (2-3 semanas)
@@ -338,9 +338,9 @@ Bolt Framework/
 
 ### Fase 4: CLI (4-6 semanas)
 11. Diseñar CLI commands
-12. Implementar `aurora init`
+12. Implementar `Bolt Framework init`
 13. Implementar `Bolt Feature create`
-14. Implementar `aurora bolt run`
+14. Implementar `Bolt Framework bolt run`
 
 ---
 
@@ -356,14 +356,14 @@ Bolt Framework/
 
 **Fecha de finalización**: 2024-12-17  
 **Implementación completa**:
-- ✅ Bolt Security Agent (`.github/copilot/agents/aurora-security.agent.md`) - 500+ líneas
+- ✅ Bolt Security Agent (`.github/copilot/agents/bolt-security.agent.md`) - 500+ líneas
 - ✅ Scripts de seguridad multiplataforma:
   - `scripts/bash/security-analysis.sh` (3,287+ líneas)
   - `scripts/powershell/Security-Analysis.ps1` (equivalente completo)
 - ✅ GitHub Actions workflow (`.github/workflows/security-analysis.yml`)
 - ✅ Setup Action (`.github/actions/setup-stack/action.yml`)
 - ✅ Template de configuración (`.boltf/docs/templates/constitution-security-template.yml`)
-- ✅ Documentación completa (`.boltf/docs/templates/aurora-security-complete-guide.md`)
+- ✅ Documentación completa (`.boltf/docs/templates/bolt-security-complete-guide.md`)
 - ✅ Integración en quality gates y scripts de inicialización
 - ✅ Referencias actualizadas en README y documentación del framework
 

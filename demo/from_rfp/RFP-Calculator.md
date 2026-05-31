@@ -411,7 +411,7 @@ Without a centralized calculator:
 **Nice to Have**:
 
 - [ ] Experience with healthcare/finance regulatory compliance
-- [ ] AI-assisted development methodology (e.g., AURORA-IA)
+- [ ] AI-assisted development methodology (e.g., Bolt Framework)
 - [ ] Iterative development approach (Agile/Bolts)
 - [ ] Domain-Driven Design (DDD) expertise
 - [ ] Clean Architecture experience

@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 # =============================================================================
 # sync-devops-status.sh
-# Synchronize work item status updates from Azure DevOps to AURORA specs
+# Synchronize work item status updates from Azure DevOps to Bolt Framework specs
 #
 # Queries Azure DevOps for task status changes and updates the corresponding
-# planning/tasks.md file in AURORA specs.
+# planning/tasks.md file in Bolt Framework specs.
 #
 # Usage:
 #   ./sync-devops-status.sh [-f "specs/001-time-tracking"] [-c]
 #
 # Parameters:
-#   -f, --feature-path   Path to the AURORA feature (optional; syncs all if omitted)
+#   -f, --feature-path   Path to the Bolt Framework feature (optional; syncs all if omitted)
 #   -c, --auto-commit    Automatically commit changes to git
 #
 # Examples:
@@ -202,7 +202,7 @@ sync_feature_status() {
 
 echo -e "\033[36m"
 echo "╔═══════════════════════════════════════════════════════════════════════════╗"
-echo "║             Azure DevOps Status → AURORA Sync                             ║"
+echo "║             Azure DevOps Status → Bolt Framework Sync                             ║"
 echo "╚═══════════════════════════════════════════════════════════════════════════╝"
 echo -e "\033[0m"
 

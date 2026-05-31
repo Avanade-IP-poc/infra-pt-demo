@@ -145,7 +145,7 @@ $description
 
 ### Out of Scope
 
-- To be defined during AURORA DISCOVERY phase
+- To be defined during Bolt Framework DISCOVERY phase
 
 ## Acceptance Criteria
 
@@ -176,7 +176,7 @@ Original work item: $ORG/$PROJECT/_workitems/edit/$wi_id
 ---
 
 **Phase**: DISCOVERY
-**Status**: Imported - Requires AURORA refinement
+**Status**: Imported - Requires Bolt Framework refinement
 EOF
 
   success "Created feature.md"
@@ -336,7 +336,7 @@ generate_metadata() {
   story_arr=$(echo "$stories_json" | jq --arg fid "$feature_id" '
     [to_entries[] | {
       workItemId: .value.id,
-      auroraStoryId: ("US-" + ((.key + 1) | tostring | if length < 3 then "0" * (3 - length) + . else . end)),
+      boltStoryId: ("US-" + ((.key + 1) | tostring | if length < 3 then "0" * (3 - length) + . else . end)),
       title: .value.fields."System.Title",
       state: .value.fields."System.State"
     }]')
@@ -344,7 +344,7 @@ generate_metadata() {
   task_arr=$(echo "$tasks_json" | jq --arg fid "$feature_id" '
     [to_entries[] | {
       workItemId: .value.id,
-      auroraBoltId: ($fid + "-" + ((.key + 1) | tostring | if length < 3 then "0" * (3 - length) + . else . end)),
+      boltBoltId: ($fid + "-" + ((.key + 1) | tostring | if length < 3 then "0" * (3 - length) + . else . end)),
       title: .value.fields."System.Title",
       state: .value.fields."System.State"
     }]')
@@ -364,7 +364,7 @@ generate_metadata() {
     --arg imp "Azure DevOps on $(date '+%Y-%m-%d %H:%M:%S')" \
     '{
       version: $ver,
-      auroraFeatureId: $fid,
+      boltFeatureId: $fid,
       azureDevOps: {
         organization: $org,
         project: $proj,
@@ -386,7 +386,7 @@ generate_metadata() {
 
 echo -e "\033[36m"
 echo "╔═══════════════════════════════════════════════════════════════════════════╗"
-echo "║             Azure DevOps → AURORA Import                                  ║"
+echo "║             Azure DevOps → Bolt Framework Import                                  ║"
 echo "║                                                                           ║"
 printf "║  Work Item ID: %-58s ║\n" "$WORK_ITEM_ID"
 printf "║  Output Path:  %-58s ║\n" "$OUTPUT_PATH"
@@ -407,7 +407,7 @@ feature_json=$(get_work_item "$WORK_ITEM_ID")
 wi_type=$(echo "$feature_json" | jq -r '.fields."System.WorkItemType"')
 if [[ "$wi_type" != "Feature" ]]; then
   error "Work item is type '$wi_type', expected 'Feature'"
-  warn "Only Feature work items can be imported as AURORA specs"
+  warn "Only Feature work items can be imported as Bolt Framework specs"
   exit 1
 fi
 
@@ -470,7 +470,7 @@ echo -e "\033[0m"
 
 echo -e "\033[33mNext steps:\033[0m"
 echo "  1. Review generated spec in $OUTPUT_PATH"
-echo "  2. Refine with AURORA agents:"
-echo -e "     \033[36m@Aurora Feature review $OUTPUT_PATH\033[0m"
-echo -e "     \033[36m@Aurora Plan verify implementation plan\033[0m"
+echo "  2. Refine with Bolt Framework agents:"
+echo -e "     \033[36m@Bolt Framework Feature review $OUTPUT_PATH\033[0m"
+echo -e "     \033[36m@Bolt Framework Plan verify implementation plan\033[0m"
 echo "  3. Verify constitution compliance"

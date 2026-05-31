@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# AURORA-IA / AI-DLC - Project Initialization Script v2.0
+# Bolt Framework / AI-DLC - Project Initialization Script v2.0
 # =============================================================================
 
 set -e
@@ -24,7 +24,7 @@ AUTO_PROFILE=""
 OUTPUT_DIR=""
 PROJECT_TYPE=""
 SOURCE_DIR=""
-AURORA_ROOT=""
+BOLT_ROOT=""
 
 # Logging functions
 log_info() { echo -e "${BLUE}[INFO]${NC} $1"; }
@@ -151,50 +151,50 @@ copy_legacy_source() {
     fi
 }
 
-copy_aurora_framework() {
-    log_step "Copying complete AURORA-IA framework..."
+copy_bolt_framework() {
+    log_step "Copying complete Bolt Framework framework..."
     
-    AURORA_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
-    log_info "AURORA root detected: $AURORA_ROOT"
+    BOLT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
+    log_info "Bolt Framework root detected: $BOLT_ROOT"
     
     log_info "Copying complete .github directory..."
-    if [ -d "$AURORA_ROOT/.github" ]; then
+    if [ -d "$BOLT_ROOT/.github" ]; then
         rm -rf "$OUTPUT_DIR/.github" 2>/dev/null || true
-        cp -r "$AURORA_ROOT/.github" "$OUTPUT_DIR/" 2>/dev/null || true
+        cp -r "$BOLT_ROOT/.github" "$OUTPUT_DIR/" 2>/dev/null || true
         log_success "Complete .github directory copied successfully"
     fi
     
     log_info "Copying complete .boltf directory..."
-    if [ -d "$AURORA_ROOT/.boltf" ]; then
+    if [ -d "$BOLT_ROOT/.boltf" ]; then
         rm -rf "$OUTPUT_DIR/.boltf" 2>/dev/null || true
-        cp -r "$AURORA_ROOT/.boltf" "$OUTPUT_DIR/" 2>/dev/null || true
+        cp -r "$BOLT_ROOT/.boltf" "$OUTPUT_DIR/" 2>/dev/null || true
         log_success ".boltf directory copied"
     fi
     
     # Copy framework documentation files from .boltf to project root
-    log_info "Copying AURORA framework documentation..."
-    if [ -f "$AURORA_ROOT/.boltf/README.md" ]; then
-        cp "$AURORA_ROOT/.boltf/README.md" "$OUTPUT_DIR/" 2>/dev/null || true
+    log_info "Copying Bolt Framework framework documentation..."
+    if [ -f "$BOLT_ROOT/.boltf/README.md" ]; then
+        cp "$BOLT_ROOT/.boltf/README.md" "$OUTPUT_DIR/" 2>/dev/null || true
         log_info "README.md copied to project root"
     fi
-    if [ -f "$AURORA_ROOT/.boltf/CHANGELOG.md" ]; then
-        cp "$AURORA_ROOT/.boltf/CHANGELOG.md" "$OUTPUT_DIR/" 2>/dev/null || true
+    if [ -f "$BOLT_ROOT/.boltf/CHANGELOG.md" ]; then
+        cp "$BOLT_ROOT/.boltf/CHANGELOG.md" "$OUTPUT_DIR/" 2>/dev/null || true
         log_info "CHANGELOG.md copied to project root"
     fi
-    if [ -f "$AURORA_ROOT/.boltf/CONTRIBUTING.md" ]; then
-        cp "$AURORA_ROOT/.boltf/CONTRIBUTING.md" "$OUTPUT_DIR/" 2>/dev/null || true
+    if [ -f "$BOLT_ROOT/.boltf/CONTRIBUTING.md" ]; then
+        cp "$BOLT_ROOT/.boltf/CONTRIBUTING.md" "$OUTPUT_DIR/" 2>/dev/null || true
         log_info "CONTRIBUTING.md copied to project root"
     fi
-    if [ -f "$AURORA_ROOT/.boltf/LICENSE" ]; then
-        cp "$AURORA_ROOT/.boltf/LICENSE" "$OUTPUT_DIR/" 2>/dev/null || true
+    if [ -f "$BOLT_ROOT/.boltf/LICENSE" ]; then
+        cp "$BOLT_ROOT/.boltf/LICENSE" "$OUTPUT_DIR/" 2>/dev/null || true
         log_info "LICENSE copied to project root"
     fi
-    if [ -f "$AURORA_ROOT/.boltf/PENDIENTES.md" ]; then
-        cp "$AURORA_ROOT/.boltf/PENDIENTES.md" "$OUTPUT_DIR/" 2>/dev/null || true
+    if [ -f "$BOLT_ROOT/.boltf/PENDIENTES.md" ]; then
+        cp "$BOLT_ROOT/.boltf/PENDIENTES.md" "$OUTPUT_DIR/" 2>/dev/null || true
         log_info "PENDIENTES.md copied to project root"
     fi
     
-    log_success "AURORA framework copied successfully"
+    log_success "Bolt Framework framework copied successfully"
 }
 
 show_usage() {
@@ -279,7 +279,7 @@ fi
 main() {
     print_banner
     
-    log_info "Initializing AURORA-IA project..."
+    log_info "Initializing Bolt Framework project..."
     log_info "  Output Directory: $OUTPUT_DIR"
     if [ "$PROJECT_TYPE" = "green" ]; then
         log_info "  Project Type: $PROJECT_TYPE - Greenfield New Project"
@@ -305,13 +305,13 @@ main() {
     # Create directory structure
     create_project_structure
     
-    # Copy AURORA framework
-    copy_aurora_framework
+    # Copy Bolt Framework framework
+    copy_bolt_framework
     
     # Copy legacy source if brownfield
     copy_legacy_source
     
-    log_success "AURORA-IA project initialization completed!"
+    log_success "Bolt Framework project initialization completed!"
     log_info "Project created in: $OUTPUT_DIR"
     log_info ""
     log_info "Configuration used:"
@@ -331,7 +331,7 @@ main() {
     else
         log_info "5. Place RFP, emails, initial docs in origin/ directory"
     fi
-    log_info "6. Use AURORA scripts from .boltf/scripts/"
+    log_info "6. Use Bolt Framework scripts from .boltf/scripts/"
 }
 
 # Run main function

@@ -38,7 +38,7 @@ Implementar **flujos de control iterativos** en el agente `@Bolt Constitution` y
 - `Incremental Save Algorithm` - Pseudocódigo de guardado after-each-decision
 - `Atomic Save Implementation` - Estrategia de escritura sin corrupción
 
-**Ubicación**: [.boltf/analysis/decision-tracking-system.md](f:/repos/aurora-ai/.boltf/analysis/decision-tracking-system.md)
+**Ubicación**: [.boltf/analysis/decision-tracking-system.md](f:/repos/bolt-framework/.boltf/analysis/decision-tracking-system.md)
 
 ---
 
@@ -176,7 +176,7 @@ FOR EACH decision:
    - Prueba de recovery capability
    - Simulación de crash y restart
 
-**Ubicación**: [.github/agents/bolt-constitution.agent.md](f:/repos/aurora-ai/.github/agents/bolt-constitution.agent.md)
+**Ubicación**: [.github/agents/bolt-constitution.agent.md](f:/repos/bolt-framework/.github/agents/bolt-constitution.agent.md)
 
 ---
 
@@ -224,7 +224,7 @@ def ask_and_save(question, state_file):
 
 - "**Resuming interrupted refinement** - detect and restore from `refinement-state.yaml`"
 
-**Ubicación**: [.claude/skills/skill-bolt-setup-constitution/SKILL.md](f:/repos/aurora-ai/.claude/skills/skill-bolt-setup-constitution/SKILL.md)
+**Ubicación**: [.claude/skills/skill-bolt-setup-constitution/SKILL.md](f:/repos/bolt-framework/.claude/skills/skill-bolt-setup-constitution/SKILL.md)
 
 ---
 

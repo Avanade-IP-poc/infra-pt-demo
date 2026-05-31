@@ -1,5 +1,5 @@
 #!/bin/bash
-# AURORA Test Generator - Intelligent test suite generation
+# Bolt Framework Test Generator - Intelligent test suite generation
 
 set -e
 
@@ -51,7 +51,7 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-echo "🧪 AURORA Test Generator"
+echo "🧪 Bolt Framework Test Generator"
 echo "======================="
 
 # Read constitution for test requirements
@@ -146,7 +146,7 @@ using FluentAssertions;
 using System.Net;
 using System.Net.Http.Json;
 
-namespace Aurora.Api.Tests.Controllers
+namespace Bolt Framework.Api.Tests.Controllers
 {
     public class ${controller_name}Tests : IClassFixture<WebApplicationFactory<Program>>
     {

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # =============================================================================
-# AURORA-IA / AI-DLC - Update Agent Context Script
+# Bolt Framework / AI-DLC - Update Agent Context Script
 # =============================================================================
 # Validates and synchronizes relationships between:
 # - Prompts (.github/prompts/)

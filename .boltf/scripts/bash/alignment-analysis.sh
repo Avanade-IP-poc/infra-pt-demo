@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# alignment-analysis.sh - AURORA-IA Alignment & Gap Analysis
+# alignment-analysis.sh - Bolt Framework Alignment & Gap Analysis
 # Analyzes alignment between RFP, legacy code, requirements, and implementation
 #
 # Usage:
@@ -10,7 +10,7 @@
 #   --full          Complete alignment analysis
 #   --rfp           RFP coverage analysis only
 #   --legacy        Legacy code migration analysis
-#   --methodology   AURORA methodology compliance
+#   --methodology   Bolt Framework methodology compliance
 #   --gaps          Gap analysis summary
 #   --progress      Progress tracking over time
 #   --baseline      Create baseline for future comparisons
@@ -71,7 +71,7 @@ print_info() { echo -e "${CYAN}ℹ️  $1${NC}"; }
 
 show_help() {
     cat << EOF
-AURORA-IA Alignment & Gap Analysis
+Bolt Framework Alignment & Gap Analysis
 
 Usage: $(basename "$0") [options]
 
@@ -79,7 +79,7 @@ Options:
   --full          Complete alignment analysis (all dimensions)
   --rfp           RFP coverage analysis only
   --legacy        Legacy code migration analysis
-  --methodology   AURORA methodology compliance
+  --methodology   Bolt Framework methodology compliance
   --gaps          Gap analysis summary
   --progress      Progress tracking over time
   --baseline      Create baseline for future comparisons
@@ -609,16 +609,16 @@ analyze_gaps() {
     
     # Generate recommendations
     if [[ ${ALIGNMENT_SCORES[rfp]:-0} -lt 50 ]]; then
-        RECOMMENDATIONS+=("Create feature specs for uncovered RFP items|/aurora.feature|High")
+        RECOMMENDATIONS+=("Create feature specs for uncovered RFP items|/bolt.feature|High")
     fi
     if [[ ${ALIGNMENT_SCORES[legacy]:-0} -lt 50 && $HAS_LEGACY == true ]]; then
-        RECOMMENDATIONS+=("Analyze and migrate legacy functions|/aurora.analyze|High")
+        RECOMMENDATIONS+=("Analyze and migrate legacy functions|/bolt.analyze|High")
     fi
     if [[ ${ALIGNMENT_SCORES[methodology]:-0} -lt 60 ]]; then
-        RECOMMENDATIONS+=("Complete missing methodology artifacts|/aurora.specify|Medium")
+        RECOMMENDATIONS+=("Complete missing methodology artifacts|/bolt.specify|Medium")
     fi
     if [[ ${ALIGNMENT_SCORES[testing]:-0} -lt 80 ]]; then
-        RECOMMENDATIONS+=("Improve test coverage|/aurora.test|High")
+        RECOMMENDATIONS+=("Improve test coverage|/bolt.test|High")
     fi
 }
 
@@ -627,7 +627,7 @@ analyze_gaps() {
 # ============================================================================
 
 generate_summary_report() {
-    print_header "🎯 AURORA-IA Alignment Analysis"
+    print_header "🎯 Bolt Framework Alignment Analysis"
     
     echo -e "${BOLD}Project Type:${NC} $PROJECT_TYPE | ${BOLD}Scope:${NC} $PROJECT_SCOPE"
     [[ -n "$MIGRATION_STRATEGY" ]] && echo -e "${BOLD}Migration Strategy:${NC} $MIGRATION_STRATEGY"
@@ -652,7 +652,7 @@ generate_summary_report() {
         case $key in
             rfp) label="RFP Coverage" ;;
             legacy) label="Legacy Migration" ;;
-            methodology) label="AURORA Methodology" ;;
+            methodology) label="Bolt Framework Methodology" ;;
             testing) label="Testing" ;;
             documentation) label="Documentation" ;;
             infrastructure) label="Infrastructure" ;;
@@ -749,7 +749,7 @@ generate_full_report() {
         echo ""
     fi
     
-    print_section "📋 AURORA Methodology Compliance"
+    print_section "📋 Bolt Framework Methodology Compliance"
     
     echo "| Phase | Artifacts | Compliance |"
     echo "|-------|-----------|------------|"
