@@ -59,10 +59,10 @@ Show user a detailed plan with item counts:
 
 ### 🎯 Core Skills (4 items, always included)
 
-- **bolt-framework** → `.github/skills/bolt-framework/`
-- **bolt-adr** → `.github/skills/bolt-adr/`
-- **new-skill** → `.github/skills/new-skill/` (already in .github)
-- **markdown-formatting** → `.github/skills/markdown-formatting/` (already in .github)
+- **bolt-framework** → `.claude/skills/bolt-framework/`
+- **bolt-adr** → `.claude/skills/bolt-adr/`
+- **new-skill** → `.claude/skills/new-skill/` (already in .github)
+- **markdown-formatting** → `.claude/skills/markdown-formatting/` (already in .github)
 
 ### 🧩 Scope Resources ([X] total items)
 
@@ -70,7 +70,7 @@ Show user a detailed plan with item counts:
 
 **Local Files** ([M] items - handled by script):
 
-- `backend-testing-strategy` → `.github/skills/backend-testing-strategy/`
+- `backend-testing-strategy` → `.claude/skills/backend-testing-strategy/`
 - `backend-mcp-settings` → `.vscode/settings.json`
 
 **Context7 Downloads** ([P] items - requires MCP):
@@ -412,7 +412,7 @@ Present complete provisioning results:
 
 ### Files Created
 
-**Skills** (.github/skills/):
+**Skills** (.claude/skills/):
 
 - [List all skill folders]
 
@@ -444,7 +444,7 @@ Run these commands to verify:
 
 ```bash
 # List provisioned skills
-ls .github/skills/
+ls .claude/skills/
 
 # List prompts
 ls .github/prompts/
@@ -460,7 +460,7 @@ cat .boltf/memory/provision-report.md
 ### Next Steps
 
 1. **Review constitution**: Open `.boltf/memory/constitution.md`
-2. **Explore skills**: Browse `.github/skills/` folders
+2. **Explore skills**: Browse `.claude/skills/` folders
 3. **Start building**: Use `@Bolt Framework` to begin AI-DLC
 4. **Create features**: Use `@Bolt Feature` to define first feature
 

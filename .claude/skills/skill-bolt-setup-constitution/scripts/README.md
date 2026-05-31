@@ -41,8 +41,8 @@ cd my-bolt-project
 
 ```bash
 cd my-bolt-project
-chmod +x .github/skills/skill-bolt-setup-constitution/scripts/merge-refinement-yamls.sh
-.github/skills/skill-bolt-setup-constitution/scripts/merge-refinement-yamls.sh . --force
+chmod +x .claude/skills/skill-bolt-setup-constitution/scripts/merge-refinement-yamls.sh
+.claude/skills/skill-bolt-setup-constitution/scripts/merge-refinement-yamls.sh . --force
 ```
 
 #### Python
@@ -65,7 +65,7 @@ python merge_refinement_yamls.py [PROJECT_PATH] [--force]
 
 ```bash
 cd my-bolt-project
-python .github/skills/skill-bolt-setup-constitution/scripts/merge_refinement_yamls.py .
+python .claude/skills/skill-bolt-setup-constitution/scripts/merge_refinement_yamls.py .
 ```
 
 ### 2. Sort Constitution by Criticality

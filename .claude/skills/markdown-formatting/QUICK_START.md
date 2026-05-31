@@ -165,7 +165,7 @@ Add to `.vscode/settings.json`:
 
 ```bash
 # Copy template
-cp .github/skills/markdown-formatting/templates/feature-spec-template.md \
+cp .claude/skills/markdown-formatting/templates/feature-spec-template.md \
    specs/XXX-my-feature/feature.md
 
 # Edit the file
@@ -176,7 +176,7 @@ code specs/XXX-my-feature/feature.md
 
 ```bash
 # Copy template
-cp .github/skills/markdown-formatting/templates/agent-template.md \
+cp .claude/skills/markdown-formatting/templates/agent-template.md \
    .github/agents/my-agent.agent.md
 
 # Edit the file
@@ -187,7 +187,7 @@ code .github/agents/my-agent.agent.md
 
 ```bash
 # Copy template
-cp .github/skills/markdown-formatting/templates/adr-template.md \
+cp .claude/skills/markdown-formatting/templates/adr-template.md \
    docs/adrs/015-my-decision.md
 
 # Edit the file

@@ -203,7 +203,7 @@ When you need automation, execute these scripts:
 ## Supported Tools
 
 Agents use VS Code built-in tools organized in 9 toolset categories.
-See `.github/skills/bolt-framework/examples/TOOLSETS.md` for the complete reference.
+See `.claude/skills/bolt-framework/examples/TOOLSETS.md` for the complete reference.
 
 **Namespace shortcuts** (recommended):
 `search`, `execute`, `read`, `edit`, `web`, `vscode`, `agent`, `todo`, `memory`

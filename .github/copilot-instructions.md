@@ -103,23 +103,23 @@ Bolt Framework includes 31 specialized AI agents. Invoke them with `@AgentName`:
 
 ## Skills - Specialized Capabilities
 
-Bolt Framework includes specialized **skills** that are auto-discovered from `.github/skills/<name>/SKILL.md`. When working on specific tasks, Copilot automatically loads relevant skills.
+Bolt Framework includes specialized **skills** (single source for both clients) auto-discovered from `.claude/skills/<name>/SKILL.md`. When working on specific tasks, the AI automatically loads relevant skills.
 
 ### Available Skills
 
 | Skill                                                      | Domain                        | Use When                                                                                         |
 | ---------------------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------ |
-| [bolt-framework](.github/skills/bolt-framework/)           | Bolt Framework Methodology    | Working on Bolt Framework projects, managing lifecycle                                           |
-| [bolt-adr](.github/skills/bolt-adr/)                       | Architecture Decision Records | Documenting architectural decisions, technology selections, or design patterns using MADR format |
-| [new-skill](.github/skills/new-skill/)                     | Skill Creation                | Creating or improving Copilot skills                                                             |
-| [markdown-formatting](.github/skills/markdown-formatting/) | Markdown Best Practices       | Writing or editing any Markdown document (.md, .agent.md, .prompt.md)                            |
-| [interface-design](.github/skills/interface-design/)       | Interface Design              | Building dashboards, admin panels, SaaS apps, tools, settings pages, and data interfaces         |
-| [mermaid-creator](.github/skills/mermaid-creator/)         | Mermaid Diagrams              | Creating any diagram — flowchart, sequence, class, state, ER, C4, and more                       |
-| [mermaid-diagrams](.github/skills/mermaid-diagrams/)       | Mermaid Diagrams (alt)        | Alternative Mermaid reference with class, sequence, flowchart, ERD, and C4 examples              |
-| [tailwind-design-system](.github/skills/tailwind-design-system/) | Tailwind Design System  | Building scalable design systems with Tailwind CSS v4, design tokens, component libraries        |
-| [skill-tdd-red-green-refactor](.github/skills/skill-tdd-red-green-refactor/) | TDD Discipline | Driving development through the Red-Green-Refactor cycle |
-| [skill-playwright-e2e](.github/skills/skill-playwright-e2e/) | Playwright E2E | Browser automation, Page Object Model, E2E fixtures |
-| [bolt-ui-mockups](.github/skills/bolt-ui-mockups/)         | UI Mockups (low-fi)           | Generating/refining static low-fi HTML mockups in DISCOVERY before planning                       |
+| [bolt-framework](../.claude/skills/bolt-framework/)           | Bolt Framework Methodology    | Working on Bolt Framework projects, managing lifecycle                                           |
+| [bolt-adr](../.claude/skills/bolt-adr/)                       | Architecture Decision Records | Documenting architectural decisions, technology selections, or design patterns using MADR format |
+| [skill-creator](../.claude/skills/skill-creator/)             | Skill Creation                | Creating or improving Agent Skills                                                               |
+| [markdown-formatting](../.claude/skills/markdown-formatting/) | Markdown Best Practices       | Writing or editing any Markdown document (.md, .agent.md, .prompt.md)                            |
+| [interface-design](../.claude/skills/interface-design/)       | Interface Design              | Building dashboards, admin panels, SaaS apps, tools, settings pages, and data interfaces         |
+| [mermaid-creator](../.claude/skills/mermaid-creator/)         | Mermaid Diagrams              | Creating any diagram — flowchart, sequence, class, state, ER, C4, and more                       |
+| [mermaid-diagrams](../.claude/skills/mermaid-diagrams/)       | Mermaid Diagrams (alt)        | Alternative Mermaid reference with class, sequence, flowchart, ERD, and C4 examples              |
+| [tailwind-design-system](../.claude/skills/tailwind-design-system/) | Tailwind Design System  | Building scalable design systems with Tailwind CSS v4, design tokens, component libraries        |
+| [skill-tdd-red-green-refactor](../.claude/skills/skill-tdd-red-green-refactor/) | TDD Discipline | Driving development through the Red-Green-Refactor cycle |
+| [skill-playwright-e2e](../.claude/skills/skill-playwright-e2e/) | Playwright E2E | Browser automation, Page Object Model, E2E fixtures |
+| [bolt-ui-mockups](../.claude/skills/bolt-ui-mockups/)         | UI Mockups (low-fi)           | Generating/refining static low-fi HTML mockups in DISCOVERY before planning                       |
 
 ### Creating Custom Skills
 

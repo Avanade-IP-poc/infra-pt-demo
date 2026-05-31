@@ -4,7 +4,7 @@ Mecanismo de evaluación A/B para medir el beneficio de los cambios en los agent
 Bolt.
 
 Reutiliza la infraestructura `skill-creator`
-(`.github/skills/skill-creator/scripts/`) adaptada a agentes en lugar de skills.
+(`.claude/skills/skill-creator/scripts/`) adaptada a agentes en lugar de skills.
 
 ## Estructura
 
@@ -72,7 +72,7 @@ y `delta` entre `before_improvements` y `after_improvements`.
 ### 5. Visualización
 
 ```powershell
-python .github/skills/skill-creator/eval-viewer/generate_review.py `
+python .claude/skills/skill-creator/eval-viewer/generate_review.py `
   .github/evals/results/iteration-1 `
   --skill-name <agent-name> `
   --benchmark .github/evals/results/iteration-1/benchmark.json
@@ -95,5 +95,5 @@ escenario se incluyan u omitan correctamente).
 
 ## Referencias
 
-- Formato JSON detallado: `.github/skills/skill-creator/references/schemas.md`
-- Workflow completo: `.github/skills/skill-creator/SKILL.md`
+- Formato JSON detallado: `.claude/skills/skill-creator/references/schemas.md`
+- Workflow completo: `.claude/skills/skill-creator/SKILL.md`

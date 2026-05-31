@@ -38,8 +38,8 @@ Create ADRs quickly using automation scripts:
 
 **Utility scripts (skill-level):**
 
-- **Bash**: `.github/skills/bolt-adr/scripts/get-next-adr-number.sh`
-- **PowerShell**: `.github/skills/bolt-adr/scripts/Get-NextAdrNumber.ps1`
+- **Bash**: `.claude/skills/skill-bolt-adr/scripts/get-next-adr-number.sh`
+- **PowerShell**: `.claude/skills/skill-bolt-adr/scripts/Get-NextAdrNumber.ps1`
 
 See [scripts/README.md](scripts/README.md) for usage details.
 

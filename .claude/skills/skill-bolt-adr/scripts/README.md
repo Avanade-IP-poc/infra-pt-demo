@@ -15,11 +15,11 @@ Utility scripts to find the next available ADR number in a project.
 
 ```bash
 # From project root
-NUM=$(.github/skills/bolt-adr/scripts/get-next-adr-number.sh)
+NUM=$(.claude/skills/skill-bolt-adr/scripts/get-next-adr-number.sh)
 echo "Next ADR number: $NUM"
 
 # Custom ADR directory
-NUM=$(.github/skills/bolt-adr/scripts/get-next-adr-number.sh docs/decisions)
+NUM=$(.claude/skills/skill-bolt-adr/scripts/get-next-adr-number.sh docs/decisions)
 ```
 
 ### PowerShell (Windows / Cross-platform)
@@ -66,10 +66,10 @@ For scripts that need to work on any OS:
 # Auto-detect OS and use appropriate script
 if [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "win32" ]]; then
     # Windows (Git Bash)
-    NUM=$(powershell.exe -File .github/skills/bolt-adr/scripts/Get-NextAdrNumber.ps1)
+    NUM=$(powershell.exe -File .claude/skills/skill-bolt-adr/scripts/Get-NextAdrNumber.ps1)
 else
     # Linux / macOS / WSL
-    NUM=$(.github/skills/bolt-adr/scripts/get-next-adr-number.sh)
+    NUM=$(.claude/skills/skill-bolt-adr/scripts/get-next-adr-number.sh)
 fi
 ```
 
@@ -78,7 +78,7 @@ fi
 Make sure the bash script is executable:
 
 ```bash
-chmod +x .github/skills/bolt-adr/scripts/get-next-adr-number.sh
+chmod +x .claude/skills/skill-bolt-adr/scripts/get-next-adr-number.sh
 ```
 
 ## Error Handling
@@ -91,7 +91,7 @@ chmod +x .github/skills/bolt-adr/scripts/get-next-adr-number.sh
 
 ```bash
 # Test bash script
-.github/skills/bolt-adr/scripts/get-next-adr-number.sh
+.claude/skills/skill-bolt-adr/scripts/get-next-adr-number.sh
 # Expected output: 0001 (if no ADRs exist)
 
 # Test PowerShell script

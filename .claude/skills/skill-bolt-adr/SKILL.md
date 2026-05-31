@@ -85,5 +85,5 @@ Types: `graph`, `sequenceDiagram`, `classDiagram`, `erDiagram`
 ## References
 
 - [MADR Format](https://adr.github.io/madr/)
-- Templates: `.github/skills/bolt-adr/templates/`
-- Scripts: `.github/skills/bolt-adr/scripts/`
+- Templates: `.claude/skills/skill-bolt-adr/templates/`
+- Scripts: `.claude/skills/skill-bolt-adr/scripts/`
