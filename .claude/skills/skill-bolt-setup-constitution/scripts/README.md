@@ -23,7 +23,7 @@ Automatically merge all scope refinement files into a single `merged-refinement.
 
 ```powershell
 cd my-bolt-project
-.\.github\skills\skill-bolt-setup-constitution\scripts\Merge-RefinementYamls.ps1 -ProjectPath .
+.\.claude\skills\skill-bolt-setup-constitution\scripts\Merge-RefinementYamls.ps1 -ProjectPath .
 ```
 
 #### Bash

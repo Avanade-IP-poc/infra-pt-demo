@@ -6,9 +6,9 @@
     "validate:scopes:sh": "bash ./.boltf/scripts/bash/validate-scopes.sh --check",
     "python:bootstrap": "pwsh -File ./.boltf/scripts/powershell/Bootstrap-Python.ps1",
     "python:bootstrap:force": "pwsh -File ./.boltf/scripts/powershell/Bootstrap-Python.ps1 -Force",
-    "skill:validate": "pwsh -File ./Invoke-PythonScript.ps1 .github/skills/skill-creator/scripts/quick_validate.py",
-    "skill:package": "pwsh -File ./Invoke-PythonScript.ps1 .github/skills/skill-creator/scripts/package_skill.py",
-    "skill:validate-all": "pwsh -c \"Get-ChildItem .github/skills -Directory | ForEach-Object { Write-Host 'Validating:' $_.Name -ForegroundColor Cyan; ./Invoke-PythonScript.ps1 .github/skills/skill-creator/scripts/quick_validate.py $_.FullName }\""
+    "skill:validate": "pwsh -File ./Invoke-PythonScript.ps1 .claude/skills/skill-creator/scripts/quick_validate.py",
+    "skill:package": "pwsh -File ./Invoke-PythonScript.ps1 .claude/skills/skill-creator/scripts/package_skill.py",
+    "skill:validate-all": "pwsh -c \"Get-ChildItem .claude/skills -Directory | ForEach-Object { Write-Host 'Validating:' $_.Name -ForegroundColor Cyan; ./Invoke-PythonScript.ps1 .claude/skills/skill-creator/scripts/quick_validate.py $_.FullName }\""
   },
   "devDependencies": {
     "markdownlint-cli": "^0.47.0",

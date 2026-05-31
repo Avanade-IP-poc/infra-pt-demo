@@ -88,13 +88,13 @@ This command will:
 **Windows:**
 
 ```powershell
-.\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\quick_validate.py my-skill\
+.\Invoke-PythonScript.ps1 .claude\skills\skill-creator\scripts\quick_validate.py my-skill\
 ```
 
 **Linux/macOS:**
 
 ```bash
-./.bolt-venv/bin/python .github/skills/skill-creator/scripts/quick_validate.py my-skill/
+./.bolt-venv/bin/python .claude/skills/skill-creator/scripts/quick_validate.py my-skill/
 ```
 
 #### Option B: Manual Activation
@@ -106,8 +106,8 @@ This command will:
 .\.bolt-venv\Scripts\Activate.ps1
 
 # Run scripts
-python .github\skills\skill-creator\scripts\quick_validate.py my-skill\
-python .github\skills\skill-creator\scripts\package_skill.py my-skill\ .\dist\
+python .claude\skills\skill-creator\scripts\quick_validate.py my-skill\
+python .claude\skills\skill-creator\scripts\package_skill.py my-skill\ .\dist\
 
 # Deactivate when done
 deactivate
@@ -120,8 +120,8 @@ deactivate
 source .bolt-venv/bin/activate
 
 # Run scripts
-python .github/skills/skill-creator/scripts/quick_validate.py my-skill/
-python .github/skills/skill-creator/scripts/package_skill.py my-skill/ ./dist/
+python .claude/skills/skill-creator/scripts/quick_validate.py my-skill/
+python .claude/skills/skill-creator/scripts/package_skill.py my-skill/ ./dist/
 
 # Deactivate
 deactivate
@@ -146,13 +146,13 @@ deactivate
 #### Basic Skill Validation (No AI)
 
 ```powershell
-.\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\quick_validate.py .github\skills\my-skill\
+.\Invoke-PythonScript.ps1 .claude\skills\skill-creator\scripts\quick_validate.py .claude\skills\my-skill\
 ```
 
 #### Package Skill for Distribution
 
 ```powershell
-.\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\package_skill.py .github\skills\my-skill\ .\dist\
+.\Invoke-PythonScript.ps1 .claude\skills\skill-creator\scripts\package_skill.py .claude\skills\my-skill\ .\dist\
 ```
 
 #### AI-Powered Skill Optimization (Requires Anthropic API Key)
@@ -162,14 +162,14 @@ deactivate
 $env:ANTHROPIC_API_KEY = "sk-ant-..."
 
 # Run evaluation
-.\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\run_eval.py `
+.\Invoke-PythonScript.ps1 .claude\skills\skill-creator\scripts\run_eval.py `
     --eval-set evals\my-skill.json `
-    --skill-path .github\skills\my-skill\
+    --skill-path .claude\skills\my-skill\
 
 # Optimize description
-.\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\run_loop.py `
+.\Invoke-PythonScript.ps1 .claude\skills\skill-creator\scripts\run_loop.py `
     --eval-set evals\my-skill.json `
-    --skill-path .github\skills\my-skill\ `
+    --skill-path .claude\skills\my-skill\ `
     --max-iterations 5
 ```
 
@@ -245,13 +245,13 @@ jobs:
       - name: Bootstrap Python Environment
         run: |
           source .boltf/scripts/bash/bootstrap-python.sh --skip-install
-          pip install -r .github/skills/skill-creator/requirements.txt
+          pip install -r .claude/skills/skill-creator/requirements.txt
 
       - name: Validate Skills
         run: |
           source .bolt-venv/bin/activate
-          for skill in .github/skills/*/; do
-            python .github/skills/skill-creator/scripts/quick_validate.py "$skill"
+          for skill in .claude/skills/*/; do
+            python .claude/skills/skill-creator/scripts/quick_validate.py "$skill"
           done
 ```
 
@@ -276,7 +276,7 @@ steps:
 
   - script: |
       source .bolt-venv/bin/activate
-      python .github/skills/skill-creator/scripts/quick_validate.py .github/skills/my-skill/
+      python .claude/skills/skill-creator/scripts/quick_validate.py .claude/skills/my-skill/
     displayName: 'Validate Skills'
 ```
 
@@ -295,7 +295,7 @@ project-root/
 │   └── bash/
 │       └── bootstrap-python.sh    # Setup script (Linux/macOS)
 │
-├── .github/skills/
+├── .claude/skills/
 │   └── skill-creator/
 │       ├── requirements.txt       # Python dependencies
 │       └── scripts/               # Python utilities
@@ -340,6 +340,6 @@ A: Yes, add them to the appropriate `requirements.txt` and rerun bootstrap.
 
 **Next Steps:**
 
-- 📚 [Skill Creator Documentation](../.github/skills/skill-creator/SKILL.md)
+- 📚 [Skill Creator Documentation](../.claude/skills/skill-creator/SKILL.md)
 - 🤖 [Agent Documentation](../.github/agents/README.md)
 - 📖 [Bolt Framework Guide](../README.md)

@@ -15,7 +15,7 @@ or editing content.
   readability best practices for all `.md`, `.agent.md`, and `.prompt.md` files.
 
   ```text
-  read_file: f:\repos\train-bolt-framework-greenfield\.github\skills\markdown-formatting\SKILL.md
+  read_file: f:\repos\train-bolt-framework-greenfield\.claude\skills\markdown-formatting\SKILL.md
   ```
 
 ### Load When Diagrams Are Involved
@@ -27,7 +27,7 @@ relationships, bounded contexts, or any visual architecture representation, also
   specs, entity classes, ASCII art, or free-text descriptions.
 
   ```text
-  read_file: f:\repos\train-bolt-framework-greenfield\.github\skills\bolt-datamodel-diagramer\SKILL.md
+  read_file: f:\repos\train-bolt-framework-greenfield\.claude\skills\bolt-datamodel-diagramer\SKILL.md
   ```
 
   Triggers: `translate into mermaid`, `document data model`, `draw context map`,

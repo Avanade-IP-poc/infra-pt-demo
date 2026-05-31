@@ -367,7 +367,7 @@ Bolt Framework includes **optional** Python-based scripts for advanced features:
 .\.boltf\scripts\powershell\Bootstrap-Python.ps1
 
 # Run Python scripts
-.\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\quick_validate.py my-skill\
+.\Invoke-PythonScript.ps1 .claude\skills\skill-creator\scripts\quick_validate.py my-skill\
 ```
 
 **Linux/macOS (Bash):**
@@ -380,7 +380,7 @@ source .boltf/scripts/bash/bootstrap-python.sh
 source .bolt-venv/bin/activate
 
 # Run Python scripts
-python .github/skills/skill-creator/scripts/quick_validate.py my-skill/
+python .claude/skills/skill-creator/scripts/quick_validate.py my-skill/
 ```
 
 ### Requirements

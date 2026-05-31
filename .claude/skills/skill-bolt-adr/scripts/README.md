@@ -26,11 +26,11 @@ NUM=$(.claude/skills/skill-bolt-adr/scripts/get-next-adr-number.sh docs/decision
 
 ```powershell
 # From project root
-$Num = .\.github\skills\bolt-adr\scripts\Get-NextAdrNumber.ps1
+$Num = .\.claude\skills\bolt-adr\scripts\Get-NextAdrNumber.ps1
 Write-Host "Next ADR number: $Num"
 
 # Custom ADR directory
-$Num = .\.github\skills\bolt-adr\scripts\Get-NextAdrNumber.ps1 -AdrDirectory "docs/decisions"
+$Num = .\.claude\skills\bolt-adr\scripts\Get-NextAdrNumber.ps1 -AdrDirectory "docs/decisions"
 ```
 
 ## How It Works
@@ -95,7 +95,7 @@ chmod +x .claude/skills/skill-bolt-adr/scripts/get-next-adr-number.sh
 # Expected output: 0001 (if no ADRs exist)
 
 # Test PowerShell script
-.\.github\skills\bolt-adr\scripts\Get-NextAdrNumber.ps1
+.\.claude\skills\bolt-adr\scripts\Get-NextAdrNumber.ps1
 # Expected output: 0001 (if no ADRs exist)
 ```
 

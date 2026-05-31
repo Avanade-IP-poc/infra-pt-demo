@@ -104,14 +104,14 @@ $VenvPath = Join-Path $ProjectRoot ".bolt-venv"
 ✅ **Verificado - requirements.txt usa paths relativos:**
 
 ```bash
-.github/skills/skill-creator/requirements.txt
+.claude/skills/skill-creator/requirements.txt
 ```
 
 **Funcionan porque:**
 
 - Bootstrap-Python.ps1 ejecuta desde raíz del proyecto destino
 - Paths son relativos a `$ProjectRoot` (línea 27 de Bootstrap-Python.ps1)
-- `.github/skills/...` existe en el proyecto destino después de Init.ps1
+- `.claude/skills/...` existe en el proyecto destino después de Init.ps1
 
 ## 🧪 Prueba de Concepto
 
@@ -130,11 +130,11 @@ cd C:\projects\my-ecommerce
 
 # Resultado esperado:
 # - .bolt-venv se crea en C:\projects\my-ecommerce\.bolt-venv\
-# - Packages instalados desde C:\projects\my-ecommerce\.github\skills\skill-creator\requirements.txt
+# - Packages instalados desde C:\projects\my-ecommerce\.claude\skills\skill-creator\requirements.txt
 # - Python Scripts ejecutables desde C:\projects\my-ecommerce\
 
 # Paso 4: Usuario ejecuta scripts Python
-.\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\quick_validate.py .github\skills\skill-creator\
+.\Invoke-PythonScript.ps1 .claude\skills\skill-creator\scripts\quick_validate.py .claude\skills\skill-creator\
 ```
 
 ## ✅ Checklist de Validación
@@ -186,14 +186,14 @@ cd C:\projects\my-ecommerce
    Test-Path .\Invoke-PythonScript.ps1          # Debe existir
    Test-Path .\.boltf\scripts\powershell\Bootstrap-Python.ps1  # Debe existir
    Test-Path .\.boltf\scripts\powershell\Test-PythonEnvironment.ps1  # Debe existir
-   Test-Path .\.github\skills\skill-creator\requirements.txt    # Debe existir
+   Test-Path .\.claude\skills\skill-creator\requirements.txt    # Debe existir
    Test-Path .\docs\python-integration.md       # Debe existir
    ```
 
 3. **Validar ejecución de scripts:**
 
 ```powershell
-   .\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\quick_validate.py .github\skills\skill-creator\
+   .\Invoke-PythonScript.ps1 .claude\skills\skill-creator\scripts\quick_validate.py .claude\skills\skill-creator\
 ```
 
 ## ✅ Conclusión

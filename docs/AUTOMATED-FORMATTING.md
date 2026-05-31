@@ -92,7 +92,7 @@ Edit `.vscode/settings.json`:
 ## 📋 Active Markdownlint Rules
 
 See full configuration at:
-`.github/skills/markdown-formatting/.markdownlint.json`
+`.claude/skills/markdown-formatting/.markdownlint.json`
 
 Key rules:
 
@@ -142,4 +142,4 @@ Check in `.vscode/settings.json`:
 
 **Configured by**: Bolt Framework AI Assistant
 **Date**: 2026-02-13
-**Skill**: [markdown-formatting](.github/skills/markdown-formatting/)
+**Skill**: [markdown-formatting](.claude/skills/markdown-formatting/)

@@ -128,7 +128,7 @@ Use the provided merge scripts to automatically combine all refinement files:
 
 ```powershell
 # From project root
-.\.github\skills\skill-bolt-setup-constitution\scripts\Merge-RefinementYamls.ps1 -ProjectPath . [-Force]
+.\.claude\skills\skill-bolt-setup-constitution\scripts\Merge-RefinementYamls.ps1 -ProjectPath . [-Force]
 ```
 
 **Bash:**

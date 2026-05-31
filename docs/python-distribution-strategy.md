@@ -32,7 +32,7 @@ Esta estrategia permite distribuir Bolt Framework con scripts Python **sin reque
 │  .boltf/scripts/powershell/                                │
 │  └── Bootstrap-Python.ps1     ← Copiado aquí, ejecuta aquí│
 │                                                             │
-│  .github/skills/                                            │
+│  .claude/skills/                                            │
 │  └── skill-creator/                                         │
 │      ├── requirements.txt     ← Copiado aquí               │
 │      └── scripts/*.py         ← Copiados aquí              │
@@ -59,7 +59,7 @@ aurora-ai/
 │   └── bash/
 │       └── bootstrap-python.sh             # ✨ Setup automático (Linux/macOS)
 │
-├── 📁 .github/skills/skill-creator/
+├── 📁 .claude/skills/skill-creator/
 │   ├── requirements.txt                    # ✨ Dependencias Python
 │   └── scripts/                            # Scripts Python funcionales
 │       ├── quick_validate.py               # Validación (NO requiere IA)
@@ -123,14 +123,14 @@ source .boltf/scripts/bash/bootstrap-python.sh
 
 ```powershell
 # Opción A: Wrapper conveniente
-.\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\quick_validate.py my-skill\
+.\Invoke-PythonScript.ps1 .claude\skills\skill-creator\scripts\quick_validate.py my-skill\
 
 # Opción B: npm scripts
 npm run skill:validate my-skill\
 
 # Opción C: Activación manual
 .\.bolt-venv\Scripts\Activate.ps1
-python .github\skills\skill-creator\scripts\quick_validate.py my-skill\
+python .claude\skills\skill-creator\scripts\quick_validate.py my-skill\
 deactivate
 ```
 
@@ -158,7 +158,7 @@ deactivate
 #### ✅ Validación de Skills
 
 ```powershell
-npm run skill:validate .github\skills\my-skill\
+npm run skill:validate .claude\skills\my-skill\
 ```
 
 **Uso:** Validar estructura de SKILL.md antes de commit
@@ -166,7 +166,7 @@ npm run skill:validate .github\skills\my-skill\
 #### 📦 Empaquetado
 
 ```powershell
-npm run skill:package .github\skills\my-skill\ .\dist\
+npm run skill:package .claude\skills\my-skill\ .\dist\
 ```
 
 **Uso:** Crear `.skill` distributable
@@ -177,9 +177,9 @@ npm run skill:package .github\skills\my-skill\ .\dist\
 
 ```powershell
 $env:ANTHROPIC_API_KEY = "sk-ant-..."
-.\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\run_eval.py `
+.\Invoke-PythonScript.ps1 .claude\skills\skill-creator\scripts\run_eval.py `
     --eval-set evals\my-skill.json `
-    --skill-path .github\skills\my-skill\
+    --skill-path .claude\skills\my-skill\
 ```
 
 **Uso:** Testing de precisión de activación
@@ -187,9 +187,9 @@ $env:ANTHROPIC_API_KEY = "sk-ant-..."
 #### 🚀 Optimización Automática
 
 ```powershell
-.\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\run_loop.py `
+.\Invoke-PythonScript.ps1 .claude\skills\skill-creator\scripts\run_loop.py `
     --eval-set evals\my-skill.json `
-    --skill-path .github\skills\my-skill\ `
+    --skill-path .claude\skills\my-skill\ `
     --max-iterations 10
 ```
 
@@ -274,7 +274,7 @@ steps:
 Cada skill que requiere Python tiene su propio `requirements.txt`:
 
 ```text
-.github/skills/
+.claude/skills/
 ├── skill-creator/
 │   └── requirements.txt     # anthropic, pyyaml
 ├── skill-senior-devops/

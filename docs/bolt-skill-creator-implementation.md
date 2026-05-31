@@ -80,11 +80,11 @@ Se ha implementado exitosamente el agente **Bolt Skill Creator** que permite cre
 source .bolt-venv/bin/activate
 
 # 2. Crear estructura de skill
-mkdir -p .github/skills/my-skill
+mkdir -p .claude/skills/my-skill
 
 # 3. Ejecutar evaluation loop
 python -m scripts.run_loop \
-  --skill-path .github/skills/my-skill \
+  --skill-path .claude/skills/my-skill \
   --test-prompts tests.txt \
   --output ./workspace/iteration-1
 
@@ -229,7 +229,7 @@ Ambos scripts ahora tienen **paridad completa** en Python setup:
 ## Referencias
 
 - **Agente**: [.github/agents/bolt-skill-creator.agent.md](.github/agents/bolt-skill-creator.agent.md)
-- **Skill original**: [.github/skills/skill-creator/SKILL.md](.github/skills/skill-creator/SKILL.md)
+- **Skill original**: [.claude/skills/skill-creator/SKILL.md](.claude/skills/skill-creator/SKILL.md)
 - **Bootstrap Python (bash)**: [.boltf/scripts/bash/bootstrap-python.sh](.boltf/scripts/bash/bootstrap-python.sh)
 - **Bootstrap Python (PowerShell)**: [.boltf/scripts/powershell/Bootstrap-Python.ps1](.boltf/scripts/powershell/Bootstrap-Python.ps1)
 

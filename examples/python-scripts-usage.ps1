@@ -11,25 +11,25 @@
 # ─── Skill Validation (No AI, No API Key) ───────────────────────────────────
 
 # Validate a single skill
-.\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\quick_validate.py .github\skills\my-skill\
+.\Invoke-PythonScript.ps1 .claude\skills\skill-creator\scripts\quick_validate.py .claude\skills\my-skill\
 
 # Validate all skills
-Get-ChildItem .github\skills -Directory | ForEach-Object {
+Get-ChildItem .claude\skills -Directory | ForEach-Object {
     Write-Host "`nValidating: $($_.Name)" -ForegroundColor Cyan
-    .\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\quick_validate.py $_.FullName
+    .\Invoke-PythonScript.ps1 .claude\skills\skill-creator\scripts\quick_validate.py $_.FullName
 }
 
 # ─── Skill Packaging (No AI, No API Key) ────────────────────────────────────
 
 # Package a single skill
-.\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\package_skill.py .github\skills\my-skill\ .\dist\
+.\Invoke-PythonScript.ps1 .claude\skills\skill-creator\scripts\package_skill.py .claude\skills\my-skill\ .\dist\
 
 # Package all skills
 $distDir = ".\dist"
 if (-not (Test-Path $distDir)) { New-Item -ItemType Directory -Path $distDir | Out-Null }
-Get-ChildItem .github\skills -Directory | ForEach-Object {
+Get-ChildItem .claude\skills -Directory | ForEach-Object {
     Write-Host "`nPackaging: $($_.Name)" -ForegroundColor Cyan
-    .\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\package_skill.py $_.FullName $distDir
+    .\Invoke-PythonScript.ps1 .claude\skills\skill-creator\scripts\package_skill.py $_.FullName $distDir
 }
 
 # ─── AI-Powered Skill Evaluation (Requires ANTHROPIC_API_KEY) ───────────────
@@ -38,9 +38,9 @@ Get-ChildItem .github\skills -Directory | ForEach-Object {
 $env:ANTHROPIC_API_KEY = "sk-ant-..."
 
 # Run evaluation on skill
-.\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\run_eval.py `
-    --eval-set .github\skills\my-skill\evals\trigger-tests.json `
-    --skill-path .github\skills\my-skill\ `
+.\Invoke-PythonScript.ps1 .claude\skills\skill-creator\scripts\run_eval.py `
+    --eval-set .claude\skills\my-skill\evals\trigger-tests.json `
+    --skill-path .claude\skills\my-skill\ `
     --num-workers 5 `
     --runs-per-query 3 `
     --verbose
@@ -48,18 +48,18 @@ $env:ANTHROPIC_API_KEY = "sk-ant-..."
 # ─── AI-Powered Description Optimization (Requires ANTHROPIC_API_KEY) ───────
 
 # Optimize skill description (train/test split)
-.\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\run_loop.py `
-    --eval-set .github\skills\my-skill\evals\trigger-tests.json `
-    --skill-path .github\skills\my-skill\ `
+.\Invoke-PythonScript.ps1 .claude\skills\skill-creator\scripts\run_loop.py `
+    --eval-set .claude\skills\my-skill\evals\trigger-tests.json `
+    --skill-path .claude\skills\my-skill\ `
     --max-iterations 10 `
     --holdout 0.3 `
     --model claude-sonnet-4-20250514 `
     --verbose
 
 # With live HTML report (auto-refreshing)
-.\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\run_loop.py `
-    --eval-set .github\skills\my-skill\evals\trigger-tests.json `
-    --skill-path .github\skills\my-skill\ `
+.\Invoke-PythonScript.ps1 .claude\skills\skill-creator\scripts\run_loop.py `
+    --eval-set .claude\skills\my-skill\evals\trigger-tests.json `
+    --skill-path .claude\skills\my-skill\ `
     --max-iterations 10 `
     --report-path .\reports\skill-optimization.html `
     --open-browser `
@@ -68,7 +68,7 @@ $env:ANTHROPIC_API_KEY = "sk-ant-..."
 # ─── Generate HTML Report from Eval Results ──────────────────────────────────
 
 # Generate visual report
-.\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\generate_report.py `
+.\Invoke-PythonScript.ps1 .claude\skills\skill-creator\scripts\generate_report.py `
     --input-json .\results\eval-output.json `
     --output-html .\reports\skill-evaluation.html `
     --open-browser
@@ -76,7 +76,7 @@ $env:ANTHROPIC_API_KEY = "sk-ant-..."
 # ─── Benchmark Analysis (Statistical) ────────────────────────────────────────
 
 # Aggregate benchmark data
-.\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\aggregate_benchmark.py `
+.\Invoke-PythonScript.ps1 .claude\skills\skill-creator\scripts\aggregate_benchmark.py `
     .\benchmarks\2026-02-26T10-30-00\
 
 # ─── Continuous Validation in CI/CD ──────────────────────────────────────────
@@ -95,8 +95,8 @@ jobs:
           python-version: '3.11'
       - run: .\.boltf\scripts\powershell\Bootstrap-Python.ps1
       - run: |
-          Get-ChildItem .github\skills -Directory | ForEach-Object {
-            .\Invoke-PythonScript.ps1 .github\skills\skill-creator\scripts\quick_validate.py $_.FullName
+          Get-ChildItem .claude\skills -Directory | ForEach-Object {
+            .\Invoke-PythonScript.ps1 .claude\skills\skill-creator\scripts\quick_validate.py $_.FullName
           }
 #>
 
