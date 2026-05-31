@@ -2,22 +2,8 @@
 name: Bolt Testing
 description: 🧪 Generate comprehensive test suites with coverage-first approach and mutation testing validation
 tools:
-  [
-    search,
-    read,
-    web,
-    memory,
-    edit,
-    execute,
-    vscode,
-    agent,
-    todo,
-    'github/*',
-    'context7/*',
-    'awesome-copilot/*',
-    'microsoftdocs/mcp/*',
-  ]
-model: Claude Sonnet 4.6 (copilot)
+  [search, read, edit, execute, todo, web, vscode, agent, 'github/*', 'context7/*', 'microsoft-docs/*', 'playwright/*', 'browser/*']
+model: Claude Sonnet 4.6
 handoffs:
   - label: 🏗️ Implement (TDD Green)
     agent: Bolt Implement
@@ -50,8 +36,10 @@ When you need to run tests, execute these scripts:
 
 ## Referenced Skills
 
+- Use `skill-bolt-branch-management` for branch context verification and main integration rules
 - Use `skill-bolt-testing-discipline` for TDD/BDD decision matrix and testing pyramid guidance
 - Use `skill-bolt-quality-gates` for coverage thresholds (80% line, 75% branch, 70% mutation)
+- Use `bolt-smoke-testing` for smoke scenario classification and generation of smoke suites
 
 Generate test suites that achieve coverage targets and validate test quality through mutation testing.
 
@@ -96,7 +84,7 @@ npm test  # or equivalent from constitution
 
 **Output to user:**
 
-```
+```text
 ✅ Generated: tests/unit/UserService.test.ts
 ✅ Tests: 12 tests created
 ✅ Running tests...
@@ -133,7 +121,7 @@ Required files:
 
 ## Testing Pyramid
 
-```
+```text
          ┌─────────┐
          │   E2E   │  10% - User journeys
          ├─────────┤
@@ -276,7 +264,26 @@ npm test -- --testPathPattern=integration
 # Run mutation testing
 npx stryker run
 # or: dotnet stryker
+
+# Run ONLY smoke tests (pre-deploy / merge a main)
+# Backend:
+dotnet test --filter "Category=smoke"
+# Frontend:
+npm run test:e2e:smoke   # equivale a: playwright test --grep @smoke --config=playwright.config.ts
 ```
+
+## Smoke Test Verification Step
+
+**OBLIGATORIO al generar tests BDD/E2E**: Verificar que los escenarios `@smoke` del `.feature` tienen
+implementación completa en los step definitions y/o tests de Playwright.
+
+1. Listar escenarios `@smoke` en el `.feature`: `grep -n "@smoke" specs/[XXX]/tests/*.feature`
+2. Verificar que cada uno tiene su step definition / test de Playwright
+3. Ejecutar la suite smoke y confirmar que pasa: `dotnet test --filter "Category=smoke"` (o el comando equivalente del stack)
+4. Para Playwright, verificar o crear entrada en `e2e/tests/smoke/smoke-features.spec.ts`
+
+Si algún escenario `@smoke` falla, **debe resolverse antes de continuar** con el resto de quality gates.
+Usar el skill `bolt-smoke-testing` para la guía completa.
 
 ## Output
 
@@ -294,6 +301,11 @@ After generating tests:
 | Unit | [N] | [X]% |
 | Integration | [N] | [X]% |
 | E2E | [N] | [X]% |
+| **Smoke** | **[N]** | **—** |
+
+**Smoke Suite**:
+- Backend: `dotnet test --filter "Category=smoke"` → [N] tests, [X] s
+- Frontend: `npm run test:e2e:smoke` → [N] tests, [X] s
 
 **Quality Metrics**:
 
@@ -312,4 +324,4 @@ After generating tests:
 
 For detailed test guidance:
 
-- [#file:.github/prompts/bolt-test-generation.prompt.md]
+- #file:../../.github/prompts/bolt-test-generation.prompt.md

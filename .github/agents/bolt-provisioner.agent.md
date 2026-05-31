@@ -10,13 +10,10 @@ tools:
     edit,
     search,
     web,
-    azure-mcp/search,
-    'awesome-copilot/*',
     'context7/*',
-    memory,
     todo,
   ]
-model: Claude Sonnet 4.6 (copilot)
+model: Claude Sonnet 4.6
 handoffs:
   - label: 📋 Back to Constitution
     agent: Bolt Constitution
@@ -73,11 +70,11 @@ Check that PowerShell script already copied local files:
 
 ```bash
 # Verify core skills exist
-ls .github/skills/bolt-framework/
-ls .github/skills/bolt-adr/
+ls .claude/skills/bolt-framework/
+ls .claude/skills/bolt-adr/
 
 # Verify local scope items were copied
-ls .github/skills/
+ls .claude/skills/
 ls .github/prompts/
 ```
 
@@ -95,8 +92,8 @@ Report what's already in place:
 
 **Local Scope Items** ([N] items):
 
-- backend-testing-strategy ✓
-- cloud-platform-constitution ✓
+- [scope-item-1] ✓
+- [scope-item-2] ✓
   [...]
 
 **Ready for external downloads**: [X] items pending
@@ -110,38 +107,35 @@ Report what's already in place:
 
 #### Mapping Rules
 
-| Scope             | Available-Skills Category Folders                       | Selection Logic                                            |
-| ----------------- | ------------------------------------------------------- | ---------------------------------------------------------- |
-| `backend`         | `dotnet-backend/`, `testing-must/`, `functional-tests/` | If .NET in stack → scan these categories for skill folders |
-| `frontend`        | `angular/`, `vue/`, `ui-common/`                        | If Angular → scan angular/, If Vue → scan vue/             |
-| `cloud-platform`  | `azure/`, `bolt-framework/`                             | If Azure → scan azure/ category for skill folders          |
-| `ai`              | `bolt-framework/`                                       | Scan for skill-bolt-testing-discipline                     |
-| `data`            | `testing-must/`                                         | Scan for tdd-\* skill folders                              |
-| `work-management` | `azdo/`, `github/`                                      | If Azure DevOps → scan azdo/, else scan github/            |
+| Scope             | Available-Skills Category Folders                  | Selection Logic                                            |
+| ----------------- | -------------------------------------------------- | ---------------------------------------------------------- |
+| `backend`         | `<backend-stack>/`, `testing-must/`                | Scan the categories matching the stack for skill folders   |
+| `frontend`        | `<frontend-stack>/`, `ui-common/`                  | Scan the category matching the detected frontend framework |
+| `cloud-platform`  | `<cloud-provider>/`, `bolt-framework/`             | Scan the cloud-provider category for skill folders         |
+| `ai`              | `bolt-framework/`                                  | Scan for AI/testing-discipline skills                      |
+| `data`            | `testing-must/`                                    | Scan for tdd-\* skill folders                              |
+| `work-management` | `<tracker>/` (e.g. `github/`)                      | Scan the active work tracker category                      |
 
-> **⚠️ CRITICAL**: Skills must be copied in a **FLAT structure** to `.github/skills/`.
-> **NEVER** copy the parent category folder (e.g., `github/`, `azure/`).
-> **ALWAYS** copy individual skill folders directly under `.github/skills/`.
+> **⚠️ CRITICAL**: Skills must be copied in a **FLAT structure** to `.claude/skills/`.
+> **NEVER** copy the parent category folder (e.g., `github/`).
+> **ALWAYS** copy individual skill folders directly under `.claude/skills/`.
 
-**Example for `backend` + `.NET` stack**:
+**Example** (mapping a category to flat skill folders):
 
 ```bash
 # ✅ CORRECT - Copy individual skill folders in flat structure:
-.boltf/available-skills/dotnet-backend/backend-testing-dotnet/
-  → .github/skills/backend-testing-dotnet/
+.boltf/available-skills/<category>/<skill-a>/
+  → .claude/skills/<skill-a>/
 
-.boltf/available-skills/dotnet-backend/dotnet-backend-patterns/
-  → .github/skills/dotnet-backend-patterns/
+.boltf/available-skills/<category>/<skill-b>/
+  → .claude/skills/<skill-b>/
 
 .boltf/available-skills/testing-must/tdd-red-green-refactor/
-  → .github/skills/tdd-red-green-refactor/
-
-.boltf/available-skills/testing-must/webapp-testing/
-  → .github/skills/webapp-testing/
+  → .claude/skills/tdd-red-green-refactor/
 
 # ❌ WRONG - DO NOT copy category folders:
-# .boltf/available-skills/dotnet-backend/
-#   → .github/skills/dotnet-backend/  ← NEVER DO THIS
+# .boltf/available-skills/<category>/
+#   → .claude/skills/<category>/  ← NEVER DO THIS
 ```
 
 **Report auto-selected skills**:
@@ -151,25 +145,21 @@ Report what's already in place:
 
 Based on your scopes and tech stack, I've identified [N] relevant skills:
 
-**Backend (.NET Stack)** ([M] skills):
+**[Scope A]** ([M] skills):
 
-- backend-testing-dotnet (from dotnet-backend/)
-- dotnet-backend-patterns (from dotnet-backend/)
-- tdd-red-green-refactor (from testing-must/)
-- webapp-testing (from testing-must/)
+- [skill-a] (from <category>/)
+- [skill-b] (from <category>/)
 
-**Cloud Platform (Azure)** ([P] skills):
+**[Scope B]** ([P] skills):
 
-- azure-identity-dotnet (from azure/)
-- azure-resource-visualizer (from azure/)
-- azure-usage (from azure/)
+- [skill-c] (from <category>/)
 
-**Work Management (GitHub)** ([Q] skills):
+**Work Management** ([Q] skills):
 
 - github-workflows (from github/)
 - github-issue-creator (from github/)
 
-**Total**: [N] skills will be copied to `.github/skills/`
+**Total**: [N] skills will be copied to `.claude/skills/`
 
 Proceed with copying these skills? **(yes/no)**
 ```
@@ -177,38 +167,34 @@ Proceed with copying these skills? **(yes/no)**
 **Copy skills** after confirmation:
 
 ```bash
-# ⚠️ CRITICAL: Copy individual skill folders FLAT to .github/skills/
+# ⚠️ CRITICAL: Copy individual skill folders FLAT to .claude/skills/
 # DO NOT preserve the category folder structure
 
 # ✅ CORRECT - For each individual skill folder:
-cp -r .boltf/available-skills/dotnet-backend/backend-testing-dotnet/ \
-     .github/skills/backend-testing-dotnet/
-
-cp -r .boltf/available-skills/azure/azure-identity-dotnet/ \
-     .github/skills/azure-identity-dotnet/
+cp -r .boltf/available-skills/<category>/<skill-a>/ \
+     .claude/skills/<skill-a>/
 
 cp -r .boltf/available-skills/github/github-workflows/ \
-     .github/skills/github-workflows/
+     .claude/skills/github-workflows/
 
 # ❌ WRONG - DO NOT copy entire category folders:
-# cp -r .boltf/available-skills/github/ .github/skills/github/  ← NEVER DO THIS
+# cp -r .boltf/available-skills/github/ .claude/skills/github/  ← NEVER DO THIS
 
 # Verify each skill has SKILL.md
-ls .github/skills/backend-testing-dotnet/SKILL.md
-ls .github/skills/azure-identity-dotnet/SKILL.md
-ls .github/skills/github-workflows/SKILL.md
+ls .claude/skills/<skill-a>/SKILL.md
+ls .claude/skills/github-workflows/SKILL.md
 ```
 
 **Final validation**:
 
 ```bash
-# Verify flat structure in .github/skills/
-ls -1 .github/skills/
+# Verify flat structure in .claude/skills/
+ls -1 .claude/skills/
 # Expected output (flat list of skill names):
-# backend-testing-dotnet/
-# azure-identity-dotnet/
+# <skill-a>/
+# <skill-b>/
 # github-workflows/
-# (NOT: github/, azure/, dotnet-backend/)
+# (NOT: github/, or any category folder)
 ```
 
 ### Step 4: Download from Context7
@@ -232,16 +218,16 @@ Expected tools:
 **Example item**:
 
 ```yaml
-- id: cloud-appservice-bicep-context7
+- id: <provider>-template-context7
   kind: templates
   enabled: true
   source:
     type: context7
-    library: /microsoftdocs/azure-docs
-    query: Define Linux App Service and Deployment from GitHub using Bicep
+    library: /<org>/<docs-library>
+    query: <natural-language query for the snippet you need>
   destination:
-    folder: infra/bicep
-    name: appservice-linux-github.bicep
+    folder: <destination/folder>
+    name: <output-file-name>
 ```
 
 **Execution**:
@@ -253,7 +239,7 @@ Expected tools:
      (await mcp_context7_resolve) -
      library -
      id({
-       libraryId: '/microsoftdocs/azure-docs',
+       libraryId: '/<org>/<docs-library>',
      });
    ```
 
@@ -263,34 +249,32 @@ Expected tools:
    const docs =
      (await mcp_context7_query) -
      docs({
-       libraryId: library.id || '/microsoftdocs/azure-docs',
-       query: 'Define Linux App Service and Deployment from GitHub using Bicep',
+       libraryId: library.id || '/<org>/<docs-library>',
+       query: '<natural-language query>',
        maxResults: 3, // Get multiple results for better context
      });
    ```
 
 3. **Extract relevant code/content**:
-   - Parse docs for Bicep examples
+   - Parse docs for usable examples
    - Extract complete, working code blocks
    - Include comments for context
 
 4. **Format with frontmatter**:
 
-   ```bicep
+   ```text
    /*
    Source: Context7
-   Library: /microsoftdocs/azure-docs
-   Query: Define Linux App Service and Deployment from GitHub using Bicep
-   URL: https://learn.microsoft.com/azure/app-service/provision-resource-bicep
-   Fetched: 2026-02-24 16:45:30
-   License: Microsoft Learn terms
+   Library: /<org>/<docs-library>
+   Query: <natural-language query>
+   URL: <source url>
+   Fetched: <timestamp>
+   License: <license>
 
-   This template provisions an Azure App Service (Linux) with GitHub deployment.
+   <short description of what this snippet provides>
    */
 
-   // Bicep code from documentation
-   param location string = resourceGroup().location
-   param appName string
+   // Code from documentation
    ...
    ```
 
@@ -298,16 +282,17 @@ Expected tools:
 
    ```typescript
    create_file({
-     filePath: 'infra/bicep/appservice-linux-github.bicep',
+     filePath: '<destination/folder>/<output-file-name>',
      content: formattedContent,
    });
    ```
 
 6. **Report progress**:
+
    ```markdown
-   ✓ appservice-linux-github.bicep
-   📦 Context7: /microsoftdocs/azure-docs
-   📄 Saved: infra/bicep/appservice-linux-github.bicep
+   ✓ <output-file-name>
+   📦 Context7: /<org>/<docs-library>
+   📄 Saved: <destination/folder>/<output-file-name>
    ```
 
 **Repeat for all Context7 items.**
@@ -334,16 +319,16 @@ Expected tools:
 **Example item**:
 
 ```yaml
-- id: cloud-bicep-best-practices-awesome
+- id: <collection>-best-practices-awesome
   kind: instructions
   enabled: true
   source:
     type: awesome_copilot
-    collection: azure-cloud-development
-    item_path: instructions/bicep-code-best-practices.instructions.md
+    collection: <collection-name>
+    item_path: instructions/<instruction-file>.instructions.md
   destination:
     folder: .github/instructions
-    name: bicep-code-best-practices.instructions.md
+    name: <instruction-file>.instructions.md
 ```
 
 **Execution**:
@@ -352,7 +337,7 @@ Expected tools:
 
    ```typescript
    const collection = await mcp_awesome_copil_load_collection({
-     collectionName: 'azure-cloud-development',
+     collectionName: '<collection-name>',
    });
    ```
 
@@ -360,8 +345,8 @@ Expected tools:
 
    ```typescript
    const instruction = await mcp_awesome_copil_load_instruction({
-     collectionName: 'azure-cloud-development',
-     instructionPath: 'instructions/bicep-code-best-practices.instructions.md',
+     collectionName: '<collection-name>',
+     instructionPath: 'instructions/<instruction-file>.instructions.md',
    });
    ```
 
@@ -370,10 +355,10 @@ Expected tools:
    ```markdown
    ---
    source: awesome_copilot
-   collection: azure-cloud-development
-   item: instructions/bicep-code-best-practices.instructions.md
-   url: https://github.com/github/awesome-copilot/tree/main/collections/azure-cloud-development/instructions/bicep-code-best-practices.instructions.md
-   fetched: 2026-02-24 16:46:15
+   collection: <collection-name>
+   item: instructions/<instruction-file>.instructions.md
+   url: https://github.com/github/awesome-copilot/tree/main/collections/<collection-name>/instructions/<instruction-file>.instructions.md
+   fetched: <timestamp>
    license: repository-defined
    ---
 
@@ -384,16 +369,17 @@ Expected tools:
 
    ```typescript
    create_file({
-     filePath: '.github/instructions/bicep-code-best-practices.instructions.md',
+     filePath: '.github/instructions/<instruction-file>.instructions.md',
      content: formattedContent,
    });
    ```
 
 5. **Report progress**:
+
    ```markdown
-   ✓ bicep-code-best-practices.instructions.md
-   📦 Awesome Copilot: azure-cloud-development
-   📄 Saved: .github/instructions/bicep-code-best-practices.instructions.md
+   ✓ <instruction-file>.instructions.md
+   📦 Awesome Copilot: <collection-name>
+   📄 Saved: .github/instructions/<instruction-file>.instructions.md
    ```
 
 **Repeat for all Awesome Copilot items.**
@@ -419,16 +405,16 @@ Expected tools:
 **Example item**:
 
 ```yaml
-- id: cloud-hashicorp-terraform-style-guide-awesome-skills
+- id: <skill-name>-awesome-skills
   kind: skills
   enabled: true
   source:
     type: awesome_skills
-    repository: https://github.com/hashicorp/agent-skills
-    skill_path: terraform/code-generation/skills/terraform-style-guide
+    repository: https://github.com/<owner>/<repo>
+    skill_path: <path/to/skill>
   destination:
-    folder: .github/skills
-    name: terraform-style-guide
+    folder: .claude/skills
+    name: <skill-name>
 ```
 
 **Execution**:
@@ -441,20 +427,19 @@ Expected tools:
    ```typescript
    // Get directory listing
    const files = await mcp_github_search_code({
-     query:
-       'repo:hashicorp/agent-skills path:terraform/code-generation/skills/terraform-style-guide',
+     query: 'repo:<owner>/<repo> path:<path/to/skill>',
    });
 
    // Download each file
    for (const file of files) {
      const content = await mcp_github_get_file_contents({
-       owner: 'hashicorp',
-       repo: 'agent-skills',
+       owner: '<owner>',
+       repo: '<repo>',
        path: file.path,
      });
 
      create_file({
-       filePath: `.github/skills/terraform-style-guide/${file.name}`,
+       filePath: `.claude/skills/<skill-name>/${file.name}`,
        content: content,
      });
    }
@@ -465,11 +450,11 @@ Expected tools:
    ```typescript
    // Fetch main SKILL.md
    const skillMd = await fetch_webpage({
-     url: 'https://raw.githubusercontent.com/hashicorp/agent-skills/main/terraform/code-generation/skills/terraform-style-guide/SKILL.md',
+     url: 'https://raw.githubusercontent.com/<owner>/<repo>/main/<path/to/skill>/SKILL.md',
    });
 
    create_file({
-     filePath: '.github/skills/terraform-style-guide/SKILL.md',
+     filePath: '.claude/skills/<skill-name>/SKILL.md',
      content: skillMd,
    });
    ```
@@ -478,19 +463,20 @@ Expected tools:
    Create a `.source.yaml` file in the skill directory:
 
    ```yaml
-   # .github/skills/terraform-style-guide/.source.yaml
+   # .claude/skills/<skill-name>/.source.yaml
    source: awesome_skills
-   repository: https://github.com/hashicorp/agent-skills
-   skill_path: terraform/code-generation/skills/terraform-style-guide
-   fetched: 2026-02-24 16:47:00
-   license: MPL-2.0
+   repository: https://github.com/<owner>/<repo>
+   skill_path: <path/to/skill>
+   fetched: <timestamp>
+   license: <license>
    ```
 
 5. **Report progress**:
+
    ```markdown
-   ✓ terraform-style-guide/
-   📦 Awesome Skills: hashicorp/agent-skills
-   📄 Saved: .github/skills/terraform-style-guide/ ([N] files)
+   ✓ <skill-name>/
+   📦 Awesome Skills: <owner>/<repo>
+   📄 Saved: .claude/skills/<skill-name>/ ([N] files)
    ```
 
 ### Step 7: Generate Enhanced Provision Report
@@ -502,32 +488,29 @@ Read existing `provision-report.md` and append download details:
 
 ### Auto-Selected Skills from Available-Skills ([N] items)
 
-| Skill                   | Source Folder   | Category         |
-| ----------------------- | --------------- | ---------------- |
-| backend-testing-dotnet  | dotnet-backend/ | Backend Testing  |
-| dotnet-backend-patterns | dotnet-backend/ | Backend Patterns |
-| azure-identity-dotnet   | azure/          | Cloud Identity   |
-| github-workflows        | github/         | Work Management  |
+| Skill              | Source Folder | Category        |
+| ------------------ | ------------- | --------------- |
+| [skill-a]          | <category>/   | [category name] |
+| [skill-b]          | <category>/   | [category name] |
+| github-workflows   | github/       | Work Management |
 
 ### Context7 Downloads ([M] items)
 
-| Item                                   | Library                   | Query                          | Destination      | Fetched             |
-| -------------------------------------- | ------------------------- | ------------------------------ | ---------------- | ------------------- |
-| appservice-linux-github.bicep          | /microsoftdocs/azure-docs | Define Linux App Service...    | infra/bicep/     | 2026-02-24 16:45:30 |
-| azure-devops-dotnet-pipeline.prompt.md | /microsoftdocs/azure-docs | Define and Deploy .NET Core... | .github/prompts/ | 2026-02-24 16:45:45 |
+| Item                | Library              | Query           | Destination        | Fetched     |
+| ------------------- | -------------------- | --------------- | ------------------ | ----------- |
+| <output-file>       | /<org>/<docs-lib>    | <query>         | <destination>/     | <timestamp> |
 
 ### Awesome Copilot Downloads ([P] items)
 
-| Item                                                 | Collection              | Path                       | Destination           | Fetched             |
-| ---------------------------------------------------- | ----------------------- | -------------------------- | --------------------- | ------------------- |
-| bicep-code-best-practices.instructions.md            | azure-cloud-development | instructions/bicep-code... | .github/instructions/ | 2026-02-24 16:46:15 |
-| kubernetes-deployment-best-practices.instructions.md | azure-cloud-development | instructions/kubernetes... | .github/instructions/ | 2026-02-24 16:46:30 |
+| Item                                | Collection        | Path                       | Destination           | Fetched     |
+| ----------------------------------- | ----------------- | -------------------------- | --------------------- | ----------- |
+| <instruction-file>.instructions.md  | <collection-name> | instructions/<file>...     | .github/instructions/ | <timestamp> |
 
 ### Awesome Skills Downloads ([Q] items)
 
-| Skill                 | Repository             | Path                                 | Destination     | Fetched             |
-| --------------------- | ---------------------- | ------------------------------------ | --------------- | ------------------- |
-| terraform-style-guide | hashicorp/agent-skills | terraform/code-generation/skills/... | .github/skills/ | 2026-02-24 16:47:00 |
+| Skill        | Repository      | Path             | Destination     | Fetched     |
+| ------------ | --------------- | ---------------- | --------------- | ----------- |
+| <skill-name> | <owner>/<repo>  | <path/to/skill>  | .claude/skills/ | <timestamp> |
 
 ---
 
@@ -569,10 +552,10 @@ Read existing `provision-report.md` and append download details:
 
 ### Files Created
 
-**Skills** (.github/skills/):
+**Skills** (.claude/skills/):
 
 ```bash
-ls .github/skills/
+ls .claude/skills/
 ```
 ````
 
@@ -582,26 +565,24 @@ ls .github/skills/
 - bolt-adr/
 - new-skill/
 - markdown-formatting/
-- backend-testing-dotnet/
-- dotnet-backend-patterns/
-- azure-identity-dotnet/
-- terraform-style-guide/
+- [skill-a]/
+- [skill-b]/
+- github-workflows/
   [...]
 
 **Prompts** (.github/prompts/):
 
-- azure-devops-dotnet-pipeline.prompt.md
+- [prompt-file].prompt.md
   [...]
 
 **Instructions** (.github/instructions/):
 
-- bicep-code-best-practices.instructions.md
-- kubernetes-deployment-best-practices.instructions.md
+- [instruction-file].instructions.md
   [...]
 
 **Templates** (various locations):
 
-- infra/bicep/appservice-linux-github.bicep
+- [destination]/[template-file]
 - .vscode/settings.json (if enabled)
   [...]
 
@@ -609,13 +590,13 @@ ls .github/skills/
 
 ```bash
 # Verify skills
-ls .github/skills/ | wc -l  # Should show [N] skills
+ls .claude/skills/ | wc -l  # Should show [N] skills
 
 # Check Context7 downloads
-head -20 infra/bicep/appservice-linux-github.bicep  # Should show source comment
+head -20 <destination>/<output-file>  # Should show source comment
 
 # Check Awesome Copilot downloads
-head -10 .github/instructions/bicep-code-best-practices.instructions.md  # Should show frontmatter
+head -10 .github/instructions/<instruction-file>.instructions.md  # Should show frontmatter
 
 # View full report
 cat .boltf/memory/provision-report.md
@@ -624,8 +605,8 @@ cat .boltf/memory/provision-report.md
 ### Next Steps
 
 1. **Review constitution**: `.boltf/memory/constitution.md`
-2. **Explore skills**: Browse `.github/skills/` folders
-3. **Test templates**: Try Bicep templates in `infra/bicep/`
+2. **Explore skills**: Browse `.claude/skills/` folders
+3. **Test templates**: Try the provisioned templates
 4. **Use instructions**: Reference `.github/instructions/` in code generation
 5. **Start building**: Invoke `@Bolt Framework` to begin AI-DLC
 
@@ -633,7 +614,7 @@ cat .boltf/memory/provision-report.md
 
 Handing back to @Bolt Constitution...
 
-````
+````text
 
 ## Error Handling
 
@@ -663,17 +644,17 @@ If user chooses **B. Manual download**, provide:
 
 **Context7 Items**:
 
-1. **appservice-linux-github.bicep**
-   - Visit: https://learn.microsoft.com/azure/app-service/provision-resource-bicep
-   - Copy Bicep example
-   - Save to: `infra/bicep/appservice-linux-github.bicep`
+1. **<output-file>**
+   - Visit: <source url>
+   - Copy the example
+   - Save to: `<destination>/<output-file>`
 
 **Awesome Copilot Items**:
 
-2. **bicep-code-best-practices.instructions.md**
-   - Visit: https://github.com/github/awesome-copilot/tree/main/collections/azure-cloud-development/instructions/bicep-code-best-practices.instructions.md
+2. **<instruction-file>.instructions.md**
+   - Visit: https://github.com/github/awesome-copilot/tree/main/collections/<collection-name>/instructions/<instruction-file>.instructions.md
    - Copy raw content
-   - Save to: `.github/instructions/bicep-code-best-practices.instructions.md`
+   - Save to: `.github/instructions/<instruction-file>.instructions.md`
 ```
 
 ### Download Failed

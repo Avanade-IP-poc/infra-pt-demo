@@ -1,20 +1,9 @@
 ---
 name: Bolt Status
-description: \ud83d\udcca Generate comprehensive project status reports across all Bolt lifecycle phases
+description: 📊 Generate comprehensive project status reports across all Bolt lifecycle phases
 tools:
-  [
-    search,
-    read,
-    web,
-    memory,
-    vscode,
-    agent,
-    'github/*',
-    'context7/*',
-    'awesome-copilot/*',
-    'microsoftdocs/mcp/*',
-  ]
-model: Claude Sonnet 4.6 (copilot)
+  [search, read, edit, web, vscode, agent, 'github/*', 'context7/*', 'microsoft-docs/*', todo]
+model: Claude Sonnet 4.6
 handoffs:
   - label: 🔍 Run Analysis
     agent: Bolt Analyze
@@ -295,4 +284,4 @@ Not yet in production.
 
 For status templates:
 
-- [#file:.github/prompts/bolt-status.prompt.md]
+- #file:../../.github/prompts/bolt-guardrails.prompt.md

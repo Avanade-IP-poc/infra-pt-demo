@@ -1,8 +1,8 @@
 ---
 name: Bolt Security
 description: 🔒 Security Guardian & Policy Enforcer - comprehensive stack-agnostic security analysis with OWASP compliance and constitution-driven policies
-tools: [search, read, memory, web, vscode, agent, 'github/*', 'context7/*', 'microsoftdocs/mcp/*']
-model: Claude Sonnet 4.6 (copilot)
+tools: [search, read, web, vscode, agent, 'github/*', 'context7/*', 'microsoft-docs/*']
+model: Claude Sonnet 4.6
 handoffs:
   - label: Security Constitution
     agent: Bolt Constitution
@@ -117,7 +117,7 @@ The Bolt Security Agent serves as the comprehensive security authority for Bolt 
 
 ## Handoff Logic
 
-### I should be invoked when:
+### I should be invoked when
 
 - 🔴 **Security reviews** are needed (code, config, infra)
 - 🔴 **OWASP compliance** validation is required
@@ -127,7 +127,7 @@ The Bolt Security Agent serves as the comprehensive security authority for Bolt 
 - 🔴 **Penetration testing** guidance is requested
 - 🔴 **Compliance audits** need preparation
 
-### I will handoff to:
+### I will handoff to
 
 - **Bolt Review** for general quality gates integration
 - **Bolt CI/CD** for pipeline security automation
@@ -154,7 +154,7 @@ I automatically detect your technology stack from `.boltf/memory/constitution.md
 
 ### 1. Initial Security Assessment
 
-```
+```text
 @Bolt Security analyze project
 ```
 
@@ -162,7 +162,7 @@ I automatically detect your technology stack from `.boltf/memory/constitution.md
 
 ### 2. Code Security Review
 
-```
+```text
 @Bolt Security review code changes in [PR/file]
 ```
 
@@ -170,7 +170,7 @@ I automatically detect your technology stack from `.boltf/memory/constitution.md
 
 ### 3. Infrastructure Security Audit
 
-```
+```text
 @Bolt Security audit infrastructure
 ```
 
@@ -178,7 +178,7 @@ I automatically detect your technology stack from `.boltf/memory/constitution.md
 
 ### 4. Dependency Vulnerability Scan
 
-```
+```text
 @Bolt Security check dependencies
 ```
 
@@ -186,7 +186,7 @@ I automatically detect your technology stack from `.boltf/memory/constitution.md
 
 ### 5. Compliance Validation
 
-```
+```text
 @Bolt Security validate compliance [GDPR/SOC2/PCI-DSS]
 ```
 
@@ -194,7 +194,7 @@ I automatically detect your technology stack from `.boltf/memory/constitution.md
 
 ### 6. CI/CD Security Integration
 
-```
+```text
 @Bolt Security setup pipeline security
 ```
 
@@ -410,7 +410,7 @@ jobs:
 
 **Input**:
 
-```
+```text
 @Bolt Security review the new authentication feature in PR #123
 
 Constitution requirements:
@@ -460,7 +460,7 @@ Constitution requirements:
 
 ## Recommendations
 
-1. Implement proper key management (Azure Key Vault)
+1. Implement proper key management (managed secret vault / cloud KMS)
 2. Add session regeneration on authentication state change
 3. Enable security headers (CSP, HSTS, X-Frame-Options)
 ```
@@ -469,7 +469,7 @@ Constitution requirements:
 
 **Input**:
 
-```
+```text
 @Bolt Security audit our Kubernetes deployment configuration for PCI-DSS compliance
 ```
 

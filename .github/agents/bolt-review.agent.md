@@ -6,7 +6,6 @@ tools:
     search,
     read,
     web,
-    memory,
     edit,
     execute,
     vscode,
@@ -14,10 +13,9 @@ tools:
     todo,
     'github/*',
     'context7/*',
-    'awesome-copilot/*',
-    'microsoftdocs/mcp/*',
+    'microsoft-docs/*',
   ]
-model: Claude Sonnet 4.6 (copilot)
+model: Claude Sonnet 4.6
 handoffs:
   - label: 🏗️ Fix Issues
     agent: Bolt Implement
@@ -52,7 +50,7 @@ Perform comprehensive code review validating constitution compliance, architectu
 
 ## Review Philosophy
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────┐
 │                      REVIEW DIMENSIONS                           │
 ├──────────────────────────────────────────────────────────────────┤
@@ -274,10 +272,10 @@ if (retryCount > MAX_RETRIES) { ... }
 2. Use @bolt-implement to apply fixes
 3. Re-run review after changes
 
-```
+```text
 
 ## Prompts Reference
 
 For detailed review guidance:
-- [#file:.github/prompts/bolt-code-review.prompt.md]
+- #file:../../.github/prompts/bolt-security-review.prompt.md
 ```

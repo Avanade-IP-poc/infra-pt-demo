@@ -2,8 +2,8 @@
 name: Bolt Ops
 description: 🚀 Manage operations, deployments, monitoring and incident response following Bolt Framework Methodology
 tools:
-  [search, read, edit, web, memory, execute, vscode, agent, 'context7/*', 'microsoftdocs/mcp/*']
-model: Claude Sonnet 4.6 (copilot)
+  [search, read, edit, web, execute, vscode, agent, 'github/*', 'context7/*', 'microsoft-docs/*']
+model: Claude Sonnet 4.6
 handoffs:
   - label: 📈 Check Improvements
     agent: Bolt Improve
@@ -42,7 +42,7 @@ Manage deployments, monitoring, and operational health of Bolt Framework project
 
 ## Operations Overview
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────┐
 │                    OPERATIONAL LIFECYCLE                          │
 ├──────────────────────────────────────────────────────────────────┤
@@ -265,4 +265,4 @@ Common operational procedures:
 
 For operational procedures:
 
-- [#file:.github/prompts/bolt-operations.prompt.md]
+- #file:../../.github/prompts/bolt-operations.prompt.md

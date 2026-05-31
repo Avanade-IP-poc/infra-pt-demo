@@ -7,15 +7,15 @@ tools:
     read,
     edit,
     web,
-    memory,
+    execute,
     vscode,
     agent,
     'github/*',
     'context7/*',
-    'awesome-copilot/*',
-    'microsoftdocs/mcp/*',
+    'microsoft-docs/*',
+    todo,
   ]
-model: Claude Sonnet 4.6 (copilot)
+model: Claude Sonnet 4.6
 handoffs:
   - label: 🏛️ Architecture Design
     agent: Bolt Architect
@@ -103,23 +103,21 @@ Examples in this agent are illustrative. ALWAYS use Constitution's patterns.
 
 ### Bounded Contexts
 
-```
-┌──────────────────────────────────────────────────────────────────┐
-│                       CONTEXT MAP                                 │
-├──────────────────────────────────────────────────────────────────┤
-│                                                                   │
-│   ┌─────────────┐    Events    ┌─────────────────┐               │
-│   │   Catalog   │ ──────────► │     Sales       │               │
-│   │  (Upstream) │              │  (Core Domain)  │               │
-│   └─────────────┘              └────────┬────────┘               │
-│                                         │                        │
-│                                    OrderPlaced                   │
-│                                         │                        │
-│   ┌─────────────┐              ┌────────▼────────┐               │
-│   │  Inventory  │ ◄─────────── │    Shipping     │               │
-│   └─────────────┘              └─────────────────┘               │
-│                                                                   │
-└──────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    Catalog["📦 Catalog<br/>(Upstream)"]
+    Sales["💰 Sales<br/>(Core Domain)"]
+    Shipping["🚚 Shipping"]
+    Inventory["📊 Inventory"]
+    
+    Catalog -->|Events| Sales
+    Sales -->|OrderPlaced| Shipping
+    Shipping <-->|ACL| Inventory
+    
+    style Catalog fill:#e1f5ff,stroke:#01579b,stroke-width:2px
+    style Sales fill:#fff3e0,stroke:#e65100,stroke-width:3px
+    style Shipping fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    style Inventory fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
 ```
 
 ### Domain Classification
@@ -222,4 +220,4 @@ public record OrderPlaced(
 
 For DDD templates:
 
-- [#file:.github/prompts/bolt-ddd.prompt.md]
+- #file:../../.github/prompts/bolt-domain-modeling.prompt.md

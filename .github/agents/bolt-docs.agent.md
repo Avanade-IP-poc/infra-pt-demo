@@ -11,8 +11,7 @@ tools:
     agent,
     'github/*',
     'context7/*',
-    'awesome-copilot/*',
-    'microsoftdocs/mcp/*',
+    'microsoft-docs/*',
   ]
 model: Claude Sonnet 4.6
 handoffs:
@@ -89,20 +88,33 @@ You are the documentation specialist for Bolt Framework projects. You create, ma
 
 ## Documentation Structure
 
-´´´text
+```text
 docs/
-├── api/                     # API documentation (OpenAPI specs, SDK guides)
+├── technical/               # Documentación técnica organizada por dominio y capa
+│   ├── backend/             # Servicios backend — un folder por bounded context
+│   │   ├── common/          # Librerías compartidas (Common projects)
+│   │   ├── auth/            # Bounded context Auth
+│   │   ├── <bounded-context-1>/
+│   │   ├── <bounded-context-2>/
+│   │   └── <bounded-context-N>/
+│   └── frontend/            # Frontend — un folder por dominio de feature
+│       ├── core/            # Módulo core (interceptors, guards, config, utils)
+│       ├── shared/          # Módulo shared (componentes, directivas, modelos reutilizables)
+│       ├── auth/            # Feature Auth
+│       ├── dashboard/
+│       ├── <feature-domain-1>/
+│       └── <feature-domain-N>/
+├── api/                     # OpenAPI specs y SDK guides (uno por servicio)
 ├── adr/                     # Architecture Decision Records
-├── architecture/            # Architecture documentation
-├── functional/              # Functional documentation
-├── code/                    # Code documentation extracted from comments
-├── deployment/              # Deployment guides and environment documentation
-├── user-guide/              # User-facing documentation and tutorials
-├── admin-guide/             # Admin documentation and configuration guides
-├── troubleshooting/         # Troubleshooting guides and FAQs
-├── process/                 # Development and operations process documentation
-└── metrics.yml              # Documentation quality and coverage metrics
-´´´
+├── architecture/            # Diagramas de arquitectura (C4, sistema)
+├── functional/              # Documentación funcional (features, journeys, personas)
+├── deployment/              # Guías de despliegue y configuración de entornos
+├── user-guide/              # Documentación orientada al usuario final
+├── admin-guide/             # Guías de administración y configuración
+├── troubleshooting/         # Guías de resolución de problemas y FAQs
+├── process/                 # Flujos de desarrollo y operaciones
+└── metrics.yml              # Métricas y cobertura de documentación
+```
 
 ## Design Documentation Structure (`docs/design/`)
 
@@ -159,6 +171,109 @@ docs/design/
 4. **Do NOT auto-generate architecture docs from static analysis tools** — architecture is
    documented intentionally, not extracted from dependency graphs.
 
+## Technical Documentation Organization
+
+### Backend: Por Dominio y Capa
+
+Cada servicio/bounded context se documenta en su propio folder bajo `docs/technical/backend/<dominio>/`.
+La estructura replica las capas (p. ej. Clean Architecture) usadas en el proyecto.
+
+```text
+docs/technical/backend/
+├── common/                        # Librerías compartidas (Common projects)
+│   ├── README.md                  # Primitivos de dominio, Result pattern, contratos genéricos
+│   ├── domain-primitives.md       # BaseEntity, AggregateRoot, Value Objects base
+│   ├── infrastructure.md          # GenericRepository, DbContext base, Unit of Work
+│   └── contracts.md               # Interfaces compartidas entre servicios
+├── auth/                          # Bounded context Auth
+│   ├── README.md                  # Propósito del servicio, dependencias, tech stack
+│   ├── api.md                     # Controllers, endpoints, DTOs request/response, middleware
+│   ├── application.md             # Commands, Queries, Handlers (CQRS), Validators, DTOs
+│   ├── domain.md                  # Aggregates, Entities, Value Objects, Domain Events, lenguaje ubicuo
+│   └── infrastructure.md          # Persistencia (DbContext/ORM), Repositories, migraciones, integraciones externas
+├── <bounded-context-1>/
+│   ├── README.md
+│   ├── api.md
+│   ├── application.md
+│   ├── domain.md
+│   └── infrastructure.md
+├── <bounded-context-2>/
+│   └── <misma estructura>
+└── <bounded-context-N>/
+    └── <misma estructura>
+```
+
+#### Contenido por fichero — Backend
+
+| Fichero | Qué documentar |
+|---------|---------------|
+| `README.md` | Propósito del bounded context, clasificación DDD (Core/Supporting/Generic), dependencias entre servicios, puertos y endpoints, enlace al spec en `specs/` |
+| `api.md` | Controllers → rutas HTTP, verbos, autenticación requerida, parámetros, request/response schemas con ejemplos JSON, errores posibles |
+| `application.md` | Commands y Queries (command/query handlers), DTOs de entrada/salida, validadores, flujo de casos de uso |
+| `domain.md` | Aggregates y sus invariantes, Entities, Value Objects con reglas de negocio, Domain Events emitidos, Domain Services, glosario de lenguaje ubicuo |
+| `infrastructure.md` | Configuración de persistencia (mappings/ORM), implementaciones de Repository, migraciones pendientes, integraciones con servicios externos |
+
+### Frontend: Por Dominio/Feature y Tipo
+
+Cada feature/dominio del frontend se documenta en `docs/technical/frontend/<dominio>/`.
+Se distinguen tres categorías: **feature domain** (funcionalidad de negocio), **core** (transversal)
+y **shared** (reutilizable entre features).
+
+```text
+docs/technical/frontend/
+├── core/                          # Módulo core — código transversal a toda la app
+│   ├── README.md                  # Resumen del módulo core, qué incluye, cuándo usarlo
+│   ├── services.md                # Servicios de infraestructura (AuthService, TenantService…)
+│   ├── interceptors.md            # HTTP interceptors (auth token, error handling, tenant header)
+│   ├── guards.md                  # Route guards (AuthGuard, RoleGuard, TenantGuard)
+│   ├── config.md                  # Inicialización, providers, configuración de entorno
+│   └── utils.md                   # Funciones de utilidad, helpers
+├── shared/                        # Módulo shared — componentes reutilizables entre features
+│   ├── README.md                  # Qué contiene shared, criterio para añadir algo aquí
+│   ├── components.md              # Componentes UI compartidos (tablas, formularios, dialogs, badges)
+│   ├── directives.md              # Directivas estructurales y de atributo reutilizables
+│   └── models.md                  # Interfaces/tipos y enums compartidos entre features
+├── auth/                          # Feature Auth (login, registro, recuperación de contraseña)
+│   ├── README.md                  # Flujo de autenticación, rutas, guards aplicados
+│   ├── components.md              # LoginComponent, ForgotPasswordComponent…
+│   └── services.md                # AuthApiService, TokenService
+├── dashboard/
+│   ├── README.md
+│   └── components.md
+├── <feature-domain-1>/
+│   ├── README.md                  # Propósito del feature, roles de usuario, routing lazy
+│   ├── components.md              # Smart components (listas, detalle, formularios) y presentacionales
+│   ├── services.md                # Servicios de la feature, llamadas API, estado reactivo
+│   └── models.md                  # Interfaces, DTOs, enums específicos del dominio
+└── <feature-domain-N>/
+    └── <misma estructura>
+```
+
+#### Contenido por fichero — Frontend
+
+| Fichero | Qué documentar |
+|---------|---------------|
+| `README.md` | Propósito del feature/módulo, roles de usuario que lo usan, rutas lazy, estado global (store), enlace al spec |
+| `components.md` | Smart vs. dumb components, inputs/outputs, eventos emitidos, ciclo de vida relevante, interacción con servicios; **incluye subsección de componentes de UI utilizados** |
+| `services.md` | Métodos de los servicios, endpoints API consumidos, manejo de errores, caché/estado reactivo |
+| `models.md` | Interfaces, enums, DTOs, alias de tipo, esquemas de validación si aplica |
+| `directives.md` | Directivas personalizadas: selector, inputs, comportamiento, ejemplo de uso |
+| `services.md` en `core/` | Servicios de infraestructura: singleton, inyección, ciclo de vida en el contexto de la app |
+
+#### Regla de clasificación: feature vs. core vs. shared
+
+```text
+¿El código es específico de un dominio de negocio?
+  Sí → docs/technical/frontend/<feature-domain>/
+
+¿El código es transversal pero NO reutilizable como componente UI?
+  Sí → docs/technical/frontend/core/
+  (interceptors, guards, config, servicios de infraestructura)
+
+¿El código es un componente/directiva/modelo reutilizable entre features?
+  Sí → docs/technical/frontend/shared/
+```
+
 ## Relevant Skills
 
 Load the following skills depending on the documentation type being generated:
@@ -169,9 +284,181 @@ Load the following skills depending on the documentation type being generated:
 | Architecture, C4, flow diagrams | `architect-diagramer` |
 | Any Mermaid diagram | `mermaid-creator` |
 | Architecture Decision Records | `skill-bolt-adr` |
-| **API Contracts** (OpenAPI desde controllers .NET) | `api-contracts-doc` |
+| **Technical docs backend** (capas Api/Application/Domain/Infrastructure) | skill de patrones de backend del stack |
+| **Technical docs frontend** (feature/core/shared) | skill de patrones de frontend del stack |
+| **Componentes de UI** (props, eventos, accesibilidad, tokens) | MCP tools del design system del proyecto, si están disponibles |
+| **API Contracts** (OpenAPI desde controllers) | `api-contracts-doc` |
 | **User Journeys** (narrativa + diagrama journey) | `user-journey-doc` |
 | Markdown formatting | `markdown-formatting` |
+
+### Technical Documentation Workflow
+
+#### Backend — Cómo documentar un dominio/servicio
+
+1. **Leer el código fuente** del servicio en `src/backend/Services/<Dominio>/`
+2. **Crear `docs/technical/backend/<dominio>/README.md`** con propósito, clasificación DDD, dependencias
+3. **Crear `api.md`** recorriendo los controllers del servicio — usar skill `api-contracts-doc`
+4. **Crear `application.md`** recorriendo Commands/Queries de la capa de aplicación
+5. **Crear `domain.md`** desde la capa de dominio — usar la skill de patrones de backend del stack + `bolt-datamodel-diagramer`
+6. **Crear `infrastructure.md`** desde la capa de infraestructura — mappings de persistencia, repositories
+7. Si es librería compartida → documentar en `docs/technical/backend/common/`
+
+#### Frontend — Cómo documentar un feature/módulo
+
+1. **Leer el código fuente** del feature en `src/frontend/` (`features/<feature>/`, `core/` o `shared/`)
+2. **Clasificar** según la regla feature / core / shared (ver sección anterior)
+3. **Crear `README.md`** con propósito, rutas lazy, roles de usuario, gestión de estado
+4. **Crear `components.md`** recorriendo los componentes del feature — inputs, outputs, interacciones
+   - Identificar qué componentes del design system usa cada componente
+   - Si el design system expone MCP tools, usarlas para obtener props/eventos reales
+   - Documentar configuración y personalización de cada componente UI en una subsección
+5. **Crear `services.md`** desde los servicios — endpoints API, estado reactivo
+6. **Crear `models.md`** desde interfaces, enums y DTOs del feature
+7. Si hay directivas propias → `directives.md`
+8. Si el feature usa componentes de UI relevantes en `shared/` → actualizar `shared/components.md`
+
+#### Templates
+
+**README.md (Backend — por dominio)**
+
+```markdown
+# {{ Nombre Dominio }} — Bounded Context
+
+**Clasificación DDD**: Core | Supporting | Generic Domain
+**Servicio**: `{{ NombreDominio }}.Api`
+**Spec**: [`specs/{{ nombre-feature }}/`](../../specs/{{ nombre-feature }}/)
+
+## Propósito
+
+{{ descripción del bounded context y responsabilidades }}
+
+## Dependencias entre servicios
+
+| Depende de | Motivo |
+|------------|--------|
+| Auth | Validación de tokens JWT |
+
+## Tech Stack específico
+
+- {{ motor de persistencia }}
+- {{ librería de validación }}
+- {{ otros }}
+
+## Capas
+
+| Fichero | Descripción |
+|---------|-------------|
+| [api.md](api.md) | Controllers y endpoints |
+| [application.md](application.md) | Commands, Queries, Handlers |
+| [domain.md](domain.md) | Aggregates, Entities, Value Objects |
+| [infrastructure.md](infrastructure.md) | Persistencia, Repositories, integraciones |
+```
+
+**README.md (Frontend — por feature domain)**
+
+```markdown
+# Feature: {{ Nombre Feature }}
+
+**Ruta lazy**: `{{ /ruta/base }}`
+**Módulo**: `src/frontend/.../features/{{ nombre-feature }}/`
+**Spec**: [`specs/{{ nombre-feature }}/`](../../specs/{{ nombre-feature }}/)
+
+## Propósito
+
+{{ qué funcionalidad de negocio cubre este feature }}
+
+## Roles de usuario
+
+| Rol | Acceso |
+|-----|--------|
+| Admin | CRUD completo |
+| {{ Rol }} | {{ permisos }} |
+
+## Gestión de estado
+
+{{ store / estado reactivo / ninguno — y cómo se organiza }}
+
+## Componentes de UI utilizados
+
+| Componente | Usado en | Propósito |
+|------------|----------|-----------|
+| `{{ tabla }}` | `{{ Componente }}` | Listado paginado con filtros |
+| `{{ componente UI }}` | `{{ Componente }}` | {{ propósito }} |
+
+## Ficheros clave
+
+| Fichero | Descripción |
+|---------|-------------|
+| [components.md](components.md) | Componentes del feature |
+| [services.md](services.md) | Servicios y llamadas API |
+| [models.md](models.md) | Interfaces/tipos y DTOs |
+```
+
+**Subsección de componentes de UI en `components.md`**
+
+Cada `components.md` que use componentes del design system debe incluir una subsección por componente
+relevante. Si el design system expone MCP tools, usarlas para obtener información actualizada:
+
+```markdown
+### Componentes de UI
+
+#### `{{ nombre }}` — {{ NombreComponente }}
+
+**Documentación oficial**: enlace a la doc del componente
+**Importación**: módulo / import correcto
+
+| Prop clave | Tipo | Valor usado | Descripción |
+|------------|------|-------------|-------------|
+| `{{ prop }}` | `{{ tipo }}` | `{{ valor }}` | {{ descripción }} |
+
+**Eventos escuchados**:
+
+| Evento | Payload | Acción en el componente |
+|--------|---------|-------------------------|
+| `{{ evento }}` | `{{ tipo }}` | {{ qué hace }} |
+
+**Personalización aplicada** (estilos / tokens de tema):
+
+```typescript
+// Ejemplo de configuración en el componente
+{{ fragmento relevante }}
+```
+
+**Accesibilidad**: {{ notas de accesibilidad del componente }}
+```
+
+### Documentación de Componentes de UI
+
+Cuando un componente del frontend usa el design system del proyecto, el agente DEBE consultar la
+documentación del componente (y las MCP tools del design system, si existen) para enriquecer la
+documentación con información precisa y actualizada.
+
+#### Cuándo incluir documentación de UI
+
+Incluir la subsección de componentes de UI en `components.md` **solo si**:
+
+- El componente tiene configuración propia (inputs, lazy loading, columnas, filtros)
+- Se usan eventos del componente (selección de fila, cambio de página, etc.)
+- Se aplican estilos, tokens de tema o personalización
+- El componente tiene implicaciones de accesibilidad relevantes para el negocio
+
+**NO documentar** componentes usados de forma estándar y sin configuración específica
+(p. ej., un botón simple sin lógica adicional).
+
+#### Documentación de `shared/components.md` — Inventario de UI del proyecto
+
+En `docs/technical/frontend/shared/components.md` mantener una tabla consolidada de todos
+los componentes de UI usados en el proyecto, con la configuración más común:
+
+```markdown
+## Inventario de Componentes de UI
+
+| Componente | Selector | Features usados | Docs oficiales |
+|------------|----------|-----------------|----------------|
+| Table | `{{ selector }}` | Paginación, sort, filtros globales | [ver docs]({{ url }}) |
+| Dialog | `{{ selector }}` | Modal, responsive | [ver docs]({{ url }}) |
+| {{ nombre }} | `{{ selector }}` | {{ features }} | [ver docs]({{ url }}) |
+```
 
 ### Functional Documentation Workflow
 
@@ -179,7 +466,7 @@ When generating **Functional Documentation** (`docs/functional/`):
 
 1. **Feature Summary** → Read `specs/**/feature.md` + implemented controllers/handlers; produce `docs/functional/feature-summary.md`
 2. **Feature Details** → Delegate to `@Bolt Feature` + `@Bolt Use Case` + `@Bolt Gherkin` for user stories, use cases, and BDD scenarios; embed sequence diagrams with `architect-diagramer`
-3. **API Contracts** → Use skill `api-contracts-doc` to extract OpenAPI from .NET controllers to `docs/api/`
+3. **API Contracts** → Use skill `api-contracts-doc` to extract OpenAPI from controllers to `docs/api/`
 4. **Personas** → Interview stakeholders or read `specs/` for actor definitions; produce `docs/functional/personas.md` using the template below
 5. **User Journeys** → Use skill `user-journey-doc` to produce `docs/functional/user-journeys/`
 
@@ -227,7 +514,7 @@ When generating **Functional Documentation** (`docs/functional/`):
 
 ## API Documentation Auto-Generation
 
-### OpenAPI from .NET Controllers
+### OpenAPI from Controllers
 
 ```csharp
 // Auto-detected and documented
@@ -323,15 +610,15 @@ flowchart TB
   end
 
   subgraph NEGOCIO["💼 Negocio Principal"]
-    ENC["F-001<br/>Encargos<br/>📋 Planificado"]
+    ORD["F-001<br/>Pedidos<br/>📋 Planificado"]
   end
 
   AUTH --> USR
-  USR --> ENC
+  USR --> ORD
 
   style AUTH fill:#f59e0b,color:#000
   style USR fill:#22c55e,color:#fff
-  style ENC fill:#cbd5e1,color:#000
+  style ORD fill:#cbd5e1,color:#000
 ```
 
 ### System Diagram Generation
@@ -341,23 +628,23 @@ flowchart TB
 ```mermaid
 graph TB
     subgraph "Frontend Layer"
-        UI[React SPA]
+        UI[SPA]
         Cache[Browser Cache]
     end
 
     subgraph "API Layer"
-        API[.NET API]
+        API[API]
         Auth[Auth Service]
         Valid[Validation]
     end
 
     subgraph "Data Layer"
-        DB[(PostgreSQL)]
+        DB[(Database)]
         Redis[(Redis Cache)]
     end
 
     subgraph "External Services"
-        Stripe[Stripe API]
+        Payments[Payment API]
         Email[Email Service]
     end
 
@@ -367,7 +654,7 @@ graph TB
     API --> Valid
     API --> DB
     API --> Redis
-    API --> Stripe
+    API --> Payments
     API --> Email
 
     classDef frontend fill:#e1f5fe
@@ -378,7 +665,7 @@ graph TB
     class UI,Cache frontend
     class API,Auth,Valid api
     class DB,Redis data
-    class Stripe,Email external
+    class Payments,Email external
 ```
 
 ### Component Documentation Template
@@ -540,10 +827,10 @@ export async function processPayment(
 
 ## 📚 Documentation
 
-- [API Documentation](docs/api/)
-- [User Guide](docs/user-guide/)
-- [Development Guide](docs/development/)
-- [Deployment Guide](docs/deployment/)
+- [API Documentation](../../docs/api/)
+- [User Guide](../../docs/user-guide/)
+- [Development Guide](../../docs/development/)
+- [Deployment Guide](../../docs/deployment/)
 
 ## 🧪 Testing
 
@@ -627,7 +914,7 @@ _ADR Template v1.0 - Bolt Framework-DLC_
 ### Data Model Template
 
 Relay on the skill `bolt-datamodel-diagramer` to generate Mermaid diagrams for data models.
-  
+
 ### Class Diagram
 
 Class diagrams should be used to document the structure of complex components, showing classes, interfaces, and their relationships.

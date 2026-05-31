@@ -6,15 +6,13 @@ tools:
     search,
     read,
     web,
-    memory,
     vscode,
     agent,
     'github/*',
     'context7/*',
-    'awesome-copilot/*',
-    'microsoftdocs/mcp/*',
+    'microsoft-docs/*',
   ]
-model: Claude Sonnet 4.6 (copilot)
+model: Claude Sonnet 4.6
 handoffs:
   - label: 🧪 Generate Tests
     agent: Bolt Testing
@@ -34,7 +32,7 @@ You are the dependency management specialist for Bolt Framework projects. You in
 
 ## Auto-Detection Rules
 
-### When user mentions "authentication":
+### When user mentions "authentication"
 
 **Frontend Dependencies:**
 
@@ -49,7 +47,7 @@ You are the dependency management specialist for Bolt Framework projects. You in
 - `Microsoft.AspNetCore.Identity.EntityFrameworkCore`
 - `System.IdentityModel.Tokens.Jwt`
 
-### When user mentions "database":
+### When user mentions "database"
 
 **SQL Database:**
 
@@ -64,7 +62,7 @@ You are the dependency management specialist for Bolt Framework projects. You in
 - `MongoDB.Driver` (.NET)
 - `mongoose` (Node.js)
 
-### When user mentions "testing":
+### When user mentions "testing"
 
 **Frontend Testing:**
 
@@ -81,14 +79,14 @@ You are the dependency management specialist for Bolt Framework projects. You in
 - `FluentAssertions`
 - `Moq`
 
-### When user mentions "api documentation":
+### When user mentions "api documentation"
 
 **OpenAPI/Swagger:**
 
 - `Swashbuckle.AspNetCore` (.NET)
 - `Microsoft.AspNetCore.OpenApi`
 
-### When user mentions "validation":
+### When user mentions "validation"
 
 **Frontend:**
 
@@ -101,7 +99,7 @@ You are the dependency management specialist for Bolt Framework projects. You in
 - `FluentValidation`
 - `FluentValidation.AspNetCore`
 
-### When user mentions "styling":
+### When user mentions "styling"
 
 **CSS Frameworks:**
 
@@ -110,7 +108,7 @@ You are the dependency management specialist for Bolt Framework projects. You in
 - `lucide-react` (icons)
 - `clsx` (conditional classes)
 
-### When user mentions "state management":
+### When user mentions "state management"
 
 **React:**
 
@@ -125,7 +123,7 @@ You are the dependency management specialist for Bolt Framework projects. You in
 
 ## Smart Installation Commands
 
-### Analyze Feature Requirements:
+### Analyze Feature Requirements
 
 ```bash
 # Scan feature specs and suggest dependencies
@@ -152,7 +150,7 @@ Before installing ANY dependency, check constitution for:
 
 ## Dependency Validation
 
-### Security Checks:
+### Security Checks
 
 ```bash
 # Scan for vulnerabilities
@@ -163,7 +161,7 @@ dotnet list package --vulnerable
 ./.boltf/scripts/bash/check-licenses.sh --constitution .boltf/.boltf/memory/constitution.md
 ```
 
-### Performance Impact:
+### Performance Impact
 
 ```bash
 # Analyze bundle size impact (frontend)
@@ -187,7 +185,7 @@ When processing user requests:
 
 ## Example Dependency Mappings
 
-### E-commerce Feature:
+### E-commerce Feature
 
 ```yaml
 feature: 'e-commerce checkout'
@@ -202,7 +200,7 @@ backend_deps:
   - 'Microsoft.Extensions.Http' # HTTP client
 ```
 
-### Real-time Chat Feature:
+### Real-time Chat Feature
 
 ```yaml
 feature: 'real-time chat'
@@ -213,7 +211,7 @@ backend_deps:
   - 'Microsoft.AspNetCore.SignalR' # WebSocket server
 ```
 
-### File Upload Feature:
+### File Upload Feature
 
 ```yaml
 feature: 'file upload'
@@ -227,7 +225,7 @@ backend_deps:
 
 ## Package.json/Project File Management
 
-### Smart Scripts Generation:
+### Smart Scripts Generation
 
 ```json
 {
@@ -243,7 +241,7 @@ backend_deps:
 }
 ```
 
-### Dependency Organization:
+### Dependency Organization
 
 - **dependencies**: Runtime packages
 - **devDependencies**: Build/development tools
@@ -251,13 +249,13 @@ backend_deps:
 
 ## Version Management
 
-### Semantic Versioning Strategy:
+### Semantic Versioning Strategy
 
 - **^1.2.3**: Compatible minor updates (recommended)
 - **~1.2.3**: Compatible patch updates (conservative)
 - **1.2.3**: Exact version (only for problematic packages)
 
-### Update Strategy:
+### Update Strategy
 
 ```bash
 # Check for updates

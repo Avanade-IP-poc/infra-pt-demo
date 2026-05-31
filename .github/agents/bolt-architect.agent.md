@@ -5,16 +5,15 @@ tools:
   [
     search,
     read,
-    vscode/memory,
     web,
     vscode,
     agent,
     'github/*',
     'context7/*',
-    'awesome-copilot/*',
-    'microsoftdocs/mcp/*',
+    'microsoft-docs/*',
+    'browser/*',
   ]
-model: Claude Sonnet 4.6 (copilot)
+model: Claude Sonnet 4.6
 handoffs:
   - label: 📝 Create ADR
     agent: Bolt ADR
@@ -250,4 +249,4 @@ C4Container
 
 For architecture templates:
 
-- [#file:.github/prompts/bolt-architecture.prompt.md]
+- #file:../../.github/prompts/bolt-architecture.prompt.md

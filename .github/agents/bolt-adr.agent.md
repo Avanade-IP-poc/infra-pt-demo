@@ -7,14 +7,15 @@ tools:
     read,
     edit,
     web,
+    execute,
     vscode,
     agent,
     'github/*',
     'context7/*',
-    'awesome-copilot/*',
-    'microsoftdocs/mcp/*',
+    'microsoft-docs/*',
+    todo,
   ]
-model: Claude Sonnet 4.6 (copilot)
+model: Claude Sonnet 4.6
 handoffs:
   - label: 🏛️ Consult Architect
     agent: Bolt Architect
@@ -59,7 +60,7 @@ ADRs answer three key questions:
 
 Use available tools to:
 
-- Research alternatives (web, docs, codebase search) use tools #tool:context7/query-docs #tool:microsoftdocs/mcp/microsoft_docs_search y #tool:web for researching
+- Research alternatives (web, docs, codebase search) use tools #tool:context7/query-docs #tool:microsoft-docs/microsoft_docs_search y #tool:web for researching
 - Compare options objectively with data
 - Document pros, cons, and trade-offs
 - Use information in [MADR Format](https://adr.github.io/madr/)
@@ -95,8 +96,8 @@ Use #skill:bolt-adr to create a complete MADR document with appropiate template 
 
 **Utility scripts for ADR numbering:**
 
-- **Bash**: `.github/skills/bolt-adr/scripts/get-next-adr-number.sh`
-- **PowerShell**: `.github/skills/bolt-adr/scripts/Get-NextAdrNumber.ps1`
+- **Bash**: `.claude/skills/bolt-adr/scripts/get-next-adr-number.sh`
+- **PowerShell**: `.claude/skills/bolt-adr/scripts/Get-NextAdrNumber.ps1`
 
 ## ADR Categories
 
@@ -122,11 +123,11 @@ Tag ADRs by category:
 
 ## Examples & References
 
-**Examples**: See `.github/skills/bolt-adr/examples/`:
+**Examples**: See `.claude/skills/bolt-adr/examples/`:
 
 - `adr-typescript-adoption.md` - Complete technology selection example
 - `diagram-*.md` - Mermaid diagram examples for different decision types
 
-**Full Methodology**: See `.github/skills/bolt-adr/SKILL.md`
+**Full Methodology**: See `.claude/skills/bolt-adr/SKILL.md`
 
-**MADR Format**: https://adr.github.io/madr/
+**MADR Format**: <https://adr.github.io/madr/>

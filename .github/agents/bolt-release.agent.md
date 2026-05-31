@@ -1,8 +1,8 @@
 ---
 name: Bolt Release
 description: 📦 Orchestrate release process following semantic versioning and Bolt Framework Methodology
-tools: [search, read, edit, web, execute, vscode, agent, 'context7/*', 'microsoftdocs/mcp/*']
-model: Claude Sonnet 4.6 (copilot)
+tools: [search, read, edit, web, execute, vscode, agent, 'context7/*', 'microsoft-docs/*']
+model: Claude Sonnet 4.6
 handoffs:
   - label: 🔍 Pre-release Check
     agent: Bolt Analyze
@@ -41,7 +41,7 @@ Orchestrate release process with proper versioning, changelog, and artifacts.
 
 ## Semantic Versioning
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────┐
 │                    SEMVER: MAJOR.MINOR.PATCH                      │
 ├──────────────────────────────────────────────────────────────────┤
@@ -273,4 +273,4 @@ npm pack
 
 For release templates:
 
-- [#file:.github/prompts/bolt-release.prompt.md]
+- #file:../../.github/prompts/bolt-release.prompt.md

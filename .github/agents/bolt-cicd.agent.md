@@ -12,11 +12,9 @@ tools:
     agent,
     'github/*',
     'context7/*',
-    'awesome-copilot/*',
-    'microsoftdocs/mcp/*',
-    'azure-devops/*',
+    'microsoft-docs/*',
   ]
-model: Claude Sonnet 4.6 (copilot)
+model: Claude Sonnet 4.6
 handoffs:
   - label: 🧪 Setup Testing Pipeline
     agent: Bolt Testing

@@ -7,15 +7,13 @@ tools:
     read,
     edit,
     web,
-    memory,
     vscode,
     agent,
     'github/*',
     'context7/*',
-    'awesome-copilot/*',
-    'microsoftdocs/mcp/*',
+    'microsoft-docs/*',
   ]
-model: Claude Sonnet 4.6 (copilot)
+model: Claude Opus 4.6
 handoffs:
   - label: 📝 Update Specification
     agent: Bolt Specify
@@ -30,6 +28,12 @@ handoffs:
 # ❓ Clarify Agent
 
 **Methodology**: Follow bolt-framework skill (loaded automatically)
+
+## Referenced Skills
+
+- Use `bolt-clarify` for question categories, Clarification Summary format and quality gates.
+- Use `bolt-ui-mockups` when an ambiguity is **visual** (layout, IA, states, flow) — see _Visual ambiguities_ in the skill.
+- Use `markdown-formatting` for spec / ADR edits.
 
 Drive structured questioning to resolve ambiguities identified during specification or analysis phases.
 
@@ -236,4 +240,4 @@ Files to update based on clarifications:
 
 For detailed guidance:
 
-- [#file:.github/prompts/bolt-business-analysis.prompt.md]
+- #file:../../.github/prompts/bolt-business-analysis.prompt.md

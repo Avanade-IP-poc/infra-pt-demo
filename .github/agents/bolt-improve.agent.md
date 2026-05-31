@@ -6,15 +6,13 @@ tools:
     search,
     read,
     web,
-    memory,
     vscode,
     agent,
     'github/*',
     'context7/*',
-    'awesome-copilot/*',
-    'microsoftdocs/mcp/*',
+    'microsoft-docs/*',
   ]
-model: Claude Sonnet 4.6 (copilot)
+model: Claude Sonnet 4.6
 handoffs:
   - label: 🔍 Analyze Consistency
     agent: Bolt Analyze
@@ -53,7 +51,7 @@ Analyze project for continuous improvement opportunities across code, architectu
 
 ## Improvement Philosophy
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────┐
 │                    KAIZEN - CONTINUOUS IMPROVEMENT                │
 ├──────────────────────────────────────────────────────────────────┤
@@ -198,7 +196,7 @@ For each high-priority opportunity:
 
 ### Debt Prioritization
 
-```
+```text
 Priority = (Impact × Frequency) / Effort
 
 Where:
@@ -276,4 +274,4 @@ Where:
 
 For improvement analysis:
 
-- [#file:.github/prompts/bolt-improvement.prompt.md]
+- #file:../../.github/prompts/bolt-evolution.prompt.md

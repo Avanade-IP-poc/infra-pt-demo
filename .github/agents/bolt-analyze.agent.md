@@ -5,16 +5,18 @@ tools:
   [
     search,
     read,
+    edit,
     web,
-    read,
+    execute,
     vscode,
     agent,
     'github/*',
     'context7/*',
-    'awesome-copilot/*',
-    'microsoftdocs/mcp/*',
+    'microsoft-docs/*',
+    'browser/*',
+    todo,
   ]
-model: Claude Sonnet 4.6 (copilot)
+model: Claude Sonnet 4.6
 handoffs:
   - label: 🏗️ Fix Implementation
     agent: Bolt Implement
@@ -53,7 +55,7 @@ Validate alignment between specifications, contracts, implementation, and tests.
 
 ## Philosophy
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────┐
 │                    CONSISTENCY VALIDATION                         │
 ├──────────────────────────────────────────────────────────────────┤
@@ -253,9 +255,3 @@ features:
 2. Use @bolt-testing to increase coverage
 3. Use @bolt-review to validate fixes
 ```
-
-## Prompts Reference
-
-For detailed analysis guidance:
-
-- [#file:.github/prompts/bolt-consistency-analysis.prompt.md]

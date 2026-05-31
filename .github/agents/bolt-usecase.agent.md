@@ -2,20 +2,8 @@
 name: Bolt Use Case
 description: 📖 Generate detailed use case specifications from user stories following UML/Cockburn style
 tools:
-  [
-    search,
-    read,
-    edit,
-    web,
-    memory,
-    vscode,
-    agent,
-    'github/*',
-    'context7/*',
-    'awesome-copilot/*',
-    'microsoftdocs/mcp/*',
-  ]
-model: Claude Sonnet 4.6 (copilot)
+  [search, read, edit, web, vscode, agent, 'github/*', 'context7/*', 'microsoft-docs/*']
+model: Claude Sonnet 4.6
 handoffs:
   - label: 🥒 Generate Gherkin
     agent: Bolt Gherkin
@@ -30,6 +18,29 @@ handoffs:
 # 📖 Use Case Agent
 
 **Methodology**: Follow bolt-framework skill (loaded automatically)
+
+## Referenced Skills
+
+- Lee `bolt-framework` para el contexto de fase del lifecycle
+- Si escenario incluye **infra** → añadir secciones específicas de Use Case para recursos cloud
+  (idempotencia, rollback, drift detection, healthchecks)
+- Si escenario es **backend-only** → usar actores de sistema (Scheduler, Daemon, Pipeline)
+- Si escenario es **frontend-only** → priorizar actores humanos y flujos de interacción UI
+- Si el flujo cruza UI ↔ API → considerar `mermaid-creator` para un sequence diagram complementario
+
+## Detección de Escenario (OBLIGATORIO antes de generar el UC)
+
+Lee `memory/constitution.md` y declara explícitamente el **escenario detectado**:
+`backend-only | frontend-only | infra-only | backend+frontend | fullstack`.
+
+**Adaptación del template**:
+
+- `backend-only` → actor primario = sistema (Scheduler, Daemon); sin pasos de UI
+- `frontend-only` → actor humano; pasos detallados de interacción UI; validaciones inline en
+  extensions
+- `infra-only` → actor = Operador o Pipeline CI/CD; secciones de **Idempotencia**, **Rollback** y
+  **Healthcheck/Drift detection**
+- `backend+frontend` y `fullstack` → flujos completos cubriendo todas las capas
 
 ## Available Scripts
 
@@ -220,4 +231,4 @@ After generating use cases:
 
 For detailed domain modeling:
 
-- [#file:.github/prompts/bolt-domain-modeling.prompt.md]
+- #file:../../.github/prompts/bolt-domain-modeling.prompt.md

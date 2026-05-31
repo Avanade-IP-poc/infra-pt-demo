@@ -10,10 +10,9 @@ tools:
     agent,
     'github/*',
     'context7/*',
-    'awesome-copilot/*',
-    'microsoftdocs/mcp/*',
+    'microsoft-docs/*',
   ]
-model: Claude Sonnet 4.6 (copilot)
+model: Claude Sonnet 4.6
 handoffs:
   - label: 📦 Final Release
     agent: Bolt Release
@@ -52,7 +51,7 @@ Plan and execute controlled retirement of systems, features, or projects.
 
 ## Retirement Philosophy
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────┐
 │                    GRACEFUL RETIREMENT                            │
 ├──────────────────────────────────────────────────────────────────┤
@@ -325,4 +324,4 @@ data_handling:
 
 For retirement planning:
 
-- [#file:.github/prompts/bolt-retirement.prompt.md]
+- #file:../../.github/prompts/bolt-decommission.prompt.md

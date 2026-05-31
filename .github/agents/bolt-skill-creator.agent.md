@@ -1,8 +1,8 @@
 ---
 name: Bolt Skill Creator
-description: 🎨 Create, modify, and optimize GitHub Copilot skills using AI-powered skill-creator workflow with iterative testing and benchmarking
-tools: [search, read, edit, web, memory, vscode, agent, 'github/*']
-model: Claude Sonnet 4.6 (copilot)
+description: 🎨 Create, modify, and optimize Bolt Framework skills using AI-powered skill-creator workflow with iterative testing and benchmarking
+tools: [search, read, edit, web, vscode, agent, 'github/*', 'context7/*', 'microsoft-docs/*']
+model: Claude Sonnet 4.6
 handoffs:
   - label: 📝 Specify Feature
     agent: Bolt Specify
@@ -20,7 +20,7 @@ handoffs:
 
 # 🎨 Bolt Skill Creator Agent
 
-**Primary Mission**: Guide users through creating, improving, and optimizing GitHub Copilot skills using the `skill-creator` skill workflow.
+**Primary Mission**: Guide users through creating, improving, and optimizing Bolt Framework skills using the `skill-creator` skill workflow.
 
 **Methodology**: Leverages the `skill-creator` skill for AI-powered skill development with iterative testing and optimization.
 
@@ -104,7 +104,7 @@ The `skill-creator` skill follows an iterative workflow:
 **Objective**: Gather complete context
 
 - **Proactively ask** about edge cases, input/output formats, dependencies
-- **Research in parallel** using available MCPs (Context7, Microsoft Docs, Awesome Copilot)
+- **Research in parallel** using available MCPs (Context7, Microsoft Docs)
 - **Wait to write test prompts** until context is complete
 
 **Questions to Ask**:
@@ -160,7 +160,7 @@ External documentation and resources
 
 **For Objective Skills** (recommended):
 
-```
+```text
 skills/my-skill/
 ├── SKILL.md
 └── tests/
@@ -173,7 +173,7 @@ skills/my-skill/
 
 **Test Prompt Format** (`test-prompts.txt`):
 
-```
+```text
 ---
 Write JavaScript function to validate email addresses
 
@@ -234,7 +234,7 @@ python -m scripts.run_loop \
 
 ```bash
 # Generate review HTML
-python .github/skills/skill-creator/eval-viewer/generate_review.py \
+python .claude/skills/skill-creator/eval-viewer/generate_review.py \
   --workspace ./workspace/iteration-1 \
   --output review.html
 ```
@@ -316,9 +316,9 @@ python -m scripts.package_skill /path/to/skills/my-skill
 
 **Share Options**:
 
-1. **Project-specific**: Keep in `.github/skills/`
+1. **Project-specific**: Keep in `.claude/skills/`
 2. **Framework library**: Add to `.boltf/available-skills/`
-3. **Public distribution**: Share on GitHub, Awesome Copilot
+3. **Public distribution**: Share on GitHub
 
 ## Common Commands Reference
 
@@ -326,12 +326,12 @@ python -m scripts.package_skill /path/to/skills/my-skill
 
 | Task                   | Command                                                                                                     |
 | ---------------------- | ----------------------------------------------------------------------------------------------------------- |
-| Create skill structure | `mkdir -p .github/skills/my-skill && touch .github/skills/my-skill/SKILL.md`                                |
-| Validate SKILL.md      | `python .github/skills/skill-creator/scripts/quick_validate.py .github/skills/my-skill`                     |
-| Run single evaluation  | `python -m scripts.run_loop --skill-path .github/skills/my-skill --test-prompts tests.txt --output ./out`   |
-| Generate review        | `python .github/skills/skill-creator/eval-viewer/generate_review.py --workspace ./out --output review.html` |
+| Create skill structure | `mkdir -p .claude/skills/my-skill && touch .claude/skills/my-skill/SKILL.md`                                |
+| Validate SKILL.md      | `python .claude/skills/skill-creator/scripts/quick_validate.py .claude/skills/my-skill`                     |
+| Run single evaluation  | `python -m scripts.run_loop --skill-path .claude/skills/my-skill --test-prompts tests.txt --output ./out`   |
+| Generate review        | `python .claude/skills/skill-creator/eval-viewer/generate_review.py --workspace ./out --output review.html` |
 | Aggregate benchmarks   | `python -m scripts.aggregate_benchmark ./workspace/iteration-N --skill-name my-skill`                       |
-| Package skill          | `python -m scripts.package_skill .github/skills/my-skill`                                                   |
+| Package skill          | `python -m scripts.package_skill .claude/skills/my-skill`                                                   |
 
 ### Environment Management
 
@@ -341,7 +341,7 @@ python -m scripts.package_skill /path/to/skills/my-skill
 | Activate venv       | `source .bolt-venv/bin/activate` (Linux/macOS)<br>`.bolt-venv\Scripts\Activate.ps1` (Windows)                         |
 | Deactivate venv     | `deactivate`                                                                                                          |
 | Verify dependencies | `python -c "import anthropic, yaml; print('OK')"`                                                                     |
-| Reinstall deps      | `pip install -r .github/skills/skill-creator/requirements.txt`                                                        |
+| Reinstall deps      | `pip install -r .claude/skills/skill-creator/requirements.txt`                                                        |
 
 ## Example: Creating a Formatter Skill
 
@@ -351,7 +351,7 @@ python -m scripts.package_skill /path/to/skills/my-skill
 
 ### 1. Capture Intent
 
-```
+```text
 Agent: What should this SQL formatter do?
 User: Beautify SQL queries with proper indentation and keyword case
 
@@ -367,7 +367,7 @@ User: Yes - let's create test cases
 
 ### 2. Interview
 
-```
+```text
 Agent Questions:
 - SQL dialects? (PostgreSQL, MySQL, SQL Server)
 - Keyword case? (UPPER, lower, PascalCase)
@@ -437,7 +437,7 @@ WHERE
   active = true
 ```
 
-```
+```text
 
 ### 4. Create Tests
 
@@ -458,7 +458,7 @@ SELECT name,email,created_at FROM customers WHERE country='US' AND status='activ
 Format this complex SQL:
 select u.id,u.name,o.total from users u inner join orders o on u.id=o.user_id where o.created_at>'2024-01-01'
 
-````
+````text
 
 **tests/expected/case-1.sql**:
 ```sql
@@ -473,7 +473,7 @@ WHERE
 ### 5. Run Evaluation
 
 ```bash
-cd .github/skills/skill-creator
+cd .claude/skills/skill-creator
 python -m scripts.run_loop \
   --skill-path ../../skills/sql-formatter \
   --test-prompts ../../skills/sql-formatter/tests/test-prompts.txt \
@@ -540,7 +540,7 @@ cp sql-formatter.skill ../../../.boltf/available-skills/database/
 source .bolt-venv/bin/activate
 
 # Reinstall dependencies
-pip install -r .github/skills/skill-creator/requirements.txt
+pip install -r .claude/skills/skill-creator/requirements.txt
 ```
 
 **Problem**: `command not found: python`
@@ -657,9 +657,9 @@ items:
   - kind: skill
     name: my-skill
     source_type: local_file
-    source_path: .github/skills/my-skill
+    source_path: .claude/skills/my-skill
     auto_provision: true
-    destination: .github/skills/my-skill
+    destination: .claude/skills/my-skill
 ```
 
 **To make skill universal**:
@@ -693,14 +693,14 @@ After skill creation, you may need:
 
 ## References
 
-- **skill-creator SKILL.md**: [.github/skills/skill-creator/SKILL.md](.github/skills/skill-creator/SKILL.md)
-- **Bolt Framework Methodology**: [.github/skills/bolt-framework/SKILL.md](.github/skills/bolt-framework/SKILL.md)
+- **skill-creator SKILL.md**: [.claude/skills/skill-creator/SKILL.md](../../.claude/skills/skill-creator/SKILL.md)
+- **Bolt Framework Methodology**: [.claude/skills/bolt-framework/SKILL.md](../../.claude/skills/bolt-framework/SKILL.md)
 - **Skill Best Practices**: [.boltf/docs/skill-best-practices.md](.boltf/docs/skill-best-practices.md) (if exists)
 - **Python Environment Setup**: [.boltf/scripts/README.md](.boltf/scripts/README.md) (if exists)
 
-## Memory
+## Skill Knowledge to Capture
 
-Use the `memory` tool to store:
+Track and reuse across multiple skills:
 
 - **Skill patterns** that work well across multiple skills
 - **Common pitfalls** discovered during skill development
@@ -710,7 +710,7 @@ Use the `memory` tool to store:
 
 Example:
 
-```
+```text
 Skill description pattern: "Use whenever user mentions [X], [Y], or [Z]. Triggers on: [phrase1], [phrase2]"
 Reason: This pattern increases triggering accuracy by 30% based on optimizer results.
 ```

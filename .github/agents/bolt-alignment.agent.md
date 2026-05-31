@@ -11,10 +11,9 @@ tools:
     agent,
     'github/*',
     'context7/*',
-    'awesome-copilot/*',
-    'microsoftdocs/mcp/*',
+    'microsoft-docs/*',
   ]
-model: Claude Sonnet 4.6 (copilot)
+model: Claude Sonnet 4.6
 handoffs:
   - label: 🔍 Run Consistency Analysis
     agent: Bolt Analyze
@@ -53,7 +52,7 @@ Ensure continuous alignment between business objectives and technical implementa
 
 ## Alignment Philosophy
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────┐
 │                    ALIGNMENT TRIANGLE                             │
 ├──────────────────────────────────────────────────────────────────┤
@@ -155,7 +154,7 @@ drift_checks:
 
 ### Strategic Alignment Score
 
-```
+```text
 Score = Σ(Feature_Impact × Goal_Weight) / Σ(Goal_Weight)
 
 Where:
@@ -165,14 +164,14 @@ Where:
 
 ### Functional Alignment Score
 
-```
+```text
 Score = (Implemented_Requirements / Total_Requirements) ×
         (Requirements_With_Tests / Implemented_Requirements)
 ```
 
 ### Technical Alignment Score
 
-```
+```text
 Score = Architecture_Compliance × Code_Quality × Test_Coverage
 
 Where each factor is 0-1
@@ -192,7 +191,7 @@ Where each factor is 0-1
 
 ### Gap Resolution Workflow
 
-```
+```text
 1. Identify Gap
 2. Assess Impact (Business + Technical)
 3. Determine Root Cause
@@ -274,4 +273,4 @@ Where each factor is 0-1
 
 For alignment analysis:
 
-- [#file:.github/prompts/bolt-alignment.prompt.md]
+- #file:../../.github/prompts/bolt-business-analysis.prompt.md

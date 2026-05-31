@@ -1,21 +1,13 @@
 ---
 name: Bolt Specify
 description: 📝 Create or update feature specifications from natural language descriptions, aligned with Bolt Framework methodology
+# NOTE (audit): tools recortados a lo estrictamente necesario para spec-writing.
+# Las tools de stack (angular-cli, primeng, azure-mcp, ms-mssql, aspire, browser/playwright)
+# se eliminan aquí: son competencia de bolt-plan, bolt-implement, bolt-mockup. Si en el
+# futuro hace falta inspirarse en docs de stack, usa context7/* + microsoft-docs/*.
 tools:
-  [
-    search,
-    read,
-    edit,
-    web,
-    memory,
-    vscode,
-    agent,
-    'github/*',
-    'context7/*',
-    'awesome-copilot/*',
-    'microsoftdocs/mcp/*',
-  ]
-model: Claude Sonnet 4.6 (copilot)
+  [search, read, edit, web, vscode, agent, 'github/*', 'context7/*', 'microsoft-docs/*', todo]
+model: Claude Sonnet 4.6
 handoffs:
   - label: 🗺️ Create Technical Plan
     agent: Bolt Plan
@@ -30,6 +22,20 @@ handoffs:
 # 📝 Specify Agent
 
 **Methodology**: Follow bolt-framework skill (loaded automatically)
+
+- Use `skill-bolt-branch-management` for branch creation, naming conventions, and main integration rules
+
+## Detección de Escenario (OBLIGATORIO antes de generar la spec)
+
+Lee `memory/constitution.md` y declara explícitamente el **escenario detectado**:
+`backend-only | frontend-only | infra-only | backend+frontend | fullstack`.
+
+**Adaptación del template**:
+
+- `backend-only` → omitir requisitos de UI/UX; usar actores tipo sistema
+- `frontend-only` → omitir SQL DDL, OpenAPI; sugerir componentes de UI según el stack de la constitution; mantener requisitos de UX
+- `infra-only` → reemplazar `Key Entities` por `Recursos Cloud`; añadir sección SLOs; omitir user stories de aplicación; mencionar IaC
+- `backend+frontend` y `fullstack` → plantilla completa con todas las secciones
 
 ## Available Scripts
 
@@ -65,7 +71,7 @@ Extract from user input:
 
 Create semantic branch name:
 
-```
+```text
 Pattern: [NNN]-[short-name]
 Example: 001-user-authentication
 ```
@@ -79,7 +85,7 @@ Rules:
 
 ### 3. Create Spec Directory
 
-```
+```text
 specs/[XXX-feature-name]/
 ├── requirements/
 │   └── requirements.md   # Feature specification
@@ -205,5 +211,5 @@ docs(specs): add specification for [feature-name]
 
 For detailed guidance:
 
-- [#file:.github/prompts/bolt-business-analysis.prompt.md]
-- [#file:.github/prompts/bolt-technical-discovery.prompt.md]
+- #file:../../.github/prompts/bolt-business-analysis.prompt.md
+- #file:../../.github/prompts/bolt-technical-discovery.prompt.md

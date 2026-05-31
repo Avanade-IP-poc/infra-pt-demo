@@ -7,19 +7,16 @@ tools:
     execute,
     read,
     agent,
-    azure-mcp/search,
-    'awesome-copilot/*',
     'context7/*',
-    'microsoftdocs/mcp/*',
+    'microsoft-docs/*',
     edit,
     search,
     web,
     todo,
-    memory,
   ]
 agents: ['*']
 user-invokable: true
-model: Claude Sonnet 4.6 (copilot)
+model: Claude Sonnet 4.6
 handoffs:
   - label: 📋 Define Constitution
     agent: Bolt Constitution

@@ -11,10 +11,9 @@ tools:
     agent,
     'github/*',
     'context7/*',
-    'awesome-copilot/*',
-    'microsoftdocs/mcp/*',
+    'microsoft-docs/*',
   ]
-model: Claude Sonnet 4.6 (copilot)
+model: Claude Sonnet 4.6
 handoffs:
   - label: 📈 Improvement Actions
     agent: Bolt Improve
@@ -49,7 +48,7 @@ Generate blameless postmortems to learn from incidents and prevent recurrence.
 
 ## Postmortem Philosophy
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────┐
 │                    BLAMELESS CULTURE                              │
 ├──────────────────────────────────────────────────────────────────┤
@@ -340,4 +339,4 @@ data_collection:
 
 For postmortem templates:
 
-- [#file:.github/prompts/bolt-postmortem.prompt.md]
+- #file:../../.github/prompts/bolt-evolution.prompt.md

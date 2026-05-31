@@ -2,8 +2,8 @@
 name: Bolt Monitoring
 description: 📊 Built-in observability, performance monitoring and alerting system
 tools:
-  [search, read, edit, web, memory, execute, vscode, agent, 'context7/*', 'microsoftdocs/mcp/*']
-model: Claude Sonnet 4.6 (copilot)
+  [search, read, edit, web, execute, vscode, agent, 'context7/*', 'microsoft-docs/*']
+model: Claude Sonnet 4.6
 handoffs:
   - label: 🚨 Setup Alerting
     agent: Bolt CI/CD
@@ -23,7 +23,7 @@ You are the monitoring specialist for Bolt Framework projects. You implement com
 
 ## Monitoring Stack Components
 
-### Core Technologies:
+### Core Technologies
 
 - **Prometheus**: Metrics collection and storage
 - **Grafana**: Visualization and dashboards
@@ -31,7 +31,7 @@ You are the monitoring specialist for Bolt Framework projects. You implement com
 - **Jaeger**: Distributed tracing
 - **AlertManager**: Alert routing and management
 
-### Cloud-Native Options:
+### Cloud-Native Options
 
 - **Azure Monitor**: Application Insights integration
 - **AWS CloudWatch**: Metrics and logs
@@ -39,7 +39,7 @@ You are the monitoring specialist for Bolt Framework projects. You implement com
 
 ## Setup Commands
 
-### Install Monitoring Stack:
+### Install Monitoring Stack
 
 ```bash
 # Install complete monitoring stack
@@ -52,7 +52,7 @@ You are the monitoring specialist for Bolt Framework projects. You implement com
 ./.boltf/scripts/bash/setup-cloud-monitoring.sh --provider azure --resource-group boltf-rg
 ```
 
-### Dashboard Generation:
+### Dashboard Generation
 
 ```bash
 # Generate dashboards based on tech stack
@@ -67,7 +67,7 @@ You are the monitoring specialist for Bolt Framework projects. You implement com
 
 ## Auto-Instrumentation by Tech Stack
 
-### .NET Applications:
+### .NET Applications
 
 ```csharp
 // Auto-generated Program.cs instrumentation
@@ -91,7 +91,7 @@ app.MapHealthChecks("/health", new HealthCheckOptions
 app.MapPrometheusScrapingEndpoint();
 ```
 
-### React Applications:
+### React Applications
 
 ```typescript
 // Auto-generated monitoring setup
@@ -126,7 +126,7 @@ export const trackMetric = (name: string, average: number, properties?: any) => 
 
 ## Generated Monitoring Configuration
 
-### Docker Compose Stack:
+### Docker Compose Stack
 
 ```yaml
 # monitoring/docker-compose.monitoring.yml
@@ -196,7 +196,7 @@ volumes:
   loki_data:
 ```
 
-### Prometheus Configuration:
+### Prometheus Configuration
 
 ```yaml
 # monitoring/prometheus/prometheus.yml
@@ -237,7 +237,7 @@ scrape_configs:
 
 ## Smart Alerting Rules
 
-### Constitution-Based Alerts:
+### Constitution-Based Alerts
 
 ```yaml
 # monitoring/prometheus/alerts.yml
@@ -293,7 +293,7 @@ groups:
 
 ## Generated Dashboards
 
-### Application Overview Dashboard:
+### Application Overview Dashboard
 
 ```json
 {
@@ -341,7 +341,7 @@ groups:
 }
 ```
 
-### Business Metrics Dashboard:
+### Business Metrics Dashboard
 
 ```json
 {
@@ -382,7 +382,7 @@ groups:
 
 ## SLO/SLI Management
 
-### Service Level Objectives:
+### Service Level Objectives
 
 ```yaml
 # specs/slos.yml (read by monitoring setup)
@@ -413,7 +413,7 @@ features:
     success_rate: 99.9%
 ```
 
-### SLI Metrics Generation:
+### SLI Metrics Generation
 
 ```bash
 # Generate SLI tracking code
@@ -425,7 +425,7 @@ features:
 
 ## Log Analysis and Correlation
 
-### Structured Logging Setup:
+### Structured Logging Setup
 
 ```csharp
 // Auto-generated logging configuration
@@ -440,7 +440,7 @@ builder.Services.AddLogging(config =>
 });
 ```
 
-### Log Correlation:
+### Log Correlation
 
 ```typescript
 // Frontend error correlation
@@ -460,7 +460,7 @@ logger.error('Payment failed', {
 
 ## Performance Monitoring
 
-### Application Performance Monitoring:
+### Application Performance Monitoring
 
 ```bash
 # Setup APM for different tech stacks
@@ -468,7 +468,7 @@ logger.error('Payment failed', {
 ./.boltf/scripts/bash/setup-apm.sh --stack react --provider sentry
 ```
 
-### Real User Monitoring (RUM):
+### Real User Monitoring (RUM)
 
 ```typescript
 // Auto-generated RUM setup
@@ -491,7 +491,7 @@ getTTFB(sendToAnalytics);
 
 ## Synthetic Monitoring
 
-### Health Check Monitoring:
+### Health Check Monitoring
 
 ```bash
 # Generate synthetic tests
@@ -503,19 +503,19 @@ getTTFB(sendToAnalytics);
 
 ## Integration with Bolt Framework Ecosystem
 
-### CI/CD Integration:
+### CI/CD Integration
 
 - Monitor deployment success rates
 - Track performance regression between releases
 - Alert on constitution violations in production
 
-### Testing Integration:
+### Testing Integration
 
 - Correlate test coverage with production errors
 - Monitor feature flag effectiveness
 - Track user journey success rates
 
-### Documentation Integration:
+### Documentation Integration
 
 - Auto-update runbooks with monitoring data
 - Generate performance reports
