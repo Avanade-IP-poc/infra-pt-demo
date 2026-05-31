@@ -21,6 +21,7 @@ NC='\033[0m'
 OUTPUT_DIR=""
 PROJECT_TYPE=""
 SOURCE_DIR=""
+SKIP_GIT_GOVERNANCE="false"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # --- Decision variables -------------------------------------------------------
@@ -90,7 +91,7 @@ EOF
 show_usage() {
     cat << EOF
 Usage:
-  ./init.sh --output <path> --type <green|brown> [--source <path>] [--help]
+  ./init.sh --output <path> --type <green|brown> [--source <path>] [--skip-git-governance] [--help]
 
 Parameters:
   --output, -o   Where to create the new project
@@ -107,6 +108,9 @@ Parameters:
                  • Accepts: Absolute path (/home/user/legacy) or relative path (./legacy)
                  • Must exist
 
+  --skip-git-governance
+                 Skip git governance init (no git repo / bolt-upstream remote / subtree base)
+
   --help, -h     Show this message
 
 The wizard walks you through the mandatory constitution decisions
@@ -121,6 +125,7 @@ parse_args() {
             --output|-o)  OUTPUT_DIR="$2";   shift 2 ;;
             --type|-t)    PROJECT_TYPE="$2"; shift 2 ;;
             --source|-s)  SOURCE_DIR="$2";   shift 2 ;;
+            --skip-git-governance) SKIP_GIT_GOVERNANCE="true"; shift ;;
             --help|-h)    show_banner; show_usage; exit 0 ;;
             *) log_error "Unknown option: $1"; echo ""; show_usage; exit 1 ;;
         esac
@@ -852,6 +857,15 @@ copy_bolt_framework() {
     [[ -d "$SCRIPT_DIR/.github" ]] && cp -r "$SCRIPT_DIR/.github" "$OUTPUT_DIR/.github"
     [[ -d "$SCRIPT_DIR/.boltf" ]] && cp -r "$SCRIPT_DIR/.boltf" "$OUTPUT_DIR/.boltf"
 
+    # .claude (dual-client: agents + skills — fuente única de metodología).
+    # settings.local.json es local/gitignored y NO se distribuye.
+    if [[ -d "$SCRIPT_DIR/.claude" ]]; then
+        mkdir -p "$OUTPUT_DIR/.claude"
+        for sub in agents skills; do
+            [[ -d "$SCRIPT_DIR/.claude/$sub" ]] && cp -r "$SCRIPT_DIR/.claude/$sub" "$OUTPUT_DIR/.claude/$sub"
+        done
+    fi
+
     for f in README.md CHANGELOG.md CONTRIBUTING.md LICENSE PENDIENTES.md; do
         [[ -f "$SCRIPT_DIR/.boltf/$f" ]] && cp "$SCRIPT_DIR/.boltf/$f" "$OUTPUT_DIR/$f"
     done
@@ -1246,7 +1260,7 @@ show_summary() {
     fi
     log_info "✓ Basic constitution created in .boltf/memory/constitution.md"
     log_info "✓ Scopes configuration saved to .boltf/scopes.yaml"
-    log_info "✓ Bolt Framework agents and skills copied to .github/"
+    log_info "✓ Bolt Framework agents copied to .github/ and .claude/; skills to .claude/skills/"
 
     # Python environment status
     if [[ "$D_PYTHON_CONFIGURED" == "true" ]]; then
@@ -1337,6 +1351,70 @@ show_summary() {
     echo ""
 }
 
+# --- Git Governance (subtree model) -------------------------------------------
+
+initialize_bolt_governance() {
+    if [[ "$SKIP_GIT_GOVERNANCE" == "true" ]]; then
+        log_info "Gobernanza git omitida (--skip-git-governance)"
+        return 0
+    fi
+
+    log_step "Initializing Bolt governance (git subtree model)..."
+
+    if ! command -v git >/dev/null 2>&1; then
+        log_warn "git no encontrado; se omite. Ejecuta luego: pwsh -c 'Import-Module .boltf/scripts/powershell/BoltFramework.psm1; Initialize-BoltSubtree'"
+        return 0
+    fi
+
+    local remote_name="bolt-upstream"
+    local remote_url="https://github.com/ava-group-iberiademos/bolt-framework.git"
+    local prefix=".boltf"
+
+    (
+        cd "$OUTPUT_DIR" || exit 1
+
+        # 1) Asegurar repositorio git
+        if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+            git init -q
+            log_info "Repositorio git inicializado"
+        fi
+
+        # 2) Commit base (git subtree necesita un HEAD)
+        if ! git rev-parse HEAD >/dev/null 2>&1; then
+            git add -A
+            git commit -q -m "chore: bootstrap Bolt Framework project"
+            log_info "Commit inicial creado"
+        fi
+
+        # 3) Remote upstream canónico
+        if ! git remote | grep -qx "$remote_name"; then
+            git remote add "$remote_name" "$remote_url"
+            log_info "Remote '$remote_name' añadido -> $remote_url"
+        fi
+        git fetch "$remote_name" --tags >/dev/null 2>&1 || log_warn "No se pudo hacer fetch de $remote_name (¿offline?)"
+
+        # 4) Base subtree: registrar merge -s ours si el tag de versión existe en upstream
+        local version
+        version="v$(grep -m1 'version:' "$prefix/bolt-manifest.yaml" 2>/dev/null | awk '{print $2}')"
+        local ref=""
+        if git rev-parse -q --verify "$remote_name/$version^{commit}" >/dev/null 2>&1; then
+            ref="$remote_name/$version"
+        elif git rev-parse -q --verify "$version^{commit}" >/dev/null 2>&1; then
+            ref="$version"
+        fi
+        if [[ -n "$ref" ]]; then
+            if git merge -s ours --no-commit --allow-unrelated-histories "$ref" >/dev/null 2>&1; then
+                git commit --allow-empty -q -m "chore(bolt): establish subtree tracking for $prefix/ at $version"
+                log_info "Relación subtree establecida en $version"
+            fi
+        else
+            log_warn "Tag $version no disponible en upstream; el primer 'Update-BoltFramework' establecerá la base."
+        fi
+    )
+
+    log_success "Gobernanza Bolt inicializada (remote bolt-upstream)"
+}
+
 # --- Main ---------------------------------------------------------------------
 
 main() {
@@ -1413,6 +1491,9 @@ main() {
     if initialize_python_environment; then
         D_PYTHON_CONFIGURED=true
     fi
+
+    # Initialize git governance (subtree model: bolt-upstream remote + base)
+    initialize_bolt_governance
 
     show_summary
 }

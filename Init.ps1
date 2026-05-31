@@ -15,7 +15,10 @@ param(
     [string]$SourceDirectory = "",
 
     [Parameter(Mandatory = $false)]
-    [switch]$Help
+    [switch]$Help,
+
+    [Parameter(Mandatory = $false)]
+    [switch]$SkipGitGovernance
 )
 
 # ─── Logging ─────────────────────────────────────────────────────────────────
@@ -48,7 +51,7 @@ function Show-Banner {
 function Show-Usage {
     Write-Host @"
 Usage:
-  ./Init.ps1 -OutputDirectory <path> -ProjectType <green|brown> [-SourceDirectory <path>]
+  ./Init.ps1 -OutputDirectory <path> -ProjectType <green|brown> [-SourceDirectory <path>] [-SkipGitGovernance]
 
 Parameters:
   -OutputDirectory  Where to create the new project
@@ -64,6 +67,9 @@ Parameters:
                     • brown: Legacy source code folder (copied to legacy/) — REQUIRED
                     • Accepts: Absolute path (C:\\Legacy\\Code) or relative path (.\\legacy)
                     • Must exist
+
+  -SkipGitGovernance
+                    Skip git governance init (no git repo / bolt-upstream remote / subtree base)
 
   -Help             Show this message
 
@@ -864,6 +870,16 @@ function Copy-BoltFramework {
     if (Test-Path "$root\.boltf") {
         Copy-Item "$root\.boltf" "$OutputDirectory\.boltf" -Recurse -Force
     }
+    # .claude (dual-client: agents + skills — fuente única de metodología).
+    # settings.local.json es local/gitignored y NO se distribuye.
+    if (Test-Path "$root\.claude") {
+        New-Item -ItemType Directory -Path "$OutputDirectory\.claude" -Force | Out-Null
+        foreach ($sub in @("agents", "skills")) {
+            if (Test-Path "$root\.claude\$sub") {
+                Copy-Item "$root\.claude\$sub" "$OutputDirectory\.claude\$sub" -Recurse -Force
+            }
+        }
+    }
     # Root docs
     @("README.md","CHANGELOG.md","CONTRIBUTING.md","LICENSE","PENDIENTES.md") | ForEach-Object {
         if (Test-Path "$root\.boltf\$_") { Copy-Item "$root\.boltf\$_" "$OutputDirectory\$_" -Force }
@@ -1452,6 +1468,54 @@ function Initialize-PythonEnvironment {
     }
 }
 
+# ─── Git Governance (subtree model) ──────────────────────────────────────────
+
+function Initialize-BoltGovernance {
+    if ($SkipGitGovernance) {
+        Write-Info "Gobernanza git omitida (-SkipGitGovernance)"
+        return
+    }
+
+    Write-Step "Initializing Bolt governance (git subtree model)..."
+
+    if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
+        Write-Warn "git no encontrado; se omite. Ejecuta luego: Import-Module .boltf/scripts/powershell/BoltFramework.psm1; Initialize-BoltSubtree"
+        return
+    }
+
+    Push-Location $OutputDirectory
+    try {
+        # 1) Asegurar repositorio git
+        git rev-parse --is-inside-work-tree *> $null
+        if ($LASTEXITCODE -ne 0) {
+            git init -q
+            Write-Info "Repositorio git inicializado"
+        }
+
+        # 2) Commit base (git subtree necesita un HEAD)
+        git rev-parse HEAD *> $null
+        if ($LASTEXITCODE -ne 0) {
+            git add -A
+            git commit -q -m "chore: bootstrap Bolt Framework project"
+            Write-Info "Commit inicial creado"
+        }
+
+        # 3) Establecer la relación subtree con el upstream canónico
+        $module = Join-Path $OutputDirectory ".boltf\scripts\powershell\BoltFramework.psm1"
+        if (Test-Path $module) {
+            Import-Module $module -Force
+            Initialize-BoltSubtree
+        }
+        else {
+            Write-Warn "BoltFramework.psm1 no encontrado; se omite Initialize-BoltSubtree"
+        }
+    }
+    finally {
+        Pop-Location
+    }
+    Write-Success "Gobernanza Bolt inicializada (remote bolt-upstream + base subtree)"
+}
+
 # ─── Summary ─────────────────────────────────────────────────────────────────
 
 function Show-Summary {
@@ -1476,7 +1540,7 @@ function Show-Summary {
     }
     Write-Host "  ✓ Basic constitution created in .boltf/memory/constitution.md" -ForegroundColor Green
     Write-Host "  ✓ Scopes configuration saved to .boltf/scopes.yaml" -ForegroundColor Green
-    Write-Host "  ✓ Bolt Framework agents and skills copied to .github/" -ForegroundColor Green
+    Write-Host "  ✓ Bolt Framework agents copied to .github/ and .claude/; skills to .claude/skills/" -ForegroundColor Green
     Write-Host ""
     Write-Host "  ⚠ IMPORTANT: Two-Step Initialization" -ForegroundColor Yellow
     Write-Host "     Phase 1: Init.ps1 (completed) — Basic configuration" -ForegroundColor DarkGray
@@ -1646,6 +1710,9 @@ function Main {
     # Optional: Setup Python environment for Python-based skills
     $pythonConfigured = Initialize-PythonEnvironment
     $decisions.PythonConfigured = $pythonConfigured
+
+    # Initialize git governance (subtree model: bolt-upstream remote + base)
+    Initialize-BoltGovernance
 
     Show-Summary -D $decisions
 }
