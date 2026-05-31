@@ -679,7 +679,7 @@ function Copy-CoreSkills {
 
     # Core skills split into two categories:
     # 1. Already in .claude/skills (from Init.ps1 copy)
-    $githubSkills = @('new-skill', 'markdown-formatting')
+    $initCopiedSkills = @('skill-creator', 'markdown-formatting')
     # 2. From .boltf/available-skills/bolt-framework/ (ALL skills auto-discovered)
     $boltFrameworkPath = Join-Path $ProjectPath ".boltf\available-skills\bolt-framework"
     $boltSkills = @()
@@ -690,13 +690,13 @@ function Copy-CoreSkills {
         Write-Warn "Bolt Framework skills path not found: $boltFrameworkPath"
     }
 
-    # Check skills that came from .github (already provisioned by Init.ps1)
-    foreach ($skillName in $githubSkills) {
+    # Check skills already provisioned by Init.ps1 (copied into .claude/skills)
+    foreach ($skillName in $initCopiedSkills) {
         $destPath = Join-Path $ProjectPath ".claude\skills\$skillName"
 
         if (Test-Path $destPath) {
-            Write-Info "Core skill already exists: $skillName (from .github)"
-            $provisionedCore += "$skillName (from .github)"
+            Write-Info "Core skill already exists: $skillName (from Init.ps1)"
+            $provisionedCore += "$skillName (from Init.ps1)"
         }
         else {
             Write-Warn "Expected skill not found: $skillName (should be copied by Init.ps1)"
