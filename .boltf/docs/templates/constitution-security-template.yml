@@ -2,13 +2,13 @@
 # BOLT FRAMEWORK Security Configuration Template
 # =============================================================================
 # This template provides comprehensive security configuration options
-# to be integrated into memory/constitution.md
+# to be integrated into .boltf/memory/constitution.md
 #
 # Usage: Copy relevant sections to your constitution.md and customize
 # according to your project's security requirements
 # =============================================================================
 
-# Add this section to your memory/constitution.md file
+# Add this section to your .boltf/memory/constitution.md file
 security:
   # =============================================================================
   # Security Policy Configuration
@@ -373,7 +373,7 @@ security:
 #
 # To integrate this security configuration into your BOLT FRAMEWORK project:
 #
-# 1. Copy the relevant sections above to your memory/constitution.md file
+# 1. Copy the relevant sections above to your .boltf/memory/constitution.md file
 # 2. Customize the values according to your project requirements
 # 3. Update your CI/CD pipeline to reference these configurations
 # 4. Run the BOLT Security Agent to validate compliance:

@@ -27,10 +27,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -52,7 +52,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+
+      - name: Detect JS/TS sources for CodeQL
+        id: detect-js-ts
+        run: |
+          if find . -type f \( -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" \) \
+            -not -path "./node_modules/*" \
+            -not -path "./dist/*" \
+            -not -path "./coverage/*" \
+            -not -path "./.boltf/*" \
+            -not -path "./.claude/*" \
+            -not -path "./.github/*" \
+            -not -path "./docs/*" \
+            -not -path "./demo/*" \
+            -not -path "./examples/*" \
+            -not -path "./.git/*" | grep -q .; then
+            echo "has_sources=true" >> "$GITHUB_OUTPUT"
+            echo "JS/TS sources detected. CodeQL will run."
+          else
+            echo "has_sources=false" >> "$GITHUB_OUTPUT"
+            echo "No JS/TS sources detected. Skipping CodeQL JS/TS analysis."
+          fi
 
       - name: Run npm audit
         run: npm audit --audit-level=high
@@ -68,15 +89,22 @@ jobs:
         continue-on-error: true
 
       - name: CodeQL Analysis
-        uses: github/codeql-action/init@v3
+        if: ${{ steps.detect-js-ts.outputs.has_sources == 'true' }}
+        uses: github/codeql-action/init@v4
         with:
           languages: javascript, typescript
 
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
+        if: ${{ steps.detect-js-ts.outputs.has_sources == 'true' }}
+        uses: github/codeql-action/autobuild@v4
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        if: ${{ steps.detect-js-ts.outputs.has_sources == 'true' }}
+        uses: github/codeql-action/analyze@v4
+
+      - name: CodeQL skipped notice
+        if: ${{ steps.detect-js-ts.outputs.has_sources != 'true' }}
+        run: echo "Skipping CodeQL JS/TS analysis because no source files were found."
 
   # ============================================================================
   # STAGE 2: Unit Tests
@@ -87,10 +115,10 @@ jobs:
     needs: [lint-and-format]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -99,15 +127,24 @@ jobs:
         run: npm ci
 
       - name: Run unit tests with coverage
-        run: npm run test:unit -- --coverage
+        run: |
+          if node -e "const scripts=require('./package.json').scripts||{}; process.exit(scripts['test:unit'] ? 0 : 1)"; then
+            npm run test:unit -- --coverage
+          elif node -e "const scripts=require('./package.json').scripts||{}; process.exit(scripts['test'] ? 0 : 1)"; then
+            npm run test -- --coverage
+          else
+            echo "No unit test script found (test:unit/test). Skipping unit tests."
+          fi
 
       - name: Upload coverage report
-        uses: codecov/codecov-action@v4
+        if: ${{ hashFiles('coverage/lcov.info') != '' }}
+        uses: codecov/codecov-action@v5
         with:
           files: ./coverage/lcov.info
           fail_ci_if_error: false
 
       - name: Check coverage threshold
+        if: ${{ hashFiles('coverage/coverage-summary.json') != '' }}
         run: |
           COVERAGE=$(cat coverage/coverage-summary.json | jq '.total.lines.pct')
           echo "Coverage: $COVERAGE%"
@@ -124,10 +161,10 @@ jobs:
     needs: [lint-and-format]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -139,7 +176,7 @@ jobs:
         run: npm run test:contracts --if-present
 
       - name: Upload test results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: always()
         with:
           name: contract-test-results
@@ -180,10 +217,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -206,10 +243,10 @@ jobs:
     needs: [unit-tests]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -218,14 +255,24 @@ jobs:
         run: npm ci
 
       - name: Build application
-        run: npm run build
+        run: |
+          if node -e "const scripts=require('./package.json').scripts||{}; process.exit(scripts['build'] ? 0 : 1)"; then
+            npm run build
+          else
+            echo "No build script found. Skipping build step."
+          fi
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('dist/**') != '' }}
+        uses: actions/upload-artifact@v5
         with:
           name: build-output
           path: dist/
           retention-days: 7
+
+      - name: Build artifact skipped notice
+        if: ${{ hashFiles('dist/**') == '' }}
+        run: echo "Skipping build artifact upload because dist/ was not generated."
 
   # ============================================================================
   # STAGE 6: Policy Guardian Check
@@ -236,7 +283,7 @@ jobs:
     needs: [build]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Check architecture compliance
         run: |

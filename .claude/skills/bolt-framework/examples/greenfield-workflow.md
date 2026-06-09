@@ -49,7 +49,7 @@ Invoke `@Bolt Constitution`:
 clean architecture, 80% test coverage, and semantic versioning."
 ```
 
-**Output**: Ratified `memory/constitution.md` with:
+**Output**: Ratified `.boltf/memory/constitution.md` with:
 
 - Tech stack (React, .NET 8, PostgreSQL)
 - Architecture pattern (Clean Architecture)

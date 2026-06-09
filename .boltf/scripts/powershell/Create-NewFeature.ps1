@@ -46,8 +46,8 @@ if (-not (Test-Path ".git")) {
 }
 
 # Check if constitution exists
-if (-not (Test-Path "memory/constitution.md")) {
-    Write-Warning "Constitution not found at memory/constitution.md"
+if (-not (Test-Path ".boltf/memory/constitution.md")) {
+    Write-Warning "Constitution not found at .boltf/memory/constitution.md"
     Write-Warning "Consider running @Bolt Constitution first"
 }
 

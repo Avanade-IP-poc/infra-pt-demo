@@ -54,7 +54,7 @@ ADRs answer three key questions:
 - Extract problem statement and context
 - Identify decision drivers (must/should/could haves)
 - Find at least 2-3 viable alternatives
-- Check `memory/constitution.md` for constraints
+- Check `.boltf/memory/constitution.md` for constraints
 
 ### 2. Research Options
 

@@ -2,9 +2,9 @@
 
 ## Agent Reference
 
-> **Primary Agent**: [Cosmic Planner](../copilot/agents/bolt-cosmic-planner.md)  
-> **Phase**: Block 1 - Inception  
-> **Constitution**: Always read `memory/constitution.md` first for project constraints
+> **Primary Agent**: [Cosmic Planner](../copilot/agents/bolt-cosmic-planner.md)
+> **Phase**: Block 1 - Inception
+> **Constitution**: Always read `.boltf/memory/constitution.md` first for project constraints
 
 ## Context
 
@@ -15,7 +15,7 @@ Use this prompt when creating release plans, iteration breakdowns, and roadmaps.
 When creating plans:
 
 ### 1. Gather Context First
-- Read `memory/constitution.md` for project constraints and deadlines
+- Read `.boltf/memory/constitution.md` for project constraints and deadlines
 - Review business requirements from Business Explorer
 - Understand team capacity and velocity
 - Identify known risks and dependencies

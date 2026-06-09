@@ -2,9 +2,9 @@
 
 ## Agent Reference
 
-> **Primary Agent**: [Business Explorer](../copilot/agents/bolt-business-explorer.md)  
-> **Phase**: Block 1 - Inception  
-> **Constitution**: Always read `memory/constitution.md` first for project context
+> **Primary Agent**: [Business Explorer](../copilot/agents/bolt-business-explorer.md)
+> **Phase**: Block 1 - Inception
+> **Constitution**: Always read `.boltf/memory/constitution.md` first for project context
 
 ## Context
 
@@ -74,15 +74,15 @@ They want to see trends and be alerted when targets are not met.
 ## Business Requirement: REQ-SALES-001
 
 ### Description
-Sales performance dashboard with regional revenue tracking, trend analysis, 
+Sales performance dashboard with regional revenue tracking, trend analysis,
 and automated alerting for target deviation.
 
 ### Acceptance Criteria
-- [ ] Given a logged-in sales manager, when they access the dashboard, 
+- [ ] Given a logged-in sales manager, when they access the dashboard,
       then they see current month revenue by region
-- [ ] Given historical data exists, when viewing a region, 
+- [ ] Given historical data exists, when viewing a region,
       then a 12-month trend chart is displayed
-- [ ] Given a region is below 80% of target, when the day ends, 
+- [ ] Given a region is below 80% of target, when the day ends,
       then stakeholders receive an alert notification
 
 ### Business Value

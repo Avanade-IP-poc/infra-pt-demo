@@ -6,7 +6,7 @@
     Validates and synchronizes relationships between:
     - Prompts (.github/prompts/)
     - Agents (.github/copilot/agents/)
-    - Constitution (memory/constitution.md)
+    - Constitution (.boltf/memory/constitution.md)
 
 .PARAMETER Mode
     Operation mode: Check, Report, or Fix
@@ -29,7 +29,7 @@ param(
 
 $PromptsDir = ".github/prompts"
 $AgentsDir = ".github/copilot/agents"
-$Constitution = "memory/constitution.md"
+$Constitution = ".boltf/memory/constitution.md"
 
 # Counters
 $script:Errors = 0

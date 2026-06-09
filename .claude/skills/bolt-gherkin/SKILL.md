@@ -17,7 +17,7 @@ using Gherkin syntax. Generate compilable step definition stubs for Reqnroll.
 
 ## Scenario detection (MANDATORY)
 
-Antes de generar `.feature` files, leer `memory/constitution.md` y/o
+Antes de generar `.feature` files, leer `.boltf/memory/constitution.md` y/o
 `specs/[XXX]/requirements/requirements.md` para determinar el escenario activo:
 
 - `backend-only` → cargar `gherkin-reqnroll`; output bajo

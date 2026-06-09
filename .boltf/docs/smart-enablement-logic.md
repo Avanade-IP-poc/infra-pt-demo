@@ -497,7 +497,7 @@ Includes smart enablement of conditional items based on project metadata.
 #>
 
 param(
-    [string]$ConstitutionPath = "memory/constitution.md",
+    [string]$ConstitutionPath = ".boltf/memory/constitution.md",
     [string]$ScopesConfigPath = "memory/scopes.yaml",
     [switch]$DryRun,
     [switch]$Verbose

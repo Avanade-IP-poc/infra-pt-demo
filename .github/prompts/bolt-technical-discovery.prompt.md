@@ -2,9 +2,9 @@
 
 ## Agent Reference
 
-> **Primary Agent**: [Technical Detective](../copilot/agents/bolt-technical-detective.md)  
-> **Phase**: Block 2 - Discovery  
-> **Constitution**: Always read `memory/constitution.md` first for target tech stack
+> **Primary Agent**: [Technical Detective](../copilot/agents/bolt-technical-detective.md)
+> **Phase**: Block 2 - Discovery
+> **Constitution**: Always read `.boltf/memory/constitution.md` first for target tech stack
 
 ## Context
 
@@ -15,7 +15,7 @@ Use this prompt when analyzing existing technical systems, mapping architectures
 When performing technical discovery:
 
 ### 1. Gather Technical Context
-- Read `memory/constitution.md` for target architecture and constraints
+- Read `.boltf/memory/constitution.md` for target architecture and constraints
 - Collect repository structures, documentation, and configs
 - Review infrastructure and deployment information
 - Gather operational metrics if available
@@ -174,7 +174,7 @@ No documentation exists.
    - No containerization
 
 ### Constitution Gaps
-Per `memory/constitution.md`, target stack is:
+Per `.boltf/memory/constitution.md`, target stack is:
 - .NET 8 (currently WebForms 4.5) ❌
 - Container-based (currently VM) ❌
 - GitHub Actions CI/CD (currently manual) ❌

@@ -2,9 +2,9 @@
 
 ## Agent Reference
 
-> **Primary Agent**: [Test Inspector](../copilot/agents/bolt-test-inspector.md)  
-> **Phase**: Block 4 - Construction  
-> **Constitution**: Read `memory/constitution.md` for testing frameworks and coverage requirements
+> **Primary Agent**: [Test Inspector](../copilot/agents/bolt-test-inspector.md)
+> **Phase**: Block 4 - Construction
+> **Constitution**: Read `.boltf/memory/constitution.md` for testing frameworks and coverage requirements
 
 ## Context
 
@@ -132,7 +132,7 @@ describe('Email Value Object', () => {
   describe('create', () => {
     it('should create valid email', () => {
       const result = Email.create('john@example.com');
-      
+
       expect(result.isSuccess).toBe(true);
       expect(result.value.toString()).toBe('john@example.com');
     });
@@ -145,7 +145,7 @@ describe('Email Value Object', () => {
       ['', 'empty string'],
     ])('should reject "%s" (%s)', (email, _reason) => {
       const result = Email.create(email);
-      
+
       expect(result.isFailure).toBe(true);
       expect(result.error.message).toBe('Invalid email format');
     });
@@ -155,14 +155,14 @@ describe('Email Value Object', () => {
     it('should be equal for same email', () => {
       const email1 = Email.create('john@example.com').value;
       const email2 = Email.create('john@example.com').value;
-      
+
       expect(email1.equals(email2)).toBe(true);
     });
 
     it('should not be equal for different emails', () => {
       const email1 = Email.create('john@example.com').value;
       const email2 = Email.create('jane@example.com').value;
-      
+
       expect(email1.equals(email2)).toBe(false);
     });
   });
@@ -176,27 +176,27 @@ describe('Password Value Object', () => {
   describe('validation', () => {
     it('should accept valid password', () => {
       const result = Password.create('SecurePass1!');
-      
+
       expect(result.isSuccess).toBe(true);
     });
 
     it('should reject password shorter than 8 characters', () => {
       const result = Password.create('Short1!');
-      
+
       expect(result.isFailure).toBe(true);
       expect(result.error.message).toContain('at least 8 characters');
     });
 
     it('should reject password without uppercase', () => {
       const result = Password.create('lowercase123!');
-      
+
       expect(result.isFailure).toBe(true);
       expect(result.error.message).toContain('uppercase');
     });
 
     it('should reject password without number', () => {
       const result = Password.create('NoNumbersHere!');
-      
+
       expect(result.isFailure).toBe(true);
       expect(result.error.message).toContain('number');
     });
@@ -345,7 +345,7 @@ describe('User Registration Integration', () => {
 
     expect(response.status).toBe(201);
     expect(response.body.userId).toBeDefined();
-    
+
     // Verify in database
     const user = await db.query('SELECT * FROM users WHERE email = $1', ['integration@example.com']);
     expect(user.rows).toHaveLength(1);

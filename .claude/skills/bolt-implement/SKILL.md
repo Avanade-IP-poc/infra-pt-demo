@@ -22,7 +22,7 @@ management, and feedback loops at each step.
 ### Conditional skill loading (per detected scenario)
 
 Carga las skills de patrones técnicos que correspondan al stack declarado en
-`memory/constitution.md`. Las referencias concretas dependen del stack del
+`.boltf/memory/constitution.md`. Las referencias concretas dependen del stack del
 proyecto:
 
 - **Backend** → skill de patrones de backend del stack (capas, repositorios,
@@ -43,7 +43,7 @@ proyecto:
 
 ## Scenario detection (MANDATORY before implementing)
 
-Read `memory/constitution.md` and declare:
+Read `.boltf/memory/constitution.md` and declare:
 `backend-only | frontend-only | infra-only | backend+frontend | fullstack`.
 
 Use the scenario to decide which layers to touch and which skills to load.
@@ -114,7 +114,7 @@ If NOT on a feature branch:
 ## Issue / Workitem tracking por Bolt
 
 Si la feature tiene >1 Bolt, crear un ticket por Bolt en el tracker activo
-(detectado desde `memory/constitution.md`, sección `work-management`).
+(detectado desde `.boltf/memory/constitution.md`, sección `work-management`).
 
 **GitHub Issues** (default):
 

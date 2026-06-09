@@ -3,7 +3,7 @@
 
 set -e
 
-CONSTITUTION_FILE="memory/constitution.md"
+CONSTITUTION_FILE=".boltf/memory/constitution.md"
 PROJECT_TYPE=""
 TECH_STACK=""
 VERBOSE=false
@@ -22,7 +22,7 @@ while [[ $# -gt 0 ]]; do
         --help)
             echo "Usage: $0 [OPTIONS]"
             echo "Options:"
-            echo "  --from-constitution FILE    Constitution file to read (default: memory/constitution.md)"
+            echo "  --from-constitution FILE    Constitution file to read (default: .boltf/memory/constitution.md)"
             echo "  --verbose                   Enable verbose output"
             echo "  --help                      Show this help message"
             exit 0
@@ -75,11 +75,11 @@ mkdir -p .github/{workflows,templates}
 # Generate structure based on detected tech stack
 if [[ $TECH_STACK == *"React"* ]]; then
     echo "⚛️  Setting up React frontend structure..."
-    
+
     mkdir -p src/frontend/{components,pages,hooks,services,styles,types,utils,contexts}
     mkdir -p src/frontend/components/{common,forms,layout,ui}
     mkdir -p tests/unit/frontend/{components,hooks,services}
-    
+
     # Create package.json for React project
     cat > src/frontend/package.json << 'EOF'
 {
@@ -182,11 +182,11 @@ fi
 
 if [[ $TECH_STACK == *"Vue"* ]]; then
     echo "🟢 Setting up Vue frontend structure..."
-    
+
     mkdir -p src/frontend/{components,views,composables,services,styles,types,utils,stores}
     mkdir -p src/frontend/components/{base,forms,layout}
     mkdir -p tests/unit/frontend/{components,composables,services}
-    
+
     # Create package.json for Vue project
     cat > src/frontend/package.json << 'EOF'
 {
@@ -225,17 +225,17 @@ fi
 
 if [[ $TECH_STACK == *".NET"* ]]; then
     echo "🔵 Setting up .NET backend structure..."
-    
+
     mkdir -p src/backend/{Controllers,Services,Models,Data,Extensions,Middleware,Configuration}
     mkdir -p tests/unit/backend/{Controllers,Services,Models}
     mkdir -p tests/integration/backend
-    
+
     # Create .NET solution file
     cd src/backend
     dotnet new sln -n Bolt Framework
     dotnet new webapi -n Bolt Framework.Api
     dotnet sln add Bolt Framework.Api
-    
+
     # Add common NuGet packages
     cd Bolt Framework.Api
     dotnet add package Microsoft.EntityFrameworkCore
@@ -243,18 +243,18 @@ if [[ $TECH_STACK == *".NET"* ]]; then
     dotnet add package Serilog.AspNetCore
     dotnet add package FluentValidation.AspNetCore
     dotnet add package Swashbuckle.AspNetCore
-    
+
     cd ../../..
-    
+
     log "✅ .NET backend structure created"
 fi
 
 if [[ $TECH_STACK == *"Python"* ]]; then
     echo "🐍 Setting up Python backend structure..."
-    
+
     mkdir -p src/backend/{api,models,services,database,middleware,config}
     mkdir -p tests/unit/backend/{api,services,models}
-    
+
     # Create requirements.txt
     cat > src/backend/requirements.txt << 'EOF'
 fastapi==0.104.1
@@ -275,16 +275,16 @@ EOF
     touch src/backend/api/__init__.py
     touch src/backend/models/__init__.py
     touch src/backend/services/__init__.py
-    
+
     log "✅ Python backend structure created"
 fi
 
 if [[ $TECH_STACK == *"Node"* ]]; then
     echo "🟡 Setting up Node.js backend structure..."
-    
+
     mkdir -p src/backend/{controllers,services,models,middleware,config,routes}
     mkdir -p tests/unit/backend/{controllers,services,models}
-    
+
     # Create package.json for Node.js project
     cat > src/backend/package.json << 'EOF'
 {
@@ -529,7 +529,7 @@ fi)
 # Deploy to staging
 ./scripts/bash/deploy.sh --env staging
 
-# Deploy to production  
+# Deploy to production
 ./scripts/bash/deploy.sh --env production
 \`\`\`
 

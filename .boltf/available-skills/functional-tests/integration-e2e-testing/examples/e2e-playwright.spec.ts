@@ -43,10 +43,6 @@ test.describe("T000 - Create client", () => {
     await db.resetAndSeed(); // → POST /api/testing/{workerIndex}/reset-and-seed-all
   });
 
-  // Smoke test — critical path. Runs in @smoke and @regression suites.
-  test(
-    "should create a new client successfully",
-    { tag: ["@smoke", "@regression"] },
   // ── Happy-path (smoke + regression) ──────────────────────────────────────────
 
   test(

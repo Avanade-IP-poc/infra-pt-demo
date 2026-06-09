@@ -49,12 +49,12 @@ mkdir -p "${TEST_DIR}/support"
 
 # Detect testing framework from constitution
 FRAMEWORK="cucumber"
-if [ -f "memory/constitution.md" ]; then
-    if grep -qi "specflow" "memory/constitution.md"; then
+if [ -f ".boltf/memory/constitution.md" ]; then
+    if grep -qi "specflow" ".boltf/memory/constitution.md"; then
         FRAMEWORK="specflow"
-    elif grep -qi "pytest-bdd" "memory/constitution.md"; then
+    elif grep -qi "pytest-bdd" ".boltf/memory/constitution.md"; then
         FRAMEWORK="pytest-bdd"
-    elif grep -qi "behave" "memory/constitution.md"; then
+    elif grep -qi "behave" ".boltf/memory/constitution.md"; then
         FRAMEWORK="behave"
     fi
 fi
@@ -72,7 +72,7 @@ Feature: ${FEATURE_TITLE}
   As a [role from user story]
   I want [capability]
   So that [benefit]
-  
+
   # Specification: ${SPEC_DIR}/spec.md
   # Generated: $(date +%Y-%m-%d)
 
@@ -103,7 +103,7 @@ Feature: ${FEATURE_TITLE}
     Given the required preconditions are met
     When I perform the action with <input>
     Then the result should be <expected>
-    
+
     Examples:
       | input        | expected |
       | valid_min    | success  |
@@ -150,13 +150,13 @@ public class CommonSteps
     {
         // Setup code
     }
-    
+
     [When(@"I perform the main action")]
     public void WhenIPerformTheMainAction()
     {
         // Action code
     }
-    
+
     [Then(@"the action should be completed successfully")]
     public void ThenTheActionShouldBeCompletedSuccessfully()
     {

@@ -82,7 +82,7 @@ $ADRContent = @"
 
 ### Constraints from Constitution
 
-Per ``memory/constitution.md``:
+Per ```.boltf/memory/constitution.md```:
 - Tech Stack: [Relevant constraints]
 - Principles: [Relevant principles]
 - Security: [Relevant requirements]
@@ -190,7 +190,7 @@ Per ``memory/constitution.md``:
 ## References
 
 - [Reference 1]
-- [Constitution: memory/constitution.md]
+- [Constitution: .boltf/memory/constitution.md]
 
 ## Changelog
 

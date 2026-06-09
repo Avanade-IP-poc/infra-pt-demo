@@ -13,7 +13,7 @@ description: Create comprehensive Bolt Framework feature specifications (require
 
 ## Scenario detection (MANDATORY before generating the spec)
 
-Read `memory/constitution.md` and declare the scenario explicitly:
+Read `.boltf/memory/constitution.md` and declare the scenario explicitly:
 `backend-only | frontend-only | infra-only | backend+frontend | fullstack`.
 
 Template adaptation:
@@ -63,7 +63,7 @@ post-facto cuesta horas.
 
 Independientemente del tracker configurado, **toda feature debe tener un
 ticket asociado** en el issue tracker activo. Detecta el tracker desde
-`memory/constitution.md` (sección `work-management`) y usa el comando
+`.boltf/memory/constitution.md` (sección `work-management`) y usa el comando
 correspondiente:
 
 **GitHub Issues** (default):

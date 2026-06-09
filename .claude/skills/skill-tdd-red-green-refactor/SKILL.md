@@ -28,7 +28,7 @@ graph LR
     A[🔴 RED<br/>Write failing test] --> B[🟢 GREEN<br/>Make it pass]
     B --> C[♻️ REFACTOR<br/>Improve code]
     C --> A
-    
+
     style A fill:#ffcccc
     style B fill:#ccffcc
     style C fill:#ccccff
@@ -90,8 +90,8 @@ graph LR
 
 ### Common GREEN Phase Mistakes
 
-❌ **Over-Engineering**: Adding features not tested yet  
-❌ **Premature Optimization**: Performance concerns before it works  
+❌ **Over-Engineering**: Adding features not tested yet
+❌ **Premature Optimization**: Performance concerns before it works
 ❌ **Adding Error Handling**: Unless you have a test for it
 
 ✅ **Keep It Simple**: Just make the test pass!
@@ -149,12 +149,12 @@ graph LR
 
 ## 🚫 TDD Anti-Patterns (What NOT to Do)
 
-❌ **Anti-Pattern 1**: Writing Tests After Implementation  
-❌ **Anti-Pattern 2**: Skipping RED Phase  
-❌ **Anti-Pattern 3**: Testing Implementation Details  
-❌ **Anti-Pattern 4**: Large Test / Large Implementation  
-❌ **Anti-Pattern 5**: Not Running Tests Frequently  
-❌ **Anti-Pattern 6**: Testing Trivial Code  
+❌ **Anti-Pattern 1**: Writing Tests After Implementation
+❌ **Anti-Pattern 2**: Skipping RED Phase
+❌ **Anti-Pattern 3**: Testing Implementation Details
+❌ **Anti-Pattern 4**: Large Test / Large Implementation
+❌ **Anti-Pattern 5**: Not Running Tests Frequently
+❌ **Anti-Pattern 6**: Testing Trivial Code
 ❌ **Anti-Pattern 7**: Fragile Tests (Over-Mocking)
 
 📘 **See**: [examples/anti-patterns.md](examples/anti-patterns.md) for detailed anti-patterns with code examples and fixes
@@ -206,18 +206,18 @@ TDD applies to E2E tests too:
 
 ### When TDD is Working Well
 
-✅ Cycle time is short (< 30 min)  
-✅ Tests are green most of the time  
-✅ Refactoring is fearless  
-✅ Code coverage is high naturally  
+✅ Cycle time is short (< 30 min)
+✅ Tests are green most of the time
+✅ Refactoring is fearless
+✅ Code coverage is high naturally
 ✅ Bugs are caught early
 
 ### When TDD is Not Working
 
-❌ Cycle time > 1 hour  
-❌ Tests frequently break  
-❌ Afraid to refactor  
-❌ Coverage gaps after TDD  
+❌ Cycle time > 1 hour
+❌ Tests frequently break
+❌ Afraid to refactor
+❌ Coverage gaps after TDD
 ❌ Tests feel like burden
 
 ---
@@ -268,7 +268,7 @@ npm test -- --watch
 
 ### Constitution
 
-TDD preferences should be in `memory/constitution.md`:
+TDD preferences should be in `.boltf/memory/constitution.md`:
 
 ```markdown
 ### Testing Philosophy

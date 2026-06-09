@@ -30,7 +30,7 @@ handoffs:
 
 ## Detección de Escenario (OBLIGATORIO antes de generar el UC)
 
-Lee `memory/constitution.md` y declara explícitamente el **escenario detectado**:
+Lee `.boltf/memory/constitution.md` y declara explícitamente el **escenario detectado**:
 `backend-only | frontend-only | infra-only | backend+frontend | fullstack`.
 
 **Adaptación del template**:
@@ -57,7 +57,7 @@ Generate detailed use case specifications from user stories, providing full acto
 
 ## Constitution Check
 
-**FIRST**: Read `memory/constitution.md` to understand:
+**FIRST**: Read `.boltf/memory/constitution.md` to understand:
 
 - Documentation format preferences
 - Naming conventions

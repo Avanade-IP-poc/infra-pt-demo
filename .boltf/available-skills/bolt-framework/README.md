@@ -24,7 +24,7 @@ Bolt Framework (Bolt Framework) is an AI-powered software development methodolog
 
 ## Key Concepts
 
-### Constitution (`memory/constitution.md`)
+### Constitution (`.boltf/memory/constitution.md`)
 
 The project's DNA - defines tech stack, standards, constraints. **Must be read before any work.**
 
@@ -59,7 +59,7 @@ These skills are activated in projects via `.boltf/scopes/` configuration when:
 
 Bolt Framework skills work with:
 
-- **Constitution**: `memory/constitution.md` - Project constraints and standards
+- **Constitution**: `.boltf/memory/constitution.md` - Project constraints and standards
 - **Feature Specs**: `specs/XXX-feature-name/` - Detailed feature specifications
 - **Quality Gates**: Automated validation of code quality
 - **Agents**: 31+ Bolt Framework agents in `.github/agents/`

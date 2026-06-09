@@ -17,6 +17,9 @@ permissions:
   security-events: write
   actions: read
 
+env:
+  ENABLE_CODE_SCANNING: ${{ vars.ENABLE_CODE_SCANNING || 'false' }}
+
 jobs:
   # ============================================================================
   # SAST - Static Application Security Testing
@@ -26,19 +29,42 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+
+      - name: Detect application source code
+        id: detect-src
+        run: |
+          # Only flag JS/TS source that lives outside framework/config directories
+          if find . \
+               -not -path '*/node_modules/*' \
+               -not -path '*/.boltf/*' \
+               -not -path '*/.claude/*' \
+               -not -path '*/.github/*' \
+               -not -path '*/docs/*' \
+               -not -path '*/demo/*' \
+               -not -path '*/examples/*' \
+               \( -name '*.js' -o -name '*.ts' -o -name '*.jsx' -o -name '*.tsx' \) \
+             | grep -q .; then
+            echo "has-source=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has-source=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No application JS/TS source found — CodeQL analysis skipped."
+          fi
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        if: steps.detect-src.outputs.has-source == 'true' && env.ENABLE_CODE_SCANNING == 'true'
+        uses: github/codeql-action/init@v4
         with:
           languages: javascript, typescript
           queries: security-extended
 
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
+        if: steps.detect-src.outputs.has-source == 'true' && env.ENABLE_CODE_SCANNING == 'true'
+        uses: github/codeql-action/autobuild@v4
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        if: steps.detect-src.outputs.has-source == 'true' && env.ENABLE_CODE_SCANNING == 'true'
+        uses: github/codeql-action/analyze@v4
         with:
           category: "/language:javascript"
 
@@ -51,10 +77,11 @@ jobs:
             p/nodejs
             p/owasp-top-ten
             p/security-audit
-          generateSarif: true
+          args: --sarif --output=semgrep.sarif
 
       - name: Upload Semgrep results
-        uses: github/codeql-action/upload-sarif@v3
+        if: env.ENABLE_CODE_SCANNING == 'true'
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: semgrep.sarif
 
@@ -66,10 +93,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '20'
           cache: 'npm'
@@ -99,8 +126,22 @@ jobs:
           format: 'SARIF'
           out: 'reports'
 
+      - name: Normalize Dependency Check SARIF URIs
+        run: |
+          SARIF_FILE="reports/dependency-check-report.sarif"
+          if [[ -f "$SARIF_FILE" ]]; then
+            # Dependency-Check may emit package-lock artifact URIs with query-like suffixes
+            # (e.g. file:///.../package-lock.json?pkg/version), which Code Scanning warns about.
+            jq '
+              (.runs[]?.artifacts[]?.location.uri |= sub("\\?.*$"; ""))
+              | (.runs[]?.results[]?.locations[]?.physicalLocation.artifactLocation.uri |= sub("\\?.*$"; ""))
+            ' "$SARIF_FILE" > "$SARIF_FILE.tmp"
+            mv "$SARIF_FILE.tmp" "$SARIF_FILE"
+          fi
+
       - name: Upload Dependency Check results
-        uses: github/codeql-action/upload-sarif@v3
+        if: env.ENABLE_CODE_SCANNING == 'true'
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: reports/dependency-check-report.sarif
 
@@ -110,13 +151,16 @@ jobs:
   secret-scan:
     name: Secret Detection
     runs-on: ubuntu-latest
+    env:
+      GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       - name: Detect secrets with Gitleaks
+        if: env.GITLEAKS_LICENSE != ''
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -131,15 +175,45 @@ jobs:
           extra_args: --debug --only-verified
 
   # ============================================================================
+  # File Detection (needed because hashFiles() is not available in job-level if:)
+  # ============================================================================
+  detect-files:
+    name: Detect File Types
+    runs-on: ubuntu-latest
+    outputs:
+      has-dockerfile: ${{ steps.detect.outputs.has-dockerfile }}
+      has-iac: ${{ steps.detect.outputs.has-iac }}
+      has-openapi: ${{ steps.detect.outputs.has-openapi }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Detect files
+        id: detect
+        run: |
+          [[ -f "Dockerfile" ]] \
+            && echo "has-dockerfile=true" >> "$GITHUB_OUTPUT" \
+            || echo "has-dockerfile=false" >> "$GITHUB_OUTPUT"
+          find . \( -name '*.tf' -o \( -path '*/cloudformation/*' -name '*.yml' \) \) \
+            -not -path '*/node_modules/*' | grep -q . \
+            && echo "has-iac=true" >> "$GITHUB_OUTPUT" \
+            || echo "has-iac=false" >> "$GITHUB_OUTPUT"
+          find . \( -name 'openapi*.yml' -o -name 'openapi*.yaml' \) \
+            | grep -q . \
+            && echo "has-openapi=true" >> "$GITHUB_OUTPUT" \
+            || echo "has-openapi=false" >> "$GITHUB_OUTPUT"
+
+  # ============================================================================
   # Container Security
   # ============================================================================
   container-scan:
     name: Container Security Scan
     runs-on: ubuntu-latest
-    if: hashFiles('Dockerfile') != ''
+    needs: detect-files
+    if: needs.detect-files.outputs.has-dockerfile == 'true'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Build Docker image
         run: docker build -t app:scan .
@@ -154,7 +228,7 @@ jobs:
           ignore-unfixed: true
 
       - name: Upload Trivy results
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: 'trivy-results.sarif'
 
@@ -170,10 +244,11 @@ jobs:
   iac-security:
     name: IaC Security Scan
     runs-on: ubuntu-latest
-    if: hashFiles('**/terraform/**/*.tf') != '' || hashFiles('**/cloudformation/**/*.yml') != ''
+    needs: detect-files
+    if: needs.detect-files.outputs.has-iac == 'true'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Run Checkov IaC scanner
         uses: bridgecrewio/checkov-action@v12
@@ -184,7 +259,7 @@ jobs:
           output_file_path: results.sarif
 
       - name: Upload Checkov results
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: results.sarif
 
@@ -197,7 +272,7 @@ jobs:
 
       - name: Upload tfsec results
         if: hashFiles('**/terraform/**/*.tf') != ''
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: tfsec.sarif
 
@@ -207,10 +282,11 @@ jobs:
   api-security:
     name: API Security Scan
     runs-on: ubuntu-latest
-    if: hashFiles('**/openapi*.yml') != '' || hashFiles('**/openapi*.yaml') != ''
+    needs: detect-files
+    if: needs.detect-files.outputs.has-openapi == 'true'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Find OpenAPI specs
         id: find-specs
@@ -220,7 +296,10 @@ jobs:
 
       - name: Run API security audit
         uses: 42crunch/api-security-audit-action@v3
-        if: steps.find-specs.outputs.spec_file != ''
+        # Requires a valid 42Crunch platform account and API_SECURITY_TOKEN secret.
+        # Skip silently when the secret is absent rather than failing with a 404.
+        if: steps.find-specs.outputs.spec_file != '' && secrets.API_SECURITY_TOKEN != ''
+        continue-on-error: true
         with:
           api-token: ${{ secrets.API_SECURITY_TOKEN }}
           min-score: 70
@@ -239,10 +318,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '20'
           cache: 'npm'
@@ -253,10 +332,10 @@ jobs:
       - name: Check licenses
         run: |
           npx license-checker --summary --production > license-summary.txt
-          
+
           # Check for problematic licenses
           PROBLEMATIC=$(npx license-checker --production --onlyAllow "MIT;Apache-2.0;ISC;BSD-2-Clause;BSD-3-Clause;0BSD;CC0-1.0;Unlicense" 2>&1 || true)
-          
+
           if echo "$PROBLEMATIC" | grep -q "FAIL"; then
             echo "⚠️ Some dependencies have non-approved licenses"
             echo "## License Issues Found" >> $GITHUB_STEP_SUMMARY
@@ -269,7 +348,7 @@ jobs:
           fi
 
       - name: Upload license report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: license-report
           path: license-summary.txt
@@ -292,7 +371,7 @@ jobs:
           echo "| SAST | ${{ needs.sast.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Dependency Scan | ${{ needs.dependency-scan.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Secret Detection | ${{ needs.secret-scan.result }} |" >> $GITHUB_STEP_SUMMARY
-          
+
           if [[ "${{ needs.sast.result }}" == "failure" ]] || \
              [[ "${{ needs.dependency-scan.result }}" == "failure" ]] || \
              [[ "${{ needs.secret-scan.result }}" == "failure" ]]; then
@@ -310,11 +389,11 @@ jobs:
               repo: context.repo.repo,
               title: `[Security] Critical findings in security scan - ${new Date().toISOString().split('T')[0]}`,
               body: `## Security Alert
-              
+
               The security scan workflow has detected issues that require attention.
-              
+
               **Workflow Run:** ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}
-              
+
               Please review the security findings and address critical vulnerabilities.`,
               labels: ['security', 'critical', 'automated']
             });

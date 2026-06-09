@@ -147,7 +147,7 @@ function Invoke-Check {
 # Load Constitution Thresholds
 # =============================================================================
 function Get-ConstitutionThresholds {
-    $constitutionPath = "memory/constitution.md"
+    $constitutionPath = ".boltf/memory/constitution.md"
     if (Test-Path $constitutionPath) {
         Write-Info "Loading thresholds from constitution..."
         $content = Get-Content $constitutionPath -Raw

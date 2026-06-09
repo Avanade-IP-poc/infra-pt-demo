@@ -44,7 +44,7 @@ jobs:
       changelog: ${{ steps.changelog.outputs.changelog }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -72,7 +72,7 @@ jobs:
         run: |
           # Get previous tag
           PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
-          
+
           if [ -n "$PREV_TAG" ]; then
             echo "Generating changelog since $PREV_TAG"
             CHANGELOG=$(git log ${PREV_TAG}..HEAD --pretty=format:"- %s (%h)" --no-merges)
@@ -80,7 +80,7 @@ jobs:
             echo "First release - generating full changelog"
             CHANGELOG=$(git log --pretty=format:"- %s (%h)" --no-merges | head -50)
           fi
-          
+
           # Store multiline changelog
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "changelog<<$EOF" >> $GITHUB_OUTPUT
@@ -104,10 +104,10 @@ jobs:
     needs: validate
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '20'
           cache: 'npm'
@@ -127,11 +127,31 @@ jobs:
           npm version ${{ needs.validate.outputs.version }} --no-git-tag-version
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: dist
           path: dist/
           retention-days: 5
+
+  # ============================================================================
+  # File Detection (hashFiles() is not available in job-level if:)
+  # ============================================================================
+  detect-files:
+    name: Detect File Types
+    runs-on: ubuntu-latest
+    needs: [validate, build]
+    outputs:
+      has-dockerfile: ${{ steps.detect.outputs.has-dockerfile }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Detect Dockerfile
+        id: detect
+        run: |
+          [[ -f "Dockerfile" ]] \
+            && echo "has-dockerfile=true" >> "$GITHUB_OUTPUT" \
+            || echo "has-dockerfile=false" >> "$GITHUB_OUTPUT"
 
   # ============================================================================
   # Container Image Build
@@ -139,14 +159,14 @@ jobs:
   docker:
     name: Build Container Image
     runs-on: ubuntu-latest
-    needs: [validate, build]
-    if: hashFiles('Dockerfile') != ''
+    needs: [validate, build, detect-files]
+    if: needs.detect-files.outputs.has-dockerfile == 'true'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: dist
           path: dist/
@@ -199,16 +219,16 @@ jobs:
     if: github.event.inputs.release_type != 'prerelease'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: dist
           path: dist/
@@ -231,10 +251,10 @@ jobs:
     if: always() && needs.build.result == 'success'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: dist
           path: dist/
@@ -251,21 +271,21 @@ jobs:
         run: |
           cat << 'EOF' > release-notes.md
           ## What's Changed
-          
+
           ${{ needs.validate.outputs.changelog }}
-          
+
           ## Installation
-          
+
           ### NPM
           ```bash
-          npm install @Bolt Framework/dlc@${{ needs.validate.outputs.version }}
+          npm install bolt-framework@${{ needs.validate.outputs.version }}
           ```
-          
+
           ### Docker
           ```bash
           docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.validate.outputs.version }}
           ```
-          
+
           ## Full Changelog
           https://github.com/${{ github.repository }}/compare/v${{ needs.validate.outputs.version }}...HEAD
           EOF

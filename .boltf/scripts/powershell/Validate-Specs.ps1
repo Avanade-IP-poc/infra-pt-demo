@@ -59,10 +59,10 @@ Write-Info "Validating specifications..."
 # =============================================================================
 Write-Section "Constitution"
 
-if (Test-Path "memory/constitution.md") {
+if (Test-Path ".boltf/memory/constitution.md") {
     Write-Success "Constitution exists"
 
-    $ConstitutionContent = Get-Content "memory/constitution.md" -Raw
+    $ConstitutionContent = Get-Content ".boltf/memory/constitution.md" -Raw
 
     $RequiredSections = @("Tech Stack", "Architectural Principles", "Development Standards")
 
@@ -74,7 +74,7 @@ if (Test-Path "memory/constitution.md") {
         }
     }
 } else {
-    Write-Err "Constitution not found at memory/constitution.md"
+    Write-Err "Constitution not found at .boltf/memory/constitution.md"
     Write-Info "Use @Bolt Setup or @Bolt Constitution to create it"
 }
 

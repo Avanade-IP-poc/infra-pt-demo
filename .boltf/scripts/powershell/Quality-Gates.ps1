@@ -101,9 +101,9 @@ function Get-ConstitutionThresholds {
     $Script:CoverageThreshold = 80
     $Script:MutationThreshold = 60
 
-    if (Test-Path "memory/constitution.md") {
+    if (Test-Path ".boltf/memory/constitution.md") {
         Write-Info "Loading thresholds from constitution..."
-        $content = Get-Content "memory/constitution.md" -Raw
+        $content = Get-Content ".boltf/memory/constitution.md" -Raw
 
         if ($content -match "Coverage.*≥\s*(\d+)") {
             $Script:CoverageThreshold = [int]$Matches[1]

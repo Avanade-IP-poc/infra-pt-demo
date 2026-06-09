@@ -314,7 +314,7 @@ az devops login --organization https://dev.azure.com/<your-org>
 
 - **Skill Completo**: [.claude/skills/azure-devops-sync/SKILL.md](../../.claude/skills/azure-devops-sync/SKILL.md)
 - **Agente**: [@bolt-az-devops-sync](../../.github/agents/bolt-az-devops-sync.agent.md)
-- **Constitution**: [memory/constitution.md](../../memory/constitution.md) - Article XI (CI/CD)
+- **Constitution**: [.boltf/memory/constitution.md](../../.boltf/memory/constitution.md) - Article XI (CI/CD)
 - **Azure DevOps CLI Docs**: https://learn.microsoft.com/en-us/cli/azure/devops
 
 ---

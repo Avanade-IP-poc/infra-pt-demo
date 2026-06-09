@@ -2,12 +2,12 @@
 
 ## Agent Reference
 
-> **Primary Agents**: 
+> **Primary Agents**:
 > - [Coding Agent](../copilot/agents/bolt-coding-agent.md) - Code implementation
 > - [Micro Iterator](../copilot/agents/bolt-micro-iterator.md) - Iterative development
 >
-> **Phase**: Block 4 - Construction  
-> **Constitution**: **CRITICAL** - Read `memory/constitution.md` FIRST for tech stack and standards
+> **Phase**: Block 4 - Construction
+> **Constitution**: **CRITICAL** - Read `.boltf/memory/constitution.md` FIRST for tech stack and standards
 
 ## Context
 
@@ -46,7 +46,7 @@ When generating code:
 ```typescript
 /**
  * [Brief description of the module/class]
- * 
+ *
  * @example
  * ```typescript
  * // Usage example

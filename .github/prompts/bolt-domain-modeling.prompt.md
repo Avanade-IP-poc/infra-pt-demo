@@ -2,12 +2,12 @@
 
 ## Agent Reference
 
-> **Primary Agents**: 
+> **Primary Agents**:
 > - [DDD Master](../copilot/agents/bolt-ddd-master.md) - Domain modeling and tactical patterns
 > - [Domain Sage](../copilot/agents/bolt-domain-sage.md) - Business rules and ubiquitous language
 >
-> **Phase**: Block 3 - Design  
-> **Constitution**: Read `memory/constitution.md` for domain patterns and conventions
+> **Phase**: Block 3 - Design
+> **Constitution**: Read `.boltf/memory/constitution.md` for domain patterns and conventions
 
 ## Context
 
@@ -53,7 +53,7 @@ Apply appropriate DDD building blocks:
 
 #### [Aggregate Name]
 - **Root Entity**: [EntityName]
-- **Invariants**: 
+- **Invariants**:
   - [Business rule that must always be true]
 - **Entities**: [List of contained entities]
 - **Value Objects**: [List of value objects]
@@ -97,19 +97,19 @@ apply discount codes, and track delivery status.
     lineItems: LineItem[];
     discount?: Discount;
     status: OrderStatus;
-    
+
     // Invariants enforced through methods
     addItem(product: ProductSnapshot, quantity: Quantity): void;
     applyDiscount(code: DiscountCode): Result<void, DiscountError>;
     submit(): Result<void, OrderError>;
   }
   ```
-- **Invariants**: 
+- **Invariants**:
   - Order must have at least one line item to be submitted
   - Discount can only be applied once per order
   - Total cannot be negative
 - **Entities**: LineItem
-- **Value Objects**: 
+- **Value Objects**:
   - OrderId, CustomerId, ProductSnapshot
   - Money, Quantity, DiscountCode
   - OrderStatus (enum)

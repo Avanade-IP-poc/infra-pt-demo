@@ -2,9 +2,9 @@
 
 ## Agent Reference
 
-> **Primary Agent**: [Legacy Archaeologist](../copilot/agents/bolt-legacy-archaeologist.md)  
-> **Phase**: Block 2 - Discovery  
-> **Constitution**: Always read `memory/constitution.md` for target modernization stack
+> **Primary Agent**: [Legacy Archaeologist](../copilot/agents/bolt-legacy-archaeologist.md)
+> **Phase**: Block 2 - Discovery
+> **Constitution**: Always read `.boltf/memory/constitution.md` for target modernization stack
 
 ## Context
 
@@ -15,7 +15,7 @@ Use this prompt when analyzing legacy systems, extracting hidden business rules,
 When performing legacy analysis:
 
 ### 1. Preparation
-- Read `memory/constitution.md` for target architecture
+- Read `.boltf/memory/constitution.md` for target architecture
 - Gather all available legacy artifacts (code, docs, schemas)
 - Identify subject matter experts for validation
 - Understand the modernization goals
@@ -203,7 +203,7 @@ flowchart TD
 Function CalcShip(weight, zone, custType)
     Dim cost
     cost = weight * 0.5  ' Base rate
-    
+
     ' Zone multiplier
     Select Case zone
         Case 1: cost = cost * 1.0
@@ -211,12 +211,12 @@ Function CalcShip(weight, zone, custType)
         Case 3: cost = cost * 2.0
         Case Else: cost = cost * 3.0  ' Unknown = highest
     End Select
-    
+
     ' VIP customers get free shipping over $100
     If custType = "VIP" And cost > 100 Then
         cost = 0
     End If
-    
+
     CalcShip = cost
 End Function
 ```
@@ -231,7 +231,7 @@ End Function
 
 ### BR-002: Zone Multiplier
 **Source**: `shipping.bas:CalcShip:6-11`
-**Rule**: 
+**Rule**:
 - Zone 1: 1.0× (local)
 - Zone 2: 1.5× (regional)
 - Zone 3: 2.0× (national)

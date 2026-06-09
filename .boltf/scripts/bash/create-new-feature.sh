@@ -2,7 +2,7 @@
 # =============================================================================
 # Bolt Framework / AI-DLC - Feature Creation Script
 # =============================================================================
-# Creates a new feature branch and specification structure following 
+# Creates a new feature branch and specification structure following
 # the Bolt Framework methodology.
 #
 # Usage:
@@ -60,8 +60,8 @@ if [ ! -d ".git" ]; then
 fi
 
 # Check if constitution exists
-if [ ! -f "memory/constitution.md" ]; then
-    log_warning "Constitution not found at memory/constitution.md"
+if [ ! -f ".boltf/memory/constitution.md" ]; then
+    log_warning "Constitution not found at .boltf/memory/constitution.md"
     log_warning "Consider running /bolt.constitution first"
 fi
 

@@ -2,9 +2,9 @@
 
 ## Agent Reference
 
-> **Primary Agent**: [Policy Guardian](../copilot/agents/bolt-policy-guardian.md)  
-> **Phase**: Cross-Cutting (All Phases)  
-> **Constitution**: Enforces `memory/constitution.md` security policies
+> **Primary Agent**: [Policy Guardian](../copilot/agents/bolt-policy-guardian.md)
+> **Phase**: Cross-Cutting (All Phases)
+> **Constitution**: Enforces `.boltf/memory/constitution.md` security policies
 
 ## Context
 
@@ -15,7 +15,7 @@ Use this prompt when reviewing code, configurations, or infrastructure for secur
 When performing security reviews:
 
 ### 1. Constitution as Policy Source
-- **READ** `memory/constitution.md` for security policies
+- **READ** `.boltf/memory/constitution.md` for security policies
 - Enforce all security standards defined
 - Check compliance requirements (GDPR, SOC2, PCI-DSS, etc.)
 - Verify tech stack matches approved technologies
@@ -146,7 +146,7 @@ cmd.Parameters.AddWithValue("@userId", userId);
 public class UserController : ControllerBase
 {
     private readonly string _connectionString = "Server=prod;User=admin;Password=P@ssw0rd!";
-    
+
     [HttpGet("/users/{id}")]
     public async Task<User> GetUser(string id)
     {
@@ -154,7 +154,7 @@ public class UserController : ControllerBase
         var user = await _db.QueryAsync(query);
         return user;
     }
-    
+
     [HttpPost("/login")]
     public async Task<IActionResult> Login(LoginDto dto)
     {

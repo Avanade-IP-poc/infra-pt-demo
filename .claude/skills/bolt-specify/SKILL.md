@@ -13,7 +13,7 @@ Framework specifications.
 
 ## Scenario detection (MANDATORY before generating the spec)
 
-Read `memory/constitution.md` and declare scenario:
+Read `.boltf/memory/constitution.md` and declare scenario:
 `backend-only | frontend-only | infra-only | backend+frontend | fullstack`.
 
 Template adaptation:

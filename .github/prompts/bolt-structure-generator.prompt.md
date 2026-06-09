@@ -89,7 +89,7 @@ environments: '{{ENVIRONMENTS}}' # dev,uat,pre,prod (comma-separated)
 ### Common:
 
 1. Always include `specs/` for Bolt Framework specifications
-2. Always include `memory/constitution.md`
+2. Always include `.boltf/memory/constitution.md`
 3. Always include `docs/adr/` for architecture decisions
 4. Include `.github/` for Copilot agents and commands
 

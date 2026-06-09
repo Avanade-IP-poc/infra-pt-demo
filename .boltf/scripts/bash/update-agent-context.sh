@@ -6,7 +6,7 @@
 # Validates and synchronizes relationships between:
 # - Prompts (.github/prompts/)
 # - Agents (.github/copilot/agents/)
-# - Constitution (memory/constitution.md)
+# - Constitution (.boltf/memory/constitution.md)
 #
 # Usage:
 #   ./update-agent-context.sh [--check|--report|--fix]
@@ -30,7 +30,7 @@ NC='\033[0m' # No Color
 # Directories
 PROMPTS_DIR=".github/prompts"
 AGENTS_DIR=".github/copilot/agents"
-CONSTITUTION="memory/constitution.md"
+CONSTITUTION=".boltf/memory/constitution.md"
 
 # Counters
 ERRORS=0
@@ -274,7 +274,7 @@ fix_missing_constitution_reference() {
     local constitution_section='
 ## Constitution Reference
 
-**IMPORTANT**: Before generating any output, read `memory/constitution.md` for:
+**IMPORTANT**: Before generating any output, read `.boltf/memory/constitution.md` for:
 - **Tech Stack**: Use exact technologies specified (not examples in this document)
 - **Patterns**: Follow architectural patterns from Constitution
 - **Standards**: Apply coding standards and conventions defined

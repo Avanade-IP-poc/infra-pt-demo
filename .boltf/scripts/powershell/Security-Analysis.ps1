@@ -22,7 +22,7 @@
 
 [CmdletBinding()]
 param(
-    [string]$Constitution = "memory/constitution.md",
+    [string]$Constitution = ".boltf/memory/constitution.md",
     [ValidateSet('nodejs', 'dotnet', 'java', 'python', 'golang')]
     [string]$Stack = "",
     [ValidateSet('json', 'markdown', 'sarif')]
@@ -63,7 +63,7 @@ if ($Help) {
     Write-Host "  .\Security-Analysis.ps1 [PARAMETERS]"
     Write-Host ""
     Write-Host "PARAMETERS:"
-    Write-Host "  -Constitution PATH      Path to constitution.md (default: memory/constitution.md)"
+    Write-Host "  -Constitution PATH      Path to constitution.md (default: .boltf/memory/constitution.md)"
     Write-Host "  -Stack STACK           Override stack detection (nodejs|dotnet|java|python|golang)"
     Write-Host "  -OutputFormat FORMAT   Output format (json|markdown|sarif) (default: markdown)"
     Write-Host "  -Severity LEVEL        Minimum severity (critical|high|medium|low) (default: medium)"
@@ -994,7 +994,7 @@ function Get-SecurityRecommendations {
 
 ### Constitution Integration
 
-Add these security policies to your ``memory/constitution.md``:
+Add these security policies to your ```.boltf/memory/constitution.md```:
 
 ``````yaml
 security:

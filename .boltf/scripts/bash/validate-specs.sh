@@ -82,21 +82,21 @@ log_info "Validating specifications..."
 # =============================================================================
 log_section "Constitution"
 
-if [ -f "memory/constitution.md" ]; then
+if [ -f ".boltf/memory/constitution.md" ]; then
     log_success "Constitution exists"
 
     # Check for required sections
     REQUIRED_SECTIONS=("Tech Stack" "Architectural Principles" "Development Standards")
 
     for section in "${REQUIRED_SECTIONS[@]}"; do
-        if grep -qi "$section" "memory/constitution.md"; then
+        if grep -qi "$section" ".boltf/memory/constitution.md"; then
             log_success "Section found: ${section}"
         else
             log_warning "Section missing: ${section}"
         fi
     done
 else
-    log_error "Constitution not found at memory/constitution.md"
+    log_error "Constitution not found at .boltf/memory/constitution.md"
     log_info "Run @Bolt Constitution to create it"
 fi
 

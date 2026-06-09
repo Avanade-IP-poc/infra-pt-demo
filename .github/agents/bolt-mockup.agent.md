@@ -33,7 +33,7 @@ también `bolt-framework` y `markdown-formatting`.
 
 ## Detección de Escenario (OBLIGATORIO antes de generar mockups)
 
-Lee `memory/constitution.md` y la spec de la feature. Comprueba que el escenario
+Lee `.boltf/memory/constitution.md` y la spec de la feature. Comprueba que el escenario
 declarado por `bolt-feature` contiene `frontend`:
 
 - `frontend-only`, `backend+frontend`, `fullstack` → continuar.

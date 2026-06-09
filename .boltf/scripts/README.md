@@ -563,7 +563,7 @@ my-project/
 ```text
 my-landing-zone/
 ├── .github/workflows/        # Platform deploy pipelines
-├── memory/constitution.md    # Pre-filled configuration
+├── .boltf/memory/constitution.md    # Pre-filled configuration
 ├── infra/
 │   └── landing-zone/
 │       ├── modules/
@@ -602,7 +602,7 @@ my-migration/
 ├── migration/
 │   ├── plan/                 # Migration roadmap
 │   └── mappings/             # Legacy → New mappings
-├── memory/constitution.md    # Technology choices
+├── .boltf/memory/constitution.md    # Technology choices
 ├── specs/                    # Feature specifications
 ├── docs/adr/                 # Architecture decisions
 └── ... (same structure as greenfield)
@@ -632,7 +632,7 @@ The `constitution.md` file is automatically pre-filled with your wizard/auto-pro
 #### Next Steps After Init
 
 1. `cd <your-project-directory>`
-2. Review `memory/constitution.md` (already pre-filled!)
+2. Review `.boltf/memory/constitution.md` (already pre-filled!)
 3. Complete any remaining configuration sections
 4. Start your first feature: `/bolt.feature [your-first-feature]`
 
@@ -746,7 +746,7 @@ Runs comprehensive quality checks on the codebase.
 
 **Configuration:**
 
-Thresholds are loaded from `memory/constitution.md`:
+Thresholds are loaded from `.boltf/memory/constitution.md`:
 
 ```markdown
 ### 5.1 Dependency Rules
@@ -938,7 +938,7 @@ Validates the relationships between Prompts, Agents, and Constitution ensuring c
 
 **Validates:**
 
-- Constitution exists at `memory/constitution.md`
+- Constitution exists at `.boltf/memory/constitution.md`
 - All Agents (`.github/copilot/agents/`) reference the Constitution
 - All Prompts (`.github/prompts/`) reference their corresponding Agent(s)
 - Prompt → Agent → Constitution chain is complete
@@ -1069,7 +1069,7 @@ cd C:\path\to\Bolt Framework-v1.0.0
 code ./demo/to_rfp/calculator-app
 ```
 
-Edit `memory/constitution.md` and fill in your technology choices:
+Edit `.boltf/memory/constitution.md` and fill in your technology choices:
 
 ```markdown
 # Example Constitution for Calculator App
@@ -1259,7 +1259,7 @@ Document findings in `legacy/analysis/`:
 
 #### Step 3: Define TARGET Constitution
 
-Edit `memory/constitution.md` with your **target** modern stack:
+Edit `.boltf/memory/constitution.md` with your **target** modern stack:
 
 ```markdown
 # Migration Constitution: COBOL Calculator → Modern Stack

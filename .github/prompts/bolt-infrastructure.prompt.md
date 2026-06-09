@@ -4,7 +4,7 @@
 
 > **Primary Agent**: [Infra Builder](../copilot/agents/bolt-infra-builder.md)
 > **Phase**: Block 4 - Construction
-> **Constitution**: **CRITICAL** - Read `memory/constitution.md` FIRST for cloud provider and infrastructure policies
+> **Constitution**: **CRITICAL** - Read `.boltf/memory/constitution.md` FIRST for cloud provider and infrastructure policies
 
 ## Context
 

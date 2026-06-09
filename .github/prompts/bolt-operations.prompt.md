@@ -2,12 +2,12 @@
 
 ## Agent Reference
 
-> **Primary Agents**: 
+> **Primary Agents**:
 > - [Proactive Operator](../copilot/agents/bolt-proactive-operator.md) - Monitoring & Incident Response
 > - [Ops-Bugfix Autonomous](../copilot/agents/bolt-ops-bugfix-autonomous.md) - Auto-remediation & Self-healing
 >
-> **Phase**: Block 6 - Operations  
-> **Constitution**: Read `memory/constitution.md` for monitoring stack and SLO policies
+> **Phase**: Block 6 - Operations
+> **Constitution**: Read `.boltf/memory/constitution.md` for monitoring stack and SLO policies
 
 ## Context
 
@@ -18,7 +18,7 @@ Use this prompt when setting up monitoring, creating runbooks, analyzing inciden
 When managing operations:
 
 ### 1. Constitution Alignment
-- Read `memory/constitution.md` for observability stack
+- Read `.boltf/memory/constitution.md` for observability stack
 - Use approved monitoring tools (Prometheus, Grafana, etc.)
 - Follow SLO/SLA definitions from Constitution
 - Respect incident management policies
@@ -71,12 +71,12 @@ health_checks:
     endpoint: /health/live
     interval: 10s
     timeout: 5s
-    
+
   - name: readiness
     endpoint: /health/ready
     interval: 30s
     timeout: 10s
-    
+
   - name: deep
     endpoint: /health/deep
     interval: 60s
@@ -103,7 +103,7 @@ groups:
           severity: critical
         annotations:
           summary: High error rate detected
-          
+
       - alert: HighLatency
         expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 0.2
         for: 5m
@@ -212,7 +212,7 @@ auto_remediation:
       max_restarts: 3
       cooldown: 10m
     confidence: 0.95
-    
+
   - name: rollback-on-error-spike
     trigger:
       metric: error_rate

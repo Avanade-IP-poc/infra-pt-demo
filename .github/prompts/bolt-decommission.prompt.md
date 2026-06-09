@@ -2,9 +2,9 @@
 
 ## Agent Reference
 
-> **Primary Agent**: [Final Archiver](../copilot/agents/bolt-final-archiver.md)  
-> **Phase**: Block 7 - Evolution  
-> **Constitution**: Read `memory/constitution.md` for data retention and compliance policies
+> **Primary Agent**: [Final Archiver](../copilot/agents/bolt-final-archiver.md)
+> **Phase**: Block 7 - Evolution
+> **Constitution**: Read `.boltf/memory/constitution.md` for data retention and compliance policies
 
 ## Context
 
@@ -15,7 +15,7 @@ Use this prompt when retiring systems, decommissioning services, or sunsetting f
 When decommissioning:
 
 ### 1. Constitution Alignment
-- Read `memory/constitution.md` for compliance requirements
+- Read `.boltf/memory/constitution.md` for compliance requirements
 - Follow data retention policies specified
 - Respect security requirements for data handling
 - Update Constitution to remove retired components
@@ -157,7 +157,7 @@ Subject: [DEPRECATION NOTICE] Legacy Service retiring on [DATE]
 
 Dear consumers,
 
-Legacy Service will be retired on [DATE]. 
+Legacy Service will be retired on [DATE].
 
 Key dates:
 - [DATE]: Deprecation begins (warnings in responses)

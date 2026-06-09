@@ -2,9 +2,9 @@
 
 ## Agent Reference
 
-> **Primary Agent**: [Release Orchestrator](../copilot/agents/bolt-release-orchestrator.md)  
-> **Phase**: Block 5 - Release  
-> **Constitution**: Read `memory/constitution.md` for CI/CD and deployment policies
+> **Primary Agent**: [Release Orchestrator](../copilot/agents/bolt-release-orchestrator.md)
+> **Phase**: Block 5 - Release
+> **Constitution**: Read `.boltf/memory/constitution.md` for CI/CD and deployment policies
 
 ## Context
 
@@ -15,7 +15,7 @@ Use this prompt when creating release pipelines, deployment configurations, or g
 When managing releases:
 
 ### 1. Constitution Alignment
-- Read `memory/constitution.md` for deployment policies
+- Read `.boltf/memory/constitution.md` for deployment policies
 - Use approved CI/CD platform (GitHub Actions, Azure DevOps, etc.)
 - Follow versioning strategy defined
 - Respect environment promotion rules
@@ -134,13 +134,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Build
         run: [build commands]
-      
+
       - name: Test
         run: [test commands]
-      
+
       - name: Security Scan
         run: [security scan]
 
@@ -150,7 +150,7 @@ jobs:
     steps:
       - name: Deploy to Staging
         run: [deploy commands]
-      
+
       - name: Health Check
         run: [health check]
 
@@ -160,10 +160,10 @@ jobs:
     steps:
       - name: Deploy Canary (10%)
         run: [canary deploy]
-      
+
       - name: Validate Canary
         run: [validate metrics]
-      
+
       - name: Full Rollout
         run: [full deploy]
 ```
@@ -211,24 +211,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-      
+
       - name: Restore
         run: dotnet restore
-      
+
       - name: Build
         run: dotnet build --no-restore
-      
+
       - name: Test
         run: dotnet test --no-build --verbosity normal
-      
+
       - name: Build Container
         run: docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
-      
+
       - name: Push Container
         run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
@@ -243,7 +243,7 @@ jobs:
           containerAppName: myapp-staging
           resourceGroup: rg-myapp
           imageToDeploy: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-      
+
       - name: Health Check
         run: |
           for i in {1..10}; do
@@ -261,10 +261,10 @@ jobs:
         run: |
           # Deploy to inactive slot
           az containerapp revision copy --name myapp --resource-group rg-myapp
-          
+
           # Validate new revision
           # ... health checks ...
-          
+
           # Switch traffic
           az containerapp ingress traffic set --name myapp --resource-group rg-myapp \
             --revision-weight latest=100

@@ -1,7 +1,7 @@
 # Constitution Template
 
 > Project DNA — defines tech stack, standards, and constraints.
-> Location: `memory/constitution.md`
+> Location: `.boltf/memory/constitution.md`
 
 ---
 

@@ -83,7 +83,7 @@ Si el escenario incluye `frontend` y existe la carpeta
 
 ### 0a. Detect scenario (MANDATORY FIRST)
 
-Read `memory/constitution.md`, determine active scopes. Declare scenario:
+Read `.boltf/memory/constitution.md`, determine active scopes. Declare scenario:
 `backend-only | frontend-only | infra-only | backend+frontend | fullstack`.
 
 Adaptation rules:
@@ -420,7 +420,7 @@ CREATE TABLE [table_name] (
 
 Gestión mínima obligatoria: registrar el plan como comentario/sub-item bajo
 el ticket de la feature en el tracker activo (detectado desde
-`memory/constitution.md`, sección `work-management`).
+`.boltf/memory/constitution.md`, sección `work-management`).
 
 **GitHub Issues** (default):
 

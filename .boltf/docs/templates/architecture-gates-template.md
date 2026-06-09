@@ -96,25 +96,25 @@ extends:
 rules:
   # Require operation descriptions
   operation-description: warn
-  
+
   # Require operation IDs
   operation-operationId: error
-  
+
   # Require tags
   operation-tags: warn
-  
+
   # Contact info
   info-contact: warn
-  
+
   # License
   info-license: off
-  
+
   # Servers array
   oas3-api-servers: warn
-  
+
   # Examples in responses
   oas3-valid-media-example: warn
-  
+
   # Schema examples
   oas3-valid-schema-example: warn
 
@@ -228,7 +228,7 @@ dotnet tool run depend --graph mermaid > reports/architecture/deps.md
 @AnalyzeClasses(packages = "com.example")
 public class ArchitectureTest {
     @ArchTest
-    static final ArchRule domainShouldNotDependOnInfrastructure = 
+    static final ArchRule domainShouldNotDependOnInfrastructure =
         noClasses().that().resideInAPackage("..domain..")
             .should().dependOnClassesThat().resideInAPackage("..infrastructure..");
 }
@@ -305,7 +305,7 @@ flowchart LR
 1. **BOLT Implementation**: Run architecture gates after each BOLT
 2. **Code Review**: Include architecture report in review
 3. **CI/CD**: Add gate as pipeline step
-4. **Constitution**: Define thresholds in `memory/constitution.md`
+4. **Constitution**: Define thresholds in `.boltf/memory/constitution.md`
 
 ---
 

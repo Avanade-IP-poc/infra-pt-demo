@@ -40,8 +40,8 @@ New-Item -ItemType Directory -Path "$TestDir/support" -Force | Out-Null
 
 # Detect testing framework from constitution
 $Framework = "cucumber"
-if (Test-Path "memory/constitution.md") {
-    $ConstitutionContent = Get-Content "memory/constitution.md" -Raw
+if (Test-Path ".boltf/memory/constitution.md") {
+    $ConstitutionContent = Get-Content ".boltf/memory/constitution.md" -Raw
     if ($ConstitutionContent -match "specflow") { $Framework = "specflow" }
     elseif ($ConstitutionContent -match "pytest-bdd") { $Framework = "pytest-bdd" }
     elseif ($ConstitutionContent -match "behave") { $Framework = "behave" }

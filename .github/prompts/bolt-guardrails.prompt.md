@@ -4,7 +4,7 @@
 
 > **Primary Agent**: [Policy Guardian](../copilot/agents/bolt-policy-guardian.md)
 > **Phase**: Foundation / Cross-cutting
-> **Constitution**: Read `memory/constitution.md` for existing policies
+> **Constitution**: Read `.boltf/memory/constitution.md` for existing policies
 
 ## Context
 
@@ -16,7 +16,7 @@ When defining guardrails:
 
 ### 1. Constitution Alignment
 
-- Read `memory/constitution.md` for existing policies
+- Read `.boltf/memory/constitution.md` for existing policies
 - Extract implicit guardrails from tech stack choices
 - Identify compliance requirements
 - Note security policies already defined
@@ -74,7 +74,7 @@ Generate `docs/guardrails/guardrails.md`:
 | Last Updated     | [YYYY-MM-DD]           |
 | Owner            | [Team/Person]          |
 | Review Cycle     | [Monthly/Quarterly]    |
-| Constitution Ref | memory/constitution.md |
+| Constitution Ref | .boltf/memory/constitution.md |
 
 ---
 
@@ -376,7 +376,7 @@ These guardrails are **strongly recommended**. Violations generate warnings and 
 
 Generate project guardrails based on:
 
-1. Constitution: memory/constitution.md
+1. Constitution: .boltf/memory/constitution.md
 2. Tech stack: .NET 8, React, PostgreSQL
 3. Compliance: GDPR, SOC2
 4. Team size: 5 developers

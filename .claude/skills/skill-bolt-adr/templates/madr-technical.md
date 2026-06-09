@@ -33,7 +33,7 @@
 
 ### Constitution Constraints
 
-Per `memory/constitution.md`:
+Per `.boltf/memory/constitution.md`:
 
 - **Tech Stack**: [Relevant constraints from constitution]
 - **Principles**: [Relevant architectural principles]

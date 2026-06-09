@@ -2,9 +2,9 @@
 
 ## Agent Reference
 
-> **Primary Agent**: [Continuous Evolver](../copilot/agents/bolt-continuous-evolver.md)  
-> **Phase**: Block 7 - Evolution  
-> **Constitution**: Read `memory/constitution.md` for approved upgrade paths and standards
+> **Primary Agent**: [Continuous Evolver](../copilot/agents/bolt-continuous-evolver.md)
+> **Phase**: Block 7 - Evolution
+> **Constitution**: Read `.boltf/memory/constitution.md` for approved upgrade paths and standards
 
 ## Context
 
@@ -15,7 +15,7 @@ Use this prompt when assessing technical debt, planning dependency upgrades, or 
 When managing evolution:
 
 ### 1. Constitution Alignment
-- Read `memory/constitution.md` for approved technologies
+- Read `.boltf/memory/constitution.md` for approved technologies
 - Ensure upgrades stay within Constitution boundaries
 - Propose Constitution updates when evolution requires new tech
 - Respect stability and security policies

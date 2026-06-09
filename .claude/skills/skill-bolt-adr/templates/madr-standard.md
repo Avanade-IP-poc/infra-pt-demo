@@ -93,7 +93,7 @@ Chosen option: "[Option Name]", because [justification - 2-3 sentences explainin
 
 ### Constitution Compliance
 
-Per `memory/constitution.md`:
+Per `.boltf/memory/constitution.md`:
 
 - [ ] Tech Stack: [Complies with allowed technologies]
 - [ ] Architecture: [Follows mandated patterns]

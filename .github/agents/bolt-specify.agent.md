@@ -27,7 +27,7 @@ handoffs:
 
 ## Detección de Escenario (OBLIGATORIO antes de generar la spec)
 
-Lee `memory/constitution.md` y declara explícitamente el **escenario detectado**:
+Lee `.boltf/memory/constitution.md` y declara explícitamente el **escenario detectado**:
 `backend-only | frontend-only | infra-only | backend+frontend | fullstack`.
 
 **Adaptación del template**:

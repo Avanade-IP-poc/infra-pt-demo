@@ -25,18 +25,57 @@ env:
 
 jobs:
   # ============================================================================
+  # File Detection (hashFiles() is not available in job-level if:)
+  # ============================================================================
+  detect-files:
+    name: Detect IaC File Types
+    runs-on: ubuntu-latest
+    outputs:
+      has-terraform: ${{ steps.detect.outputs.has-terraform }}
+      has-bicep: ${{ steps.detect.outputs.has-bicep }}
+      has-kubernetes: ${{ steps.detect.outputs.has-kubernetes }}
+      has-helm: ${{ steps.detect.outputs.has-helm }}
+      has-docker: ${{ steps.detect.outputs.has-docker }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Detect IaC files
+        id: detect
+        run: |
+          if [ -d terraform ] && find terraform -name '*.tf' | grep -q .; then
+            echo "has-terraform=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has-terraform=false" >> "$GITHUB_OUTPUT"
+          fi
+          find . -name '*.bicep' -not -path '*/node_modules/*' | grep -q . \
+            && echo "has-bicep=true" >> "$GITHUB_OUTPUT" \
+            || echo "has-bicep=false" >> "$GITHUB_OUTPUT"
+          find . \( -path '*/kubernetes/*' -o -path '*/k8s/*' \) \
+            \( -name '*.yaml' -o -name '*.yml' \) | grep -q . \
+            && echo "has-kubernetes=true" >> "$GITHUB_OUTPUT" \
+            || echo "has-kubernetes=false" >> "$GITHUB_OUTPUT"
+          find . -name 'Chart.yaml' | grep -q . \
+            && echo "has-helm=true" >> "$GITHUB_OUTPUT" \
+            || echo "has-helm=false" >> "$GITHUB_OUTPUT"
+          find . -name 'Dockerfile*' | grep -q . \
+            && echo "has-docker=true" >> "$GITHUB_OUTPUT" \
+            || echo "has-docker=false" >> "$GITHUB_OUTPUT"
+
+  # ============================================================================
   # Terraform Validation
   # ============================================================================
   terraform-validate:
     name: Terraform Validation
     runs-on: ubuntu-latest
-    if: hashFiles('terraform/**') != '' || hashFiles('infra/**/*.tf') != ''
+    needs: detect-files
+    if: needs.detect-files.outputs.has-terraform == 'true'
     defaults:
       run:
         working-directory: terraform
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -54,7 +93,7 @@ jobs:
         run: terraform validate
 
       - name: TFLint
-        uses: terraform-linters/setup-tflint@v4
+        uses: terraform-linters/setup-tflint@v5
         with:
           tflint_version: latest
 
@@ -73,7 +112,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload Checkov results
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         if: always()
         with:
           sarif_file: checkov-terraform.sarif
@@ -92,7 +131,7 @@ jobs:
         working-directory: terraform
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -125,13 +164,13 @@ jobs:
         with:
           script: |
             const output = `## Terraform Plan
-            
+
             \`\`\`
             ${{ steps.plan.outputs.plan }}
             \`\`\`
-            
+
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
@@ -145,10 +184,11 @@ jobs:
   bicep-validate:
     name: Bicep Validation
     runs-on: ubuntu-latest
-    if: hashFiles('bicep/**') != '' || hashFiles('infra/**/*.bicep') != ''
+    needs: detect-files
+    if: needs.detect-files.outputs.has-bicep == 'true'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Bicep
         uses: azure/setup-bicep@v0.1
@@ -174,10 +214,11 @@ jobs:
   kubernetes-validate:
     name: Kubernetes Validation
     runs-on: ubuntu-latest
-    if: hashFiles('kubernetes/**') != '' || hashFiles('k8s/**') != ''
+    needs: detect-files
+    if: needs.detect-files.outputs.has-kubernetes == 'true'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3
@@ -213,10 +254,11 @@ jobs:
   helm-validate:
     name: Helm Validation
     runs-on: ubuntu-latest
-    if: hashFiles('helm/**') != '' || hashFiles('charts/**') != ''
+    needs: detect-files
+    if: needs.detect-files.outputs.has-helm == 'true'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Helm
         uses: azure/setup-helm@v3
@@ -250,10 +292,11 @@ jobs:
   docker-validate:
     name: Docker Validation
     runs-on: ubuntu-latest
-    if: hashFiles('Dockerfile*') != '' || hashFiles('**/Dockerfile*') != ''
+    needs: detect-files
+    if: needs.detect-files.outputs.has-docker == 'true'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Hadolint Dockerfile Linter
         uses: hadolint/hadolint-action@v3.1.0
@@ -286,7 +329,7 @@ jobs:
     if: github.event_name == 'pull_request'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Infracost
         uses: infracost/actions/setup@v3
@@ -310,7 +353,7 @@ jobs:
   infra-summary:
     name: Infrastructure Summary
     runs-on: ubuntu-latest
-    needs: [terraform-validate, bicep-validate, kubernetes-validate, helm-validate, docker-validate]
+    needs: [detect-files, terraform-validate, bicep-validate, kubernetes-validate, helm-validate, docker-validate]
     if: always()
     steps:
       - name: Generate summary

@@ -7,7 +7,7 @@ This directory contains GitHub Copilot prompt files (`.prompt.md`) that provide 
 Copilot prompts help ensure consistent, high-quality AI assistance aligned with:
 
 - **Bolt Framework**: AI-Driven Development Lifecycle with 6 phases and micro-iterations
-- **Constitution**: Central governance through `memory/constitution.md`
+- **Constitution**: Central governance through `.boltf/memory/constitution.md`
 - **Quality Gates**: Automated validation at each Bolt iteration
 
 ## How Prompts Relate to Agents
@@ -126,7 +126,7 @@ Agents automatically pick up relevant prompts based on the task. The agent will 
 │                                                                          │
 │   2. AGENT: Bolt Testing                                                 │
 │      ├── Reads: bolt-test-generation.prompt.md (instructions)           │
-│      ├── Reads: memory/constitution.md (standards)                      │
+│      ├── Reads: .boltf/memory/constitution.md (standards)                      │
 │      └── Generates: Test code following BDD/TDD patterns                │
 │                                                                          │
 │   3. AGENT: Executes script (if needed)                                  │
@@ -141,7 +141,7 @@ Agents automatically pick up relevant prompts based on the task. The agent will 
 
 - **Agents**: `.github/agents/` - AI agent definitions (29 agents)
 - **Scripts**: `scripts/bash/` and `scripts/powershell/` - Automation
-- **Constitution**: `memory/constitution.md` - Project governance
+- **Constitution**: `.boltf/memory/constitution.md` - Project governance
 - **Workflows**: `.github/workflows/` - GitHub Actions
 
 ## Validation

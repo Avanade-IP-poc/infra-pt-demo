@@ -349,7 +349,7 @@ var frontend = builder.AddProject<Projects.Frontend>("frontend")
 
 ### Paso 3: Merge en Constitution Principal
 
-Cuando `Invoke-BoltSetupConstitution.ps1` ejecuta Phase 1 (Constitution Merge), Article XXIII de cada scope se añade al constitution principal en `memory/constitution.md`.
+Cuando `Invoke-BoltSetupConstitution.ps1` ejecuta Phase 1 (Constitution Merge), Article XXIII de cada scope se añade al constitution principal en `.boltf/memory/constitution.md`.
 
 **Resultado esperado**:
 

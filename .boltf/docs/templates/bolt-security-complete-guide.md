@@ -24,7 +24,7 @@ The Bolt Security Agent is a comprehensive security orchestration system designe
 - **Stack-Agnostic Security Analysis**: Automatically detects technology stack and applies appropriate security tools
 - **OWASP Top 10 Compliance**: Built-in checks for all OWASP Top 10 vulnerabilities
 - **Multi-Layer Security**: SAST, SCA, secrets scanning, infrastructure security
-- **Constitution-Driven Policies**: Security policies defined in `memory/constitution.md`
+- **Constitution-Driven Policies**: Security policies defined in `.boltf/memory/constitution.md`
 - **Automated CI/CD Integration**: GitHub Actions workflow for continuous security monitoring
 - **Comprehensive Reporting**: Detailed security reports with actionable recommendations
 
@@ -123,7 +123,7 @@ Two equivalent scripts are provided for cross-platform support:
 ./scripts/bash/security-analysis.sh --stack nodejs --sast --sca
 
 # Constitution-driven analysis
-./scripts/bash/security-analysis.sh --constitution memory/constitution.md
+./scripts/bash/security-analysis.sh --constitution .boltf/memory/constitution.md
 ```
 
 #### PowerShell Script (Windows/Cross-platform)
@@ -136,7 +136,7 @@ Two equivalent scripts are provided for cross-platform support:
 .\scripts\powershell\Security-Analysis.ps1 -Stack nodejs -Sast -Sca
 
 # Constitution-driven analysis
-.\scripts\powershell\Security-Analysis.ps1 -Constitution "memory/constitution.md"
+.\scripts\powershell\Security-Analysis.ps1 -Constitution ".boltf/memory/constitution.md"
 ```
 
 ### Script Features
@@ -193,7 +193,7 @@ To customize the security workflow for your project:
    env:
      SEVERITY_THRESHOLD: 'high' # Adjust threshold
      COMPLIANCE_STANDARD: 'pci-dss' # Set compliance framework
-     CONSTITUTION_PATH: 'memory/constitution.md'
+     CONSTITUTION_PATH: '.boltf/memory/constitution.md'
    ```
 
 3. **Add secrets** (if using commercial tools):
@@ -241,7 +241,7 @@ stages:
 
 ### Security Configuration
 
-Add security policies to your `memory/constitution.md`:
+Add security policies to your `.boltf/memory/constitution.md`:
 
 ```yaml
 security:
@@ -655,7 +655,7 @@ $env:DEBUG="1"; .\scripts\powershell\Security-Analysis.ps1 -All
 ### Security Policy Management
 
 1. **Constitution-Driven Security**
-   - Define security policies in `memory/constitution.md`
+   - Define security policies in `.boltf/memory/constitution.md`
    - Version control all security configurations
    - Regular policy reviews and updates
 

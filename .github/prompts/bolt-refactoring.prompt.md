@@ -2,9 +2,9 @@
 
 ## Agent Reference
 
-> **Primary Agent**: [Surgical Refactorer](../copilot/agents/bolt-surgical-refactorer.md)  
-> **Phase**: Block 7 - Evolution  
-> **Constitution**: Read `memory/constitution.md` for coding standards and patterns
+> **Primary Agent**: [Surgical Refactorer](../copilot/agents/bolt-surgical-refactorer.md)
+> **Phase**: Block 7 - Evolution
+> **Constitution**: Read `.boltf/memory/constitution.md` for coding standards and patterns
 
 ## Context
 
@@ -15,7 +15,7 @@ Use this prompt when improving code quality, eliminating code smells, or moderni
 When refactoring:
 
 ### 1. Constitution Alignment
-- Read `memory/constitution.md` for coding standards
+- Read `.boltf/memory/constitution.md` for coding standards
 - Apply patterns defined in Constitution (SOLID, Clean Code, etc.)
 - Use approved languages and frameworks
 - Follow naming conventions specified
@@ -93,15 +93,15 @@ public class OrderService
     {
         // Order creation logic (50 lines)
         var order = new Order { /* ... */ };
-        
+
         // Payment logic mixed in (80 lines)
         var payment = await ProcessPayment(order);
         order.PaymentId = payment.Id;
-        
+
         // More order logic (30 lines)
         return await _repository.Save(order);
     }
-    
+
     private async Task<Payment> ProcessPayment(Order order)
     {
         // Payment processing (80 lines)
@@ -114,12 +114,12 @@ public class OrderService
 public class OrderService
 {
     private readonly IPaymentService _paymentService;
-    
+
     public OrderService(IPaymentService paymentService)
     {
         _paymentService = paymentService;
     }
-    
+
     public async Task<Order> CreateOrder(OrderDto dto)
     {
         var order = new Order { /* ... */ };
@@ -178,19 +178,19 @@ public interface IOrderPricingStrategy
 
 public class StandardPricingStrategy : IOrderPricingStrategy
 {
-    public decimal CalculateTotal(Order order) 
+    public decimal CalculateTotal(Order order)
         => order.Subtotal + order.Tax;
 }
 
 public class PremiumPricingStrategy : IOrderPricingStrategy
 {
-    public decimal CalculateTotal(Order order) 
+    public decimal CalculateTotal(Order order)
         => (order.Subtotal * 0.9m) + order.Tax;
 }
 
 public class WholesalePricingStrategy : IOrderPricingStrategy
 {
-    public decimal CalculateTotal(Order order) 
+    public decimal CalculateTotal(Order order)
         => order.Subtotal * 0.75m;
 }
 
@@ -198,7 +198,7 @@ public class WholesalePricingStrategy : IOrderPricingStrategy
 public class OrderService
 {
     private readonly Dictionary<OrderType, IOrderPricingStrategy> _strategies;
-    
+
     public decimal CalculateTotal(Order order)
         => _strategies[order.Type].CalculateTotal(order);
 }
@@ -279,13 +279,13 @@ git commit -m "Revert: [refactoring description]"
 public class UserService
 {
     private readonly SqlConnection _db = new SqlConnection("...");
-    
+
     public User GetUser(int id)
     {
         var cmd = new SqlCommand($"SELECT * FROM Users WHERE Id = {id}", _db);
         // ... 50 more lines
     }
-    
+
     public void UpdateUser(User user)
     {
         // Duplicate validation
@@ -293,7 +293,7 @@ public class UserService
         if (!user.Email.Contains("@")) throw new Exception("Invalid email");
         // ... 80 more lines with same validation
     }
-    
+
     public void CreateUser(User user)
     {
         // Same validation repeated
@@ -301,7 +301,7 @@ public class UserService
         if (!user.Email.Contains("@")) throw new Exception("Invalid email");
         // ... 100 more lines
     }
-    
+
     public void SendWelcomeEmail(User user) { /* ... */ }
     public void SendPasswordReset(User user) { /* ... */ }
     public void GenerateReport() { /* ... */ }

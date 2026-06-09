@@ -14,7 +14,7 @@ Framework conventions for documentation.
 | Source | Examples |
 |--------|----------|
 | **ASCII Art** | Context maps, simple box diagrams inside code/markdown |
-| **DDD Specifications** | `specs/**/feature.md`, `memory/constitution.md` bounded context sections |
+| **DDD Specifications** | `specs/**/feature.md`, `.boltf/memory/constitution.md` bounded context sections |
 | **C# Entity Classes** | EF Core `DbContext`, `IEntity`, aggregate roots in `src/backend/` |
 | **Plain Text** | Free-form description of entities and relationships |
 | **Existing Diagrams** | Convert one Mermaid type to another (e.g., class → ER) |

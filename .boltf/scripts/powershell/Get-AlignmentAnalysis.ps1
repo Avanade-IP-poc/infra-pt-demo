@@ -141,7 +141,7 @@ function Get-ProjectContext {
         HasLegacy = $false
     }
 
-    $constitutionPath = Join-Path $ProjectRoot "memory/constitution.md"
+    $constitutionPath = Join-Path $ProjectRoot ".boltf/memory/constitution.md"
 
     if (Test-Path $constitutionPath) {
         $content = Get-Content $constitutionPath -Raw
@@ -521,7 +521,7 @@ function Get-DocumentationStatus {
     $docCount = 0
 
     if (Test-Path (Join-Path $ProjectRoot "README.md")) { $docCount++ }
-    if (Test-Path (Join-Path $ProjectRoot "memory/constitution.md")) { $docCount++ }
+    if (Test-Path (Join-Path $ProjectRoot ".boltf/memory/constitution.md")) { $docCount++ }
     $docsDir = Join-Path $ProjectRoot "docs"
     if ((Test-Path $docsDir) -and (Get-ChildItem $docsDir -ErrorAction SilentlyContinue).Count -gt 0) { $docCount++ }
     $adrDir = Join-Path $ProjectRoot "docs/architecture/decisions"

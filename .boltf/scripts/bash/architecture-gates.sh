@@ -106,9 +106,9 @@ run_check() {
     local name="$1"
     local command="$2"
     local critical="${3:-true}"  # Default: critical failure
-    
+
     log_info "Running: ${name}"
-    
+
     if eval "${command}"; then
         log_success "${name} passed"
         ((PASSED++))
@@ -148,7 +148,7 @@ detect_project() {
 
 # Load thresholds from constitution if available
 load_constitution_thresholds() {
-    local constitution="memory/constitution.md"
+    local constitution=".boltf/memory/constitution.md"
     if [ -f "$constitution" ]; then
         log_info "Loading thresholds from constitution..."
         # Parse thresholds from constitution (simplified - could use yq/jq for YAML/JSON)
@@ -184,7 +184,7 @@ check_dependency_rules_node() {
         log_info "To init: npx depcruise --init"
         ((WARNINGS++))
     fi
-    
+
     # Check eslint-plugin-boundaries if available
     if grep -q "eslint-plugin-boundaries" package.json 2>/dev/null; then
         log_info "eslint-plugin-boundaries detected - rules enforced via ESLint"
@@ -344,10 +344,10 @@ log_section "Gate 3: Contract Validation"
 
 check_openapi_contracts() {
     local openapi_files=$(find specs -name "openapi.yaml" -o -name "openapi.json" 2>/dev/null)
-    
+
     if [ -n "$openapi_files" ]; then
         log_info "Found OpenAPI specs: $openapi_files"
-        
+
         # Validate OpenAPI syntax with Spectral
         if command -v spectral &> /dev/null || npm ls @stoplight/spectral-cli &>/dev/null 2>&1; then
             for spec in $openapi_files; do
@@ -358,7 +358,7 @@ check_openapi_contracts() {
             log_info "To install: npm install --save-dev @stoplight/spectral-cli"
             ((WARNINGS++))
         fi
-        
+
         # Check if implementation matches spec (with openapi-diff or similar)
         # This requires running the actual API and comparing
     else
@@ -368,10 +368,10 @@ check_openapi_contracts() {
 
 check_asyncapi_contracts() {
     local asyncapi_files=$(find specs -name "asyncapi.yaml" -o -name "asyncapi.json" 2>/dev/null)
-    
+
     if [ -n "$asyncapi_files" ]; then
         log_info "Found AsyncAPI specs: $asyncapi_files"
-        
+
         if command -v asyncapi &> /dev/null; then
             for spec in $asyncapi_files; do
                 run_check "AsyncAPI Validate: $spec" "asyncapi validate $spec" "false" || true
@@ -424,12 +424,12 @@ check_complexity_node() {
             log_info "  'max-lines': ['error', { max: $MAX_FILE_LINES }]"
         fi
     fi
-    
+
     # SonarQube/SonarCloud analysis
     if [ -f "sonar-project.properties" ]; then
         log_info "SonarQube configured - complexity metrics available in dashboard"
     fi
-    
+
     # ts-complexity-report
     if npm ls ts-complexity-report &>/dev/null 2>&1; then
         run_check "TypeScript Complexity" "npx ts-complexity-report" "false" || true
@@ -444,7 +444,7 @@ check_complexity_dotnet() {
         log_warning "Consider adding Roslyn analyzers for complexity metrics"
         log_info "  dotnet add package Microsoft.CodeAnalysis.NetAnalyzers"
     fi
-    
+
     # Check .editorconfig for complexity rules
     if [ -f ".editorconfig" ] && grep -q "dotnet_code_quality" .editorconfig; then
         log_success "Code quality rules in .editorconfig"
@@ -487,7 +487,7 @@ log_section "Gate 5: Fitness Functions"
 check_build_time() {
     log_info "Checking build time..."
     local start_time=$(date +%s)
-    
+
     case $PROJECT_TYPE in
         node|node-ts)
             npm run build &>/dev/null 2>&1 || true
@@ -496,10 +496,10 @@ check_build_time() {
             dotnet build --no-restore &>/dev/null 2>&1 || true
             ;;
     esac
-    
+
     local end_time=$(date +%s)
     local build_time=$((end_time - start_time))
-    
+
     if [ $build_time -lt 300 ]; then  # 5 minutes
         log_success "Build time: ${build_time}s (< 5min threshold)"
     else
@@ -514,7 +514,7 @@ check_bundle_size() {
         if npm ls webpack-bundle-analyzer &>/dev/null 2>&1; then
             log_info "webpack-bundle-analyzer available - run 'npm run analyze' for details"
         fi
-        
+
         # Check dist folder size
         if [ -d "dist" ]; then
             local size=$(du -sm dist 2>/dev/null | cut -f1)
@@ -533,16 +533,16 @@ check_bundle_size() {
 # 5.3 Test count and mock ratio
 check_test_quality() {
     log_info "Analyzing test quality..."
-    
+
     case $PROJECT_TYPE in
         node|node-ts)
             local test_count=$(find src -name "*.spec.ts" -o -name "*.test.ts" 2>/dev/null | wc -l)
             local mock_count=$(grep -r "jest.mock\|vi.mock\|mock\(" src --include="*.spec.ts" --include="*.test.ts" 2>/dev/null | wc -l)
-            
+
             if [ "$test_count" -gt 0 ]; then
                 local mock_ratio=$((mock_count * 100 / test_count))
                 log_info "Test files: $test_count, Mock usages: $mock_count"
-                
+
                 if [ "$mock_ratio" -gt 300 ]; then  # More than 3 mocks per test file avg
                     log_warning "High mock ratio ($mock_ratio%) - consider improving architecture"
                     ((WARNINGS++))
@@ -566,9 +566,9 @@ check_test_quality
 # =============================================================================
 if [ "$GENERATE_REPORT" = true ]; then
     log_section "Generating Architecture Report"
-    
+
     mkdir -p reports/architecture
-    
+
     case $PROJECT_TYPE in
         node|node-ts)
             # Generate dependency graph
@@ -576,7 +576,7 @@ if [ "$GENERATE_REPORT" = true ]; then
                 npx madge --image reports/architecture/dependency-graph.svg src 2>/dev/null || true
                 log_success "Generated: reports/architecture/dependency-graph.svg"
             fi
-            
+
             # Generate dependency-cruiser report
             if [ -f ".dependency-cruiser.cjs" ]; then
                 npx depcruise --config .dependency-cruiser.cjs src --output-type html > reports/architecture/dependencies.html 2>/dev/null || true
@@ -584,7 +584,7 @@ if [ "$GENERATE_REPORT" = true ]; then
             fi
             ;;
     esac
-    
+
     # Generate summary
     cat > reports/architecture/summary.md << EOF
 # Architecture Quality Report
@@ -634,7 +634,7 @@ if [ $FAILED -gt 0 ]; then
     echo "  2. Check for circular imports with 'npx madge --circular src'"
     echo "  3. Validate OpenAPI specs with 'npx spectral lint specs/*/contracts/openapi.yaml'"
     echo ""
-    
+
     if [ "$CI_MODE" = true ]; then
         exit 1
     fi

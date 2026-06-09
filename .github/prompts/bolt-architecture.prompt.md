@@ -2,9 +2,9 @@
 
 ## Agent Reference
 
-> **Primary Agent**: [Omega Architect](../copilot/agents/bolt-omega-architect.md)  
-> **Phase**: Block 3 - Design  
-> **Constitution**: **CRITICAL** - Read `memory/constitution.md` FIRST for approved tech stack
+> **Primary Agent**: [Omega Architect](../copilot/agents/bolt-omega-architect.md)
+> **Phase**: Block 3 - Design
+> **Constitution**: **CRITICAL** - Read `.boltf/memory/constitution.md` FIRST for approved tech stack
 
 ## Context
 
@@ -15,7 +15,7 @@ Use this prompt when designing system architecture, creating ADRs, or generating
 When designing architecture:
 
 ### 1. Constitution First (MANDATORY)
-- **READ** `memory/constitution.md` before any design decision
+- **READ** `.boltf/memory/constitution.md` before any design decision
 - Use ONLY approved technologies from Constitution
 - Follow architectural principles defined in Constitution
 - Respect infrastructure and security policies
@@ -107,7 +107,7 @@ graph TB
         Cache[(Redis)]
         Queue[Message Queue<br/>RabbitMQ]
     end
-    
+
     User --> Web
     Web --> API
     API --> DB
@@ -126,7 +126,7 @@ graph TB
         Domain[Domain Layer]
         Infra[Infrastructure]
     end
-    
+
     Controllers --> AppServices
     AppServices --> Domain
     AppServices --> Infra
@@ -218,7 +218,7 @@ graph TB
         Redis[(Azure Cache)]
         Queue[Service Bus]
     end
-    
+
     CDN[Azure CDN] --> Web
     API --> DB
     API --> Redis

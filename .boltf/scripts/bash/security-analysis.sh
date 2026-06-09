@@ -34,7 +34,7 @@ WHITE='\033[1;37m'
 NC='\033[0m' # No Color
 
 # Configuration
-CONSTITUTION_FILE="memory/constitution.md"
+CONSTITUTION_FILE=".boltf/memory/constitution.md"
 TECH_STACK=""
 OUTPUT_FORMAT="markdown"
 MIN_SEVERITY="medium"
@@ -105,7 +105,7 @@ while [[ $# -gt 0 ]]; do
             echo "Run comprehensive security analysis for Bolt Framework projects"
             echo ""
             echo "Options:"
-            echo "  --constitution PATH      Path to constitution.md (default: memory/constitution.md)"
+            echo "  --constitution PATH      Path to constitution.md (default: .boltf/memory/constitution.md)"
             echo "  --stack STACK           Override stack detection (nodejs|dotnet|java|python|golang)"
             echo "  --output-format FORMAT  Output format (json|markdown|sarif) (default: markdown)"
             echo "  --severity LEVEL        Minimum severity (critical|high|medium|low) (default: medium)"
@@ -922,7 +922,7 @@ EOF
 
 ### Constitution Integration
 
-Add these security policies to your \`memory/constitution.md\`:
+Add these security policies to your \`.boltf/memory/constitution.md\`:
 
 \`\`\`yaml
 security:

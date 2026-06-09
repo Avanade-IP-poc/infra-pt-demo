@@ -76,7 +76,7 @@ Follow these steps **in order**. Do not modify any file until the analysis has b
 
 ### Step 1 — Read the project context
 
-1. Read `memory/constitution.md` to understand the technology stack, standards, and constraints.
+1. Read `.boltf/memory/constitution.md` to understand the technology stack, standards, and constraints.
 2. Read `docs/adr/README.md` for the index of existing ADRs.
 3. List the contents of `docs/` to inventory the current documentation.
 4. Read `docs/architecture/README.md` if it exists.

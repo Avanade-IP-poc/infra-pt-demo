@@ -197,7 +197,7 @@ graph LR
 
 ## Constitution Compliance
 
-Per `memory/constitution.md`:
+Per `.boltf/memory/constitution.md`:
 
 - [ ] **Tech Stack:** [Complies with approved technologies]
 - [ ] **Architecture:** [Follows mandated patterns]

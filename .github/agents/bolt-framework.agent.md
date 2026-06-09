@@ -119,7 +119,7 @@ You are the Bolt Framework orchestrator, guiding development through Bolt Framew
 
 ### First Time in Project?
 
-Check if initialized: `ls memory/constitution.md specs/ src/`
+Check if initialized: `ls .boltf/memory/constitution.md specs/ src/`
 
 If missing, run init:
 

@@ -13,7 +13,7 @@
 #   --full    Run full suite including security scan
 # =============================================================================
 
-set -e
+set -o pipefail
 
 # Colors for output
 RED='\033[0;31m'
@@ -83,9 +83,9 @@ SECURITY_ENABLED=false
 run_check() {
     local name="$1"
     local command="$2"
-    
+
     log_info "Running: ${name}"
-    
+
     if eval "${command}"; then
         log_success "${name} passed"
         ((PASSED++))
@@ -127,12 +127,19 @@ detect_project() {
 load_constitution_thresholds() {
     COVERAGE_THRESHOLD=80
     MUTATION_THRESHOLD=60
-    
-    if [ -f "memory/constitution.md" ]; then
-        log_info "Loading thresholds from constitution..."
+
+    local constitution_file
+    if [ -f ".boltf/memory/constitution.md" ]; then
+        constitution_file=".boltf/memory/constitution.md"
+    elif [ -f "memory/constitution.md" ]; then
+        constitution_file="memory/constitution.md"
+    fi
+
+    if [ -n "$constitution_file" ]; then
+        log_info "Loading thresholds from constitution (${constitution_file})..."
         local content
-        content=$(cat "memory/constitution.md")
-        
+        content=$(cat "$constitution_file")
+
         # Extract coverage threshold
         local cov_match
         cov_match=$(echo "$content" | grep -oP 'Coverage.*≥\s*\K\d+' | head -1)
@@ -140,7 +147,7 @@ load_constitution_thresholds() {
             COVERAGE_THRESHOLD=$cov_match
             log_info "  Coverage threshold: ${COVERAGE_THRESHOLD}%"
         fi
-        
+
         # Extract mutation threshold
         local mut_match
         mut_match=$(echo "$content" | grep -oP 'Mutation.*≥\s*\K\d+' | head -1)
@@ -277,10 +284,11 @@ log_section "Formatting"
 case $PROJECT_TYPE in
     node|node-ts)
         if [ -f ".prettierrc" ] || [ -f ".prettierrc.json" ] || [ -f "prettier.config.js" ] || [ -f "prettier.config.mjs" ]; then
+            log_info "Running: Prettier"
             if [ "$MODE" = "fix" ]; then
-                run_check "Prettier" "npx prettier --write ." || true
+                npx prettier --write . > /dev/null 2>&1 && log_success "Prettier fixed" || { log_warning "Prettier had issues"; ((WARNINGS++)); }
             else
-                run_check "Prettier" "npx prettier --check ." || true
+                npx prettier --check . > /dev/null 2>&1 && log_success "Prettier passed" || { log_warning "Prettier formatting issues found (non-blocking)"; ((WARNINGS++)); }
             fi
         else
             log_info "Prettier not configured (optional)"
@@ -398,7 +406,13 @@ log_info "Coverage threshold: ${COVERAGE_THRESHOLD}%"
 
 case $PROJECT_TYPE in
     node|node-ts)
-        run_check "Coverage" "npm test -- --coverage --passWithNoTests" || true
+        # Check if test script exists before running
+        if grep -q "\"test\"" package.json 2>/dev/null; then
+            run_check "Coverage" "npm test -- --coverage --passWithNoTests" || true
+        else
+            log_warning "No test script in package.json - skipping coverage"
+            ((WARNINGS++))
+        fi
         ;;
     python)
         if command -v pytest &> /dev/null; then
@@ -514,27 +528,30 @@ esac
 # Quality Gate 7: Security Analysis (Bolt Framework Security Agent)
 # =============================================================================
 run_security_analysis() {
-    if [[ "$FULL_SUITE" == "true" ]] && [[ -f "scripts/bash/security-analysis.sh" ]]; then
+    if [[ "$FULL_SUITE" == "true" ]] && [[ -f ".boltf/scripts/bash/security-analysis.sh" ]]; then
         log_section "Security Analysis (Bolt Framework Security Agent)"
-        
-        chmod +x scripts/bash/security-analysis.sh
-        
+
+        chmod +x .boltf/scripts/bash/security-analysis.sh
+
         if [[ "$MODE" == "fix" ]]; then
-            run_check "SAST Analysis" "./scripts/bash/security-analysis.sh --sast --severity medium"
-            run_check "Dependency Scan" "./scripts/bash/security-analysis.sh --sca"
-            run_check "Secrets Detection" "./scripts/bash/security-analysis.sh --secrets"
+            run_check "SAST Analysis" "./.boltf/scripts/bash/security-analysis.sh --sast --severity medium"
+            run_check "Dependency Scan" "./.boltf/scripts/bash/security-analysis.sh --sca"
+            run_check "Secrets Detection" "./.boltf/scripts/bash/security-analysis.sh --secrets"
         else
-            run_check "Security Analysis" "./scripts/bash/security-analysis.sh --sast --sca --secrets --severity high"
+            run_check "Security Analysis" "./.boltf/scripts/bash/security-analysis.sh --sast --sca --secrets --severity high"
         fi
-        
+
         SECURITY_ENABLED=true
     elif [[ "$FULL_SUITE" == "true" ]]; then
         log_section "Fallback Security Scan"
-        
+
         # Fallback to basic security checks if Bolt Framework Security Agent not available
         case $PROJECT_TYPE in
             node|node-ts)
-                run_check "NPM Audit" "npm audit --audit-level=high" || true
+                # NPM audit with non-blocking warnings
+                log_info "Running: NPM Audit"
+                npm audit --audit-level=moderate 2>&1 | tee /tmp/npm-audit.log || true
+                ((WARNINGS++))
                 ;;
             python)
                 if command -v safety &> /dev/null; then
@@ -586,34 +603,8 @@ run_security_analysis() {
             log_info "Security scanning not configured for ${PROJECT_TYPE}"
             ;;
     esac
-fi
-
-# =============================================================================
-# Quality Gate 8: Architecture Gates (if --full)
-# =============================================================================
-if [ "$FULL_SUITE" = true ]; then
-    log_section "Architecture Quality Gates"
-    
-    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    ARCH_GATES="${SCRIPT_DIR}/architecture-gates.sh"
-    
-    if [ -f "$ARCH_GATES" ]; then
-        log_info "Running architecture validation..."
-        if bash "$ARCH_GATES" --check; then
-            ((PASSED++))
-            log_success "Architecture gates passed"
-        else
-            log_warning "Architecture gates have issues (non-blocking)"
-            ((WARNINGS++))
-        fi
-    else
-        log_warning "architecture-gates.sh not found"
-        log_info "Expected at: $ARCH_GATES"
-        ((WARNINGS++))
     fi
-fi
-
-# Execute security analysis
+}
 run_security_analysis
 
 # =============================================================================

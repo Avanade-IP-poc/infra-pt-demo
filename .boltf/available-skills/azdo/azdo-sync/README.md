@@ -336,7 +336,7 @@ Both BOLT and DevOps modified simultaneously
 ## References
 
 - [SKILL.md](.claude/skills/azure-devops-sync/SKILL.md) - Complete documentation
-- [Constitution Article XI](memory/constitution.md#article-xi-cicd) - DevOps configuration
+- [Constitution Article XI](.boltf/memory/constitution.md#article-xi-cicd) - DevOps configuration
 - [Azure DevOps CLI Docs](https://learn.microsoft.com/en-us/cli/azure/devops)
 - [Work Items REST API](https://learn.microsoft.com/en-us/rest/api/azure/devops/wit/work-items)
 

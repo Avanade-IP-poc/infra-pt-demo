@@ -7,7 +7,7 @@ FEATURE_ID=""
 SCAN_COVERAGE=false
 TEST_TYPE="all"
 OUTPUT_DIR="tests"
-CONSTITUTION_FILE="memory/constitution.md"
+CONSTITUTION_FILE=".boltf/memory/constitution.md"
 MIN_COVERAGE=80
 
 # Parse arguments
@@ -73,9 +73,9 @@ generate_react_tests() {
     local component_name=$(basename "$component_file" .tsx)
     local test_dir="$OUTPUT_DIR/unit/frontend/components"
     local test_file="$test_dir/${component_name}.test.tsx"
-    
+
     mkdir -p "$test_dir"
-    
+
     cat > "$test_file" << EOF
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
@@ -98,10 +98,10 @@ describe('${component_name}', () => {
   it('handles user interactions correctly', async () => {
     const mockHandler = vi.fn();
     render(<${component_name} {...defaultProps} onClick={mockHandler} />);
-    
+
     const button = screen.getByRole('button');
     fireEvent.click(button);
-    
+
     await waitFor(() => {
       expect(mockHandler).toHaveBeenCalledTimes(1);
     });
@@ -134,9 +134,9 @@ generate_dotnet_tests() {
     local controller_name=$(basename "$controller_file" .cs)
     local test_dir="$OUTPUT_DIR/unit/backend/controllers"
     local test_file="$test_dir/${controller_name}Tests.cs"
-    
+
     mkdir -p "$test_dir"
-    
+
     cat > "$test_file" << EOF
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -236,9 +236,9 @@ generate_integration_tests() {
     local feature_spec="$1"
     local test_dir="$OUTPUT_DIR/integration"
     local test_file="$test_dir/${FEATURE_ID}_integration.test.js"
-    
+
     mkdir -p "$test_dir"
-    
+
     cat > "$test_file" << EOF
 // Integration tests for feature: $FEATURE_ID
 // Generated from: $feature_spec
@@ -331,9 +331,9 @@ generate_e2e_tests() {
     local feature_spec="$1"
     local test_dir="$OUTPUT_DIR/e2e"
     local test_file="$test_dir/${FEATURE_ID}_e2e.spec.ts"
-    
+
     mkdir -p "$test_dir"
-    
+
     cat > "$test_file" << EOF
 // E2E tests for feature: $FEATURE_ID
 // Generated from: $feature_spec
@@ -352,38 +352,38 @@ test.describe('${FEATURE_ID} E2E Tests', () => {
 
     // Step 2: Fill in required information
     await page.fill('[data-testid="input-field"]', 'test data');
-    
+
     // Step 3: Submit form
     await page.click('[data-testid="submit-button"]');
-    
+
     // Step 4: Verify success
     await expect(page.locator('[data-testid="success-message"]')).toBeVisible();
   });
 
   test('displays appropriate error messages', async ({ page }) => {
     await page.click('[data-testid="nav-${FEATURE_ID}"]');
-    
+
     // Submit without required data
     await page.click('[data-testid="submit-button"]');
-    
+
     // Verify error message
     await expect(page.locator('[data-testid="error-message"]')).toBeVisible();
   });
 
   test('works on mobile devices', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 667 });
-    
+
     await page.click('[data-testid="nav-${FEATURE_ID}"]');
-    
+
     // Verify mobile layout
     await expect(page.locator('[data-testid="mobile-menu"]')).toBeVisible();
   });
 
   test('handles offline scenarios', async ({ page, context }) => {
     await context.setOffline(true);
-    
+
     await page.click('[data-testid="nav-${FEATURE_ID}"]');
-    
+
     // Verify offline handling
     await expect(page.locator('[data-testid="offline-message"]')).toBeVisible();
   });
@@ -396,7 +396,7 @@ EOF
 # Scan existing code and generate tests
 if [[ $SCAN_COVERAGE == true || $TEST_TYPE == "all" || $TEST_TYPE == "unit" ]]; then
     echo "🔍 Scanning for components to test..."
-    
+
     # Find React components
     if [[ -d "src/frontend" ]]; then
         echo "⚛️  Scanning React components..."
@@ -406,7 +406,7 @@ if [[ $SCAN_COVERAGE == true || $TEST_TYPE == "all" || $TEST_TYPE == "unit" ]]; 
             fi
         done
     fi
-    
+
     # Find .NET controllers
     if [[ -d "src/backend" ]]; then
         echo "🔵 Scanning .NET controllers..."
@@ -421,13 +421,13 @@ fi
 # Generate feature-specific tests
 if [[ -n "$FEATURE_ID" ]]; then
     echo "📋 Generating tests for feature: $FEATURE_ID"
-    
+
     FEATURE_SPEC="specs/${FEATURE_ID}/feature.md"
     if [[ -f "$FEATURE_SPEC" ]]; then
         if [[ $TEST_TYPE == "all" || $TEST_TYPE == "integration" ]]; then
             generate_integration_tests "$FEATURE_SPEC"
         fi
-        
+
         if [[ $TEST_TYPE == "all" || $TEST_TYPE == "e2e" ]]; then
             generate_e2e_tests "$FEATURE_SPEC"
         fi
@@ -549,7 +549,7 @@ cat > "$OUTPUT_DIR/fixtures/test-data.json" << 'EOF'
       "role": "user"
     },
     {
-      "id": "admin-1", 
+      "id": "admin-1",
       "email": "admin@example.com",
       "name": "Admin User",
       "role": "admin"

@@ -13,7 +13,7 @@ the gap between high-level stories and Gherkin scenarios.
 
 ## Scenario detection (MANDATORY)
 
-Before generating any use case, read `memory/constitution.md` and declare
+Before generating any use case, read `.boltf/memory/constitution.md` and declare
 the **detected scenario** explicitly:
 `backend-only | frontend-only | infra-only | backend+frontend | fullstack`.
 
