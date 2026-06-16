@@ -37,6 +37,7 @@ jobs:
     outputs:
       has-frontend: ${{ steps.check.outputs.has-frontend }}
       has-backend: ${{ steps.check.outputs.has-backend }}
+      has-docker: ${{ steps.check.outputs.has-docker }}
       frontend-type: ${{ steps.check.outputs.frontend-type }}
       backend-type: ${{ steps.check.outputs.backend-type }}
       target-env: ${{ steps.env.outputs.target-env }}
@@ -81,6 +82,13 @@ jobs:
             fi
           else
             echo "has-backend=false" >> $GITHUB_OUTPUT
+          fi
+
+          # Check for Docker
+          if [[ -f "src/frontend/Dockerfile" || -f "src/backend/Dockerfile" || -f "Dockerfile" ]]; then
+            echo "has-docker=true" >> $GITHUB_OUTPUT
+          else
+            echo "has-docker=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Determine target environment
@@ -305,7 +313,7 @@ jobs:
     name: 🐳 Build Docker Images
     runs-on: ubuntu-latest
     needs: [setup, quality-gates]
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && needs.setup.outputs.has-docker == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
