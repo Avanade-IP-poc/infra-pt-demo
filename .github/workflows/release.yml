@@ -249,12 +249,19 @@ jobs:
 
       - name: Check publish preconditions
         id: check
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           if [[ "${{ steps.download.outcome }}" != "success" ]]; then
             echo "skip=true" >> $GITHUB_OUTPUT
             echo "⚠️ No dist artifact found. Skipping NPM publish."
           elif node -e "const p=require('./package.json'); process.exit(p.private ? 1 : 0)"; then
-            echo "skip=false" >> $GITHUB_OUTPUT
+            if [[ -z "$NPM_TOKEN" ]]; then
+              echo "skip=true" >> $GITHUB_OUTPUT
+              echo "⚠️ NPM_TOKEN secret not set. Skipping NPM publish."
+            else
+              echo "skip=false" >> $GITHUB_OUTPUT
+            fi
           else
             echo "skip=true" >> $GITHUB_OUTPUT
             echo "⚠️ package.json is private. Skipping NPM publish."
@@ -265,7 +272,7 @@ jobs:
         run: npm version ${{ needs.validate.outputs.version }} --no-git-tag-version
 
       - name: Publish to NPM
-        if: steps.check.outputs.skip != 'true' && secrets.NPM_TOKEN != ''
+        if: steps.check.outputs.skip != 'true'
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
