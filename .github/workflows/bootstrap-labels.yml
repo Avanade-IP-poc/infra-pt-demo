@@ -35,3 +35,5 @@ jobs:
                   upsert_label "needs-triage"     "e11d48" "Needs triage by project maintainers"
                   upsert_label "bug"              "d73a4a" "Something isn't working"
                   upsert_label "enhancement"      "a2eeef" "New feature or request"
+                  upsert_label "spec-drift"      "0075ca" "Automated spec drift report"
+                  upsert_label "technical-debt"  "e4e669" "Technical debt tracking"

@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "type": "command",
+        "bash": ".github/hooks/scripts/pre-check.sh"
+      }
+    ],
+    "postToolUse": [
+      {
+        "type": "command",
+        "bash": ".github/hooks/scripts/post-format.sh"
+      }
+    ]
+  }
+}
