@@ -1,6 +1,6 @@
 ---
 name: bolt-improve
-description: Continuous improvement (Kaizen) analysis for Bolt Framework projects in PRODUCTION — code quality, performance, reliability, security, DevEx and documentation. Uses MEASURE → ANALYZE → IMPROVE → CONTROL loop. Triggers: 'continuous improvement', 'kaizen', 'tech debt analysis', 'performance improvement', 'improvement opportunities', 'PRODUCTION phase', '/bolt-improve'.
+description: "Continuous improvement (Kaizen) analysis for Bolt Framework projects in PRODUCTION — code quality, performance, reliability, security, DevEx and documentation. Uses MEASURE → ANALYZE → IMPROVE → CONTROL loop. Triggers: 'continuous improvement', 'kaizen', 'tech debt analysis', 'performance improvement', 'improvement opportunities', 'PRODUCTION phase', '/bolt-improve'."
 ---
 
 # Bolt Improve — Methodology

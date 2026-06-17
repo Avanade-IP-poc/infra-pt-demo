@@ -1,6 +1,6 @@
 ---
 name: bolt-status
-description: Generate comprehensive project status reports across all Bolt Framework lifecycle phases. Analyzes artifacts, code metrics, git history, monitoring data to produce executive summary + phase-by-phase status. Triggers: 'project status', 'status report', 'phase progress', 'health check', 'velocity report', 'overall progress', '/bolt-status'.
+description: "Generate comprehensive project status reports across all Bolt Framework lifecycle phases. Analyzes artifacts, code metrics, git history, monitoring data to produce executive summary + phase-by-phase status. Triggers: 'project status', 'status report', 'phase progress', 'health check', 'velocity report', 'overall progress', '/bolt-status'."
 ---
 
 # Bolt Status — Methodology

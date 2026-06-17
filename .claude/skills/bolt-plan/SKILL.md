@@ -1,6 +1,6 @@
 ---
 name: bolt-plan
-description: Create technical implementation plan from a Bolt Framework feature specification. Produces `planning/plan.md`, `planning/research.md`, `requirements/data-model.md`, `contracts/openapi.yaml` (contract-first from data-model) and a scenario-aware Bolt breakdown. Runs in parallel with bolt-gherkin. Triggers: 'create implementation plan', 'technical plan', 'bolt breakdown', 'plan from spec', 'REASON phase', 'architecture plan', '/bolt-plan'.
+description: "Create technical implementation plan from a Bolt Framework feature specification. Produces `planning/plan.md`, `planning/research.md`, `requirements/data-model.md`, `contracts/openapi.yaml` (contract-first from data-model) and a scenario-aware Bolt breakdown. Runs in parallel with bolt-gherkin. Triggers: 'create implementation plan', 'technical plan', 'bolt breakdown', 'plan from spec', 'REASON phase', 'architecture plan', '/bolt-plan'."
 ---
 
 # Bolt Plan — Methodology

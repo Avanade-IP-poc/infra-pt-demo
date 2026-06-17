@@ -1,6 +1,6 @@
 ---
 name: bolt-ddd
-description: Domain-Driven Design modelling for Bolt Framework — bounded contexts, context maps, aggregates, entities, value objects, domain events, ubiquitous language. Produces docs in `docs/design/ddd/<context>/`. Triggers: 'DDD modeling', 'bounded context', 'context map', 'aggregate', 'value object', 'domain event', 'ubiquitous language', '/bolt-ddd'.
+description: "Domain-Driven Design modelling for Bolt Framework — bounded contexts, context maps, aggregates, entities, value objects, domain events, ubiquitous language. Produces docs in `docs/design/ddd/<context>/`. Triggers: 'DDD modeling', 'bounded context', 'context map', 'aggregate', 'value object', 'domain event', 'ubiquitous language', '/bolt-ddd'."
 ---
 
 # Bolt DDD — Methodology

@@ -1,6 +1,6 @@
 ---
 name: markdown-formatting
-description:
+description: >
   When creating, updating or editing Markdown files this skill ensures consistent formatting and
   adherence to Bolt Framework conventions additionally it will use good practices for readability
   and maintainability in Markdown files.

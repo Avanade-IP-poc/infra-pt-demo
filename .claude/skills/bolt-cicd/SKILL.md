@@ -1,6 +1,6 @@
 ---
 name: bolt-cicd
-description: DevOps integration, deployment automation and pipeline management for Bolt Framework projects. Constitution-first routing: extracts Article XI decisions, orchestrates via `skill-cicd-pipeline-azure`, then routes to GitHub Actions or Azure DevOps Pipelines provider skill. Triggers: 'CI/CD', 'pipeline', 'deployment automation', 'GitHub Actions', 'Azure DevOps Pipelines', 'release pipeline', 'pipeline design', '/bolt-cicd'.
+description: "DevOps integration, deployment automation and pipeline management for Bolt Framework projects. Constitution-first routing: extracts Article XI decisions, orchestrates via `skill-cicd-pipeline-azure`, then routes to GitHub Actions or Azure DevOps Pipelines provider skill. Triggers: 'CI/CD', 'pipeline', 'deployment automation', 'GitHub Actions', 'Azure DevOps Pipelines', 'release pipeline', 'pipeline design', '/bolt-cicd'."
 ---
 
 # Bolt CI/CD — Methodology

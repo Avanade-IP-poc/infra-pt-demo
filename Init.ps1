@@ -201,7 +201,7 @@ function Read-MultiChoice {
 
     if ($selectAll) {
         # Return all values except the "all" marker
-        return $Values | Where-Object { $_ -ne "all" }
+        return @($Values | Where-Object { $_ -ne "all" })
     }
 
     # Return selected values
@@ -211,7 +211,7 @@ function Read-MultiChoice {
         }
     }
 
-    return $result
+    return @($result)
 }
 
 function Read-YesNo {
@@ -252,13 +252,34 @@ function Get-CopilotCliModels {
     try {
         $helpText = & copilot --help 2>&1 | Out-String
 
-        # Parse: --model <model>  Set the AI model to use (choices: "model1", "model2", ...)
-        if ($helpText -match '--model <model>\s+Set the AI model to use \(choices:\s*([^)]+)\)') {
+        # Pattern 1: standard yargs format — (choices: "m1", "m2", ...) on the same line
+        if ($helpText -match '--model[^\n]*\(choices:\s*((?:"[^"]+"(?:,\s*)?)*)\)') {
             $modelList = $Matches[1]
-            # Extract model names from quoted strings: "claude-sonnet-4.6", "gpt-5.4", etc.
             $models = [regex]::Matches($modelList, '"([^"]+)"') | ForEach-Object { $_.Groups[1].Value }
-            return $models
+            if ($models.Count -gt 0) { return $models }
         }
+
+        # Pattern 2: wrapped output — choices on a continuation/bracketed line
+        if ($helpText -match '(?s)--model[^\n]+\n(\s+\[choices:[^\]]+\])') {
+            $modelList = $Matches[1]
+            $models = [regex]::Matches($modelList, '"([^"]+)"') | ForEach-Object { $_.Groups[1].Value }
+            if ($models.Count -gt 0) { return $models }
+        }
+
+        # Pattern 3: a single line that contains both '--model' and 'choices' with quoted values
+        $choicesLine = ($helpText -split "`n" | Where-Object { $_ -match '--model' -and $_ -match 'choices' -and $_ -match '"' } | Select-Object -First 1)
+        if ($choicesLine) {
+            $models = [regex]::Matches($choicesLine, '"([^"]+)"') | ForEach-Object { $_.Groups[1].Value }
+            if ($models.Count -gt 0) { return $models }
+        }
+
+        # Pattern 4: extract all quoted tokens following a --model flag anywhere in help
+        if ($helpText -match '(?s)--model.{1,200}?((?:"[\w.:-]+"(?:[,|\s]+)?){2,})') {
+            $modelList = $Matches[1]
+            $models = [regex]::Matches($modelList, '"([\w.:-]+)"') | ForEach-Object { $_.Groups[1].Value }
+            if ($models.Count -gt 0) { return $models }
+        }
+
         return @()
     }
     catch {
@@ -272,13 +293,20 @@ function Select-CopilotModel {
     .OUTPUTS  Selected model name or $null if no models available.
     #>
     Write-Host ""
-    Write-Host "  🔍 Querying available models from Copilot CLI..." -ForegroundColor DarkGray
+    Write-Host "  🔍 Loading available models..." -ForegroundColor DarkGray
 
     $models = Get-CopilotCliModels
 
     if ($models.Count -eq 0) {
-        Write-Warn "Could not retrieve model list from CLI. Using default."
-        return "gpt-5.1"  # Fallback default
+        # CLI does not expose the model list — ask the user to type the model name.
+        Write-Host ""
+        Write-Host "  Select AI model for @Bolt Constitution agent:" -ForegroundColor Cyan
+        Write-Host "  (The CLI did not expose a model list — type any valid model name)" -ForegroundColor DarkGray
+        Write-Host "  Examples: claude-sonnet-4.6  claude-opus-4  gpt-4.1  gemini-2.5-pro" -ForegroundColor DarkGray
+        Write-Prompt "  Model [claude-sonnet-4.6] > "
+        $typed = Read-Host
+        if ([string]::IsNullOrWhiteSpace($typed)) { return "claude-sonnet-4.6" }
+        return $typed.Trim()
     }
 
     # Group models by family for better display
@@ -294,11 +322,15 @@ function Select-CopilotModel {
     $orderedModels += $geminiModels
     $orderedModels += $otherModels
 
-    # Find a sensible default (prefer claude-sonnet-4 or gpt-5.1)
+    # Find a sensible default (prefer claude-sonnet-4.6, then any claude-sonnet, then first model)
     $defaultIdx = 1
     for ($i = 0; $i -lt $orderedModels.Count; $i++) {
-        if ($orderedModels[$i] -eq "claude-sonnet-4") { $defaultIdx = $i + 1; break }
-        if ($orderedModels[$i] -eq "gpt-5.1") { $defaultIdx = $i + 1 }
+        if ($orderedModels[$i] -eq "claude-sonnet-4.6") { $defaultIdx = $i + 1; break }
+    }
+    if ($defaultIdx -eq 1) {
+        for ($i = 0; $i -lt $orderedModels.Count; $i++) {
+            if ($orderedModels[$i] -like "claude-sonnet*") { $defaultIdx = $i + 1; break }
+        }
     }
 
     return Read-Choice `
@@ -385,6 +417,68 @@ function Select-AIClient {
         -Options @("GitHub Copilot (VS Code)", "Claude Code") `
         -Values  @("copilot", "claude") `
         -Default 1
+
+    if ($script:AIClient -eq 'claude') {
+        $claudeAvailable = Get-Command claude -ErrorAction SilentlyContinue
+        if ($null -eq $claudeAvailable) {
+            Write-Host ""
+            Write-Warn "Claude Code CLI no está instalado en este sistema."
+            Write-Host ""
+            Write-Host "  Para instalarlo, ejecuta el siguiente comando en PowerShell:" -ForegroundColor Cyan
+            Write-Host "     irm https://claude.ai/install.ps1 | iex" -ForegroundColor White
+            Write-Host ""
+            $continue = Read-YesNo "¿Quieres continuar de todas formas sin Claude CLI?" $false
+            if (-not $continue) {
+                Write-Info "Inicialización cancelada. Instala Claude Code CLI y vuelve a ejecutar el script."
+                exit 0
+            }
+            Write-Warn "Continuando sin Claude CLI. Deberás instalarlo antes de usar los agentes Claude."
+        } else {
+            Write-Success "Claude Code CLI detectado"
+        }
+    }
+
+    if ($script:AIClient -eq 'copilot') {
+        $copilotAvailable = Get-Command copilot -ErrorAction SilentlyContinue
+        if ($null -eq $copilotAvailable) {
+            Write-Host ""
+            Write-Warn "GitHub Copilot CLI no está instalado en este sistema."
+            Write-Host ""
+            Write-Host "  Para instalarlo, ejecuta el siguiente comando:" -ForegroundColor Cyan
+            Write-Host "     gh extension install github/gh-copilot" -ForegroundColor White
+            Write-Host ""
+            $continue = Read-YesNo "¿Quieres continuar de todas formas sin Copilot CLI?" $false
+            if (-not $continue) {
+                Write-Info "Inicialización cancelada. Instala Copilot CLI y vuelve a ejecutar el script."
+                exit 0
+            }
+            Write-Warn "Continuando sin Copilot CLI. Deberás instalarlo antes de usar los agentes Copilot."
+        } else {
+            Write-Host ""
+            Write-Host "  Verificando versión de Copilot CLI..." -ForegroundColor DarkGray
+            $versionCheck = Test-CopilotCliVersion
+            if ($versionCheck.NeedsUpdate -and $versionCheck.LatestVersion -and $versionCheck.LatestVersion -ne "unknown") {
+                Write-Host ""
+                Write-Warn "GitHub Copilot CLI tiene una actualización disponible."
+                Write-Host "    Instalada: $($versionCheck.CurrentVersion)" -ForegroundColor Red
+                Write-Host "    Última:    $($versionCheck.LatestVersion)" -ForegroundColor Green
+                Write-Host ""
+                Write-Host "  Para actualizarlo, ejecuta uno de los siguientes comandos:" -ForegroundColor Cyan
+                Write-Host "     copilot update" -ForegroundColor White
+                Write-Host "     npm install -g @github/copilot" -ForegroundColor White
+                Write-Host ""
+                $continue = Read-YesNo "¿Quieres continuar con la versión actual?" $false
+                if (-not $continue) {
+                    Write-Info "Inicialización cancelada. Actualiza Copilot CLI y vuelve a ejecutar el script."
+                    exit 0
+                }
+                Write-Warn "Continuando con Copilot CLI v$($versionCheck.CurrentVersion)."
+            } else {
+                Write-Success "GitHub Copilot CLI v$($versionCheck.CurrentVersion) detectado"
+            }
+        }
+    }
+
     Write-Success "AI client seleccionado: $script:AIClient"
 }
 
@@ -1612,80 +1706,49 @@ function Show-Summary {
         }
     }
     else {
-    # Check if GitHub Copilot CLI is available and up-to-date
-    $cliAvailable = Get-Command copilot -ErrorAction SilentlyContinue
+        $cliAvailable = Get-Command copilot -ErrorAction SilentlyContinue
 
-    if ($null -ne $cliAvailable) {
-        # Check if there's a newer version available
-        Write-Host "  🔍 Checking Copilot CLI version..." -ForegroundColor DarkGray
-        $versionCheck = Test-CopilotCliVersion
-
-        if ($versionCheck.NeedsUpdate -and $versionCheck.LatestVersion -ne "unknown") {
-            Write-Host ""
-            Write-Host "  ⚠ GitHub Copilot CLI update available" -ForegroundColor Yellow
-            Write-Host "    Installed: $($versionCheck.CurrentVersion)" -ForegroundColor Red
-            Write-Host "    Latest:    $($versionCheck.LatestVersion)" -ForegroundColor Green
-            Write-Host ""
-            Write-Host "  📦 UPDATE RECOMMENDED:" -ForegroundColor Cyan
-            Write-Host "     Run: copilot update" -ForegroundColor White
-            Write-Host "     Or:  npm install -g @github/copilot" -ForegroundColor White
+        if ($null -ne $cliAvailable) {
+            Write-Host "  ✓ GitHub Copilot CLI detectado" -ForegroundColor Green
+            Write-Host "  🤖 Invocando @Bolt Constitution agent (MODO INTERACTIVO)..." -ForegroundColor Yellow
+            Write-Host "  ⚠  Se te pedirá aprobar cada paso de aprovisionamiento" -ForegroundColor Yellow
             Write-Host ""
 
-            $continueAnyway = Read-YesNo "Continue with current version anyway?" $false
-            if (-not $continueAnyway) {
-                Write-Host ""
-                Write-Host "  📝 AFTER UPDATING, RUN:" -ForegroundColor Yellow
-                Write-Host "     1. cd $OutputDirectory" -ForegroundColor White
-                Write-Host "     2. Run: copilot" -ForegroundColor White
-                Write-Host "     3. Prompt: @Bolt Constitution setup constitution" -ForegroundColor White
-                Write-Host ""
-                return
-            }
+            $selectedModel = Select-CopilotModel
             Write-Host ""
-        }
+            Write-Host "  📦 Usando modelo: $selectedModel" -ForegroundColor Cyan
+            Write-Host ""
 
-        Write-Host "  ✓ GitHub Copilot CLI v$($versionCheck.CurrentVersion) detected" -ForegroundColor Green
-        Write-Host "  🤖 Invoking @Bolt Constitution agent (INTERACTIVE MODE)..." -ForegroundColor Yellow
-        Write-Host "  ⚠  You will be prompted to approve each provisioning step" -ForegroundColor Yellow
-        Write-Host ""
-
-        # Let user select which AI model to use
-        $selectedModel = Select-CopilotModel
-        Write-Host ""
-        Write-Host "  📦 Using model: $selectedModel" -ForegroundColor Cyan
-        Write-Host ""
-
-        try {
-            # Change to project directory and invoke agent
-            Push-Location $OutputDirectory
             try {
-                & copilot --agent="bolt-constitution" --banner --model $selectedModel --yolo --allow-tool 'shell' -i "setup constitution" --add-dir $OutputDirectory
-                Write-Host ""
-                Write-Host "  ✓ @Bolt Constitution agent completed" -ForegroundColor Green
-                Write-Host "  📝 Review provision results above" -ForegroundColor Cyan
+                Push-Location $OutputDirectory
+                try {
+                    & copilot --agent="bolt-constitution" --banner --model $selectedModel --yolo --allow-tool 'shell' -i "setup constitution" --add-dir $OutputDirectory
+                    Write-Host ""
+                    Write-Host "  ✓ @Bolt Constitution agent completado" -ForegroundColor Green
+                    Write-Host "  📝 Revisa los resultados del aprovisionamiento arriba" -ForegroundColor Cyan
+                }
+                finally {
+                    Pop-Location
+                }
             }
-            finally {
-                Pop-Location
+            catch {
+                Write-Warn "Failed to invoke agent: $_"
+                Write-Host "  📝 MANUAL FALLBACK:" -ForegroundColor Yellow
+                Write-Host "     1. cd $OutputDirectory" -ForegroundColor White
+                Write-Host "     2. Run: copilot --model $selectedModel" -ForegroundColor White
+                Write-Host "     3. Prompt: Use Bolt Constitution agent to setup constitution" -ForegroundColor White
             }
         }
-        catch {
-            Write-Warn "Failed to invoke agent: $_"
-            Write-Host "  📝 MANUAL FALLBACK:" -ForegroundColor Yellow
+        else {
+            Write-Host "  ⚠ GitHub Copilot CLI no detectado" -ForegroundColor Yellow
+            Write-Host "  📝 PASO MANUAL REQUERIDO:" -ForegroundColor Cyan
             Write-Host "     1. cd $OutputDirectory" -ForegroundColor White
-            Write-Host "     2. Run: copilot --model $selectedModel" -ForegroundColor White
-            Write-Host "     3. Prompt: Use Bolt Constitution agent to setup constitution" -ForegroundColor White
+            Write-Host "     2. Instala GitHub Copilot CLI: gh extension install github/gh-copilot" -ForegroundColor White
+            Write-Host "     3. Run: copilot" -ForegroundColor White
+            Write-Host "     4. Prompt: Use Bolt Constitution agent to setup constitution" -ForegroundColor White
+            Write-Host ""
+            Write-Host "  💡 Tras la instalación, el agente se invocará automáticamente en el próximo init" -ForegroundColor DarkGray
         }
-    }
-    else {
-        Write-Host "  ⚠ GitHub Copilot CLI not detected" -ForegroundColor Yellow
-        Write-Host "  📝 MANUAL STEP REQUIRED:" -ForegroundColor Cyan
-        Write-Host "     1. cd $OutputDirectory" -ForegroundColor White
-        Write-Host "     2. Install GitHub Copilot CLI: gh extension install github/gh-copilot" -ForegroundColor White
-        Write-Host "     3. Run: copilot" -ForegroundColor White
-        Write-Host "     4. Prompt: Use Bolt Constitution agent to setup constitution" -ForegroundColor White
-        Write-Host ""
-        Write-Host "  💡 After CLI installation, the agent will auto-invoke on next init" -ForegroundColor DarkGray
-    }
     }
 
     Write-Host ""

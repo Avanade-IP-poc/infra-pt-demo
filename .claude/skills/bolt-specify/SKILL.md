@@ -1,6 +1,6 @@
 ---
 name: bolt-specify
-description: Transform natural language feature descriptions into structured Bolt Framework specifications. Generate `specs/[XXX-feature-name]/requirements/requirements.md` with FRs, NFRs, user stories, key entities, edge cases. Triggers: 'specify feature', 'create spec', 'turn description into spec', 'structured specification', 'PERCEIVE phase', 'ANALYZE phase', '/bolt-specify'.
+description: "Transform natural language feature descriptions into structured Bolt Framework specifications. Generate `specs/[XXX-feature-name]/requirements/requirements.md` with FRs, NFRs, user stories, key entities, edge cases. Triggers: 'specify feature', 'create spec', 'turn description into spec', 'structured specification', 'PERCEIVE phase', 'ANALYZE phase', '/bolt-specify'."
 ---
 
 # Bolt Specify — Methodology

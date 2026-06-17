@@ -1,6 +1,7 @@
 ---
 name: bolt-ui-mockups
-description: Generate and refine static low-fidelity UI mockups for Bolt Framework features (frontend-only, backend+frontend, fullstack). Single-file HTML with Tailwind v4 CDN, no JS frameworks. Two modes — `generate` (initial wireframes from spec) and `refine` (iterate over user feedback). Produces accessible static deliverables for stakeholder review BEFORE planning and implementation. Triggers — "mockup", "wireframe", "boceto UI", "prototipo visual", "low-fi mockup", "diseñar pantalla", "refinar mockup", "generate mockups", "DISCOVERY mockups", "/bolt-mockup".
+description: >-
+  Generate and refine static low-fidelity UI mockups for Bolt Framework features (frontend-only, backend+frontend, fullstack). Single-file HTML with Tailwind v4 CDN, no JS frameworks. Two modes — `generate` (initial wireframes from spec) and `refine` (iterate over user feedback). Produces accessible static deliverables for stakeholder review BEFORE planning and implementation. Triggers — "mockup", "wireframe", "boceto UI", "prototipo visual", "low-fi mockup", "diseñar pantalla", "refinar mockup", "generate mockups", "DISCOVERY mockups", "/bolt-mockup".
 ---
 
 # Bolt UI Mockups — Methodology

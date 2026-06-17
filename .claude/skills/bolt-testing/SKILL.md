@@ -1,6 +1,6 @@
 ---
 name: bolt-testing
-description: Generate Bolt Framework test suites with coverage-first approach and mutation validation. Auto-creates unit/integration/E2E tests aligned with constitution thresholds (coverage ≥ 80%, mutation ≥ 70%). Triggers: 'generate tests', 'create test suite', 'TDD', 'BDD', 'coverage first', 'mutation testing', 'EXECUTE phase', '/bolt-testing'.
+description: "Generate Bolt Framework test suites with coverage-first approach and mutation validation. Auto-creates unit/integration/E2E tests aligned with constitution thresholds (coverage ≥ 80%, mutation ≥ 70%). Triggers: 'generate tests', 'create test suite', 'TDD', 'BDD', 'coverage first', 'mutation testing', 'EXECUTE phase', '/bolt-testing'."
 ---
 
 # Bolt Testing — Methodology

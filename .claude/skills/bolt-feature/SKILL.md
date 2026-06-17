@@ -1,6 +1,6 @@
 ---
 name: bolt-feature
-description: Create comprehensive Bolt Framework feature specifications (requirements.md) with user stories, use cases, acceptance criteria classified as `@smoke`, GitHub Issue creation (mandatory), and optional Work Management Tool sync. Auto-creates feature branch via `create-new-feature` script after user confirmation. Triggers: 'create feature', 'new feature spec', 'feature specification', 'user story spec', 'product owner workflow', '/bolt-feature'.
+description: "Create comprehensive Bolt Framework feature specifications (requirements.md) with user stories, use cases, acceptance criteria classified as `@smoke`, GitHub Issue creation (mandatory), and optional Work Management Tool sync. Auto-creates feature branch via `create-new-feature` script after user confirmation. Triggers: 'create feature', 'new feature spec', 'feature specification', 'user story spec', 'product owner workflow', '/bolt-feature'."
 ---
 
 # Bolt Feature — Methodology

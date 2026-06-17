@@ -1,6 +1,6 @@
 ---
 name: bolt-postmortem
-description: Generate blameless postmortems for incidents, outages and project failures using the Bolt Framework methodology. Focuses on systems/processes, not individuals. Produces timeline, root cause, learnings and action items. Triggers: 'postmortem', 'incident review', 'blameless retro', 'RCA', 'root cause analysis', 'outage analysis', '/bolt-postmortem'.
+description: "Generate blameless postmortems for incidents, outages and project failures using the Bolt Framework methodology. Focuses on systems/processes, not individuals. Produces timeline, root cause, learnings and action items. Triggers: 'postmortem', 'incident review', 'blameless retro', 'RCA', 'root cause analysis', 'outage analysis', '/bolt-postmortem'."
 ---
 
 # Bolt Postmortem — Methodology

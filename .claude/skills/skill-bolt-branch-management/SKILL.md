@@ -1,6 +1,6 @@
 ---
 name: skill-bolt-branch-management
-description: Bolt micro-iteration branching pattern with feature/bolt hierarchy (feature/XXX-name/bolt-N). MANDATORY before implementing any Bolt iteration. Use before creating feature branches or managing Bolt branch workflows. Triggers => 'create bolt branch', 'branch pattern', 'feature branch Bolt', 'bolt iteration branch', 'micro-iteration workflow', 'bolt hierarchy', 'branch naming Bolt', 'feature/bolt pattern'. Required for each Bolt iteration.
+description: "Bolt micro-iteration branching pattern with feature/bolt hierarchy (feature/XXX-name/bolt-N). MANDATORY before implementing any Bolt iteration. Use before creating feature branches or managing Bolt branch workflows. Triggers => 'create bolt branch', 'branch pattern', 'feature branch Bolt', 'bolt iteration branch', 'micro-iteration workflow', 'bolt hierarchy', 'branch naming Bolt', 'feature/bolt pattern'. Required for each Bolt iteration."
 ---
 
 # BOLT Branch Management

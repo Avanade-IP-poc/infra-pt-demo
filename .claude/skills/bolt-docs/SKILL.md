@@ -1,6 +1,6 @@
 ---
 name: bolt-docs
-description: Generate and maintain project documentation for Bolt Framework — README, API contracts, architecture docs, user journeys, ADR index, runbooks. Keeps docs in sync with code and spec. Triggers: 'generate docs', 'documentation', 'README', 'api docs', 'doc update', 'project documentation', '/bolt-docs'.
+description: "Generate and maintain project documentation for Bolt Framework — README, API contracts, architecture docs, user journeys, ADR index, runbooks. Keeps docs in sync with code and spec. Triggers: 'generate docs', 'documentation', 'README', 'api docs', 'doc update', 'project documentation', '/bolt-docs'."
 ---
 
 # Bolt Docs — Methodology

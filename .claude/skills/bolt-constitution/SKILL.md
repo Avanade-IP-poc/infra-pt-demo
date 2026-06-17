@@ -1,6 +1,6 @@
 ---
 name: bolt-constitution
-description: Bolt Framework Constitution provisioning (Step 2 of init). Process separate constitution files per active scope, capture per-scope refinement YAMLs, merge final decisions, and generate the master `constitution.md`. Triggers: 'constitution provisioning', 'bolt step 2', 'scope-based constitution', 'merge refinement', 'project DNA setup', '/bolt-constitution'. Use AFTER `bolt-init` has created `.boltf/memory/scopes.yaml`.
+description: "Bolt Framework Constitution provisioning (Step 2 of init). Process separate constitution files per active scope, capture per-scope refinement YAMLs, merge final decisions, and generate the master `constitution.md`. Triggers: 'constitution provisioning', 'bolt step 2', 'scope-based constitution', 'merge refinement', 'project DNA setup', '/bolt-constitution'. Use AFTER `bolt-init` has created `.boltf/memory/scopes.yaml`."
 ---
 
 # Bolt Constitution — Methodology

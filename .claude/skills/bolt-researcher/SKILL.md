@@ -1,6 +1,6 @@
 ---
 name: bolt-researcher
-description: Conduct comprehensive technical research using multiple sources (Context7, Microsoft Docs, Web Search, GitHub) and project documentation to answer questions, evaluate technologies and support decisions throughout the Bolt Framework lifecycle. Triggers: 'research', 'investigate', 'compare libraries', 'find best practices', 'technology evaluation', 'REASON phase', 'how to use library', 'evaluate', '/bolt-researcher'.
+description: "Conduct comprehensive technical research using multiple sources (Context7, Microsoft Docs, Web Search, GitHub) and project documentation to answer questions, evaluate technologies and support decisions throughout the Bolt Framework lifecycle. Triggers: 'research', 'investigate', 'compare libraries', 'find best practices', 'technology evaluation', 'REASON phase', 'how to use library', 'evaluate', '/bolt-researcher'."
 ---
 
 # Bolt Researcher — Methodology

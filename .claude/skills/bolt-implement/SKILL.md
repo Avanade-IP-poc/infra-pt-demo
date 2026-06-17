@@ -1,6 +1,6 @@
 ---
 name: bolt-implement
-description: Execute Bolt implementation following the task list with AI-DLC quality gates, micro-iteration branch discipline (`feature/[name]/bolt-[N]-[desc]`), lifecycle management (states, velocity tracking), and feedback loops (gate escalation, AC revision). Auto-detects scenario (backend/frontend/infra) and loads relevant patterns. Triggers: 'implement bolt', 'execute bolt', 'code the bolt', 'CONSTRUCTION phase', 'bolt N implementation', 'start coding', 'next bolt', 'micro-iteration', '/bolt-implement'.
+description: "Execute Bolt implementation following the task list with AI-DLC quality gates, micro-iteration branch discipline (`feature/[name]/bolt-[N]-[desc]`), lifecycle management (states, velocity tracking), and feedback loops (gate escalation, AC revision). Auto-detects scenario (backend/frontend/infra) and loads relevant patterns. Triggers: 'implement bolt', 'execute bolt', 'code the bolt', 'CONSTRUCTION phase', 'bolt N implementation', 'start coding', 'next bolt', 'micro-iteration', '/bolt-implement'."
 ---
 
 # Bolt Implement — Methodology

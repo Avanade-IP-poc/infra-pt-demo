@@ -1,6 +1,6 @@
 ---
 name: bolt-architect
-description: Design solution architecture for Bolt Framework projects — system context (C4), component & sequence diagrams, integration architecture, NFR mapping. Produces architecture docs in `docs/design/architecture/` and feeds ADRs. Triggers: 'design architecture', 'C4 model', 'solution architecture', 'system design', 'architecture document', 'component diagram', '/bolt-architect'.
+description: "Design solution architecture for Bolt Framework projects — system context (C4), component & sequence diagrams, integration architecture, NFR mapping. Produces architecture docs in `docs/design/architecture/` and feeds ADRs. Triggers: 'design architecture', 'C4 model', 'solution architecture', 'system design', 'architecture document', 'component diagram', '/bolt-architect'."
 ---
 
 # Bolt Architect — Methodology

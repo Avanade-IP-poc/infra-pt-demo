@@ -1,6 +1,6 @@
 ---
 name: skill-playwright-e2e
-description: End-to-end testing with Playwright for frontend applications
+description: "End-to-end testing with Playwright for frontend applications"
 ---
 
 # Playwright E2E Testing

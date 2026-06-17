@@ -1,6 +1,6 @@
 ---
 name: bolt-analyze
-description: Run consistency analysis across Bolt Framework artifacts (spec ↔ data model ↔ contracts ↔ implementation ↔ tests). Detects entity/operation drift, missing tests, divergent contracts. Produces an alignment report. Triggers: 'consistency analysis', 'verify alignment', 'spec vs impl', 'drift detection', 'VALIDATE phase', '/bolt-analyze'.
+description: "Run consistency analysis across Bolt Framework artifacts (spec ↔ data model ↔ contracts ↔ implementation ↔ tests). Detects entity/operation drift, missing tests, divergent contracts. Produces an alignment report. Triggers: 'consistency analysis', 'verify alignment', 'spec vs impl', 'drift detection', 'VALIDATE phase', '/bolt-analyze'."
 ---
 
 # Bolt Analyze — Methodology

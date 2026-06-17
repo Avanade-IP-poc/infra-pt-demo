@@ -1,6 +1,6 @@
 ---
 name: bolt-templates
-description: Smart project template generator based on constitution. Creates folder structures, boilerplate files and configuration tailored to the tech stack (React + .NET, Vue + Python, Angular + Node, etc.). Triggers: 'generate template', 'project structure', 'scaffold project', 'boilerplate', 'create component template', 'create from constitution', '/bolt-templates'.
+description: "Smart project template generator based on constitution. Creates folder structures, boilerplate files and configuration tailored to the tech stack (React + .NET, Vue + Python, Angular + Node, etc.). Triggers: 'generate template', 'project structure', 'scaffold project', 'boilerplate', 'create component template', 'create from constitution', '/bolt-templates'."
 ---
 
 # Bolt Templates — Methodology

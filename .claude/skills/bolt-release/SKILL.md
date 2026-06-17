@@ -1,6 +1,6 @@
 ---
 name: bolt-release
-description: Orchestrate Bolt Framework releases following SemVer (MAJOR.MINOR.PATCH + pre-release / RC), with quality gates, changelog generation, tag / GitHub Release / artifact creation, and deployment handoff. Triggers: 'create release', 'tag release', 'changelog', 'SemVer bump', 'GitHub Release', 'pre-release', 'TRANSITION phase', '/bolt-release'.
+description: "Orchestrate Bolt Framework releases following SemVer (MAJOR.MINOR.PATCH + pre-release / RC), with quality gates, changelog generation, tag / GitHub Release / artifact creation, and deployment handoff. Triggers: 'create release', 'tag release', 'changelog', 'SemVer bump', 'GitHub Release', 'pre-release', 'TRANSITION phase', '/bolt-release'."
 ---
 
 # Bolt Release — Methodology

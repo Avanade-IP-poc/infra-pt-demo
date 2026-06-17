@@ -1,6 +1,6 @@
 ---
 name: bolt-adr
-description: Create Architecture Decision Records (ADRs) in MADR format documenting significant technical decisions, context, considered options and consequences. Produces `docs/adr/ADR-NNN-title.md`. Triggers: 'create ADR', 'document decision', 'architecture decision record', 'MADR', 'why did we choose', 'technical decision log', '/bolt-adr'.
+description: "Create Architecture Decision Records (ADRs) in MADR format documenting significant technical decisions, context, considered options and consequences. Produces `docs/adr/ADR-NNN-title.md`. Triggers: 'create ADR', 'document decision', 'architecture decision record', 'MADR', 'why did we choose', 'technical decision log', '/bolt-adr'."
 ---
 
 # Bolt ADR — Methodology

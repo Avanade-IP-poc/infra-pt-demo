@@ -1,6 +1,6 @@
 ---
 name: bolt-gherkin
-description: Generate BDD scenarios in Gherkin syntax for Reqnroll (.NET) or Playwright (frontend) from user stories and acceptance criteria, marking `@smoke` per Bolt smoke-classification rules. Generates compilable Reqnroll step definition stubs. Runs in parallel with bolt-plan. Produces `specs/[feature]/tests/*.feature` files. Triggers: 'generate Gherkin', 'BDD scenarios', 'Reqnroll', 'feature file', 'Given When Then', '/bolt-gherkin'.
+description: "Generate BDD scenarios in Gherkin syntax for Reqnroll (.NET) or Playwright (frontend) from user stories and acceptance criteria, marking `@smoke` per Bolt smoke-classification rules. Generates compilable Reqnroll step definition stubs. Runs in parallel with bolt-plan. Produces `specs/[feature]/tests/*.feature` files. Triggers: 'generate Gherkin', 'BDD scenarios', 'Reqnroll', 'feature file', 'Given When Then', '/bolt-gherkin'."
 ---
 
 # Bolt Gherkin — Methodology

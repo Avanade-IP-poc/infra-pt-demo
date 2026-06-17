@@ -1,6 +1,6 @@
 ---
 name: bolt-retire
-description: Plan and execute controlled retirement of systems, features or entire projects in Bolt Framework — assessment → planning → communication → migration → archive → decommission. Triggers: 'retirement', 'decommission', 'sunset feature', 'deprecate service', 'shutdown system', 'end of life', 'RETIREMENT phase', '/bolt-retire'.
+description: "Plan and execute controlled retirement of systems, features or entire projects in Bolt Framework — assessment → planning → communication → migration → archive → decommission. Triggers: 'retirement', 'decommission', 'sunset feature', 'deprecate service', 'shutdown system', 'end of life', 'RETIREMENT phase', '/bolt-retire'."
 ---
 
 # Bolt Retire — Methodology

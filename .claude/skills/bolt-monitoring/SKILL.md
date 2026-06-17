@@ -1,6 +1,6 @@
 ---
 name: bolt-monitoring
-description: Built-in observability, performance monitoring and proactive alerting for Bolt Framework projects. Prometheus + Grafana + Loki + Jaeger stack (or Azure Monitor / CloudWatch / GCP Monitoring), auto-instrumentation per stack, constitution-based alerts, SLO/SLI tracking, RUM and synthetic monitoring. Triggers: 'monitoring', 'observability', 'Prometheus', 'Grafana', 'dashboards', 'alerts', 'SLO', 'APM', 'health checks', '/bolt-monitoring'.
+description: "Built-in observability, performance monitoring and proactive alerting for Bolt Framework projects. Prometheus + Grafana + Loki + Jaeger stack (or Azure Monitor / CloudWatch / GCP Monitoring), auto-instrumentation per stack, constitution-based alerts, SLO/SLI tracking, RUM and synthetic monitoring. Triggers: 'monitoring', 'observability', 'Prometheus', 'Grafana', 'dashboards', 'alerts', 'SLO', 'APM', 'health checks', '/bolt-monitoring'."
 ---
 
 # Bolt Monitoring — Methodology

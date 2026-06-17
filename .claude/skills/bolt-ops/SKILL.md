@@ -1,6 +1,6 @@
 ---
 name: bolt-ops
-description: Manage operations, deployments, monitoring and incident response for Bolt Framework projects in PRODUCTION. Covers env config, deploy flow with pre/post checks and rollback, alert configuration. Triggers: 'operations', 'deploy to environment', 'production health', 'incident response', 'rollback', 'PRODUCTION phase', '/bolt-ops'.
+description: "Manage operations, deployments, monitoring and incident response for Bolt Framework projects in PRODUCTION. Covers env config, deploy flow with pre/post checks and rollback, alert configuration. Triggers: 'operations', 'deploy to environment', 'production health', 'incident response', 'rollback', 'PRODUCTION phase', '/bolt-ops'."
 ---
 
 # Bolt Ops — Methodology

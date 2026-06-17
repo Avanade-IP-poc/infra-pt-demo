@@ -1,6 +1,6 @@
 ---
 name: bolt-security
-description: Security Guardian for Bolt Framework — comprehensive stack-agnostic security analysis with OWASP Top 10 / ASVS / CWE compliance, SAST/DAST/SCA tooling, constitution-driven policies and remediation guidance. Triggers: 'security analysis', 'OWASP', 'SAST', 'DAST', 'dependency audit', 'security review', 'CWE', 'vulnerability scan', '/bolt-security'.
+description: "Security Guardian for Bolt Framework — comprehensive stack-agnostic security analysis with OWASP Top 10 / ASVS / CWE compliance, SAST/DAST/SCA tooling, constitution-driven policies and remediation guidance. Triggers: 'security analysis', 'OWASP', 'SAST', 'DAST', 'dependency audit', 'security review', 'CWE', 'vulnerability scan', '/bolt-security'."
 ---
 
 # Bolt Security — Methodology

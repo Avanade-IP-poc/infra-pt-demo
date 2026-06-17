@@ -1,6 +1,6 @@
 ---
 name: bolt-clarify
-description: Structured questioning to resolve ambiguities and underspecified areas in Bolt Framework specs. Categories: functional, data, business rules, integration. Produces a Clarification Summary table and updates the spec. Triggers: 'clarify requirements', 'ambiguous spec', 'underspecified', 'vague user story', 'missing acceptance criteria', 'UNDERSTAND phase', '/bolt-clarify'.
+description: "Structured questioning to resolve ambiguities and underspecified areas in Bolt Framework specs. Categories: functional, data, business rules, integration. Produces a Clarification Summary table and updates the spec. Triggers: 'clarify requirements', 'ambiguous spec', 'underspecified', 'vague user story', 'missing acceptance criteria', 'UNDERSTAND phase', '/bolt-clarify'."
 ---
 
 # Bolt Clarify — Methodology

@@ -1,6 +1,6 @@
 ---
 name: bolt-skill-creator
-description: Create, improve and optimize Bolt Framework skills using the AI-powered skill-creator workflow with iterative testing, benchmarking and description optimization. Triggers: 'create skill', 'new skill', 'improve skill', 'optimize skill', 'skill triggering', 'skill evaluation', 'package skill', '/bolt-skill-creator'.
+description: "Create, improve and optimize Bolt Framework skills using the AI-powered skill-creator workflow with iterative testing, benchmarking and description optimization. Triggers: 'create skill', 'new skill', 'improve skill', 'optimize skill', 'skill triggering', 'skill evaluation', 'package skill', '/bolt-skill-creator'."
 ---
 
 # Bolt Skill Creator — Methodology
@@ -66,7 +66,7 @@ deactivate
 ```yaml
 ---
 name: skill-identifier
-description: When to trigger, what it does. Be "pushy" - include specific contexts for when to use.
+description: 'When to trigger, what it does. Be "pushy" - include specific contexts for when to use.'
 compatibility: # Optional - required tools/dependencies
 ---
 
@@ -283,7 +283,7 @@ User Answers:
 ```markdown
 ---
 name: sql-formatter
-description: Format and beautify SQL queries. Use when user mentions SQL formatting, query beautification, or pastes unformatted SQL code. Triggers on: "format SQL", "beautify query", "indent SQL", SQL code blocks.
+description: 'Format and beautify SQL queries. Use when user mentions SQL formatting, query beautification, or pastes unformatted SQL code. Triggers on: "format SQL", "beautify query", "indent SQL", SQL code blocks.'
 ---
 
 # SQL Formatter
@@ -317,7 +317,7 @@ python -m scripts.run_loop \
 ### 8. Optimize description (manual)
 
 ```yaml
-description: SQL query formatting, beautification, query optimization, database code cleanup. Use whenever user mentions SQL queries, format SQL, beautify database code, query formatting, or database query cleanup.
+description: "SQL query formatting, beautification, query optimization, database code cleanup. Use whenever user mentions SQL queries, format SQL, beautify database code, query formatting, or database query cleanup."
 ```
 
 ### 9. Package & deploy

@@ -1,6 +1,6 @@
 ---
 name: bolt-deps
-description: Smart dependency management and auto-installation for Bolt Framework projects based on feature keywords (authentication, database, testing, validation, styling, state management…) and constitution constraints. Validates security, licenses and performance impact. Triggers: 'install dependency', 'add package', 'manage dependencies', 'dependency audit', 'update packages', 'bundle size', '/bolt-deps'.
+description: "Smart dependency management and auto-installation for Bolt Framework projects based on feature keywords (authentication, database, testing, validation, styling, state management…) and constitution constraints. Validates security, licenses and performance impact. Triggers: 'install dependency', 'add package', 'manage dependencies', 'dependency audit', 'update packages', 'bundle size', '/bolt-deps'."
 ---
 
 # Bolt Dependencies — Methodology

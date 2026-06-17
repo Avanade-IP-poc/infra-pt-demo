@@ -1,6 +1,6 @@
 ---
 name: bolt-tasks
-description: Generate actionable Bolt task lists from an implementation plan, reconciling with BDD scenarios, auto-splitting by weight heuristic, and mapping user stories to Bolts (2-3 day micro-iterations) with mandatory per-Bolt quality gates (linting, coverage ≥ 80%, mutation ≥ 70%). Produces `planning/tasks.md`. Triggers: 'generate tasks', 'break plan into tasks', 'task breakdown', 'bolt tasks', 'task list from plan', 'PLAN → EXECUTE preparation', '/bolt-tasks'.
+description: "Generate actionable Bolt task lists from an implementation plan, reconciling with BDD scenarios, auto-splitting by weight heuristic, and mapping user stories to Bolts (2-3 day micro-iterations) with mandatory per-Bolt quality gates (linting, coverage ≥ 80%, mutation ≥ 70%). Produces `planning/tasks.md`. Triggers: 'generate tasks', 'break plan into tasks', 'task breakdown', 'bolt tasks', 'task list from plan', 'PLAN → EXECUTE preparation', '/bolt-tasks'."
 ---
 
 # Bolt Tasks — Methodology

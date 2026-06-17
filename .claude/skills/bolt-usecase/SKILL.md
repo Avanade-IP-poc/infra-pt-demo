@@ -1,6 +1,6 @@
 ---
 name: bolt-usecase
-description: Generate detailed use cases in UML / Cockburn style from Bolt Framework feature specs. Produces `docs/legacy/specs/use-cases/UC-NNN.md` with actors, preconditions, main flow, alternative flows, postconditions, exceptions. Triggers: 'use case', 'Cockburn', 'UML use case', 'generate UC', 'detailed use case', '/bolt-usecase'.
+description: "Generate detailed use cases in UML / Cockburn style from Bolt Framework feature specs. Produces `docs/legacy/specs/use-cases/UC-NNN.md` with actors, preconditions, main flow, alternative flows, postconditions, exceptions. Triggers: 'use case', 'Cockburn', 'UML use case', 'generate UC', 'detailed use case', '/bolt-usecase'."
 ---
 
 # Bolt Use Case — Methodology

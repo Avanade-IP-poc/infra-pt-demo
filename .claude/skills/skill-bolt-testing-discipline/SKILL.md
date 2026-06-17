@@ -1,6 +1,6 @@
 ---
 name: skill-bolt-testing-discipline
-description: Testing pyramid, TDD/BDD decision matrix, and coverage-first approach for Bolt Framework testing discipline. Use when generating test suites, deciding between TDD/BDD, implementing testing strategies, or ensuring test coverage. Triggers => 'testing pyramid', 'TDD' or 'BDD', 'test strategy', 'coverage first', 'unit vs integration tests', 'testing discipline', 'test approach', 'test suite design', 'testing methodology Bolt', '70-20-10 split'.
+description: "Testing pyramid, TDD/BDD decision matrix, and coverage-first approach for Bolt Framework testing discipline. Use when generating test suites, deciding between TDD/BDD, implementing testing strategies, or ensuring test coverage. Triggers => 'testing pyramid', 'TDD' or 'BDD', 'test strategy', 'coverage first', 'unit vs integration tests', 'testing discipline', 'test approach', 'test suite design', 'testing methodology Bolt', '70-20-10 split'."
 ---
 
 # Testing Discipline

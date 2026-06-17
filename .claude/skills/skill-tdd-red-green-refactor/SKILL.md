@@ -1,6 +1,6 @@
 ---
 name: skill-tdd-red-green-refactor
-description: Test-Driven Development workflow with Red-Green-Refactor cycle for backend and frontend
+description: "Test-Driven Development workflow with Red-Green-Refactor cycle for backend and frontend"
 ---
 
 # Skill: TDD Red-Green-Refactor

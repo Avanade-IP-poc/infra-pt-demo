@@ -1,6 +1,6 @@
 ---
 name: bolt-provisioner
-description: Download and provision Bolt Framework resources (skills, prompts, instructions, agents, templates) from multiple sources (local available-skills, Context7, Awesome Copilot, Awesome Skills GitHub). Auto-selects skills based on active scopes and tech stack. Triggers: 'provision resources', 'download skills', 'context7 download', 'awesome copilot', 'available-skills', 'install skill', '/bolt-provisioner'.
+description: "Download and provision Bolt Framework resources (skills, prompts, instructions, agents, templates) from multiple sources (local available-skills, Context7, Awesome Copilot, Awesome Skills GitHub). Auto-selects skills based on active scopes and tech stack. Triggers: 'provision resources', 'download skills', 'context7 download', 'awesome copilot', 'available-skills', 'install skill', '/bolt-provisioner'."
 ---
 
 # Bolt Provisioner — Methodology

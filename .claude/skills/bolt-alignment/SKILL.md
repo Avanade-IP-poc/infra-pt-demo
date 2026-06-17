@@ -1,6 +1,6 @@
 ---
 name: bolt-alignment
-description: Analyze business-technical alignment across the Alignment Triangle (Business Goals ↔ Requirements ↔ Implementation). Cross-phase continuous validation using OKRs, KPIs, metrics, user feedback. Triggers: 'business alignment', 'goals vs implementation', 'OKR check', 'KPI tracking', 'strategic alignment', '/bolt-alignment'.
+description: "Analyze business-technical alignment across the Alignment Triangle (Business Goals ↔ Requirements ↔ Implementation). Cross-phase continuous validation using OKRs, KPIs, metrics, user feedback. Triggers: 'business alignment', 'goals vs implementation', 'OKR check', 'KPI tracking', 'strategic alignment', '/bolt-alignment'."
 ---
 
 # Bolt Alignment — Methodology

@@ -1,6 +1,6 @@
 ---
 name: bolt-review
-description: Comprehensive Bolt Framework code review validating constitution compliance, architecture patterns (Clean Arch, DDD, CQRS, Hexagonal), SOLID principles and test quality. Produces a review report with blocking vs major findings. Triggers: 'code review', 'review code', 'check SOLID', 'review BOLT', 'review PR', 'REVIEW phase', '/bolt-review'.
+description: "Comprehensive Bolt Framework code review validating constitution compliance, architecture patterns (Clean Arch, DDD, CQRS, Hexagonal), SOLID principles and test quality. Produces a review report with blocking vs major findings. Triggers: 'code review', 'review code', 'check SOLID', 'review BOLT', 'review PR', 'REVIEW phase', '/bolt-review'."
 ---
 
 # Bolt Review — Methodology
