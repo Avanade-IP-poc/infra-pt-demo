@@ -17,6 +17,10 @@ handoffs:
     agent: Bolt Clarify
     prompt: Clarify ambiguous requirements
     send: false
+  - label: 🎨 Design Web UI
+    agent: Bolt UX Design
+    prompt: "If `.impeccable.md` or Design Context is missing, start in `teach` mode to gather context; otherwise `craft` the web UI for this feature. The feature specification is available in the specs/ folder. Generate the design system and a production-grade HTML implementation aligned to it."
+    send: false
 ---
 
 # 📝 Specify Agent
