@@ -119,71 +119,83 @@ function Read-MultiChoice {
     $currentIndex = 0
     $selectedIndices = @()
     $hasAllOption = ($Values.Count -gt 0 -and $Values[0] -eq "all")
-    $linesDrawn = 0
+    $itemsStartLine = -1   # Y coordinate of the first item row
 
-    # Helper to draw the menu
-    function Draw-Menu {
-        param($Index, $Selected, [ref]$LastDrawnLines)
+    # Redraws a single item row in place — only the two rows that change per keypress
+    function Draw-Item {
+        param([int]$ItemIndex, [bool]$IsActive, [bool]$IsSelected)
 
-        # If not first draw, move up and clear
-        if ($LastDrawnLines.Value -gt 0) {
-            # Move cursor up the exact number of lines we drew last time
-            for ($i = 0; $i -lt $LastDrawnLines.Value; $i++) {
-                Write-Host "`e[1A`e[2K" -NoNewline  # Move up 1 line + Clear line
-            }
-        }
+        $checkbox = if ($IsSelected) { "[X]" } else { "[ ]" }
+        $prefix   = if ($IsActive)   { "  >" } else { "   " }
+        # Limit to WindowWidth-1 to prevent automatic line-wrap
+        $maxLen   = [Math]::Max(1, [Console]::WindowWidth - 1)
+        $line     = ("$prefix $checkbox $($Options[$ItemIndex])").PadRight($maxLen).Substring(0, $maxLen)
 
-        # Reset line counter
-        $linesThisDraw = 0
+        $savedColor = [Console]::ForegroundColor
+        $maxY = [Console]::BufferHeight - 1
+        [Console]::SetCursorPosition(0, [Math]::Min($itemsStartLine + $ItemIndex, $maxY))
+        if ($IsActive) { [Console]::ForegroundColor = [ConsoleColor]::Yellow }
+        [Console]::Write($line)
+        [Console]::ForegroundColor = $savedColor
 
-        Write-Host ""
-        $linesThisDraw++
-        Write-Host "  $Title" -ForegroundColor Cyan
-        $linesThisDraw++
-        Write-Host "  (↑↓ navigate | Space select | Enter confirm)" -ForegroundColor DarkGray
-        $linesThisDraw++
-
-        for ($i = 0; $i -lt $Options.Count; $i++) {
-            $checkbox = if ($Selected -contains $i) { "[X]" } else { "[ ]" }
-            $prefix = if ($i -eq $Index) { "  >" } else { "   " }
-
-            if ($i -eq $Index) {
-                Write-Host "$prefix $checkbox " -NoNewline -ForegroundColor Yellow
-                Write-Host "$($Options[$i])" -ForegroundColor Yellow
-            } else {
-                Write-Host "$prefix $checkbox $($Options[$i])"
-            }
-            $linesThisDraw++
-        }
-
-        # Save how many lines we drew for next redraw
-        $LastDrawnLines.Value = $linesThisDraw
+        # Park cursor below the menu so keystrokes don't appear inside it
+        [Console]::SetCursorPosition(0, [Math]::Min($itemsStartLine + $Options.Count, $maxY))
     }
 
-    # Initial draw
-    Draw-Menu -Index $currentIndex -Selected $selectedIndices -LastDrawnLines ([ref]$linesDrawn)
+    # ── Full initial draw (only once) ───────────────────────────────────────
+    # Pre-scroll: reserve enough lines so the menu won't push past the buffer
+    # while we draw, which would invalidate $itemsStartLine.
+    $totalMenuLines = $Options.Count + 3  # blank + title + hint + items
+    for ($r = 0; $r -lt $totalMenuLines; $r++) { [Console]::WriteLine("") }
+    # Move cursor back up to the reserved block start
+    $blockStart = [Math]::Max(0, [Console]::CursorTop - $totalMenuLines)
+    [Console]::SetCursorPosition(0, $blockStart)
 
-    # Input loop
+    $savedColor = [Console]::ForegroundColor
+
+    [Console]::WriteLine("")
+    [Console]::ForegroundColor = [ConsoleColor]::Cyan
+    [Console]::WriteLine("  $Title")
+    [Console]::ForegroundColor = [ConsoleColor]::DarkGray
+    [Console]::WriteLine("  (↑↓ navigate | Space select | Enter confirm)")
+    [Console]::ForegroundColor = $savedColor
+
+    # Record where items begin (stable — scroll already happened above)
+    $itemsStartLine = [Console]::CursorTop
+
+    for ($i = 0; $i -lt $Options.Count; $i++) {
+        Draw-Item -ItemIndex $i -IsActive ($i -eq $currentIndex) -IsSelected ($selectedIndices -contains $i)
+    }
+
+    # Park cursor below menu (always within buffer now)
+    $maxY = [Console]::BufferHeight - 1
+    [Console]::SetCursorPosition(0, [Math]::Min($itemsStartLine + $Options.Count, $maxY))
+
+    # ── Input loop — only update changed rows ────────────────────────────────
     $done = $false
     while (-not $done) {
         $key = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
 
         switch ($key.VirtualKeyCode) {
             38 { # Up Arrow
+                $oldIndex    = $currentIndex
                 $currentIndex = if ($currentIndex -gt 0) { $currentIndex - 1 } else { $Options.Count - 1 }
-                Draw-Menu -Index $currentIndex -Selected $selectedIndices -LastDrawnLines ([ref]$linesDrawn)
+                Draw-Item -ItemIndex $oldIndex     -IsActive $false -IsSelected ($selectedIndices -contains $oldIndex)
+                Draw-Item -ItemIndex $currentIndex -IsActive $true  -IsSelected ($selectedIndices -contains $currentIndex)
             }
             40 { # Down Arrow
+                $oldIndex    = $currentIndex
                 $currentIndex = if ($currentIndex -lt $Options.Count - 1) { $currentIndex + 1 } else { 0 }
-                Draw-Menu -Index $currentIndex -Selected $selectedIndices -LastDrawnLines ([ref]$linesDrawn)
+                Draw-Item -ItemIndex $oldIndex     -IsActive $false -IsSelected ($selectedIndices -contains $oldIndex)
+                Draw-Item -ItemIndex $currentIndex -IsActive $true  -IsSelected ($selectedIndices -contains $currentIndex)
             }
-            32 { # Space
+            32 { # Space — toggle selection
                 if ($selectedIndices -contains $currentIndex) {
                     $selectedIndices = @($selectedIndices | Where-Object { $_ -ne $currentIndex })
                 } else {
                     $selectedIndices += $currentIndex
                 }
-                Draw-Menu -Index $currentIndex -Selected $selectedIndices -LastDrawnLines ([ref]$linesDrawn)
+                Draw-Item -ItemIndex $currentIndex -IsActive $true -IsSelected ($selectedIndices -contains $currentIndex)
             }
             13 { # Enter
                 $done = $true
