@@ -41,11 +41,47 @@ caracterización. Base buildable sobre la que se asientan los Bolts 2-6.
 
 ---
 
+## Bolt 2 — IAM Core (Terminal Authorization)
+
+**Tracker**: gh#TBD
+**Branch**: `bolt/001-migracion-sica-iam-core`
+**Objetivo**: Implementar RULE-001 — autorización de terminales por hostname
+(case-insensitive) o IP, sólo si el terminal está registrado y activo. Endpoint
+`POST /api/v1/iam/terminals/authorize` con resolución de IP vía `X-Forwarded-For`
+(primera IP) para clientes detrás de proxy.
+**User Stories**: US-2 (IAM)
+**Estado**: Complete
+
+### Tareas
+
+- [x] T201 [S] Dominio — `Terminal` aggregate + `TerminalId` + `ITerminalRepository`
+- [x] T202 [S] Dominio — RULE-001 en `Terminal.Matches()` (hostname OR IP)
+- [x] T203 [S] Application — `AuthorizeTerminalQuery`/`Result`/`Handler` (CQRS nativo)
+- [x] T204 [S] Application — `IamErrors` (NotRegistered, Inactive) + DI `AddApplication`
+- [x] T205 [M] Infrastructure — `SicaDbContext` + `TerminalConfiguration` (schema sica)
+- [x] T206 [S] Infrastructure — `TerminalRepository` + DI `AddInfrastructure`
+- [x] T207 [M] API — `IamEndpoints` + resolución `X-Forwarded-For` + wiring `Program.cs`
+- [x] T208 [M] Tests — `TerminalTests` (RULE-001 hostname/IP/inactive)
+- [x] T209 [M] Tests — `AuthorizeTerminalQueryHandlerTests` (NSubstitute, 3 paths)
+- [x] T210 [S] `dotnet build` + `dotnet test` verdes
+
+### Quality Gates (Bolt 2)
+
+- [x] Linting: PASS (0 warnings, TreatWarningsAsErrors)
+- [x] Unit tests: PASS (30 passed, 1 skipped)
+- [x] Build: PASS (Release, 0 errors / 0 warnings)
+
+**Diferido** (Bolt 2 continuación / Bolts posteriores): CRUD completo de terminales
+(list/create/get/update/deactivate), agregado `User`, autenticación Azure AD B2C,
+migraciones EF + integration tests con Testcontainers SQL Server, parity harness real.
+
+---
+
 ## Bolts siguientes (resumen — ver plan.md §5)
 
 | # | Nombre | Estado |
 |---|--------|--------|
-| 2 | Backend: IAM Core | Planned |
+| 2 | Backend: IAM Core | Complete |
 | 3 | Backend: SMI ACL | Planned |
 | 4 | Backend: Card Management | Planned |
 | 5 | Backend: Access Control | Planned |
@@ -65,3 +101,4 @@ caracterización. Base buildable sobre la que se asientan los Bolts 2-6.
 | Bolt | Planned | Completed | Days | Notes |
 |------|---------|-----------|------|-------|
 | B-01 | 11 tasks | 11 tasks | 1 | Foundation buildable; rehost a Azure + parity harness real diferidos a infra/Bolt 2 |
+| B-02 | 10 tasks | 10 tasks | 1 | RULE-001 terminal authorization; 12 tests nuevos (30 total). CRUD/User/B2C diferidos |

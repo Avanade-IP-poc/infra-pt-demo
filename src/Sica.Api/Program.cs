@@ -1,7 +1,13 @@
+using Sica.Api.Endpoints;
+using Sica.Application;
+using Sica.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
@@ -14,6 +20,8 @@ if (app.Environment.IsDevelopment())
 app.MapGet("/health", () => Results.Ok(new HealthStatus("Healthy", "001-migracion-sica")))
     .WithName("HealthCheck")
     .WithOpenApi();
+
+app.MapIamEndpoints();
 
 app.Run();
 
