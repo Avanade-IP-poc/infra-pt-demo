@@ -205,6 +205,40 @@ transaccionales del rollback RULE-007.
 
 ---
 
+## Bolt 6 — Monitoring
+
+**Tracker**: gh#TBD
+**Branch**: `bolt/001-migracion-sica-monitoring`
+**User Stories**: US-2 (parcial) — monitorización de accesos físicos en tiempo (cuasi) real
+**Estado**: Complete
+
+**Objetivo**: Exponer los eventos de acceso y la ocupación por zona consultados
+directamente del SMI (read-only, sin persistencia en MVP — data-model §5.1), aplicando
+la clasificación de movimiento RULE-011 (Entrada/Salida/Desconocido).
+
+| ID | Tarea | Estado |
+|----|-------|--------|
+| T601 | `AccessEventType` enum (Entry/Exit/Unknown) | [x] |
+| T602 | `MovementClassifier` (RULE-011: descripción prioritaria + fallback por parámetro) | [x] |
+| T603 | `ListAccessEventsQuery` + DTO + handler (ACL SMI, clamp horas/maxEvents) | [x] |
+| T604 | `CountUsersByZoneQuery` + DTO + handler (ocupación por zona) | [x] |
+| T605 | `MonitoringEndpoints` GET /events, GET /zones + wiring Program.cs | [x] |
+| T606 | Registro DI de handlers Monitoring | [x] |
+| T607 | Tests: `MovementClassifier` (todos los escenarios RULE-011) | [x] |
+| T608 | Tests: handlers `ListAccessEvents` (mapeo/clasificación/clamp) y `CountUsersByZone` | [x] |
+
+### Quality Gates (Bolt 6)
+
+- [x] Linting: PASS (0 warnings, TreatWarningsAsErrors)
+- [x] Unit tests: PASS (116 passed, 1 skipped — 18 nuevos)
+- [x] Build: PASS (Release, 0 errors / 0 warnings)
+
+**Diferido**: agregado `Alarm` (fuera de MVP), persistencia de `AccessEvent` y resolución
+de `UserId`, resolución RULE-010 por grupo de circuitos, endpoint `zones/{id}/users`,
+cliente SOAP real de eventos, integration tests del ACL SMI.
+
+---
+
 ## Bolts siguientes (resumen — ver plan.md §5)
 
 | # | Nombre | Estado |
@@ -213,7 +247,7 @@ transaccionales del rollback RULE-007.
 | 3 | Backend: SMI ACL | Complete |
 | 4 | Backend: Card Management | Complete |
 | 5 | Backend: Access Control | Complete |
-| 6 | Backend: Monitoring | Planned |
+| 6 | Backend: Monitoring | Complete |
 | 7 | Frontend: Foundation | Planned |
 | 8 | Frontend: Dashboard | Planned |
 | 9 | Frontend: Visitantes | Planned |
@@ -233,3 +267,4 @@ transaccionales del rollback RULE-007.
 | B-03 | 10 tasks | 10 tasks | 1 | SMI ACL: puerto `ISmiService` + Mock/SOAP adapters; 11 tests nuevos (41 total). Cliente SOAP real diferido |
 | B-04 | 15 tasks | 15 tasks | 1 | Card Management: agregados `SmartCard` + `VisitorCardAssignment` (RULE-004/005/008/009); 3 casos de uso CQRS + endpoints; 26 tests nuevos (77 total). User/CRUD/sync SMI/migraciones diferidos |
 | B-05 | 16 tasks | 16 tasks | 1 | Access Control: agregados `AccessFamily` + `Circuit` + `TerminalAccessPolicy` (RULE-007 reemplazo transaccional); 6 casos de uso CQRS + endpoints; 21 tests nuevos (98 total). Join tables normalizadas/auditoría/sync SMI diferidos |
+| B-06 | 8 tasks | 8 tasks | 1 | Monitoring: `MovementClassifier` (RULE-011 read-only desde SMI) + 2 queries CQRS (eventos/zonas) + endpoints; 18 tests nuevos (116 total). Agregado `Alarm`, persistencia de eventos y RULE-010 por grupo diferidos |
