@@ -157,6 +157,54 @@ cartões + endpoints de administración, comando de sincronización SMI→SmartC
 
 ---
 
+## Bolt 5 — Access Control
+
+**Tracker**: gh#TBD
+**Branch**: `bolt/001-migracion-sica-access-control`
+**Objetivo**: Modelar el control de accesos físicos: agregado `AccessFamily`
+(grupos de acceso con membresía de usuarios), `Circuit` (puntos de acceso físicos,
+jerarquía por grupo) y `TerminalAccessPolicy` (perfil de acceso por terminal).
+RULE-007: actualizar el perfil de un terminal reemplaza por completo la configuración
+anterior (delete + insert) de forma atómica vía unit of work — corrige el defecto
+legacy sin transacción que dejaba el terminal en estado inconsistente. Casos de uso
+CQRS: listar/crear familias, actualizar membresía, listar circuitos, leer y actualizar
+la política de terminal. Persistencia EF Core + endpoints REST.
+**User Stories**: US-2 (parcial) — habilita Bolt 6 (Monitoring)
+**Estado**: Complete
+
+### Tareas
+
+- [x] T501 [S] Domain — `AccessFamilyId`, `CircuitId`, `TerminalAccessPolicyId`
+- [x] T502 [M] Domain — agregado `AccessFamily` (`Create`, `Rename`, `ReplaceMembers`)
+- [x] T503 [S] Domain — agregado `Circuit` (`Register`, jerarquía `CircuitGroupId`)
+- [x] T504 [L] Domain — agregado `TerminalAccessPolicy` (`ReplaceRules` RULE-007)
+- [x] T505 [S] Domain — puertos `IAccessFamilyRepository`, `ICircuitRepository`, `ITerminalAccessPolicyRepository`
+- [x] T506 [S] Application — `AccessControlErrors`
+- [x] T507 [M] Application — `ListAccessFamiliesQuery` + `CreateAccessFamilyCommand` + handlers
+- [x] T508 [S] Application — `UpdateFamilyMembersCommand` + handler
+- [x] T509 [S] Application — `ListCircuitsQuery` + handler
+- [x] T510 [M] Application — `GetTerminalPolicyQuery` + `UpdateTerminalPolicyCommand` + handlers (RULE-007)
+- [x] T511 [S] Application — DI: registra 6 handlers Access Control
+- [x] T512 [M] Infrastructure — configs EF (`AccessFamily`, `Circuit`, `TerminalAccessPolicy`)
+- [x] T513 [M] Infrastructure — 3 repositorios + DbSets + DI
+- [x] T514 [M] API — `AccessControlEndpoints` (familias, miembros, circuitos, política terminal)
+- [x] T515 [L] Tests — dominio (`AccessFamily`, `TerminalAccessPolicy`) + handlers (21 tests)
+- [x] T516 [S] `dotnet build` + `dotnet test` verdes
+
+### Quality Gates (Bolt 5)
+
+- [x] Linting: PASS (0 warnings, TreatWarningsAsErrors)
+- [x] Unit tests: PASS (98 passed, 1 skipped — 21 nuevos)
+- [x] Build: PASS (Release, 0 errors / 0 warnings)
+
+**Diferido**: tablas de unión normalizadas `TerminalPolicyRules` (producto Familia×Circuito;
+se usa columna serializada por consistencia con el patrón establecido), log de auditoría
+`PolicyUpdated` (a Bolt 6 Monitoring / domain events), validación de existencia del terminal
+contra IAM, sincronización SMI→AccessFamily/Circuit, migraciones EF Core, integration tests
+transaccionales del rollback RULE-007.
+
+---
+
 ## Bolts siguientes (resumen — ver plan.md §5)
 
 | # | Nombre | Estado |
@@ -164,7 +212,7 @@ cartões + endpoints de administración, comando de sincronización SMI→SmartC
 | 2 | Backend: IAM Core | Complete |
 | 3 | Backend: SMI ACL | Complete |
 | 4 | Backend: Card Management | Complete |
-| 5 | Backend: Access Control | Planned |
+| 5 | Backend: Access Control | Complete |
 | 6 | Backend: Monitoring | Planned |
 | 7 | Frontend: Foundation | Planned |
 | 8 | Frontend: Dashboard | Planned |
@@ -184,3 +232,4 @@ cartões + endpoints de administración, comando de sincronización SMI→SmartC
 | B-02 | 10 tasks | 10 tasks | 1 | RULE-001 terminal authorization; 12 tests nuevos (30 total). CRUD/User/B2C diferidos |
 | B-03 | 10 tasks | 10 tasks | 1 | SMI ACL: puerto `ISmiService` + Mock/SOAP adapters; 11 tests nuevos (41 total). Cliente SOAP real diferido |
 | B-04 | 15 tasks | 15 tasks | 1 | Card Management: agregados `SmartCard` + `VisitorCardAssignment` (RULE-004/005/008/009); 3 casos de uso CQRS + endpoints; 26 tests nuevos (77 total). User/CRUD/sync SMI/migraciones diferidos |
+| B-05 | 16 tasks | 16 tasks | 1 | Access Control: agregados `AccessFamily` + `Circuit` + `TerminalAccessPolicy` (RULE-007 reemplazo transaccional); 6 casos de uso CQRS + endpoints; 21 tests nuevos (98 total). Join tables normalizadas/auditoría/sync SMI diferidos |

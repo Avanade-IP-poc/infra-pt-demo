@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Sica.Application.Abstractions;
 using Sica.Application.Integration.Smi;
+using Sica.Domain.AccessControl;
 using Sica.Domain.Cards;
 using Sica.Domain.Iam;
 using Sica.Infrastructure.Integration.Smi;
@@ -26,6 +27,9 @@ public static class DependencyInjection
         services.AddScoped<ITerminalRepository, TerminalRepository>();
         services.AddScoped<ISmartCardRepository, SmartCardRepository>();
         services.AddScoped<IVisitorCardAssignmentRepository, VisitorCardAssignmentRepository>();
+        services.AddScoped<IAccessFamilyRepository, AccessFamilyRepository>();
+        services.AddScoped<ICircuitRepository, CircuitRepository>();
+        services.AddScoped<ITerminalAccessPolicyRepository, TerminalAccessPolicyRepository>();
 
         services.AddSmiIntegration(configuration);
 
