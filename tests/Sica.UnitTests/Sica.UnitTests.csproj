@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Sica.Shared\Sica.Shared.csproj" />
     <ProjectReference Include="..\..\src\Sica.Domain\Sica.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Sica.Application\Sica.Application.csproj" />
   </ItemGroup>
 
 </Project>
