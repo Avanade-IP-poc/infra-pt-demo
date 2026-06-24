@@ -276,6 +276,40 @@ vulnerabilidades dev-only de tooling.
 
 ---
 
+## Bolt 8 — Frontend: Dashboard
+
+**Tracker**: gh#TBD
+**Branch**: `bolt/001-migracion-sica-frontend-dashboard`
+**User Stories**: US-3 (PagPrincipal — monitorización)
+**Estado**: Complete
+
+**Objetivo**: Reproducir la página principal legacy de monitorización consumiendo los
+endpoints del Bolt 6 (Monitoring) y del Bolt 5 (Access Control): selección de circuito,
+log de eventos recientes con polling y ocupación por zona.
+
+| ID | Tarea | Estado |
+|----|-------|--------|
+| T801 | Tipos y cliente API del feature `monitoring` (circuits/events/zones, envelope `items`) | [x] |
+| T802 | Hooks TanStack Query: `useCircuits`, `useAccessEvents` (poll 5s), `useZoneOccupancy` (poll 15s) | [x] |
+| T803 | `CircuitSelector` (dropdown de circuitos) | [x] |
+| T804 | `EventLog` (tabla de eventos) + `EventTypeBadge` (RULE-011 Entrada/Saída/Desconhecido) | [x] |
+| T805 | `ZoneOccupancyPanel` (ocupación por zona) | [x] |
+| T806 | `DashboardPage` compuesta + auto-selección del primer circuito | [x] |
+| T807 | Util `formatTime` (locale pt-PT) | [x] |
+| T808 | Tests Vitest: api (envelope/query), `EventTypeBadge`, `EventLog`, `formatTime` | [x] |
+
+### Quality Gates (Bolt 8)
+
+- [x] Build: PASS (`tsc -b && vite build`, 0 errors)
+- [x] Unit tests: PASS (28 passed — 13 nuevos)
+- [x] Security: `npm audit --omit=dev` → 0 vulnerabilidades en producción
+
+**Diferido**: componente `UserDetail` (foto + ficha del último evento, requiere resolución
+de `UserId` en backend), filtros de horas/maxEvents en la UI, tests de hooks con polling,
+code-splitting del bundle, Playwright E2E del dashboard.
+
+---
+
 ## Bolts siguientes (resumen — ver plan.md §5)
 
 | # | Nombre | Estado |
@@ -286,7 +320,7 @@ vulnerabilidades dev-only de tooling.
 | 5 | Backend: Access Control | Complete |
 | 6 | Backend: Monitoring | Complete |
 | 7 | Frontend: Foundation | Complete |
-| 8 | Frontend: Dashboard | Planned |
+| 8 | Frontend: Dashboard | Complete |
 | 9 | Frontend: Visitantes | Planned |
 | 10 | Frontend: Secundarias | Planned |
 | 11 | Infra: Azure Bicep | Planned |
@@ -306,3 +340,4 @@ vulnerabilidades dev-only de tooling.
 | B-05 | 16 tasks | 16 tasks | 1 | Access Control: agregados `AccessFamily` + `Circuit` + `TerminalAccessPolicy` (RULE-007 reemplazo transaccional); 6 casos de uso CQRS + endpoints; 21 tests nuevos (98 total). Join tables normalizadas/auditoría/sync SMI diferidos |
 | B-06 | 8 tasks | 8 tasks | 1 | Monitoring: `MovementClassifier` (RULE-011 read-only desde SMI) + 2 queries CQRS (eventos/zonas) + endpoints; 18 tests nuevos (116 total). Agregado `Alarm`, persistencia de eventos y RULE-010 por grupo diferidos |
 | B-07 | 10 tasks | 10 tasks | 1 | Frontend Foundation: scaffold SPA React 18 + TS + Vite, design system Tailwind v4, MSAL (Auth Code+PKCE), TanStack Query + cliente API, 5 componentes base + 2 layouts + login/dashboard; 15 tests Vitest. AAD real/páginas de negocio/E2E/mutation diferidos |
+| B-08 | 8 tasks | 8 tasks | 1 | Frontend Dashboard: feature `monitoring` (api/hooks con polling) + `CircuitSelector`/`EventLog`/`EventTypeBadge`/`ZoneOccupancyPanel` + `DashboardPage` consumiendo Monitoring (RULE-011) y Access Control; 13 tests nuevos (28 total). `UserDetail`/filtros UI/E2E diferidos |
