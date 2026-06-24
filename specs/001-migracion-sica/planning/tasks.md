@@ -239,6 +239,43 @@ cliente SOAP real de eventos, integration tests del ACL SMI.
 
 ---
 
+## Bolt 7 — Frontend: Foundation
+
+**Tracker**: gh#TBD
+**Branch**: `bolt/001-migracion-sica-frontend-foundation`
+**User Stories**: US-3 (setup)
+**Estado**: Complete
+
+**Objetivo**: Scaffold de la SPA (`frontend/`) con React 18 + TypeScript + Vite,
+design system Tailwind v4, autenticación MSAL (Azure AD B2C, Auth Code + PKCE),
+TanStack Query, enrutado protegido y componentes base reutilizables.
+
+| ID | Tarea | Estado |
+|----|-------|--------|
+| T701 | Proyecto Vite + TS (`package.json`, `tsconfig*`, `vite.config.ts`, `index.html`) | [x] |
+| T702 | Design system Tailwind v4 con tokens (`src/index.css`) | [x] |
+| T703 | MSAL: config + instancia + `RequireAuth` (Auth Code + PKCE) | [x] |
+| T704 | TanStack Query + cliente API autenticado (`apiFetch`, `ApiError`) | [x] |
+| T705 | Componentes base: `Button`, `Input`, `Card`, `Table`, `Modal` | [x] |
+| T706 | Layouts: `DashboardLayout`, `AuthLayout` | [x] |
+| T707 | Páginas `/login` (redirect AAD) y `/dashboard` (home) + router | [x] |
+| T708 | Bootstrap MSAL (`main.tsx`) + providers (`App.tsx`) | [x] |
+| T709 | Tests Vitest + RTL: `Button`, `Card`, `apiFetch`, `cn` | [x] |
+| T710 | ESLint config + `.env.example` + README frontend | [x] |
+
+### Quality Gates (Bolt 7)
+
+- [x] Build: PASS (`tsc -b && vite build`, 0 errors)
+- [x] Unit tests: PASS (15 passed — Vitest + Testing Library)
+- [x] Security: `npm audit --omit=dev` → 0 vulnerabilidades en producción
+
+**Diferido**: valores reales de Azure AD B2C (tenant/clientId/scope), páginas de negocio
+(Dashboard de monitorización B-08, Visitantes B-09, secundarias B-10), code-splitting del
+bundle (>500 kB), Zustand stores concretos, Stryker JS (mutation), Playwright E2E, 6
+vulnerabilidades dev-only de tooling.
+
+---
+
 ## Bolts siguientes (resumen — ver plan.md §5)
 
 | # | Nombre | Estado |
@@ -248,7 +285,7 @@ cliente SOAP real de eventos, integration tests del ACL SMI.
 | 4 | Backend: Card Management | Complete |
 | 5 | Backend: Access Control | Complete |
 | 6 | Backend: Monitoring | Complete |
-| 7 | Frontend: Foundation | Planned |
+| 7 | Frontend: Foundation | Complete |
 | 8 | Frontend: Dashboard | Planned |
 | 9 | Frontend: Visitantes | Planned |
 | 10 | Frontend: Secundarias | Planned |
@@ -268,3 +305,4 @@ cliente SOAP real de eventos, integration tests del ACL SMI.
 | B-04 | 15 tasks | 15 tasks | 1 | Card Management: agregados `SmartCard` + `VisitorCardAssignment` (RULE-004/005/008/009); 3 casos de uso CQRS + endpoints; 26 tests nuevos (77 total). User/CRUD/sync SMI/migraciones diferidos |
 | B-05 | 16 tasks | 16 tasks | 1 | Access Control: agregados `AccessFamily` + `Circuit` + `TerminalAccessPolicy` (RULE-007 reemplazo transaccional); 6 casos de uso CQRS + endpoints; 21 tests nuevos (98 total). Join tables normalizadas/auditoría/sync SMI diferidos |
 | B-06 | 8 tasks | 8 tasks | 1 | Monitoring: `MovementClassifier` (RULE-011 read-only desde SMI) + 2 queries CQRS (eventos/zonas) + endpoints; 18 tests nuevos (116 total). Agregado `Alarm`, persistencia de eventos y RULE-010 por grupo diferidos |
+| B-07 | 10 tasks | 10 tasks | 1 | Frontend Foundation: scaffold SPA React 18 + TS + Vite, design system Tailwind v4, MSAL (Auth Code+PKCE), TanStack Query + cliente API, 5 componentes base + 2 layouts + login/dashboard; 15 tests Vitest. AAD real/páginas de negocio/E2E/mutation diferidos |
