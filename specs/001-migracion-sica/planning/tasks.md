@@ -114,13 +114,56 @@ para `SmiMockAdapter`, integration tests del adaptador SOAP.
 
 ---
 
+## Bolt 4 — Card Management
+
+**Tracker**: gh#TBD
+**Branch**: `bolt/001-migracion-sica-card-management`
+**Objetivo**: Modelar el agregado `SmartCard` (tipo derivado del prefijo del código,
+RULE-004; sincronización restringida a prefijos válidos, RULE-005) y el agregado
+`VisitorCardAssignment` que gobierna la disponibilidad de cartões de visitante
+(RULE-008) y la validación de datos obligatorios al asignar (RULE-009). Casos de
+uso CQRS: listar cartões disponibles, asignar cartão a visitante (registra entrada)
+y registrar salida (libera el cartão). Persistencia EF Core + endpoints REST.
+**User Stories**: US-3 (gestión de cartões de visitante)
+**Estado**: Complete
+
+### Tareas
+
+- [x] T401 [S] Domain — `CardId`, `CardType`, `CardStatus`, `CardCode` (RULE-004/005)
+- [x] T402 [M] Domain — agregado `SmartCard` (`Create`, `SyncFromMaster`, transiciones de estado)
+- [x] T403 [L] Domain — agregado `VisitorCardAssignment` (`Assign` RULE-009, `RecordExit` RULE-008)
+- [x] T404 [S] Domain — puertos `ISmartCardRepository`, `IVisitorCardAssignmentRepository`
+- [x] T405 [S] Application — `IUnitOfWork` + `CardErrors`
+- [x] T406 [M] Application — `ListAvailableVisitorCardsQuery` + handler (RULE-008)
+- [x] T407 [M] Application — `AssignVisitorCardCommand` + handler (RULE-009, `TimeProvider`)
+- [x] T408 [S] Application — `RecordVisitorExitCommand` + handler
+- [x] T409 [S] Application — DI: registra handlers Cards + `TimeProvider.System`
+- [x] T410 [M] Infrastructure — `SmartCardConfiguration` + `VisitorCardAssignmentConfiguration` (EF)
+- [x] T411 [M] Infrastructure — `SmartCardRepository` + `VisitorCardAssignmentRepository`
+- [x] T412 [S] Infrastructure — DI: repos Cards + `IUnitOfWork` → `SicaDbContext`
+- [x] T413 [M] API — `CardEndpoints` (GET available, POST assign, POST exit)
+- [x] T414 [L] Tests — dominio (CardCode/SmartCard/VisitorCardAssignment) + handlers (26 tests)
+- [x] T415 [S] `dotnet build` + `dotnet test` verdes
+
+### Quality Gates (Bolt 4)
+
+- [x] Linting: PASS (0 warnings, TreatWarningsAsErrors)
+- [x] Unit tests: PASS (77 passed, 1 skipped — 26 nuevos)
+- [x] Build: PASS (Release, 0 errors / 0 warnings)
+
+**Diferido**: agregado `User` (titulares de cartões de empleado), CRUD completo de
+cartões + endpoints de administración, comando de sincronización SMI→SmartCard usando
+`ISmiService` (RULE-005), migraciones EF Core, integration tests de los repositorios.
+
+---
+
 ## Bolts siguientes (resumen — ver plan.md §5)
 
 | # | Nombre | Estado |
 |---|--------|--------|
 | 2 | Backend: IAM Core | Complete |
 | 3 | Backend: SMI ACL | Complete |
-| 4 | Backend: Card Management | Planned |
+| 4 | Backend: Card Management | Complete |
 | 5 | Backend: Access Control | Planned |
 | 6 | Backend: Monitoring | Planned |
 | 7 | Frontend: Foundation | Planned |
@@ -140,3 +183,4 @@ para `SmiMockAdapter`, integration tests del adaptador SOAP.
 | B-01 | 11 tasks | 11 tasks | 1 | Foundation buildable; rehost a Azure + parity harness real diferidos a infra/Bolt 2 |
 | B-02 | 10 tasks | 10 tasks | 1 | RULE-001 terminal authorization; 12 tests nuevos (30 total). CRUD/User/B2C diferidos |
 | B-03 | 10 tasks | 10 tasks | 1 | SMI ACL: puerto `ISmiService` + Mock/SOAP adapters; 11 tests nuevos (41 total). Cliente SOAP real diferido |
+| B-04 | 15 tasks | 15 tasks | 1 | Card Management: agregados `SmartCard` + `VisitorCardAssignment` (RULE-004/005/008/009); 3 casos de uso CQRS + endpoints; 26 tests nuevos (77 total). User/CRUD/sync SMI/migraciones diferidos |

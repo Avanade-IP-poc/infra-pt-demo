@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Sica.Application.Abstractions;
 using Sica.Application.Integration.Smi;
+using Sica.Domain.Cards;
 using Sica.Domain.Iam;
 using Sica.Infrastructure.Integration.Smi;
 using Sica.Infrastructure.Persistence;
@@ -19,7 +21,11 @@ public static class DependencyInjection
         services.AddDbContext<SicaDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("SicaDatabase")));
 
+        services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<SicaDbContext>());
+
         services.AddScoped<ITerminalRepository, TerminalRepository>();
+        services.AddScoped<ISmartCardRepository, SmartCardRepository>();
+        services.AddScoped<IVisitorCardAssignmentRepository, VisitorCardAssignmentRepository>();
 
         services.AddSmiIntegration(configuration);
 

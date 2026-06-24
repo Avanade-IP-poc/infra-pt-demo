@@ -23,6 +23,8 @@ app.MapGet("/health", () => Results.Ok(new HealthStatus("Healthy", "001-migracio
 
 app.MapIamEndpoints();
 
+app.MapCardEndpoints();
+
 app.Run();
 
 internal sealed record HealthStatus(string Status, string Feature);
