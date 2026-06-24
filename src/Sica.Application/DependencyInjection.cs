@@ -10,6 +10,8 @@ using Sica.Application.Cards.AssignVisitorCard;
 using Sica.Application.Cards.ListAvailableVisitorCards;
 using Sica.Application.Cards.RecordVisitorExit;
 using Sica.Application.Iam.AuthorizeTerminal;
+using Sica.Application.Monitoring.CountUsersByZone;
+using Sica.Application.Monitoring.ListAccessEvents;
 
 namespace Sica.Application;
 
@@ -59,6 +61,14 @@ public static class DependencyInjection
         services.AddScoped<
             ICommandHandler<UpdateTerminalPolicyCommand>,
             UpdateTerminalPolicyCommandHandler>();
+
+        services.AddScoped<
+            IQueryHandler<ListAccessEventsQuery, IReadOnlyList<AccessEventDto>>,
+            ListAccessEventsQueryHandler>();
+
+        services.AddScoped<
+            IQueryHandler<CountUsersByZoneQuery, IReadOnlyList<ZoneOccupancyDto>>,
+            CountUsersByZoneQueryHandler>();
 
         return services;
     }
