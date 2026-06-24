@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Sica.Api/Sica.Api.csproj" />
+    <Project Path="src/Sica.Application/Sica.Application.csproj" />
+    <Project Path="src/Sica.Domain/Sica.Domain.csproj" />
+    <Project Path="src/Sica.Infrastructure/Sica.Infrastructure.csproj" />
+    <Project Path="src/Sica.Shared/Sica.Shared.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Sica.CharacterizationTests/Sica.CharacterizationTests.csproj" />
+    <Project Path="tests/Sica.UnitTests/Sica.UnitTests.csproj" />
+  </Folder>
+</Solution>

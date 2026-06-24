@@ -1,0 +1,16 @@
+﻿novo webservice "wsSMIServer" 
+  - metodos para ligação à BD Alizes
+  - todos os métodos estão preparados para lidar com a BD nas versões 11 e 55
+
+"Web.config"
+  - adicionada a referência ao wsSMIServer
+
+"Default.aspx"
+  - modificado o layout
+  - simplificado o código do timer
+
+"Circuitos.ascx", "LogPorta.ascx", "DetalheUtilizador.ascx" e "ResumoZonas.ascx"
+  - alterado código para passar a usar o webservice
+
+""
+  -

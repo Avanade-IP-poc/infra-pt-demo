@@ -1,0 +1,81 @@
+﻿nova página "default.aspx"
+  - código para leitura do nome do PC que invoca a app
+  - o código que estava antes no "Session_Start" do "Global.asax" passou para esta nova página
+
+página "Monitorizacao.aspx" descontinuada
+  - foi alterado o nome para "Monitorizacao_OLD.aspx"
+  - a página será eliminada
+
+"MasterPage.master" 
+  - foi substiruído o "ToolkitScriptManager" pelo "ScriptManager"
+  - eliminada referencia ao objeto para controlo de sessão
+
+"ActivarCartoes.ascx"
+  - alterado o código para usar session("NomeTerminal") e não session("IPTerminal")
+
+"Circuitos.ascx"
+  - alterado o código para usar session("NomeTerminal") e não session("IPTerminal")
+
+"DetalheVisitante.ascx"
+  - alterado o código para usar session("NomeTerminal") e não session("IPTerminal")
+  - alterado o código para guardar info de atribuição de cartões na BD SICA e não Alizes
+  - os campos adicionais no SMI podem ser descontinuados.
+
+"Foto.aspx"
+  - código alterado para mostrar foto via link e não via BD
+  - página descontinuada
+
+"LogPorta.ascx"
+  - alterado o código para ler a BD SICA em vez da Alizes
+  - optimizado o número de chamadas à BD
+
+"Visitantes.ascx"
+  - alterado o código para usar session("NomeTerminal") e não session("IPTerminal")
+  - alterado design para mostrar ma mesma página os cartões atribuídos e o formulário para novos
+
+"MonSeg.aspx"
+  - removidos os alarmes da primeira página e criados como um tab
+
+"Web.config"
+  - adicionada nova connection string ActiveDirectoryConnectionString
+
+"DetalheUtilizador.ascx"
+  - alteração para ler URL da foto na BD ActiveDirectory e não da Alizes
+  - alteração das ligações à DB: passou da Alizes para SICA
+  - optimização da forma e numero de ligações à BD.
+
+Novas páginas para substituir a "MonSeg.aspx"
+  - Menu.ascx
+  - PagAlarmes.aspx
+  - PagConfigAcessos.aspx
+  - PagHistorico.aspx
+  - PagPrincipal.aspx
+  - PagVisitantes.aspx
+  - PagZonas.aspx
+
+BD SICA
+  - nova tabela tblVisitantes
+  - nova tabela tblTipoVisitante
+  - nova view vwVisitantes
+  - nova view vwCartoesAtribuidos
+  - nova sp SelectVwCircuitosByNomeTerminal
+  - nova sp sp_tblVisitantes_Insert
+  - nova sp sp_tblVisitantes_SelectAtribuidosByNomeTerminal
+  - nova sp sp_tblVisitantes_SelectByID
+  - nova sp sp_tblVisitantes_SelectUltimaAtribuicao
+  - nova sp sp_tblVisitantes_Update
+  - nova sp sp_ValidaAcessoCartaoByTerminal
+  - nova sp sp_ValidaAcessoCircuitoByTerminal
+  - nova sp sp_ValidaAcessoFamiliaByTerminal
+  - *** é necessário reimportar toda a tabela de cartões para garantir os ID's iguais ao SMI ***
+  - nova tabela tblLogPortas
+  - nova sp sp_tblLogPortas_DeleteOldRecords
+  - tblCartoes campo ID: is identity=no
+
+
+BD Alizes
+  - novo Trigger REFER_Historique_Insert para a tabela "Historique"
+
+RFSQL01 - Server Agent
+  - novo job SICA - Limpa Logs +72h
+

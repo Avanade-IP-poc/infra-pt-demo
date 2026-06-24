@@ -1,0 +1,1 @@
+﻿<%@ WebService Language="VB" CodeBehind="SMIMethods.asmx.vb" Class="wsSMIServer.SMIMethods" %>

@@ -1,0 +1,68 @@
+﻿IMPORTAÇÃO DE TODOS OS CARTÕES PARA CORREÇÃO DOS IDs
+--importar Alizes.dbo.Badge  para SICA.dbo.tblCartoesIMPORT
+--tabela tblCartoesIMPORT: novo campo idAntigo (int)
+--tabela tblCartoes: remover autoIncrement no campo ID
+--delete from tblCartoesIMPORT where supprime<>0
+--delete from tblCartoesIMPORT where LEN(codelogique)=7 and codelogique not like 'V%'
+--delete from tblCartoesIMPORT where codelogique not like 'A%' and codelogique not like 'C%' and codelogique not like 'M%' and codelogique not like 'R%' and codelogique not like 'S%' and codelogique not like 'V%'
+--delete from tblCartoesIMPORT where statutbadge in(8,16,32)
+--update tblCartoesIMPORT set codelogique=REPLACE ( codelogique , ' ' , '' ) where codelogique like '% %'
+--update tblCartoesIMPORT set codelogique=UPPER ( codelogique )
+--UPDATE tblCartoesIMPORT SET idAntigo = tblCartoes.ID 
+--		FROM tblCartoesIMPORT INNER JOIN tblCartoes ON tblCartoesIMPORT.codelogique = tblCartoes.NumCartao
+--replicar tabela tblCartoesTerminal para tblCartoesTerminalMIGRACAO
+--tabela tblCartoesTerminalMIGRACAO: novo campo IDCartaoNovo (int)
+--replicar tabela tblCartoes para tblCartoesMIGRACAO - SERVIRÁ APENAS PARA BACKUP
+--delete from tblCartoesTerminal
+--delete from tblCartoes
+--INSERT INTO tblCartoes (ID,NumCartao,Decricao)
+--		(select idbadge as ID,codelogique as NumCartao,libelle as Decricao from tblCartoesIMPORT )
+--insert into tblCartoesTerminal (IDCartao,IDTerminal)
+--		(SELECT tblCartoesIMPORT.idbadge as IDCartao, tblCartoesTerminalMIGRACAO.IDTerminal
+--		 FROM tblCartoesTerminalMIGRACAO INNER JOIN tblCartoesIMPORT ON tblCartoesTerminalMIGRACAO.IDCartao = tblCartoesIMPORT.idAntigo)
+--A Verificar manualmente todos os cartões que aparecem em duplicado
+--		SELECT NumCartao, COUNT(*) AS c FROM tblCartoes GROUP BY NumCartao HAVING (COUNT(*) = 2)
+
+
+
+--drop table tblCartoesIMPORT
+--drop table tblCartoesMIGRACAO
+--drop table tblCartoesTerminalMIGRACAO
+
+
+
+IMPORTAÇÃO DAS ATUAIS ATRIBUIÇÕES DE CARTÕES
+--importar Alizes.dbo.vwREFERVisitantesJoin  para SICA.dbo.tblVisitantesIMPORT
+V2
+	--delete from tblVisitantesIMPORT where HoraSaida <>''
+	--adicionar campo IDCartao como inteiro à tabela tblVisitantesIMPORT
+	--UPDATE tblVisitantesIMPORT SET IDCartao = tblCartoes.ID FROM tblVisitantesIMPORT INNER JOIN tblCartoes ON tblVisitantesIMPORT.NumCartao = tblCartoes.NumCartao     
+	--DELETE FROM tblVisitantesIMPORT FROM tblVisitantesIMPORT INNER JOIN _CartoesVFT ON tblVisitantesIMPORT.IDCartao = _CartoesVFT.IDCartao
+
+--update tblVisitantesIMPORT set HoraEntrada = REPLACE(HoraEntrada, '.', ':')
+--update tblVisitantesIMPORT set HoraSaida = REPLACE(HoraSaida, '.', ':')
+--update tblVisitantesIMPORT set HoraEntrada = REPLACE(HoraEntrada, 'O', '0')
+--update tblVisitantesIMPORT set HoraSaida = REPLACE(HoraSaida, 'O', '0')
+--update tblVisitantesIMPORT set HoraEntrada = REPLACE(HoraEntrada, 'h', ':')
+--update tblVisitantesIMPORT set HoraSaida = REPLACE(HoraSaida, 'h', ':')
+--update tblVisitantesIMPORT set HoraEntrada = REPLACE(HoraEntrada, ',', ':')
+--update tblVisitantesIMPORT set HoraSaida = REPLACE(HoraSaida, ',', ':')
+--update tblVisitantesIMPORT set HoraEntrada = REPLACE(HoraEntrada, ' ', ':')
+--update tblVisitantesIMPORT set HoraSaida = REPLACE(HoraSaida, ' ', ':')
+--update tblVisitantesIMPORT set HoraEntrada = '2000-01-01 ' + HoraEntrada + ':00'
+--update tblVisitantesIMPORT set HoraSaida = '2000-01-01 ' + HoraSaida + ':00'
+--update tblVisitantesIMPORT set HoraEntrada = null where LEN(HoraEntrada)<19
+--update tblVisitantesIMPORT set HoraSaida = null where LEN(HoraSaida)<19
+--delete from tblVisitantesIMPORT where HoraEntrada is null
+--update tblVisitantesIMPORT set nome=LEFT(nome,50) where LEN(nome)>50
+--update tblVisitantesIMPORT set EntidadeVisitada=LEFT(EntidadeVisitada,50) where LEN(EntidadeVisitada)>50
+--update tblVisitantesIMPORT set EmpresaVisitante=LEFT(EmpresaVisitante,50) where LEN(EmpresaVisitante)>50
+--update tblVisitantesIMPORT set EntidadeVisitada='Carr. Trav. Madeira novas N.G.7338 Sr.º A.Marques' where EntidadeVisitada='Carregar travessas madeira novas N.º G.ª 7338 Sr.º A. Marques '
+--update tblVisitantesIMPORT set EntidadeVisitada='Sr.Luis Genebra Carr.350 Trav.Creosetada N.G.65917' where EntidadeVisitada='REFER Srº Luis Genebra Carregou 350 Trav. M. Creosetada N.º G.ª65917'
+--update tblVisitantesIMPORT set EntidadeVisitada='TECNOCARRIL-Marques 225 Trav.Creosetada N.G.493165' where EntidadeVisitada='TECNOCARRIL Srº Marques Carregou 225 trav. M. creosetada N.º G.ª493165'
+--update tblVisitantesIMPORT set EntidadeVisitada='Sr.Luis Genebra(RF) Carr.Trav.Creosetada N.G.65919' where EntidadeVisitada='Sr.º Luis Genebra CPL Refer Carregou trav.madeira creosetada N.º G.ª65919'
+
+--INSERT INTO tblVisitantes (IDCartao,NumCartao,IDTipoVisitante,NomeVisitante,EmpresaVisitante,EntidadeVisitada,HoraEntrada,HoraSaida)
+--                        (SELECT * from vwVisitantesIMPORT)
+
+--drop table tblVisitantesIMPORT

@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sica.Domain\Sica.Domain.csproj" />
+    <ProjectReference Include="..\Sica.Shared\Sica.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

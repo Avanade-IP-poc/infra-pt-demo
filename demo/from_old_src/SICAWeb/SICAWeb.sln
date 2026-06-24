@@ -1,0 +1,83 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.35714.111
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "SICAWeb", "SICAWeb\", "{3338FEA5-E156-4F11-9F6C-7DFBAB338EB4}"
+	ProjectSection(SvnOrigin) = preProject
+		@Keys = Enlist,Svn.Uri
+		Enlist = Required
+		Svn.Uri = SICAWeb/
+	EndProjectSection
+	ProjectSection(WebsiteProperties) = preProject
+		SccProjectName = "Svn"
+		SccAuxPath = "Svn"
+		SccLocalPath = "Svn"
+		SccProvider = "SubversionScc"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/SICAWeb"
+		Debug.AspNetCompiler.PhysicalPath = "SICAWeb\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\SICAWeb\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/SICAWeb"
+		Release.AspNetCompiler.PhysicalPath = "SICAWeb\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\SICAWeb\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "58310"
+		VWDDynamicPort = "true"
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{87313BDA-11F5-4256-8359-DEAC631AA94E} = {87313BDA-11F5-4256-8359-DEAC631AA94E}
+	EndProjectSection
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "wsSMIServer", "..\wsSMIServer\wsSMIServer.vbproj", "{87313BDA-11F5-4256-8359-DEAC631AA94E}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SICADataSync", "..\SICADataSync\SICADataSync.vbproj", "{7CCACC26-130D-42B6-BA2A-68432AD0B263}"
+EndProject
+Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|.NET = Debug|.NET
+		Debug|Any CPU = Debug|Any CPU
+		Release|.NET = Release|.NET
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3338FEA5-E156-4F11-9F6C-7DFBAB338EB4}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{3338FEA5-E156-4F11-9F6C-7DFBAB338EB4}.Debug|.NET.Build.0 = Debug|Any CPU
+		{3338FEA5-E156-4F11-9F6C-7DFBAB338EB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3338FEA5-E156-4F11-9F6C-7DFBAB338EB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3338FEA5-E156-4F11-9F6C-7DFBAB338EB4}.Release|.NET.ActiveCfg = Debug|Any CPU
+		{3338FEA5-E156-4F11-9F6C-7DFBAB338EB4}.Release|.NET.Build.0 = Debug|Any CPU
+		{3338FEA5-E156-4F11-9F6C-7DFBAB338EB4}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{3338FEA5-E156-4F11-9F6C-7DFBAB338EB4}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{87313BDA-11F5-4256-8359-DEAC631AA94E}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{87313BDA-11F5-4256-8359-DEAC631AA94E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87313BDA-11F5-4256-8359-DEAC631AA94E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87313BDA-11F5-4256-8359-DEAC631AA94E}.Release|.NET.ActiveCfg = Release|Any CPU
+		{87313BDA-11F5-4256-8359-DEAC631AA94E}.Release|.NET.Build.0 = Release|Any CPU
+		{87313BDA-11F5-4256-8359-DEAC631AA94E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87313BDA-11F5-4256-8359-DEAC631AA94E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CCACC26-130D-42B6-BA2A-68432AD0B263}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{7CCACC26-130D-42B6-BA2A-68432AD0B263}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CCACC26-130D-42B6-BA2A-68432AD0B263}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CCACC26-130D-42B6-BA2A-68432AD0B263}.Release|.NET.ActiveCfg = Release|Any CPU
+		{7CCACC26-130D-42B6-BA2A-68432AD0B263}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CCACC26-130D-42B6-BA2A-68432AD0B263}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {12797417-568C-435C-B739-3F0F8F229BF3}
+	EndGlobalSection
+EndGlobal

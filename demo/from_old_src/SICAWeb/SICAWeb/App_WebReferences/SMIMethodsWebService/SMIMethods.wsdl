@@ -1,0 +1,666 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="GetUsers">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetUsersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUsersResult" type="tns:ArrayOfUserProperties" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfUserProperties">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UserProperties" type="tns:UserProperties" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UserProperties">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="idUser" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LogicalCode" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="idGeoZone" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="idReader" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="LastPassingDate" type="s:dateTime" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetUsersByLogicalCode">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LogicalCode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUsersByLogicalCodeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GetUsersByLogicalCodeResult" type="tns:UserProperties" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetFamilies">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetFamiliesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetFamiliesResult" type="tns:ArrayOfFamily" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfFamily">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Family" type="tns:Family" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Family">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="idFamily" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Label" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetUserFamiles">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="idUser" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserFamilesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserFamilesResult" type="tns:ArrayOfUserFamilies" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfUserFamilies">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UserFamilies" type="tns:UserFamilies" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UserFamilies">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="idUser" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="idFamily" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Label" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="index" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AddUserFamily">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="idUser" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="idFamily" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddUserFamilyResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="AddUserFamilyResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteUserFamily">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="idUser" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="idFamily" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteUserFamilyResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="DeleteUserFamilyResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSmartCardByID">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="idSmartCard" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSmartCardByIDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GetSmartCardByIDResult" type="tns:SmartCardProperties" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="SmartCardProperties">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="idSmartCard" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Label" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="tag" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="idUser" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="ExpirationDate" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="Status" type="tns:SmartCardStatus" />
+          <s:element minOccurs="0" maxOccurs="1" name="LogicalCode" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="SmartCardStatus">
+        <s:restriction base="s:string">
+          <s:enumeration value="Unknown" />
+          <s:enumeration value="Active" />
+          <s:enumeration value="Forbiden" />
+          <s:enumeration value="Lost" />
+          <s:enumeration value="Stolen" />
+          <s:enumeration value="Destroied" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="GetExternalSmartCards">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetExternalSmartCardsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetExternalSmartCardsResult" type="tns:ArrayOfSmartCardProperties" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfSmartCardProperties">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="SmartCardProperties" type="tns:SmartCardProperties" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="UpdateSmartCard">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="idSmartCard" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="ExpirationDate" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="Status" type="tns:SmartCardStatus" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateSmartCardResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="UpdateSmartCardResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetLastCircuitEvents">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CircuitIDs" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="LastHours" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="MaxNumberOfRecords" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetLastCircuitEventsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetLastCircuitEventsResult" type="tns:ArrayOfEventProperties" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfEventProperties">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="EventProperties" type="tns:EventProperties" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="EventProperties">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="DateTime" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="idFamily" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Family" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="idCompany" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Company" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LogicalCode" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="idEvent" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Event" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="idGeoZone" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="GeoZone" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="idCircuit" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Circuit" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CountUsersByZone">
+        <s:complexType />
+      </s:element>
+      <s:element name="CountUsersByZoneResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CountUsersByZoneResult" type="tns:ArrayOfZoneProperties" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfZoneProperties">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ZoneProperties" type="tns:ZoneProperties" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ZoneProperties">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="idGeoZone" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Label" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="UserCount" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetUsersByZone">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="idGeoZone" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUsersByZoneResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUsersByZoneResult" type="tns:ArrayOfUserProperties" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCircuits">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetCircuitsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetCircuitsResult" type="tns:ArrayOfCircuitProperties" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfCircuitProperties">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="CircuitProperties" type="tns:CircuitProperties" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CircuitProperties">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="idCircuit" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Label" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="IP" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetUsersSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUsers" />
+  </wsdl:message>
+  <wsdl:message name="GetUsersSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUsersResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetUsersByLogicalCodeSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUsersByLogicalCode" />
+  </wsdl:message>
+  <wsdl:message name="GetUsersByLogicalCodeSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUsersByLogicalCodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetFamiliesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetFamilies" />
+  </wsdl:message>
+  <wsdl:message name="GetFamiliesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetFamiliesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetUserFamilesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserFamiles" />
+  </wsdl:message>
+  <wsdl:message name="GetUserFamilesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserFamilesResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddUserFamilySoapIn">
+    <wsdl:part name="parameters" element="tns:AddUserFamily" />
+  </wsdl:message>
+  <wsdl:message name="AddUserFamilySoapOut">
+    <wsdl:part name="parameters" element="tns:AddUserFamilyResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteUserFamilySoapIn">
+    <wsdl:part name="parameters" element="tns:DeleteUserFamily" />
+  </wsdl:message>
+  <wsdl:message name="DeleteUserFamilySoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteUserFamilyResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetSmartCardByIDSoapIn">
+    <wsdl:part name="parameters" element="tns:GetSmartCardByID" />
+  </wsdl:message>
+  <wsdl:message name="GetSmartCardByIDSoapOut">
+    <wsdl:part name="parameters" element="tns:GetSmartCardByIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetExternalSmartCardsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetExternalSmartCards" />
+  </wsdl:message>
+  <wsdl:message name="GetExternalSmartCardsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetExternalSmartCardsResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateSmartCardSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateSmartCard" />
+  </wsdl:message>
+  <wsdl:message name="UpdateSmartCardSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateSmartCardResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetLastCircuitEventsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetLastCircuitEvents" />
+  </wsdl:message>
+  <wsdl:message name="GetLastCircuitEventsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetLastCircuitEventsResponse" />
+  </wsdl:message>
+  <wsdl:message name="CountUsersByZoneSoapIn">
+    <wsdl:part name="parameters" element="tns:CountUsersByZone" />
+  </wsdl:message>
+  <wsdl:message name="CountUsersByZoneSoapOut">
+    <wsdl:part name="parameters" element="tns:CountUsersByZoneResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetUsersByZoneSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUsersByZone" />
+  </wsdl:message>
+  <wsdl:message name="GetUsersByZoneSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUsersByZoneResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCircuitsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetCircuits" />
+  </wsdl:message>
+  <wsdl:message name="GetCircuitsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetCircuitsResponse" />
+  </wsdl:message>
+  <wsdl:portType name="SMIMethodsSoap">
+    <wsdl:operation name="GetUsers">
+      <wsdl:input message="tns:GetUsersSoapIn" />
+      <wsdl:output message="tns:GetUsersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersByLogicalCode">
+      <wsdl:input message="tns:GetUsersByLogicalCodeSoapIn" />
+      <wsdl:output message="tns:GetUsersByLogicalCodeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetFamilies">
+      <wsdl:input message="tns:GetFamiliesSoapIn" />
+      <wsdl:output message="tns:GetFamiliesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserFamiles">
+      <wsdl:input message="tns:GetUserFamilesSoapIn" />
+      <wsdl:output message="tns:GetUserFamilesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddUserFamily">
+      <wsdl:input message="tns:AddUserFamilySoapIn" />
+      <wsdl:output message="tns:AddUserFamilySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteUserFamily">
+      <wsdl:input message="tns:DeleteUserFamilySoapIn" />
+      <wsdl:output message="tns:DeleteUserFamilySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSmartCardByID">
+      <wsdl:input message="tns:GetSmartCardByIDSoapIn" />
+      <wsdl:output message="tns:GetSmartCardByIDSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetExternalSmartCards">
+      <wsdl:input message="tns:GetExternalSmartCardsSoapIn" />
+      <wsdl:output message="tns:GetExternalSmartCardsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateSmartCard">
+      <wsdl:input message="tns:UpdateSmartCardSoapIn" />
+      <wsdl:output message="tns:UpdateSmartCardSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLastCircuitEvents">
+      <wsdl:input message="tns:GetLastCircuitEventsSoapIn" />
+      <wsdl:output message="tns:GetLastCircuitEventsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CountUsersByZone">
+      <wsdl:input message="tns:CountUsersByZoneSoapIn" />
+      <wsdl:output message="tns:CountUsersByZoneSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersByZone">
+      <wsdl:input message="tns:GetUsersByZoneSoapIn" />
+      <wsdl:output message="tns:GetUsersByZoneSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCircuits">
+      <wsdl:input message="tns:GetCircuitsSoapIn" />
+      <wsdl:output message="tns:GetCircuitsSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SMIMethodsSoap" type="tns:SMIMethodsSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetUsers">
+      <soap:operation soapAction="http://tempuri.org/GetUsers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersByLogicalCode">
+      <soap:operation soapAction="http://tempuri.org/GetUsersByLogicalCode" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFamilies">
+      <soap:operation soapAction="http://tempuri.org/GetFamilies" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserFamiles">
+      <soap:operation soapAction="http://tempuri.org/GetUserFamiles" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddUserFamily">
+      <soap:operation soapAction="http://tempuri.org/AddUserFamily" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteUserFamily">
+      <soap:operation soapAction="http://tempuri.org/DeleteUserFamily" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSmartCardByID">
+      <soap:operation soapAction="http://tempuri.org/GetSmartCardByID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetExternalSmartCards">
+      <soap:operation soapAction="http://tempuri.org/GetExternalSmartCards" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateSmartCard">
+      <soap:operation soapAction="http://tempuri.org/UpdateSmartCard" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLastCircuitEvents">
+      <soap:operation soapAction="http://tempuri.org/GetLastCircuitEvents" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CountUsersByZone">
+      <soap:operation soapAction="http://tempuri.org/CountUsersByZone" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersByZone">
+      <soap:operation soapAction="http://tempuri.org/GetUsersByZone" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCircuits">
+      <soap:operation soapAction="http://tempuri.org/GetCircuits" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="SMIMethodsSoap12" type="tns:SMIMethodsSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetUsers">
+      <soap12:operation soapAction="http://tempuri.org/GetUsers" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersByLogicalCode">
+      <soap12:operation soapAction="http://tempuri.org/GetUsersByLogicalCode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFamilies">
+      <soap12:operation soapAction="http://tempuri.org/GetFamilies" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserFamiles">
+      <soap12:operation soapAction="http://tempuri.org/GetUserFamiles" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddUserFamily">
+      <soap12:operation soapAction="http://tempuri.org/AddUserFamily" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteUserFamily">
+      <soap12:operation soapAction="http://tempuri.org/DeleteUserFamily" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSmartCardByID">
+      <soap12:operation soapAction="http://tempuri.org/GetSmartCardByID" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetExternalSmartCards">
+      <soap12:operation soapAction="http://tempuri.org/GetExternalSmartCards" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateSmartCard">
+      <soap12:operation soapAction="http://tempuri.org/UpdateSmartCard" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLastCircuitEvents">
+      <soap12:operation soapAction="http://tempuri.org/GetLastCircuitEvents" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CountUsersByZone">
+      <soap12:operation soapAction="http://tempuri.org/CountUsersByZone" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersByZone">
+      <soap12:operation soapAction="http://tempuri.org/GetUsersByZone" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCircuits">
+      <soap12:operation soapAction="http://tempuri.org/GetCircuits" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SMIMethods">
+    <wsdl:port name="SMIMethodsSoap" binding="tns:SMIMethodsSoap">
+      <soap:address location="http://localhost:50696/SMIMethods.asmx" />
+    </wsdl:port>
+    <wsdl:port name="SMIMethodsSoap12" binding="tns:SMIMethodsSoap12">
+      <soap12:address location="http://localhost:50696/SMIMethods.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
