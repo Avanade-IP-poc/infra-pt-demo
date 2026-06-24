@@ -3,6 +3,7 @@ dist
 dist-ssr
 coverage
 *.local
+*.tsbuildinfo
 
 # Editor
 .vscode/*
