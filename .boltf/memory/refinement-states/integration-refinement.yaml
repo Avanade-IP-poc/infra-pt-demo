@@ -1,0 +1,62 @@
+schema_version: 1
+scope: integration
+status: completed
+processed_at: "2026-06-19"
+project: SICA Modernization
+
+decisions:
+  # Article IV - Communication
+  communication_style: hybrid
+  sync_protocols:
+    - rest_api
+  graphql: none
+  grpc: false
+  async_broker: azure_service_bus
+  service_bus_tier: standard
+  background_processing:
+    - azure_functions_service_bus_trigger
+    - azure_functions_timer_trigger
+    - azure_functions_http_trigger
+  functions_runtime: dotnet8_isolated_worker
+
+  # Article XVII - Legacy coexistence
+  migration_pattern: strangler_fig
+  legacy_coexistence:
+    - system: webforms_sicaweb
+      mode: read_only_during_transition
+      decommission_phase: 3_4
+    - system: wsmiserver_asmx
+      mode: proxy_to_new_rest_endpoint
+      decommission_phase: 2
+    - system: sicadatasync
+      mode: replaced_by_azure_functions
+      decommission_phase: 2
+  anti_corruption_layer: true
+  adapter_pattern: true
+  outbox_pattern: true
+
+  # Article XVIII - API Management
+  api_management: azure_apim
+  apim_tier_dev: developer
+  apim_tier_prod: standard
+  api_versioning: url_path_v1_v2
+  apim_policies:
+    - jwt_validation_azure_ad_b2c
+    - cors
+    - rate_limit_100_per_min_per_client
+  developer_portal: true
+
+  # CI/CD (Integration-specific)
+  integration_test_service_bus: azure_service_bus_emulator_or_real_namespace
+  contract_testing: true
+
+skills:
+  - name: azure-identity-dotnet
+    source: available-skills/azure/azure-identity-dotnet
+    destination: .claude/skills/azure-identity-dotnet
+    reason: MSAL, Microsoft.Identity.Web, token validation en API y APIM (shared con backend)
+
+  - name: github-actions-templates
+    source: available-skills/github/github-actions-templates
+    destination: .claude/skills/github-actions-templates
+    reason: Workflows para deploy de Azure Functions y APIM policies (shared con cloud-platform)

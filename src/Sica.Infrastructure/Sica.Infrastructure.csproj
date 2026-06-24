@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sica.Application\Sica.Application.csproj" />
+    <ProjectReference Include="..\Sica.Domain\Sica.Domain.csproj" />
+    <ProjectReference Include="..\Sica.Shared\Sica.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

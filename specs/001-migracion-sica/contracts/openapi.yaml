@@ -1,0 +1,1370 @@
+openapi: 3.1.0
+info:
+  title: SICA Web API
+  version: 1.0.0
+  description: |
+    API REST para el sistema SICA (Sistema de Control de Accesos) modernizado.
+    
+    ## Bounded Contexts
+    - **IAM**: Identity & Access Management (usuarios, terminales, autenticación)
+    - **Card Management**: Gestión de tarjetas inteligentes
+    - **Access Control**: Familias de acceso, políticas, circuitos
+    - **Monitoring**: Eventos de acceso, alarmas
+    
+    ## Autenticación
+    Azure AD B2C con OAuth 2.0 / OpenID Connect.
+    
+    ## Versionamiento
+    API versionada en URL (`/api/v1/...`). Breaking changes requieren nueva versión mayor.
+    
+  contact:
+    name: SICA Team
+    email: sica-support@example.com
+  license:
+    name: Proprietary
+
+servers:
+  - url: https://api-sica-dev.azurewebsites.net/api/v1
+    description: Desarrollo
+  - url: https://api-sica-uat.azurewebsites.net/api/v1
+    description: UAT
+  - url: https://api-sica.azurewebsites.net/api/v1
+    description: Producción
+
+tags:
+  - name: IAM
+    description: Identity & Access Management
+  - name: Cards
+    description: Card Management
+  - name: Access Control
+    description: Access Control & Policies
+  - name: Monitoring
+    description: Physical Access Monitoring
+  - name: Admin
+    description: Administración y configuración
+
+security:
+  - AzureADB2C: []
+
+paths:
+  # ==================== IAM ====================
+  
+  /iam/terminals/authorize:
+    post:
+      tags: [IAM]
+      summary: Autorizar terminal por hostname o IP
+      description: |
+        Valida que un terminal esté registrado y activo. Mapea a RULE-001 del legacy.
+        
+        **Business Rule**: Un terminal sólo puede acceder si su nombre o IP están registrados.
+      operationId: authorizeTerminal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TerminalAuthorizationRequest'
+      responses:
+        '200':
+          description: Terminal autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TerminalAuthorizationResponse'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /iam/terminals:
+    get:
+      tags: [IAM]
+      summary: Listar terminales
+      operationId: listTerminals
+      parameters:
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PageSize'
+        - name: isActive
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Lista paginada de terminales
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TerminalListResponse'
+    
+    post:
+      tags: [IAM]
+      summary: Registrar nuevo terminal
+      operationId: registerTerminal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TerminalCreateRequest'
+      responses:
+        '201':
+          description: Terminal creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Terminal'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /iam/terminals/{terminalId}:
+    get:
+      tags: [IAM]
+      summary: Obtener detalles de un terminal
+      operationId: getTerminal
+      parameters:
+        - $ref: '#/components/parameters/TerminalId'
+      responses:
+        '200':
+          description: Detalles del terminal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Terminal'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    put:
+      tags: [IAM]
+      summary: Actualizar terminal
+      operationId: updateTerminal
+      parameters:
+        - $ref: '#/components/parameters/TerminalId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TerminalUpdateRequest'
+      responses:
+        '200':
+          description: Terminal actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Terminal'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    delete:
+      tags: [IAM]
+      summary: Desactivar terminal (soft delete)
+      operationId: deactivateTerminal
+      parameters:
+        - $ref: '#/components/parameters/TerminalId'
+      responses:
+        '204':
+          description: Terminal desactivado
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /iam/users:
+    get:
+      tags: [IAM]
+      summary: Listar usuarios
+      operationId: listUsers
+      parameters:
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PageSize'
+        - name: userType
+          in: query
+          schema:
+            $ref: '#/components/schemas/UserType'
+        - name: search
+          in: query
+          description: Buscar por nombre, código lógico o employeeId
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista paginada de usuarios
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserListResponse'
+    
+    post:
+      tags: [IAM]
+      summary: Crear usuario (visitante)
+      description: Los empleados se sincronizan desde AD, no se crean manualmente
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateRequest'
+      responses:
+        '201':
+          description: Usuario creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /iam/users/{userId}:
+    get:
+      tags: [IAM]
+      summary: Obtener detalles de usuario
+      operationId: getUser
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: Detalles del usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ==================== CARDS ====================
+  
+  /cards:
+    get:
+      tags: [Cards]
+      summary: Listar tarjetas
+      operationId: listCards
+      parameters:
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PageSize'
+        - name: cardType
+          in: query
+          schema:
+            $ref: '#/components/schemas/CardType'
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/CardStatus'
+        - name: search
+          in: query
+          description: Buscar por código de tarjeta
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista paginada de tarjetas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardListResponse'
+    
+    post:
+      tags: [Cards]
+      summary: Registrar tarjeta (sincronización SMI)
+      description: Normalmente invocado por sincronización automática SMI
+      operationId: registerCard
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardCreateRequest'
+      responses:
+        '201':
+          description: Tarjeta creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmartCard'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /cards/{cardId}:
+    get:
+      tags: [Cards]
+      summary: Obtener detalles de tarjeta
+      operationId: getCard
+      parameters:
+        - $ref: '#/components/parameters/CardId'
+      responses:
+        '200':
+          description: Detalles de la tarjeta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmartCard'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    patch:
+      tags: [Cards]
+      summary: Actualizar estado de tarjeta
+      operationId: updateCardStatus
+      parameters:
+        - $ref: '#/components/parameters/CardId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardStatusUpdateRequest'
+      responses:
+        '200':
+          description: Estado actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmartCard'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /cards/visitors/available:
+    get:
+      tags: [Cards]
+      summary: Listar tarjetas disponibles para visitantes
+      description: |
+        Tarjetas de tipo Visitor que están disponibles para asignar.
+        
+        **Business Rule (RULE-008)**: Una tarjeta está disponible si:
+        - Nunca fue usada (sin entrada ni salida)
+        - O tiene hora de salida registrada (visitante anterior salió)
+      operationId: listAvailableVisitorCards
+      parameters:
+        - name: terminalId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de tarjetas disponibles
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/VisitorCardAvailability'
+
+  /cards/visitors/assign:
+    post:
+      tags: [Cards]
+      summary: Asignar tarjeta a visitante
+      description: |
+        Crea una asignación de tarjeta a visitante con datos del visitante,
+        familia de acceso y ventana de validez.
+        
+        **Business Rule (RULE-009)**: Validación completa antes de asignar.
+      operationId: assignVisitorCard
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VisitorCardAssignmentRequest'
+      responses:
+        '201':
+          description: Tarjeta asignada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisitorCardAssignment'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /cards/visitors/assignments:
+    get:
+      tags: [Cards]
+      summary: Listar asignaciones de tarjetas de visitantes
+      operationId: listVisitorCardAssignments
+      parameters:
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PageSize'
+        - name: terminalId
+          in: query
+          schema:
+            type: integer
+        - name: active
+          in: query
+          description: Filtrar por asignaciones activas (sin hora de salida)
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Lista de asignaciones
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisitorCardAssignmentListResponse'
+
+  /cards/visitors/assignments/{assignmentId}/exit:
+    post:
+      tags: [Cards]
+      summary: Registrar salida de visitante
+      operationId: recordVisitorExit
+      parameters:
+        - name: assignmentId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Salida registrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisitorCardAssignment'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ==================== ACCESS CONTROL ====================
+  
+  /access-control/families:
+    get:
+      tags: [Access Control]
+      summary: Listar familias de acceso
+      operationId: listAccessFamilies
+      parameters:
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: Lista de familias
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessFamilyListResponse'
+    
+    post:
+      tags: [Access Control]
+      summary: Crear familia de acceso
+      operationId: createAccessFamily
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccessFamilyCreateRequest'
+      responses:
+        '201':
+          description: Familia creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessFamily'
+
+  /access-control/families/{familyId}:
+    get:
+      tags: [Access Control]
+      summary: Obtener detalles de familia
+      operationId: getAccessFamily
+      parameters:
+        - $ref: '#/components/parameters/FamilyId'
+      responses:
+        '200':
+          description: Detalles de la familia
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessFamily'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /access-control/families/{familyId}/members:
+    post:
+      tags: [Access Control]
+      summary: Añadir usuario a familia
+      operationId: addUserToFamily
+      parameters:
+        - $ref: '#/components/parameters/FamilyId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId]
+              properties:
+                userId:
+                  type: string
+                  format: uuid
+      responses:
+        '204':
+          description: Usuario añadido
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    delete:
+      tags: [Access Control]
+      summary: Eliminar usuario de familia
+      operationId: removeUserFromFamily
+      parameters:
+        - $ref: '#/components/parameters/FamilyId'
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Usuario eliminado
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /access-control/circuits:
+    get:
+      tags: [Access Control]
+      summary: Listar circuitos
+      operationId: listCircuits
+      parameters:
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: Lista de circuitos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CircuitListResponse'
+
+  /access-control/circuits/{circuitId}:
+    get:
+      tags: [Access Control]
+      summary: Obtener detalles de circuito
+      operationId: getCircuit
+      parameters:
+        - $ref: '#/components/parameters/CircuitId'
+      responses:
+        '200':
+          description: Detalles del circuito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Circuit'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /access-control/policies/terminal/{terminalId}:
+    get:
+      tags: [Access Control]
+      summary: Obtener política de acceso de un terminal
+      description: |
+        Devuelve las familias, tarjetas y circuitos asociados a un terminal.
+        
+        **Business Rule (RULE-007)**: Política Triple (Terminal ↔ Familia ↔ Circuito).
+      operationId: getTerminalAccessPolicy
+      parameters:
+        - $ref: '#/components/parameters/TerminalId'
+      responses:
+        '200':
+          description: Política de acceso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TerminalAccessPolicy'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    put:
+      tags: [Access Control]
+      summary: Actualizar política de acceso de terminal
+      description: Reemplaza completamente las relaciones (families, cards, circuits)
+      operationId: updateTerminalAccessPolicy
+      parameters:
+        - $ref: '#/components/parameters/TerminalId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TerminalAccessPolicyUpdateRequest'
+      responses:
+        '200':
+          description: Política actualizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TerminalAccessPolicy'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ==================== MONITORING ====================
+  
+  /monitoring/events:
+    get:
+      tags: [Monitoring]
+      summary: Listar eventos de acceso
+      description: |
+        Consulta eventos de entrada/salida de los últimos 72 horas.
+        
+        **Business Rule (RULE-010)**: Resolución de circuitos físicos por grupo.
+        **Business Rule (RULE-011)**: Clasificación Entrada/Salida por descripción o parámetro.
+      operationId: listAccessEvents
+      parameters:
+        - name: circuitId
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: hours
+          in: query
+          description: Ventana de tiempo en horas (por defecto 72)
+          schema:
+            type: integer
+            default: 72
+            minimum: 1
+            maximum: 168
+        - name: maxEvents
+          in: query
+          description: Máximo número de eventos (por defecto 20)
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+      responses:
+        '200':
+          description: Lista de eventos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AccessEvent'
+
+  /monitoring/zones:
+    get:
+      tags: [Monitoring]
+      summary: Contar personas por zona
+      operationId: countUsersByZone
+      responses:
+        '200':
+          description: Conteo por zona
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  zones:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ZoneCount'
+
+  /monitoring/zones/{zoneId}/users:
+    get:
+      tags: [Monitoring]
+      summary: Listar personas en una zona
+      operationId: getUsersByZone
+      parameters:
+        - name: zoneId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de personas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UserInZone'
+
+  # ==================== ADMIN ====================
+  
+  /admin/audit-logs:
+    get:
+      tags: [Admin]
+      summary: Consultar logs de auditoría
+      operationId: listAuditLogs
+      parameters:
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PageSize'
+        - name: from
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: eventType
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de audit logs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLogListResponse'
+
+  /admin/smi/sync:
+    post:
+      tags: [Admin]
+      summary: Forzar sincronización con SMI
+      description: Sincroniza tarjetas, familias y circuitos desde el sistema SMI
+      operationId: forceSMISync
+      responses:
+        '202':
+          description: Sincronización iniciada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  syncId:
+                    type: string
+                    format: uuid
+                  status:
+                    type: string
+                    enum: [queued, in_progress]
+
+# ==================== COMPONENTS ====================
+
+components:
+  securitySchemes:
+    AzureADB2C:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://sicab2c.b2clogin.com/sicab2c.onmicrosoft.com/oauth2/v2.0/authorize
+          tokenUrl: https://sicab2c.b2clogin.com/sicab2c.onmicrosoft.com/oauth2/v2.0/token
+          scopes:
+            api.read: Lectura de datos
+            api.write: Escritura de datos
+
+  parameters:
+    PageNumber:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    PageSize:
+      name: pageSize
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+    TerminalId:
+      name: terminalId
+      in: path
+      required: true
+      schema:
+        type: integer
+    UserId:
+      name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    CardId:
+      name: cardId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    FamilyId:
+      name: familyId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    CircuitId:
+      name: circuitId
+      in: path
+      required: true
+      schema:
+        type: integer
+
+  schemas:
+    # ==================== IAM ====================
+    
+    TerminalAuthorizationRequest:
+      type: object
+      required: [hostname, ipAddress]
+      properties:
+        hostname:
+          type: string
+          example: "TERM01"
+        ipAddress:
+          type: string
+          format: ipv4
+          example: "192.168.1.100"
+    
+    TerminalAuthorizationResponse:
+      type: object
+      properties:
+        authorized:
+          type: boolean
+        terminalId:
+          type: integer
+        terminalName:
+          type: string
+    
+    Terminal:
+      type: object
+      properties:
+        id:
+          type: integer
+        hostname:
+          type: string
+        ipAddress:
+          type: string
+        description:
+          type: string
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+    
+    TerminalListResponse:
+      allOf:
+        - $ref: '#/components/schemas/PagedResponse'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/Terminal'
+    
+    TerminalCreateRequest:
+      type: object
+      required: [hostname]
+      properties:
+        hostname:
+          type: string
+        ipAddress:
+          type: string
+        description:
+          type: string
+    
+    TerminalUpdateRequest:
+      type: object
+      properties:
+        hostname:
+          type: string
+        ipAddress:
+          type: string
+        description:
+          type: string
+        isActive:
+          type: boolean
+    
+    UserType:
+      type: string
+      enum: [Employee, Visitor]
+    
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        logicalCode:
+          type: string
+        userType:
+          $ref: '#/components/schemas/UserType'
+        employeeId:
+          type: string
+          nullable: true
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+          nullable: true
+        photoUrl:
+          type: string
+          format: uri
+          nullable: true
+        isActive:
+          type: boolean
+    
+    UserListResponse:
+      allOf:
+        - $ref: '#/components/schemas/PagedResponse'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/User'
+    
+    UserCreateRequest:
+      type: object
+      required: [firstName, lastName, userType]
+      properties:
+        logicalCode:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        userType:
+          $ref: '#/components/schemas/UserType'
+        email:
+          type: string
+          format: email
+    
+    # ==================== CARDS ====================
+    
+    CardType:
+      type: string
+      enum: [Employee, Visitor, Service]
+    
+    CardStatus:
+      type: string
+      enum: [Active, Inactive, Lost, Stolen, Destroyed]
+    
+    SmartCard:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        cardCode:
+          type: string
+        cardType:
+          $ref: '#/components/schemas/CardType'
+        label:
+          type: string
+        status:
+          $ref: '#/components/schemas/CardStatus'
+        expirationDate:
+          type: string
+          format: date-time
+          nullable: true
+        ownerId:
+          type: string
+          format: uuid
+          nullable: true
+        smiCardId:
+          type: integer
+          nullable: true
+    
+    CardListResponse:
+      allOf:
+        - $ref: '#/components/schemas/PagedResponse'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/SmartCard'
+    
+    CardCreateRequest:
+      type: object
+      required: [cardCode, cardType, status]
+      properties:
+        cardCode:
+          type: string
+        label:
+          type: string
+        cardType:
+          $ref: '#/components/schemas/CardType'
+        status:
+          $ref: '#/components/schemas/CardStatus'
+        expirationDate:
+          type: string
+          format: date-time
+        smiCardId:
+          type: integer
+    
+    CardStatusUpdateRequest:
+      type: object
+      required: [status]
+      properties:
+        status:
+          $ref: '#/components/schemas/CardStatus'
+    
+    VisitorCardAvailability:
+      type: object
+      properties:
+        cardId:
+          type: string
+          format: uuid
+        cardCode:
+          type: string
+        label:
+          type: string
+        lastUsed:
+          type: string
+          format: date-time
+          nullable: true
+    
+    VisitorCardAssignment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        cardId:
+          type: string
+          format: uuid
+        visitorId:
+          type: string
+          format: uuid
+        visitedEntity:
+          type: string
+        company:
+          type: string
+        vehiclePlate:
+          type: string
+          nullable: true
+        entryTime:
+          type: string
+          format: date-time
+          nullable: true
+        exitTime:
+          type: string
+          format: date-time
+          nullable: true
+        validFrom:
+          type: string
+          format: date-time
+        validUntil:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+    
+    VisitorCardAssignmentRequest:
+      type: object
+      required: [cardId, visitor, accessFamilyIds, validFrom, validUntil]
+      properties:
+        cardId:
+          type: string
+          format: uuid
+        visitor:
+          type: object
+          required: [firstName, lastName, company]
+          properties:
+            firstName:
+              type: string
+            lastName:
+              type: string
+            company:
+              type: string
+            visitedEntity:
+              type: string
+            vehiclePlate:
+              type: string
+        accessFamilyIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          minItems: 1
+        validFrom:
+          type: string
+          format: date-time
+        validUntil:
+          type: string
+          format: date-time
+    
+    VisitorCardAssignmentListResponse:
+      allOf:
+        - $ref: '#/components/schemas/PagedResponse'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/VisitorCardAssignment'
+    
+    # ==================== ACCESS CONTROL ====================
+    
+    AccessFamily:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        smiFamilyId:
+          type: integer
+          nullable: true
+        memberCount:
+          type: integer
+        circuitCount:
+          type: integer
+    
+    AccessFamilyListResponse:
+      allOf:
+        - $ref: '#/components/schemas/PagedResponse'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/AccessFamily'
+    
+    AccessFamilyCreateRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        smiFamilyId:
+          type: integer
+    
+    Circuit:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        circuitGroupId:
+          type: integer
+          nullable: true
+        smiCircuitId:
+          type: integer
+          nullable: true
+    
+    CircuitListResponse:
+      allOf:
+        - $ref: '#/components/schemas/PagedResponse'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/Circuit'
+    
+    TerminalAccessPolicy:
+      type: object
+      properties:
+        terminalId:
+          type: integer
+        families:
+          type: array
+          items:
+            type: string
+            format: uuid
+        circuits:
+          type: array
+          items:
+            type: integer
+        cards:
+          type: array
+          items:
+            type: string
+            format: uuid
+    
+    TerminalAccessPolicyUpdateRequest:
+      type: object
+      required: [familyIds, circuitIds]
+      properties:
+        familyIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+        circuitIds:
+          type: array
+          items:
+            type: integer
+    
+    # ==================== MONITORING ====================
+    
+    EventType:
+      type: string
+      enum: [Entry, Exit, AccessDenied]
+    
+    AccessEvent:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        circuitId:
+          type: integer
+        cardCode:
+          type: string
+        userId:
+          type: string
+          format: uuid
+          nullable: true
+        userName:
+          type: string
+        company:
+          type: string
+        eventType:
+          $ref: '#/components/schemas/EventType'
+        timestamp:
+          type: string
+          format: date-time
+        geoZone:
+          type: string
+    
+    ZoneCount:
+      type: object
+      properties:
+        zoneId:
+          type: integer
+        zoneName:
+          type: string
+        userCount:
+          type: integer
+    
+    UserInZone:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+        logicalCode:
+          type: string
+        name:
+          type: string
+        company:
+          type: string
+        lastEventTimestamp:
+          type: string
+          format: date-time
+    
+    # ==================== AUDIT ====================
+    
+    AuditLog:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        eventType:
+          type: string
+        entityType:
+          type: string
+        entityId:
+          type: string
+        message:
+          type: string
+        terminalId:
+          type: integer
+          nullable: true
+        userId:
+          type: string
+          format: uuid
+          nullable: true
+        timestamp:
+          type: string
+          format: date-time
+    
+    AuditLogListResponse:
+      allOf:
+        - $ref: '#/components/schemas/PagedResponse'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/AuditLog'
+    
+    # ==================== COMMON ====================
+    
+    PagedResponse:
+      type: object
+      properties:
+        page:
+          type: integer
+        pageSize:
+          type: integer
+        totalCount:
+          type: integer
+        totalPages:
+          type: integer
+    
+    ErrorResponse:
+      type: object
+      required: [type, title, status]
+      properties:
+        type:
+          type: string
+          format: uri
+          example: "https://api-sica.azurewebsites.net/errors/validation"
+        title:
+          type: string
+          example: "Validation error"
+        status:
+          type: integer
+          example: 400
+        detail:
+          type: string
+          example: "One or more validation errors occurred."
+        traceId:
+          type: string
+          example: "00-abc123-def456-01"
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+
+  responses:
+    BadRequest:
+      description: Petición inválida
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Recurso no encontrado
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Conflict:
+      description: Conflicto (recurso duplicado)
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Acceso denegado
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalError:
+      description: Error interno del servidor
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'

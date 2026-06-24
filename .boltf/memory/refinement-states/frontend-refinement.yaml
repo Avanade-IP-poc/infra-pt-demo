@@ -1,0 +1,87 @@
+schema_version: 1
+scope: frontend
+status: completed
+processed_at: "2026-06-19"
+project: SICA Modernization
+
+decisions:
+  # Article II - Framework & Mobile
+  framework: react
+  framework_version: "18.x"
+  build_tool: vite
+  language: typescript
+  component_library: shadcn_ui
+  css_framework: tailwind_css_v4
+  mobile: none
+  criticality: critical
+
+  # Article III - Architecture
+  architecture_style: monolith_spa
+  state_management_server: tanstack_query
+  state_management_client: zustand
+  routing: react_router_v6
+  criticality_arch: critical
+
+  # Article VII - Identity (Frontend)
+  auth_flow: authorization_code_pkce
+  auth_library: msal_js_v3
+  authorization_model: rbac_jwt_claims
+
+  # Article XIII - Testing
+  unit_test_framework: vitest
+  component_test: react_testing_library
+  e2e_framework: playwright
+  visual_regression: playwright_screenshots
+  performance: lighthouse_ci
+  coverage_line_min: 80
+  coverage_branch_min: 75
+  mutation_score_min: 70
+  mutation_tool: stryker_js
+
+  # Article XIV - Code standards
+  naming_files: kebab_case
+  naming_components: pascal_case
+  line_length: 100
+  semicolons: true
+  quotes: single
+  tooling_format: eslint_prettier
+
+  # Article XVII - Legacy modules to migrate (priority order)
+  legacy_modules:
+    - name: MonSeg.aspx
+      feature: dashboard_monitoring
+      priority: high
+    - name: Acessos.ascx
+      feature: access_management
+      priority: high
+    - name: Visitantes.ascx
+      feature: visitors
+      priority: high
+    - name: ActivarCartoes.ascx
+      feature: card_activation
+      priority: medium
+    - name: Circuitos.ascx
+      feature: circuits
+      priority: medium
+    - name: LogHistorico.ascx
+      feature: log_history
+      priority: medium
+    - name: Alarmes.ascx
+      feature: alarms
+      priority: medium
+
+skills:
+  - name: senior-frontend
+    source: available-skills/frontend/senior-frontend
+    destination: .claude/skills/senior-frontend
+    reason: React 18 patterns, TypeScript, TanStack Query, accesibilidad WCAG
+
+  - name: playwright-e2e
+    source: available-skills/functional-tests/playwright-e2e
+    destination: .claude/skills/playwright-e2e
+    reason: E2E testing React SPA, Page Object Model, CI integration
+
+  - name: tdd-comprehensive
+    source: available-skills/tdd/tdd-comprehensive
+    destination: .claude/skills/tdd-comprehensive
+    reason: TDD/BDD frontend con Vitest + RTL (shared con backend scope)

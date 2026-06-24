@@ -1,0 +1,110 @@
+schema_version: 1
+scope: cloud-platform
+status: completed
+processed_at: "2026-06-19"
+project: SICA Modernization
+
+decisions:
+  # Article VIII - Containers & Orchestration
+  container_strategy: none_paas_only
+  orchestration: azure_app_service
+  keda_enabled: false
+  dapr_enabled: false
+  criticality: critical
+
+  # Article VIII-B - Infrastructure Scope
+  infra_scope: workload_infrastructure
+  landing_zone: false
+
+  # Workload resources
+  compute:
+    - azure_app_service       # Web API + WebForms legacy
+    - azure_functions         # Procesamiento async (consumption plan)
+  data_resources:
+    - azure_sql_database
+    - azure_cache_redis
+    - azure_storage_accounts  # Blobs (fotos, logs)
+  integration_resources:
+    - azure_service_bus
+    - azure_api_management
+    - azure_application_gateway_waf
+  security:
+    - azure_key_vault
+    - azure_ad_b2c
+    - azure_vnet
+    - private_endpoints
+
+  # Article IX - IaC
+  iac_tool: bicep
+  iac_validation: az_deployment_what_if
+  iac_lint: bicep_lint
+  security_scan: checkov
+  cost_estimation: infracost
+  compliance: azure_policy
+
+  # Article XI - CI/CD
+  cicd_platform: github_actions
+  branch_strategy: gitflow
+  deployment_strategy: blue_green
+  deployment_slots: azure_app_service_slots
+  pipeline_stages:
+    build: true
+    lint: true
+    unit_tests: true
+    integration_tests: true
+    architecture_tests: true
+    mutation_tests: true
+    security_scan: true
+    iac_lint: true
+    iac_validation: true
+    iac_security_scan: true
+    cost_estimation: true
+
+  # Article XII - Observability
+  observability_strategy: opentelemetry_azure
+  application_insights: true
+  log_analytics_workspace: true
+  azure_monitor_alerts: true
+  azure_workbooks: true
+  slo_api_p95_ms: 500
+  slo_availability_pct: 99.5
+  slo_error_rate_pct: 0.1
+
+  # Article XIII §13.4 - IaC Testing
+  iac_testing:
+    - bicep_lint
+    - az_what_if
+    - checkov
+    - infracost
+    - pester_smoke
+
+  # Article XVI - Security
+  vnet_enabled: true
+  private_endpoints_enabled: true
+  waf_enabled: true
+  encryption_at_rest: azure_managed_keys
+  encryption_in_transit: tls_1_2_plus
+  pii_handling: encryption
+  gdpr_required: true
+
+  # Environments
+  environments:
+    - name: dev
+      auto_deploy: on_commit_to_develop
+    - name: uat
+      auto_deploy: on_pr_merge
+    - name: pre
+      auto_deploy: manual_trigger
+    - name: prod
+      auto_deploy: manual_approval
+
+skills:
+  - name: skill-senior-devops
+    source: available-skills/skill-senior-devops
+    destination: .claude/skills/skill-senior-devops
+    reason: Bicep IaC, GitHub Actions, Azure resource patterns, DevOps best practices
+
+  - name: github-actions-templates
+    source: available-skills/github/github-actions-templates
+    destination: .claude/skills/github-actions-templates
+    reason: Pipelines CI/CD reutilizables para .NET 8, Bicep y Azure Functions

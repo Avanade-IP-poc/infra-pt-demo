@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "SICAWeb", "..\SICAWeb", "{3338FEA5-E156-4F11-9F6C-7DFBAB338EB4}"
+	ProjectSection(WebsiteProperties) = preProject
+		SccProjectName = ""$/SICAWeb", RERAAAAA"
+		SccAuxPath = ""
+		SccLocalPath = "."
+		SccProvider = "MSSCCI:Microsoft Visual SourceSafe"
+		TargetFramework = "3.5"
+		Debug.AspNetCompiler.VirtualPath = "/SICAWeb"
+		Debug.AspNetCompiler.PhysicalPath = "..\SICAWeb\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\SICAWeb\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/SICAWeb"
+		Release.AspNetCompiler.PhysicalPath = "..\SICAWeb\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\SICAWeb\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "1552"
+		VWDDynamicPort = "true"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 1
+		SccWebProject0 = true
+		SccProjectUniqueName0 = .
+		SccProjectName0 = \u0022$/SICAWeb\u0022,\u0020RERAAAAA
+		SccLocalPath0 = C:\\Documents\u0020and\u0020Settings\\ajsfernandes\\My\u0020Documents\\Visual\u0020Studio\u00202005\\Projects\\SICAWeb
+		SccProvider0 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
+		SccProjectEnlistmentChoice0 = 2
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|.NET = Debug|.NET
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3338FEA5-E156-4F11-9F6C-7DFBAB338EB4}.Debug|.NET.ActiveCfg = Debug|.NET
+		{3338FEA5-E156-4F11-9F6C-7DFBAB338EB4}.Debug|.NET.Build.0 = Debug|.NET
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

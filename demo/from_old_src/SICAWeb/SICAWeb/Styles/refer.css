@@ -1,0 +1,730 @@
+/* definição automática do comportamento dos links */
+a {
+	text-decoration : none;
+}
+
+a:hover {
+	text-decoration : underline;
+}
+
+/* definição da cor de fundo para todas as páginas do site */
+body{
+	background-color : #FFFFFF;
+}
+
+/* definição do tipo de listas */
+li , ul , ol {
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	list-style-image : url(bullet.gif);
+}
+
+/* definição do corpo do texto que aparece tanto em notícias como em destaques */
+.corpotexto{
+	color : #000000;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	padding : 3px;
+}
+
+.corpotexto a:link{
+	color : #000000;
+	font-style : italic;
+	text-decoration : underline;
+}
+
+.corpotexto a:visited{
+	color : #6699CC;
+	font-style : italic;
+	text-decoration : underline;
+}
+
+.corpotexto a:hover{
+	font-style : italic;
+	text-decoration : underline;
+}
+
+.corpotextorosa{
+	color : #000000;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	padding : 3px;
+}
+
+.corpotextorosa a:link{
+	color : #000000;
+	font-style : italic;
+	text-decoration : underline;
+}
+
+.corpotextorosa a:visited{
+	color : #FF99FF;
+	font-style : italic;
+	text-decoration : underline;
+}
+
+.corpotextorosa a:hover{
+	font-style : italic;
+	text-decoration : underline;
+}
+
+.corpotextoverde{
+	color : #000000;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	padding : 3px;
+}
+
+.corpotextoverde a:link{
+	color : #000000;
+	font-style : italic;
+	text-decoration : underline;
+}
+
+.corpotextoverde a:visited{
+	color : #99CC00;
+	font-style : italic;
+	text-decoration : underline;
+}
+
+.corpotextoverde a:hover{
+	font-style : italic;
+	text-decoration : underline;
+}
+
+/* título dos destaques */
+.destaque{
+	background-color : #FF99FF;
+	color : #00458A;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+}
+
+.destaque a:link{
+	background-color : #FF99FF;
+	color : #00458A;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+}
+
+.destaque a:visited{
+	background-color : #FF99FF;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+}
+
+/* definição do texto do footer */
+.footer{
+	color : #999999;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : normal;
+	padding : 3px;
+}
+
+.footer a:link{
+	color : #999999;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : normal;
+	padding : 3px;
+	text-decoration : none;
+}
+
+.footer a:visited{
+	color : #CCCCCC;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : normal;
+	padding : 3px;
+	text-decoration : none;
+}
+
+.footer a:hover{
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : normal;
+	padding : 3px;
+	text-decoration : underline;
+}
+
+/* definição de todos os elementos de formulários excepto Radio Buttons e CheckBoxes */
+.formulario{
+	background-color : #E0F0FF;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : normal;
+}
+
+/* definição do texto correspondente à legenda */
+.legenda{
+	color : #999999;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-style : italic;
+	padding : 3px;
+}
+
+/* definição das linhas brancas das tabelas zebra/referência */
+.linhaimpar{
+	background-color : #FFFFFF;
+	color : #00458A;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	padding : 3px;
+}
+
+.linhaimpar:link{
+	background-color : #FFFFFF;
+	color : #00458A;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	padding : 3px;
+}
+
+.linhaimpar:visited{
+	background-color : #FFFFFF;
+	color : #999999;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	padding : 3px;
+}
+
+.linhaimpar:hover{
+	background-color : #FFFFFF;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	padding : 3px;
+}
+
+/* definição das linhas azuis das tabelas zebra/referência */
+.linhapar{
+	background-color : #E0F0FF;
+	color : #00458A;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	padding : 3px;
+}
+
+.linhapar:link{
+	background-color : #E0F0FF;
+	color : #00458A;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	padding : 3px;
+}
+
+.linhapar:visited{
+	background-color : #E0F0FF;
+	color : #999999;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	padding : 3px;
+}
+
+.linhapar:hover{
+	background-color : #E0F0FF;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	padding : 3px;
+}
+
+/* definição dos links de 1ºnível na navegação horizontal */
+.linknivel01{
+	background-color : #99CC00;
+	color : #FFFFFF;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+}
+
+.linknivel01 a:link{
+	background-color : #99CC00;
+	color : #FFFFFF;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+	text-decoration : none;
+}
+
+.linknivel01 a:visited{
+	background-color : #99CC00;
+	color : #00458A;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+}
+
+.linknivel01 a:hover{
+	background-color : #99CC00;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+	text-decoration : underline;
+}
+
+/* definição dos links de 1ºnível na navegação horizontal  quando está "ON"*/
+.linknivel01on{
+	background-color : #CEE784;
+	color : #FFFFFF;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+}
+
+.linknivel01on a:link{
+	background-color : #CEE784;
+	color : #FFFFFF;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+	text-decoration : none;
+}
+
+.linknivel01on a:visited{
+	background-color : #CEE784;
+	color : #00458A;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+}
+
+.linknivel01on a:hover{
+	background-color : #CEE784;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+	text-decoration : underline;
+}
+
+/* definição dos links de 1ºnível na navegação  quando está "ON"*/
+.linknivel01onvertical{
+	background-color : #999999;
+	color : #FFFFFF;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+}
+
+.linknivel01onvertical a:link{
+	background-color : #999999;
+	color : #FFFFFF;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+	text-decoration : none;
+}
+
+.linknivel01onvertical a:visited{
+	background-color : #999999;
+	color : #FFFFFF;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+}
+
+.linknivel01onvertical a:hover{
+	background-color : #999999;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+	text-decoration : underline;
+}
+
+/* definição dos links de 1ºnível na navegação vertical */
+.linknivel01vertical{
+	background-color : #639CCE;
+	color : #FFFFFF;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+}
+
+.linknivel01vertical a:link{
+	background-color : #639CCE;
+	color : #FFFFFF;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+	text-decoration : none;
+}
+
+.linknivel01vertical a:visited{
+	background-color : #639CCE;
+	color : #FFFFFF;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+}
+
+.linknivel01vertical a:hover{
+	background-color : #639CCE;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+	text-decoration : underline;
+}
+
+/* definição dos links de 2ºnível na navegação horizontal */
+.linknivel02{
+	background-color : #CEE784;
+	color : #FFFFFF;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+}
+
+.linknivel02 a:link{
+	background-color : #CEE784;
+	color : #FFFFFF;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+	text-decoration : none;
+}
+
+.linknivel02 a:visited{
+	background-color : #CEE784;
+	color : #00458A;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+}
+
+.linknivel02 a:hover{
+	background-color : #CEE784;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+	text-decoration : underline;
+}
+
+/* definição dos links de 2ºnível na navegação  quando está "ON"*/
+.linknivel02onvertical
+{
+	padding-right: 3px;
+	border-top: #ffffff 1px solid;
+	font-weight: bold;
+	font-size: 10px;
+	padding-bottom: 3px;
+	color: #999999;
+	text-indent: 10px;
+	padding-top: 3px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	background-color: #cccccc;
+}
+
+.linknivel02onvertical a:link{
+	background-color : #CCCCCC;
+	border-top-color : #FFFFFF;
+	border-top-style : solid;
+	border-top-width : 1px;
+	color : #999999;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+	text-decoration : none;
+}
+
+.linknivel02onvertical a:visited{
+	background-color : #CCCCCC;
+	border-top-color : #FFFFFF;
+	border-top-style : solid;
+	border-top-width : 1px;
+	color : #999999;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+}
+
+.linknivel02onvertical a:hover{
+	background-color : #CCCCCC;
+	border-top-color : #FFFFFF;
+	border-top-style : solid;
+	border-top-width : 1px;
+	color : #999999;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+	text-decoration : underline;
+}
+
+/* definição dos links de 2ºnível na navegação vertical */
+.linknivel02vertical
+{
+	padding-right: 3px;
+	border-top: #ffffff 1px solid;
+	font-weight: bold;
+	font-size: 10px;
+	padding-bottom: 3px;
+	color: #ffffff;
+	text-indent: 10px;
+	padding-top: 3px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	background-color: #9cce00;
+}
+
+.linknivel02vertical a:link{
+	background-color : #9CCE00;
+	border-top-color : #FFFFFF;
+	border-top-style : solid;
+	border-top-width : 1px;
+	color : #FFFFFF;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+	text-decoration : none;
+}
+
+.linknivel02vertical a:visited{
+	background-color : #9CCE00;
+	border-top-color : #FFFFFF;
+	border-top-style : solid;
+	border-top-width : 1px;
+	color : #FFFFFF;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+}
+
+.linknivel02vertical a:hover{
+	background-color : #9CCE00;
+	border-top-color : #FFFFFF;
+	border-top-style : solid;
+	border-top-width : 1px;
+	color : #FFFFFF;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+	text-decoration : underline;
+}
+
+/* definição dos links de 3ºnível na navegação  quando está "ON"*/
+.linknivel03onvertical{
+	background-color : #DDDDDD;
+	border-top-color : #FFFFFF;
+	border-top-style : solid;
+	border-top-width : 1px;
+	border-width : 1px;
+	color : #999999;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+}
+
+.linknivel03onvertical a:link{
+	background-color : #DDDDDD;
+	border-top-color : #FFFFFF;
+	border-top-style : solid;
+	border-top-width : 1px;
+	color : #999999;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+	text-decoration : none;
+}
+
+.linknivel03onvertical a:visited{
+	background-color : #DDDDDD;
+	border-top-color : #FFFFFF;
+	border-top-style : solid;
+	border-top-width : 1px;
+	color : #999999;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+}
+
+.linknivel03onvertical a:hover{
+	background-color : #DDDDDD;
+	border-top-color : #FFFFFF;
+	border-top-style : solid;
+	border-top-width : 1px;
+	color : #999999;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+	text-decoration : underline;
+}
+
+/* definição dos links de 3ºnível na navegação vertical */
+.linknivel03vertical{
+	background-color : #CEE784;
+	border-top-color : #FFFFFF;
+	border-top-style : solid;
+	border-top-width : 1px;
+	border-width : 1px;
+	color : #FFFFFF;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+}
+
+.linknivel03vertical a:link{
+	background-color : #CEE784;
+	border-top-color : #FFFFFF;
+	border-top-style : solid;
+	border-top-width : 1px;
+	color : #FFFFFF;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+	text-decoration : none;
+}
+
+.linknivel03vertical a:visited{
+	background-color : #CEE784;
+	border-top-color : #FFFFFF;
+	border-top-style : solid;
+	border-top-width : 1px;
+	color : #FFFFFF;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+}
+
+.linknivel03vertical a:hover{
+	background-color : #CEE784;
+	border-top-color : #FFFFFF;
+	border-top-style : solid;
+	border-top-width : 1px;
+	color : #FFFFFF;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+	text-decoration : underline;
+}
+
+/* subtitulos */
+.subtitulo{
+	background-color : #CCE682;
+	color : #00458A;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 2px 2px 2px;
+	padding-left : 10px;
+}
+
+.subtitulo a:link{
+	background-color : #CCE682;
+	color : #00458A;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 2px 2px 2px;
+	padding-left : 10px;
+}
+
+.subtitulo a:visited{
+	background-color : #CCE682;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 2px 2px 2px;
+	padding-left : 10px;
+}
+
+/* definições de tabelas em 3 cores - PARA APLICAR EM <TABLE> */
+.tabelaazul{
+	border : 1px solid #00458A;
+}
+
+.tabelarosa{
+	border : 1px solid #FF99FF;
+}
+
+.tabelaverde{
+	border : 1px solid #99CC00;
+}
+
+/* títulos */
+.titulo{
+	background-color : #99CC00;
+	color : #00458A;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+}
+
+.titulo a:link{
+	background-color : #99CC00;
+	color : #00458A;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+}
+
+.titulo a:visited{
+	background-color : #99CC00;
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	font-weight : bold;
+	padding : 3px 3px 3px;
+}
+
+
+/* div table */
+
+div.tableContainer {
+	clear: both;
+	height: 200px;
+	overflow: auto;
+	/* 
+	SCROLLBAR-3DLIGHT-COLOR: #ffffff;
+	SCROLLBAR-FACE-COLOR: #F7E5C1; 
+	SCROLLBAR-HIGHLIGHT-COLOR: #F7E5C1; 
+	SCROLLBAR-SHADOW-COLOR: #F7E5C1; 
+	SCROLLBAR-ARROW-COLOR: #EB9500; 
+	SCROLLBAR-DARKSHADOW-COLOR: #EB9500; 
+	*/
+	width: 100%
+}
+
+
+div.tableContainer table {
+	float: left;
+	width: 100%
+}

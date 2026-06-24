@@ -1,0 +1,109 @@
+schema_version: 1
+scope: backend
+status: completed
+processed_at: "2026-06-19"
+project: SICA Modernization
+
+decisions:
+  # Article II - Language & Runtime
+  language: csharp
+  runtime: dotnet8
+  api_style:
+    - controllers_mvc
+    - azure_functions
+  criticality: critical
+
+  # Article III - Architecture
+  architecture_style: modular_monolith
+  cqrs_enabled: true
+  cqrs_pattern: simple_cqrs
+  cqrs_library: native_dotnet_no_mediatr
+  event_sourcing_enabled: false
+  criticality_arch: critical
+
+  # Article IV - Communication
+  communication_style: hybrid
+  sync_protocols:
+    - rest_api
+  async_broker: azure_service_bus
+  background_processing:
+    - azure_functions
+
+  # Article V - Data (transactional)
+  database: azure_sql_database
+  orm: ef_core_8
+  migration_strategy: ef_core_migrations_code_first
+  repository_pattern: repository_unit_of_work
+  zero_raw_sql: true
+
+  # Article VI - Caching
+  caching: azure_cache_redis
+  caching_pattern: cache_aside
+
+  # Article VII - Identity
+  identity_provider: azure_ad_b2c
+  auth_flow: authorization_code_pkce
+  api_auth: jwt_bearer
+  authorization_model: policy_based
+
+  # Article VIII - Containers
+  container_strategy: none_paas_only
+  orchestration: azure_app_service
+
+  # Article XIII - Testing
+  unit_test_framework: xunit
+  assertion_library: fluent_assertions
+  mock_library: nsubstitute
+  integration_test: testcontainers_sqlserver
+  characterization_tests: true
+  e2e_framework: reqnroll_gherkin
+  coverage_line_min: 80
+  coverage_branch_min: 75
+  mutation_score_min: 70
+  mutation_tool: stryker_net
+
+  # Article XIV - Code standards
+  naming_convention: csharp_standard
+  line_length: 120
+  static_analysis:
+    - roslyn_analyzers
+    - sonarqube
+
+  # Article XVII - Legacy Migration
+  migration_pattern: strangler_fig
+  characterization_tests_mandatory: true
+
+  # Article XVIII - API Management
+  api_management: azure_apim
+  api_versioning: url_path
+
+skills:
+  - name: dotnet-backend-patterns
+    source: available-skills/dotnet-backend/dotnet-backend-patterns
+    destination: .claude/skills/dotnet-backend-patterns
+    reason: Clean Architecture, CQRS nativo, Result pattern para .NET 8
+
+  - name: backend-testing-dotnet
+    source: available-skills/dotnet-backend/backend-testing-dotnet
+    destination: .claude/skills/backend-testing-dotnet
+    reason: xUnit, Testcontainers, Coverlet, Stryker.NET
+
+  - name: tdd-comprehensive
+    source: available-skills/tdd/tdd-comprehensive
+    destination: .claude/skills/tdd-comprehensive
+    reason: Red-Green-Refactor discipline con mutation testing
+
+  - name: integration-e2e-testing
+    source: available-skills/functional-tests/integration-e2e-testing
+    destination: .claude/skills/integration-e2e-testing
+    reason: Testcontainers SQL Server real, Respawn para cleanup
+
+  - name: gherkin-reqnroll
+    source: available-skills/functional-tests/gherkin-reqnroll
+    destination: .claude/skills/gherkin-reqnroll
+    reason: BDD scenarios .NET, step definitions para acceptance tests
+
+  - name: azure-identity-dotnet
+    source: available-skills/azure/azure-identity-dotnet
+    destination: .claude/skills/azure-identity-dotnet
+    reason: Microsoft.Identity.Web, Azure AD B2C JWT validation

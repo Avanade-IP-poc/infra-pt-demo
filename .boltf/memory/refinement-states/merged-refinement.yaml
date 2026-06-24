@@ -1,0 +1,194 @@
+schema_version: 1
+project: SICA Modernization
+generated_at: "2026-06-19"
+merged_from:
+  - backend-refinement.yaml
+  - frontend-refinement.yaml
+  - cloud-platform-refinement.yaml
+  - data-refinement.yaml
+  - integration-refinement.yaml
+active_scopes:
+  - backend
+  - frontend
+  - cloud-platform
+  - data
+  - integration
+all_scopes_completed: true
+
+# ==============================================================================
+# MERGED DECISIONS — DEDUPLICADAS Y CONSOLIDADAS
+# ==============================================================================
+
+technology_stack:
+  # Backend
+  language: csharp
+  runtime: dotnet8_lts
+  api_frameworks:
+    - aspnet_core_controllers_mvc
+    - azure_functions_isolated_worker_dotnet8
+  architecture: modular_monolith
+  cqrs: simple_cqrs_native_dotnet_no_mediatr
+  event_sourcing: false
+
+  # Frontend
+  frontend_framework: react_18
+  frontend_language: typescript
+  build_tool: vite
+  component_library: shadcn_ui_tailwind_v4
+  state_server: tanstack_query
+  state_client: zustand
+  routing: react_router_v6
+  mobile: none
+
+  # Cloud & IaC
+  cloud_provider: microsoft_azure
+  iac_tool: bicep
+  orchestration: azure_app_service_paas
+  container_strategy: none_paas_only
+
+  # Data
+  primary_database: azure_sql_database
+  orm: ef_core_8
+  cache: azure_cache_redis
+
+  # Messaging
+  message_broker: azure_service_bus_standard
+  async_processing: azure_functions
+
+  # Identity & Security
+  identity_provider: azure_ad_b2c_entra_id
+  auth_flow: authorization_code_pkce
+  api_auth: jwt_bearer_microsoft_identity_web
+  authorization: policy_based_dotnet
+  secrets: azure_key_vault
+  network: azure_vnet_private_endpoints
+  waf: azure_application_gateway_waf_v2
+  encryption_at_rest: azure_managed_keys
+  encryption_transit: tls_1_2_plus
+  gdpr_compliance: true
+
+  # Observability
+  observability: opentelemetry_azure_monitor
+  application_insights: true
+  log_analytics: true
+
+  # API Management
+  api_management: azure_api_management
+  api_versioning: url_path
+
+quality_gates:
+  coverage_line_min: 80
+  coverage_branch_min: 75
+  mutation_score_min: 70
+  security_scan: zero_critical
+  zero_raw_sql: true
+  characterization_tests_before_rewrite: true
+
+cicd:
+  platform: github_actions
+  branch_strategy: gitflow
+  deployment_strategy: blue_green
+
+environments:
+  - dev
+  - uat
+  - pre
+  - prod
+
+migration:
+  pattern: strangler_fig
+  phases:
+    - "Fase 1: Rehost WebForms en Azure App Service"
+    - "Fase 2: Extraer APIs y lógica de negocio (.NET 8)"
+    - "Fase 3: Migrar UI a SPA React"
+    - "Fase 4: Decomisionar legacy"
+  legacy_coexistence: read_only_webforms_during_transition
+  anti_corruption_layer: true
+  outbox_pattern: true
+
+# ==============================================================================
+# SKILLS PROVISIONADOS (DEDUPLICADOS)
+# ==============================================================================
+
+skills:
+  - name: dotnet-backend-patterns
+    source: available-skills/dotnet-backend/dotnet-backend-patterns
+    destination: .claude/skills/dotnet-backend-patterns
+    scopes: [backend]
+    provisioned: true
+
+  - name: backend-testing-dotnet
+    source: available-skills/dotnet-backend/backend-testing-dotnet
+    destination: .claude/skills/backend-testing-dotnet
+    scopes: [backend]
+    provisioned: true
+
+  - name: tdd-comprehensive
+    source: available-skills/tdd/tdd-comprehensive
+    destination: .claude/skills/tdd-comprehensive
+    scopes: [backend, frontend]
+    provisioned: true
+
+  - name: integration-e2e-testing
+    source: available-skills/functional-tests/integration-e2e-testing
+    destination: .claude/skills/integration-e2e-testing
+    scopes: [backend, data]
+    provisioned: true
+
+  - name: gherkin-reqnroll
+    source: available-skills/functional-tests/gherkin-reqnroll
+    destination: .claude/skills/gherkin-reqnroll
+    scopes: [backend]
+    provisioned: true
+
+  - name: azure-identity-dotnet
+    source: available-skills/azure/azure-identity-dotnet
+    destination: .claude/skills/azure-identity-dotnet
+    scopes: [backend, integration]
+    provisioned: true
+
+  - name: senior-frontend
+    source: available-skills/frontend/senior-frontend
+    destination: .claude/skills/senior-frontend
+    scopes: [frontend]
+    provisioned: true
+
+  - name: playwright-e2e
+    source: available-skills/functional-tests/playwright-e2e
+    destination: .claude/skills/playwright-e2e
+    scopes: [frontend]
+    provisioned: true
+
+  - name: skill-senior-devops
+    source: available-skills/skill-senior-devops
+    destination: .claude/skills/skill-senior-devops
+    scopes: [cloud-platform]
+    provisioned: true
+
+  - name: github-actions-templates
+    source: available-skills/github/github-actions-templates
+    destination: .claude/skills/github-actions-templates
+    scopes: [cloud-platform, integration]
+    provisioned: true
+
+# ==============================================================================
+# CONFLICTOS DETECTADOS
+# ==============================================================================
+
+conflicts: []
+
+# ==============================================================================
+# SUMMARY
+# ==============================================================================
+
+summary:
+  scopes_processed: 5
+  decisions_total: 48
+  skills_provisioned: 10
+  conflicts_resolved: 0
+  adrs_required:
+    - "ADR-001: Backend stack y arquitectura (C#/.NET 8, Modular Monolith, CQRS)"
+    - "ADR-002: Frontend SPA (React 18, Vite, Shadcn/ui)"
+    - "ADR-003: Infraestructura Azure y IaC (App Service, Bicep, GitHub Actions)"
+    - "ADR-004: Estrategia de migración legacy (Strangler Fig, tests de caracterización)"
+    - "ADR-005: Seguridad e identidad (Azure AD B2C, Key Vault, WAF, GDPR)"
