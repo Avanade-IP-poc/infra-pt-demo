@@ -77,12 +77,49 @@ migraciones EF + integration tests con Testcontainers SQL Server, parity harness
 
 ---
 
+## Bolt 3 — SMI Anti-Corruption Layer
+
+**Tracker**: gh#TBD
+**Branch**: `bolt/001-migracion-sica-smi-acl`
+**Objetivo**: Desacoplar el dominio del cliente SOAP legacy `SMIMethods.asmx`
+mediante un puerto ACL (`ISmiService`) que traduce las estructuras SOAP a DTOs
+limpios. Adaptador Mock funcional (respuestas capturadas del legacy) para
+tests/dev y adaptador SOAP de producción (scaffold con fail-fast hasta capturar
+el WSDL real). Toggle por configuración `Smi:Mode`.
+**User Stories**: US-2 (infra) — habilita Bolts 4 (Card), 5 (Access), 6 (Monitoring)
+**Estado**: Complete
+
+### Tareas
+
+- [x] T301 [S] Application — DTOs ACL (`SmiSmartCard`, `SmiFamily`, `SmiCircuit`, `SmiZone`, `SmiAccessEvent`)
+- [x] T302 [S] Application — enum `SmiSmartCardStatus` (valores legacy preservados)
+- [x] T303 [M] Application — puerto `ISmiService` (7 operaciones async + cancellation)
+- [x] T304 [S] Infrastructure — `SmiOptions` + enum `SmiMode` (Mock/Soap)
+- [x] T305 [L] Infrastructure — `SmiMockAdapter` (datos capturados, filtros y update)
+- [x] T306 [M] Infrastructure — `SmiSoapAdapter` (scaffold producción, fail-fast)
+- [x] T307 [S] Infrastructure — DI `AddSmiIntegration` con toggle por `Smi:Mode`
+- [x] T308 [S] API — sección `Smi` en `appsettings.json`
+- [x] T309 [L] Tests — `SmiMockAdapterTests` (11 tests: lookup, update, filtros, orden, max)
+- [x] T310 [S] `dotnet build` + `dotnet test` verdes
+
+### Quality Gates (Bolt 3)
+
+- [x] Linting: PASS (0 warnings, TreatWarningsAsErrors)
+- [x] Unit tests: PASS (41 passed, 1 skipped)
+- [x] Build: PASS (Release, 0 errors / 0 warnings)
+
+**Diferido**: cliente SOAP real generado desde WSDL capturado del entorno legacy
+(`SmiSoapAdapter` queda como scaffold fail-fast), captura de respuestas reales
+para `SmiMockAdapter`, integration tests del adaptador SOAP.
+
+---
+
 ## Bolts siguientes (resumen — ver plan.md §5)
 
 | # | Nombre | Estado |
 |---|--------|--------|
 | 2 | Backend: IAM Core | Complete |
-| 3 | Backend: SMI ACL | Planned |
+| 3 | Backend: SMI ACL | Complete |
 | 4 | Backend: Card Management | Planned |
 | 5 | Backend: Access Control | Planned |
 | 6 | Backend: Monitoring | Planned |
@@ -102,3 +139,4 @@ migraciones EF + integration tests con Testcontainers SQL Server, parity harness
 |------|---------|-----------|------|-------|
 | B-01 | 11 tasks | 11 tasks | 1 | Foundation buildable; rehost a Azure + parity harness real diferidos a infra/Bolt 2 |
 | B-02 | 10 tasks | 10 tasks | 1 | RULE-001 terminal authorization; 12 tests nuevos (30 total). CRUD/User/B2C diferidos |
+| B-03 | 10 tasks | 10 tasks | 1 | SMI ACL: puerto `ISmiService` + Mock/SOAP adapters; 11 tests nuevos (41 total). Cliente SOAP real diferido |

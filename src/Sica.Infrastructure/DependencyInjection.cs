@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Sica.Application.Integration.Smi;
 using Sica.Domain.Iam;
+using Sica.Infrastructure.Integration.Smi;
 using Sica.Infrastructure.Persistence;
 using Sica.Infrastructure.Persistence.Repositories;
 
@@ -18,6 +20,31 @@ public static class DependencyInjection
             options.UseSqlServer(configuration.GetConnectionString("SicaDatabase")));
 
         services.AddScoped<ITerminalRepository, TerminalRepository>();
+
+        services.AddSmiIntegration(configuration);
+
+        return services;
+    }
+
+    /// <summary>Wires the SMI Anti-Corruption Layer adapter based on <c>Smi:Mode</c>.</summary>
+    private static IServiceCollection AddSmiIntegration(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.Configure<SmiOptions>(configuration.GetSection(SmiOptions.SectionName));
+
+        var mode = configuration
+            .GetSection(SmiOptions.SectionName)
+            .GetValue<SmiMode>(nameof(SmiOptions.Mode));
+
+        if (mode == SmiMode.Soap)
+        {
+            services.AddSingleton<ISmiService, SmiSoapAdapter>();
+        }
+        else
+        {
+            services.AddSingleton<ISmiService, SmiMockAdapter>();
+        }
 
         return services;
     }
