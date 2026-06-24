@@ -1,4 +1,10 @@
 using Microsoft.Extensions.DependencyInjection;
+using Sica.Application.AccessControl.CreateAccessFamily;
+using Sica.Application.AccessControl.GetTerminalPolicy;
+using Sica.Application.AccessControl.ListAccessFamilies;
+using Sica.Application.AccessControl.ListCircuits;
+using Sica.Application.AccessControl.UpdateFamilyMembers;
+using Sica.Application.AccessControl.UpdateTerminalPolicy;
 using Sica.Application.Abstractions;
 using Sica.Application.Cards.AssignVisitorCard;
 using Sica.Application.Cards.ListAvailableVisitorCards;
@@ -29,6 +35,30 @@ public static class DependencyInjection
         services.AddScoped<
             ICommandHandler<RecordVisitorExitCommand>,
             RecordVisitorExitCommandHandler>();
+
+        services.AddScoped<
+            IQueryHandler<ListAccessFamiliesQuery, IReadOnlyList<AccessFamilyDto>>,
+            ListAccessFamiliesQueryHandler>();
+
+        services.AddScoped<
+            ICommandHandler<CreateAccessFamilyCommand, Guid>,
+            CreateAccessFamilyCommandHandler>();
+
+        services.AddScoped<
+            ICommandHandler<UpdateFamilyMembersCommand>,
+            UpdateFamilyMembersCommandHandler>();
+
+        services.AddScoped<
+            IQueryHandler<ListCircuitsQuery, IReadOnlyList<CircuitDto>>,
+            ListCircuitsQueryHandler>();
+
+        services.AddScoped<
+            IQueryHandler<GetTerminalPolicyQuery, TerminalPolicyDto>,
+            GetTerminalPolicyQueryHandler>();
+
+        services.AddScoped<
+            ICommandHandler<UpdateTerminalPolicyCommand>,
+            UpdateTerminalPolicyCommandHandler>();
 
         return services;
     }

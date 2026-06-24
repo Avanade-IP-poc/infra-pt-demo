@@ -25,6 +25,8 @@ app.MapIamEndpoints();
 
 app.MapCardEndpoints();
 
+app.MapAccessControlEndpoints();
+
 app.Run();
 
 internal sealed record HealthStatus(string Status, string Feature);
