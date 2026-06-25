@@ -32,6 +32,24 @@ internal sealed class VisitorCardAssignmentRepository(SicaDbContext context)
             .Distinct()
             .ToListAsync(cancellationToken);
 
+    public async Task<IReadOnlyList<VisitorCardAssignment>> ListAsync(
+        bool? active,
+        CancellationToken cancellationToken = default)
+    {
+        var query = _context.VisitorCardAssignments.AsNoTracking();
+
+        if (active.HasValue)
+        {
+            query = active.Value
+                ? query.Where(a => a.ExitTime == null)
+                : query.Where(a => a.ExitTime != null);
+        }
+
+        return await query
+            .OrderByDescending(a => a.EntryTime)
+            .ToListAsync(cancellationToken);
+    }
+
     public void Add(VisitorCardAssignment assignment)
         => _context.VisitorCardAssignments.Add(assignment);
 }

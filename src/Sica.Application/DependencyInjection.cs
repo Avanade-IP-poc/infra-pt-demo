@@ -8,6 +8,7 @@ using Sica.Application.AccessControl.UpdateTerminalPolicy;
 using Sica.Application.Abstractions;
 using Sica.Application.Cards.AssignVisitorCard;
 using Sica.Application.Cards.ListAvailableVisitorCards;
+using Sica.Application.Cards.ListVisitorAssignments;
 using Sica.Application.Cards.RecordVisitorExit;
 using Sica.Application.Iam.AuthorizeTerminal;
 using Sica.Application.Monitoring.CountUsersByZone;
@@ -29,6 +30,10 @@ public static class DependencyInjection
         services.AddScoped<
             IQueryHandler<ListAvailableVisitorCardsQuery, IReadOnlyList<AvailableVisitorCard>>,
             ListAvailableVisitorCardsQueryHandler>();
+
+        services.AddScoped<
+            IQueryHandler<ListVisitorAssignmentsQuery, IReadOnlyList<VisitorAssignmentDto>>,
+            ListVisitorAssignmentsQueryHandler>();
 
         services.AddScoped<
             ICommandHandler<AssignVisitorCardCommand, AssignVisitorCardResult>,
