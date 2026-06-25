@@ -310,6 +310,39 @@ code-splitting del bundle, Playwright E2E del dashboard.
 
 ---
 
+## Bolt 9 — Frontend: Visitantes
+
+**Tracker**: gh#TBD
+**Branch**: `bolt/001-migracion-sica-frontend-visitors`
+**User Stories**: US-3 (PagVisitantes)
+**Estado**: Complete
+
+**Objetivo**: Implementar la gestión de visitantes con asignación/devolución de tarjetas,
+consumiendo Card Management y Access Control, con polling para el listado activo.
+
+| ID | Tarea | Estado |
+|----|-------|--------|
+| T901 | Backend: `GET /api/v1/cards/visitors/assignments` (active filter) + query CQRS | [x] |
+| T902 | Backend: compat `terminalId` en `/visitors/available` | [x] |
+| T903 | Frontend: feature `visitors` (tipos + API + hooks polling/mutations) | [x] |
+| T904 | `AvailableCardsList` (tarjetas disponibles) | [x] |
+| T905 | `VisitorCardAssignmentForm` (RULE-009 validación cliente) | [x] |
+| T906 | `VisitorCardList` (asignaciones activas + salida) | [x] |
+| T907 | `VisitorsPage` + navegación y ruta `/visitors` | [x] |
+| T908 | Tests: backend query handler + frontend visitors api | [x] |
+
+### Quality Gates (Bolt 9)
+
+- [x] Backend build/test: PASS (`dotnet build/test`, 119 total: 118 passed, 1 skipped)
+- [x] Frontend build/test: PASS (`npm run build/test`, 33 passed)
+- [x] Security: `npm audit --omit=dev` → 0 vulnerabilidades en producción
+
+**Diferido**: filtro real por `terminalId` en backend (modelo actual no relaciona asignación
+con terminal), UX avanzada de selección de visitante (catálogo/autocomplete), tests de
+componentes visitors y Playwright E2E del flujo de entrada/salida.
+
+---
+
 ## Bolts siguientes (resumen — ver plan.md §5)
 
 | # | Nombre | Estado |
@@ -321,7 +354,7 @@ code-splitting del bundle, Playwright E2E del dashboard.
 | 6 | Backend: Monitoring | Complete |
 | 7 | Frontend: Foundation | Complete |
 | 8 | Frontend: Dashboard | Complete |
-| 9 | Frontend: Visitantes | Planned |
+| 9 | Frontend: Visitantes | Complete |
 | 10 | Frontend: Secundarias | Planned |
 | 11 | Infra: Azure Bicep | Planned |
 | 12 | Observability | Planned |
@@ -341,3 +374,4 @@ code-splitting del bundle, Playwright E2E del dashboard.
 | B-06 | 8 tasks | 8 tasks | 1 | Monitoring: `MovementClassifier` (RULE-011 read-only desde SMI) + 2 queries CQRS (eventos/zonas) + endpoints; 18 tests nuevos (116 total). Agregado `Alarm`, persistencia de eventos y RULE-010 por grupo diferidos |
 | B-07 | 10 tasks | 10 tasks | 1 | Frontend Foundation: scaffold SPA React 18 + TS + Vite, design system Tailwind v4, MSAL (Auth Code+PKCE), TanStack Query + cliente API, 5 componentes base + 2 layouts + login/dashboard; 15 tests Vitest. AAD real/páginas de negocio/E2E/mutation diferidos |
 | B-08 | 8 tasks | 8 tasks | 1 | Frontend Dashboard: feature `monitoring` (api/hooks con polling) + `CircuitSelector`/`EventLog`/`EventTypeBadge`/`ZoneOccupancyPanel` + `DashboardPage` consumiendo Monitoring (RULE-011) y Access Control; 13 tests nuevos (28 total). `UserDetail`/filtros UI/E2E diferidos |
+| B-09 | 8 tasks | 8 tasks | 1 | Frontend Visitantes: endpoint backend de asignaciones activas + feature `visitors` (api/hooks), `AvailableCardsList` + `VisitorCardAssignmentForm` + `VisitorCardList` + `VisitorsPage`; navegación `/visitors`; 5 tests frontend nuevos + 2 backend nuevos (119 backend / 33 frontend). Filtro terminal real y E2E diferidos |

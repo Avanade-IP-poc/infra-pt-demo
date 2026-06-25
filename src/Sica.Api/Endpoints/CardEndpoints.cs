@@ -1,6 +1,7 @@
 using Sica.Application.Abstractions;
 using Sica.Application.Cards.AssignVisitorCard;
 using Sica.Application.Cards.ListAvailableVisitorCards;
+using Sica.Application.Cards.ListVisitorAssignments;
 using Sica.Application.Cards.RecordVisitorExit;
 
 namespace Sica.Api.Endpoints;
@@ -16,6 +17,10 @@ public static class CardEndpoints
             .WithName("listAvailableVisitorCards")
             .WithOpenApi();
 
+        group.MapGet("/visitors/assignments", ListVisitorAssignmentsAsync)
+            .WithName("listVisitorAssignments")
+            .WithOpenApi();
+
         group.MapPost("/visitors/assign", AssignVisitorCardAsync)
             .WithName("assignVisitorCard")
             .WithOpenApi();
@@ -28,10 +33,25 @@ public static class CardEndpoints
     }
 
     private static async Task<IResult> ListAvailableVisitorCardsAsync(
+        int? terminalId,
         IQueryHandler<ListAvailableVisitorCardsQuery, IReadOnlyList<AvailableVisitorCard>> handler,
         CancellationToken cancellationToken)
     {
+        _ = terminalId;
         var result = await handler.HandleAsync(new ListAvailableVisitorCardsQuery(), cancellationToken);
+        return Results.Ok(result.Value);
+    }
+
+    private static async Task<IResult> ListVisitorAssignmentsAsync(
+        int? terminalId,
+        bool? active,
+        IQueryHandler<ListVisitorAssignmentsQuery, IReadOnlyList<VisitorAssignmentDto>> handler,
+        CancellationToken cancellationToken)
+    {
+        var result = await handler.HandleAsync(
+            new ListVisitorAssignmentsQuery(terminalId, active),
+            cancellationToken);
+
         return Results.Ok(result.Value);
     }
 

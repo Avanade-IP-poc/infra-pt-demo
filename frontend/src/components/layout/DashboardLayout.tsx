@@ -3,7 +3,10 @@ import { NavLink, Outlet } from 'react-router-dom';
 import { Button } from '@/components/ui';
 import { cn } from '@/lib/cn';
 
-const navItems = [{ to: '/dashboard', label: 'Dashboard' }];
+const navItems = [
+  { to: '/dashboard', label: 'Dashboard' },
+  { to: '/visitors', label: 'Visitantes' },
+];
 
 export function DashboardLayout() {
   const { instance, accounts } = useMsal();

@@ -3,6 +3,7 @@ import { RequireAuth } from '@/auth/RequireAuth';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { DashboardPage } from '@/pages/DashboardPage';
 import { LoginPage } from '@/pages/LoginPage';
+import { VisitorsPage } from '@/pages/VisitorsPage';
 
 export const router = createBrowserRouter([
   {
@@ -16,6 +17,7 @@ export const router = createBrowserRouter([
         element: <DashboardLayout />,
         children: [
           { path: '/dashboard', element: <DashboardPage /> },
+          { path: '/visitors', element: <VisitorsPage /> },
         ],
       },
     ],
