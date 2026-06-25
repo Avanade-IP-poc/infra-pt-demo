@@ -1,0 +1,31 @@
+# Bolt Framework — Active Scopes
+# Proyecto: Migración SICA (VB.NET WebForms → Azure .NET 6+ / React SPA)
+# Generado durante la fase INCEPTION. Fuente de verdad para los scopes activos.
+
+version: 1
+project:
+  name: SICA Modernization
+  type: full-stack-migration   # Derivado de los scopes activos
+  kind: brownfield
+  language: es-ES              # Idioma de interacción y documentación
+  source-architecture: demo/origen.md
+  target-architecture: demo/destino.md
+
+active-scopes:
+  - backend          # Web API .NET 6+, lógica de negocio, Azure Functions
+  - frontend         # SPA React, UI responsiva
+  - cloud-platform   # Azure App Service, IaC (Bicep), Landing Zone
+  - data             # Azure SQL Database, migración del data layer procedural
+  - integration      # API Gateway, integración con WebForms legacy (read-only)
+
+transversal-scopes:
+  - work-management  # GitHub Projects / Issues (sincronización de features y bolts)
+
+decisions:
+  frontend-spa: React
+  database: Azure SQL Database
+  cicd: GitHub Actions
+  iac: Bicep
+  identity: Azure AD B2C / Entra ID
+  observability: Azure Monitor + Application Insights
+  cloud-provider: Microsoft Azure

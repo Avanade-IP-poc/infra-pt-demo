@@ -1,15 +1,18 @@
 # BOLT Framework Project Constitution
 
 > **Version**: 1.0.0
-> **Ratification Date**: [YYYY-MM-DD]
-> **Last Amended**: [YYYY-MM-DD]
-> **Status**: Template
+> **Ratification Date**: 2026-06-19
+> **Last Amended**: 2026-06-19
+> **Status**: Ratified
+> **Project**: SICA Modernization (Migración VB.NET WebForms → Azure .NET 6+ / React SPA)
+> **Kind**: Brownfield migration
+> **Interaction Language**: Español (España)
 
 ---
 
 ## Preamble
 
-This Constitution establishes the governing principles, technology decisions, and standards for the **[PROJECT_NAME]** project. All AI agents, developers, and automated systems MUST adhere to this document.
+This Constitution establishes the governing principles, technology decisions, and standards for the **SICA Modernization** project — the modernization of the legacy SICA system (described in [demo/origen.md](../../demo/origen.md)) toward the target cloud-native architecture (described in [demo/destino.md](../../demo/destino.md)). All AI agents, developers, and automated systems MUST adhere to this document.
 
 **This document is the SINGLE SOURCE OF TRUTH.**
 
@@ -27,11 +30,11 @@ Select ONE or MORE scopes. Each active scope injects its own constitution sectio
 
 |     | Scope              | Description                                                  | Activates                                                                                             |
 | --- | ------------------ | ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- |
-| [ ] | **backend**        | Server-side APIs, services, domain logic                     | Articles II §2.1, III §3.1/3.3/3.4, IV, V, VI, VII, VIII, XIII §13.1-13.3, XIV, XV (A-D), XVII, XVIII |
-| [ ] | **frontend**       | Web/mobile UI, SPA, design system                            | Articles II §2.2-2.3, III §3.2, VII §7.3-7.4, XIII (E2E), XIV, XV (frontend)                          |
-| [ ] | **cloud-platform** | Infrastructure, Landing Zones, IaC, platform engineering     | Articles VIII, IX, XII §12.3, XIII §13.4, XV (E-F)                                                    |
-| [ ] | **data**           | Databases, ETL/ELT, analytics, data governance               | Articles V, VI                                                                                        |
-| [ ] | **integration**    | API management, messaging, external system connectors        | Articles IV, XVII, XVIII                                                                              |
+| [x] | **backend**        | Server-side APIs, services, domain logic                     | Articles II §2.1, III §3.1/3.3/3.4, IV, V, VI, VII, VIII, XIII §13.1-13.3, XIV, XV (A-D), XVII, XVIII |
+| [x] | **frontend**       | Web/mobile UI, SPA, design system                            | Articles II §2.2-2.3, III §3.2, VII §7.3-7.4, XIII (E2E), XIV, XV (frontend)                          |
+| [x] | **cloud-platform** | Infrastructure, Landing Zones, IaC, platform engineering     | Articles VIII, IX, XII §12.3, XIII §13.4, XV (E-F)                                                    |
+| [x] | **data**           | Databases, ETL/ELT, analytics, data governance               | Articles V, VI                                                                                        |
+| [x] | **integration**    | API management, messaging, external system connectors        | Articles IV, XVII, XVIII                                                                              |
 | [ ] | **ai**             | AI/ML models, agents, prompt engineering, responsible AI     | Article XIX §19.2 (emphasis) + AI-specific extensions                                                 |
 | [ ] | **crm**            | Dynamics 365, Power Platform, Dataverse, business automation | Article VII                                                                                           |
 
@@ -59,10 +62,10 @@ Select ONE or MORE scopes. Each active scope injects its own constitution sectio
 
 | Environment | Purpose                      | Enabled | Auto-Deploy              |
 | ----------- | ---------------------------- | ------- | ------------------------ |
-| **dev**     | Development, rapid iteration | [ ] Yes | [ ] On commit to develop |
-| **uat**     | User Acceptance Testing      | [ ] Yes | [ ] On PR merge          |
-| **pre**     | Pre-production, staging      | [ ] Yes | [ ] Manual trigger       |
-| **prod**    | Production                   | [ ] Yes | [ ] Manual approval      |
+| **dev**     | Development, rapid iteration | [x] Yes | [x] On commit to develop |
+| **uat**     | User Acceptance Testing      | [x] Yes | [x] On PR merge          |
+| **pre**     | Pre-production, staging      | [x] Yes | [x] Manual trigger       |
+| **prod**    | Production                   | [x] Yes | [x] Manual approval      |
 
 ### Section 10.2: Configuration Management
 
@@ -71,7 +74,7 @@ Select strategy:
 - [ ] **Azure App Configuration** - Centralized, feature flags (recommended)
 - [ ] **Environment Variables** - Container/App Service config
 - [ ] **appsettings.{Environment}.json** (.NET) / **.env files** (Node.js)
-- [ ] **Combination** - App Config + Key Vault (recommended)
+- [x] **Combination** - App Config + Key Vault (recommended)
 
 ### Section 10.3: Secrets Management
 
@@ -83,8 +86,8 @@ Select strategy:
 
 Local Development Secrets:
 
-- [ ] **User Secrets** (.NET) - `dotnet user-secrets`
-- [ ] **.env files** (Node.js) - gitignored
+- [x] **User Secrets** (.NET) - `dotnet user-secrets`
+- [x] **.env files** (Node.js) - gitignored
 - [ ] **Local Key Vault** - Azure Key Vault dev instance
 
 ### Section 10.4: Feature Flags
@@ -92,7 +95,7 @@ Local Development Secrets:
 Feature Flag Provider:
 
 - [ ] **None**
-- [ ] **Azure App Configuration** - Native integration
+- [x] **Azure App Configuration** - Native integration
 - [ ] **LaunchDarkly** - Enterprise features
 - [ ] **Unleash** - Open-source
 
@@ -106,7 +109,7 @@ Feature Flag Provider:
 
 Select ONE:
 
-- [ ] **GitHub Actions** - GitHub-native
+- [x] **GitHub Actions** - GitHub-native
 - [ ] **Azure DevOps Pipelines** - Azure-native
 
 ### Section 11.2: Pipeline Stages
@@ -115,41 +118,41 @@ Select ONE:
 
 | Stage                  | Enabled | Threshold                          |
 | ---------------------- | ------- | ---------------------------------- |
-| **Build**              | [ ] Yes | Warnings as errors: [ ] Yes [ ] No |
-| **Lint/Format**        | [ ] Yes | -                                  |
-| **Unit Tests**         | [ ] Yes | Coverage >= \_\_%                  |
-| **Integration Tests**  | [ ] Yes | -                                  |
-| **Architecture Tests** | [ ] Yes | -                                  |
-| **Mutation Tests**     | [ ] Yes | Score >= \_\_%                     |
-| **Security Scan**      | [ ] Yes | 0 Critical                         |
-| **Container Build**    | [ ] Yes | -                                  |
-| **Container Scan**     | [ ] Yes | 0 Critical                         |
+| **Build**              | [x] Yes | Warnings as errors: [x] Yes [ ] No |
+| **Lint/Format**        | [x] Yes | -                                  |
+| **Unit Tests**         | [x] Yes | Coverage >= 80%                  |
+| **Integration Tests**  | [x] Yes | -                                  |
+| **Architecture Tests** | [x] Yes | -                                  |
+| **Mutation Tests**     | [x] Yes | Score >= 70%                     |
+| **Security Scan**      | [x] Yes | 0 Critical                         |
+| **Container Build**    | [x] Yes | -                                  |
+| **Container Scan**     | [x] Yes | 0 Critical                         |
 
 #### For Infrastructure
 
 | Stage                | Enabled | Threshold           |
 | -------------------- | ------- | ------------------- |
-| **IaC Lint**         | [ ] Yes | Bicep lint / tflint |
-| **IaC Validation**   | [ ] Yes | what-if / plan      |
-| **Security Scan**    | [ ] Yes | Checkov / tfsec     |
-| **Cost Estimation**  | [ ] Yes | Infracost           |
-| **Compliance Check** | [ ] Yes | Azure Policy        |
+| **IaC Lint**         | [x] Yes | Bicep lint / tflint |
+| **IaC Validation**   | [x] Yes | what-if / plan      |
+| **Security Scan**    | [x] Yes | Checkov / tfsec     |
+| **Cost Estimation**  | [x] Yes | Infracost           |
+| **Compliance Check** | [x] Yes | Azure Policy        |
 
 #### Deployment Stages
 
 | Stage           | Enabled | Trigger            |
 | --------------- | ------- | ------------------ |
-| **Deploy Dev**  | [ ] Yes | Auto on develop    |
-| **Deploy UAT**  | [ ] Yes | Auto on release/\* |
-| **Deploy Pre**  | [ ] Yes | Manual trigger     |
-| **Deploy Prod** | [ ] Yes | Manual approval    |
+| **Deploy Dev**  | [x] Yes | Auto on develop    |
+| **Deploy UAT**  | [x] Yes | Auto on release/\* |
+| **Deploy Pre**  | [x] Yes | Manual trigger     |
+| **Deploy Prod** | [x] Yes | Manual approval    |
 
 ### Section 11.3: Deployment Strategy
 
 Select ONE:
 
 - [ ] **Rolling Update** - Gradual replacement
-- [ ] **Blue-Green** - Azure Deployment Slots / K8s
+- [x] **Blue-Green** - Azure Deployment Slots / K8s
 - [ ] **Canary** - Gradual traffic shift
 - [ ] **Feature Flags** - Deploy dark, enable via flags
 
@@ -157,7 +160,7 @@ Select ONE:
 
 Select ONE:
 
-- [ ] **GitFlow** - feature/, develop, release/, main
+- [x] **GitFlow** - feature/, develop, release/, main
 - [ ] **GitHub Flow** - feature/, main
 - [ ] **Trunk-Based** - Short-lived branches, main
 
@@ -172,7 +175,7 @@ Select ONE:
 Select ONE:
 
 - [ ] **Azure-Native** - Azure Monitor + Application Insights
-- [ ] **OpenTelemetry → Azure** - OTel SDK → Azure Monitor Exporter
+- [x] **OpenTelemetry → Azure** - OTel SDK → Azure Monitor Exporter
 - [ ] **OpenTelemetry → Grafana Stack** - Self-hosted Grafana/Loki/Tempo
 
 ### Section 12.2: Health Checks
@@ -187,11 +190,11 @@ Select ONE:
 
 | Component       | Tool                      | Enabled |
 | --------------- | ------------------------- | ------- |
-| Resource Health | Azure Resource Health     | [ ] Yes |
-| Activity Logs   | Azure Monitor             | [ ] Yes |
-| Diagnostics     | Log Analytics             | [ ] Yes |
-| Alerts          | Azure Monitor Alerts      | [ ] Yes |
-| Dashboards      | Azure Workbooks / Grafana | [ ] Yes |
+| Resource Health | Azure Resource Health     | [x] Yes |
+| Activity Logs   | Azure Monitor             | [x] Yes |
+| Diagnostics     | Log Analytics             | [x] Yes |
+| Alerts          | Azure Monitor Alerts      | [x] Yes |
+| Dashboards      | Azure Workbooks / Grafana | [x] Yes |
 
 ---
 
@@ -203,26 +206,26 @@ Select ONE:
 
 | Component                | Configuration                     |
 | ------------------------ | --------------------------------- |
-| Virtual Network          | [ ] Azure VNet [ ] None           |
-| Private Endpoints        | [ ] Enabled [ ] Disabled          |
-| Web Application Firewall | [ ] Azure Front Door WAF [ ] None |
+| Virtual Network          | [x] Azure VNet [ ] None           |
+| Private Endpoints        | [x] Enabled [ ] Disabled          |
+| Web Application Firewall | [x] Azure Front Door WAF [ ] None |
 
 ### Section 16.2: Data Protection
 
 | Policy                | Value                                                 |
 | --------------------- | ----------------------------------------------------- |
-| Encryption at Rest    | [ ] Azure-managed keys [ ] Customer-managed keys      |
+| Encryption at Rest    | [x] Azure-managed keys [ ] Customer-managed keys      |
 | Encryption in Transit | TLS 1.2+ (mandatory)                                  |
-| PII Handling          | [ ] Anonymization [ ] Pseudonymization [ ] Encryption |
+| PII Handling          | [ ] Anonymization [ ] Pseudonymization [x] Encryption |
 
 ### Section 16.3: Compliance Requirements
 
 | Standard | Required       |
 | -------- | -------------- |
-| GDPR     | [ ] Yes [ ] No |
-| HIPAA    | [ ] Yes [ ] No |
-| SOC 2    | [ ] Yes [ ] No |
-| PCI-DSS  | [ ] Yes [ ] No |
+| GDPR     | [x] Yes [ ] No |
+| HIPAA    | [ ] Yes [x] No |
+| SOC 2    | [ ] Yes [x] No |
+| PCI-DSS  | [ ] Yes [x] No |
 
 ---
 
@@ -290,8 +293,82 @@ Before generating code or making changes:
 
 ## Revision History
 
-| Version | Date   | Author   | Changes                                                                                    |
-| ------- | ------ | -------- | ------------------------------------------------------------------------------------------ |
-| 2.1.0   | [DATE] | [AUTHOR] | Added Project Scope (App/Infra/Full Stack), Landing Zone templates, Infrastructure testing |
-| 2.0.0   | [DATE] | [AUTHOR] | Complete rewrite with C#/Node.js options                                                   |
-| 1.0.0   | [DATE] | [AUTHOR] | Initial constitution                                                                       |
+| Version | Date       | Author           | Changes                                                                                                                          |
+| ------- | ---------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| 1.0.0   | 2026-06-19 | Bolt Constitution | Constitución inicial ratificada: 5 scopes, React 18+.NET 8+Azure SQL+Bicep+GitHub Actions, Strangler Fig, CQRS nativo, GDPR |
+
+---
+
+## Technology Stack (SICA — Ratified Decisions)
+
+> Full details per scope in `refinement-states/merged-refinement.yaml` and per-scope constitutions.
+
+| Layer             | Technology                                       |
+| ----------------- | ------------------------------------------------ |
+| Backend Runtime   | **C# / .NET 8 LTS**                              |
+| Backend API       | **ASP.NET Core Controllers + Azure Functions**   |
+| Backend Arch      | **Modular Monolith** (Strangler Fig → extract)   |
+| CQRS              | **Simple CQRS — native .NET, NO MediatR**        |
+| Frontend          | **React 18 + TypeScript + Vite**                 |
+| Component Library | **shadcn/ui + Tailwind CSS v4**                  |
+| State (server)    | **TanStack Query**                               |
+| State (client)    | **Zustand**                                      |
+| Auth (SPA)        | **MSAL.js v3 / @azure/msal-react**               |
+| Auth (API)        | **Microsoft.Identity.Web + Azure AD B2C**        |
+| Database          | **Azure SQL Database + EF Core 8**               |
+| Cache             | **Azure Cache for Redis**                        |
+| Messaging         | **Azure Service Bus (Standard)**                 |
+| IaC               | **Bicep**                                        |
+| CI/CD             | **GitHub Actions** (GitFlow, Blue-Green)         |
+| Observability     | **OpenTelemetry → Azure Monitor / App Insights** |
+| API Management    | **Azure API Management**                         |
+| Secrets           | **Azure Key Vault**                              |
+| Identity          | **Azure AD B2C / Entra ID**                      |
+| Network Security  | **Azure VNet + Private Endpoints + WAF v2**      |
+| Compliance        | **GDPR** ✅                                      |
+
+---
+
+## Scope Constitution Files
+
+| Scope            | Constitution File                                                |
+| ---------------- | ---------------------------------------------------------------- |
+| Backend          | [backend-constitution.md](backend-constitution.md)               |
+| Frontend         | [frontend-constitution.md](frontend-constitution.md)             |
+| Cloud Platform   | [cloud-platform-constitution.md](cloud-platform-constitution.md) |
+| Data             | [data-constitution.md](data-constitution.md)                     |
+| Integration      | [integration-constitution.md](integration-constitution.md)       |
+
+**Refinement states**: `refinement-states/` (per-scope YAMLs + `merged-refinement.yaml`)
+
+---
+
+## Provisioned Skills
+
+| Skill                       | Scope(s)                  | Purpose                                        |
+| --------------------------- | ------------------------- | ---------------------------------------------- |
+| `dotnet-backend-patterns`   | backend                   | Clean Architecture, CQRS, EF Core, Result<T>   |
+| `backend-testing-dotnet`    | backend                   | xUnit, Coverlet, NetArchTest, Stryker.NET       |
+| `tdd-comprehensive`         | backend, frontend         | Red-Green-Refactor, mutation testing discipline |
+| `integration-e2e-testing`   | backend, data             | Testcontainers SQL Server, Respawn              |
+| `gherkin-reqnroll`          | backend                   | BDD acceptance tests .NET (Reqnroll)            |
+| `azure-identity-dotnet`     | backend, integration      | Microsoft.Identity.Web, Azure AD B2C           |
+| `senior-frontend`           | frontend                  | React 18, TanStack Query, MSAL.js              |
+| `playwright-e2e`            | frontend                  | E2E testing SPA, Page Object Model             |
+| `skill-senior-devops`       | cloud-platform            | Bicep IaC, GitHub Actions, Azure deployments   |
+| `github-actions-templates`  | cloud-platform, integration | CI/CD pipelines reutilizables                |
+| `skill-characterization-testing` | backend (legacy)     | Golden-master tests antes de reescribir        |
+| `skill-bolt-quality-gates`  | all                       | Quality gates per Bolt iteration               |
+| `skill-bolt-branch-management` | all                    | Branch discipline (feature/bolt)               |
+
+---
+
+## Architecture Decision Records (Pending)
+
+| ADR     | Decisión                                                        | Estado   |
+| ------- | --------------------------------------------------------------- | -------- |
+| [ADR-001](../../../docs/adr/ADR-001-backend-stack-dotnet8-modular-monolith-cqrs.md) | Backend stack: C#/.NET 8, Modular Monolith, CQRS nativo, EF Core | Accepted |
+| [ADR-002](../../../docs/adr/ADR-002-frontend-react18-typescript-vite.md) | Frontend: React 18 + TypeScript + Vite + shadcn/ui | Accepted |
+| [ADR-003](../../../docs/adr/ADR-003-infra-azure-appservice-bicep-ghactions.md) | Infra: Azure App Service + Bicep + GitHub Actions + Blue-Green | Accepted |
+| [ADR-004](../../../docs/adr/ADR-004-migracion-strangler-fig-characterization-tests.md) | Migración: Strangler Fig + Characterization Tests + ACL | Accepted |
+| [ADR-005](../../../docs/adr/ADR-005-seguridad-identity-keyvault-waf-gdpr.md) | Seguridad: Azure AD B2C + Key Vault + WAF + GDPR | Accepted |

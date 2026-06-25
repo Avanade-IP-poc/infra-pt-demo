@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sica.Domain\Sica.Domain.csproj" />
+    <ProjectReference Include="..\Sica.Shared\Sica.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,50 @@
+schema_version: 1
+scope: data
+status: completed
+processed_at: "2026-06-19"
+project: SICA Modernization
+
+decisions:
+  # Nota: scope data en este proyecto = data layer transaccional (no analytics)
+  scope_type: transactional
+  analytics_platform: none
+
+  # Almacenamiento transaccional (gobernado en backend scope también)
+  primary_database: azure_sql_database
+  sql_tier_dev: serverless_gp_s_gen5_2
+  sql_tier_prod: standard_s3
+  backup: geo_redundant
+  backup_retention_days: 35
+  audit: sql_audit_log_analytics
+
+  # Migración del esquema
+  migration_approach: ef_core_database_first_to_code_first
+  scaffold_tool: ef_core_dotnet_ef
+  zero_destructive_changes_until_legacy_readonly: true
+
+  # Reemplazos críticos
+  replacements:
+    - legacy: SQLMethods_vb_multiple_copies
+      replacement: ef_core_repositories_per_bounded_context
+    - legacy: concatenated_sql_no_params
+      replacement: ef_core_linq_sqlparameter_parametrized
+    - legacy: DataSync_vb_direct_sync
+      replacement: azure_functions_service_bus
+    - legacy: wsSMIServer_asmx_queries
+      replacement: rest_endpoints_web_api
+
+  # Calidad y seguridad
+  zero_tolerance_raw_sql: true
+  static_analysis_sql_injection:
+    - roslyn_analyzer_ef0001
+    - sonarqube_cs_s2077
+  pii_data_in_scope: true
+  encryption_at_rest: azure_sql_tde_azure_managed_keys
+  connection_string_storage: azure_key_vault
+  private_endpoint: true
+
+skills:
+  - name: integration-e2e-testing
+    source: available-skills/functional-tests/integration-e2e-testing
+    destination: .claude/skills/integration-e2e-testing
+    reason: Testcontainers SQL Server real para pruebas de repositorio EF Core (shared con backend)

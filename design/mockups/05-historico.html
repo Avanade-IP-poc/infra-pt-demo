@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SICA — Histórico de Accesos</title>
+<script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        oklch(11% 0.012 245);
+    --surface:   oklch(16% 0.015 245);
+    --surface-2: oklch(21% 0.015 245);
+    --border:    oklch(27% 0.010 245);
+    --fg:        oklch(88% 0.008 245);
+    --fg-muted:  oklch(54% 0.010 245);
+    --accent:    oklch(74% 0.170 55);
+    --success:   oklch(68% 0.180 145);
+    --danger:    oklch(63% 0.220 25);
+    --info:      oklch(70% 0.140 240);
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--fg); font-family:'Barlow',sans-serif; font-size:14px; display:flex; height:100vh; overflow:hidden; }
+  .sidebar { width:220px;min-width:220px; background:var(--surface); border-right:1px solid var(--border); display:flex;flex-direction:column; }
+  .sidebar-logo { padding:20px 20px 16px; border-bottom:1px solid var(--border); }
+  .sidebar-logo .brand { font-family:'Rajdhani',sans-serif; font-size:22px; font-weight:700; letter-spacing:0.08em; color:var(--accent); }
+  .sidebar-logo .sub { font-size:10px; color:var(--fg-muted); letter-spacing:0.12em; text-transform:uppercase; margin-top:2px; }
+  nav { flex:1; padding:12px 0; }
+  .nav-item { display:flex;align-items:center;gap:10px;padding:10px 20px;cursor:pointer;color:var(--fg-muted);font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:500;letter-spacing:0.04em; }
+  .nav-item.active { background:var(--surface-2);color:var(--accent);position:relative; }
+  .nav-item.active::before { content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent); }
+  .nav-icon { width:16px;height:16px; }
+  .sidebar-footer { padding:12px 20px 16px; border-top:1px solid var(--border); }
+  .sidebar-footer .terminal-label { font-family:'Rajdhani',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.1em; color:var(--fg-muted); text-transform:uppercase; margin-bottom:4px; }
+  .sidebar-footer .terminal-name { font-family:'Rajdhani',sans-serif; font-size:15px; font-weight:600; color:var(--info); }
+  .sidebar-footer .user-name { font-size:12px; color:var(--fg-muted); margin-top:6px; }
+  .main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+  .topbar { background:var(--surface); border-bottom:1px solid var(--border); padding:0 24px; height:52px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+  .page-title { font-family:'Rajdhani',sans-serif; font-size:18px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; }
+  .content { flex:1; overflow:hidden; display:flex; gap:0; }
+  .panel { background:var(--surface); border:1px solid var(--border); border-radius:6px; overflow:hidden; }
+  .panel-header { padding:10px 16px; background:var(--surface-2); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+  .panel-title { font-family:'Rajdhani',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--fg-muted); }
+  table { width:100%; border-collapse:collapse; }
+  th { font-family:'Rajdhani',sans-serif; font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--fg-muted); padding:8px 12px; text-align:left; border-bottom:1px solid var(--border); background:var(--surface-2); position:sticky; top:0; z-index:1; }
+  td { padding:9px 12px; border-bottom:1px solid var(--border); font-size:13px; vertical-align:middle; }
+  tr:last-child td { border-bottom:none; }
+  tr:hover td { background:oklch(20% 0.012 245); }
+  label.field-label { font-family:'Rajdhani',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--fg-muted); display:block; margin-bottom:6px; }
+  input[type=text], input[type=datetime-local] { background:var(--surface-2); border:1px solid var(--border); color:var(--fg); padding:7px 10px; border-radius:4px; font-family:'Barlow',sans-serif; font-size:13px; width:100%; outline:none; }
+  input:focus { border-color:var(--accent); }
+  .checklist { background:var(--bg); border:1px solid var(--border); border-radius:4px; overflow-y:auto; }
+  .checklist-item { display:flex;align-items:center;gap:10px;padding:8px 10px;border-bottom:1px solid var(--border);cursor:pointer;font-size:12px; }
+  .checklist-item:last-child { border-bottom:none; }
+  .checklist-item:hover { background:oklch(20% 0.012 245); }
+  .checklist-item input[type=checkbox] { accent-color:var(--accent); width:14px; height:14px; flex-shrink:0; }
+  .btn-primary { background:var(--accent); color:oklch(11% 0.012 245); padding:9px 20px; border:none; border-radius:4px; font-family:'Rajdhani',sans-serif; font-size:14px; font-weight:700; letter-spacing:0.08em; cursor:pointer; width:100%; }
+  .btn-clear { background:none; border:1px solid var(--border); color:var(--fg-muted); padding:7px 16px; border-radius:4px; font-family:'Rajdhani',sans-serif; font-size:12px; font-weight:600; cursor:pointer; width:100%; margin-top:6px; }
+  .btn-clear:hover { border-color:var(--danger); color:var(--danger); }
+  .badge { display:inline-flex;align-items:center;padding:2px 7px;border-radius:3px;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase; }
+  .badge-entry { background:oklch(68% 0.18 145/0.15); color:var(--success); }
+  .badge-exit { background:oklch(63% 0.22 25/0.12); color:var(--danger); }
+  ::-webkit-scrollbar { width:5px; }
+  ::-webkit-scrollbar-track { background:var(--bg); }
+  ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+  .results-summary { padding:10px 16px; background:var(--surface-2); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:20px; font-size:12px; }
+  .results-summary span { color:var(--fg-muted); }
+  .results-summary strong { color:var(--fg); }
+  .radio-group { display:flex; gap:0; border:1px solid var(--border); border-radius:4px; overflow:hidden; }
+  .radio-btn { padding:7px 14px; font-family:'Rajdhani',sans-serif; font-size:12px; font-weight:600; cursor:pointer; background:var(--bg); color:var(--fg-muted); border:none; }
+  .radio-btn.active { background:var(--accent); color:oklch(11% 0.012 245); }
+  .radio-btn + .radio-btn { border-left:1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">SICA</div>
+    <div class="sub">Control de Accesos</div>
+  </div>
+  <nav>
+    <div class="nav-item">
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+      Log de Porta
+    </div>
+    <div class="nav-item">
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+      Visitantes
+    </div>
+    <div class="nav-item">
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+      Zonas
+    </div>
+    <div class="nav-item active">
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      Histórico
+    </div>
+    <div style="border-top:1px solid var(--border);margin:8px 0;"></div>
+    <div class="nav-item" style="opacity:0.5;pointer-events:none;">
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/></svg>
+      Configurar Acessos
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="terminal-label">Terminal activo</div>
+    <div class="terminal-name">TERM01</div>
+    <div class="user-name">ajsfernandes</div>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <span class="page-title">Histórico de Accesos</span>
+    <span style="font-size:12px;color:var(--fg-muted);">Búsqueda ±7 días del período para trazar posición inicial</span>
+  </div>
+
+  <div class="content">
+
+    <!-- Left: filter panel -->
+    <div style="width:280px;min-width:280px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;padding:16px;">
+
+      <div style="font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:10px;">Tipo de consulta</div>
+      <div class="radio-group" style="margin-bottom:16px;">
+        <button class="radio-btn active">Por circuito</button>
+        <button class="radio-btn">Por persona</button>
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label class="field-label">Circuitos (selección múltiple)</label>
+        <div class="checklist" style="max-height:180px;">
+          <div class="checklist-item">
+            <input type="checkbox" checked>
+            <span>Puerta Principal Ent. (338)</span>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox" checked>
+            <span>Puerta Principal Sal. (342)</span>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox">
+            <span>Garaje Entrada (347)</span>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox">
+            <span>Garaje Salida (344)</span>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox">
+            <span>Puerta Lateral Este (346)</span>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox">
+            <span>Puerta Emergencia (351)</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label class="field-label">Período — Inicio</label>
+        <input type="text" value="2026-06-24 00:00:00">
+      </div>
+      <div style="margin-bottom:16px;">
+        <label class="field-label">Período — Fin</label>
+        <input type="text" value="2026-06-24 23:59:59">
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label class="field-label">Tipo de evento</label>
+        <div class="checklist">
+          <div class="checklist-item"><input type="checkbox" checked><span>Entrada</span></div>
+          <div class="checklist-item"><input type="checkbox" checked><span>Salida</span></div>
+          <div class="checklist-item"><input type="checkbox"><span>Acceso denegado</span></div>
+        </div>
+      </div>
+
+      <div style="margin-top:auto;padding-top:12px;">
+        <button class="btn-primary">Consultar</button>
+        <button class="btn-clear">Limpiar filtros</button>
+      </div>
+    </div>
+
+    <!-- Right: results -->
+    <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+      <div class="results-summary">
+        <span>Resultados: <strong>24 eventos</strong></span>
+        <span>Período: <strong>2026-06-24 00:00 – 23:59</strong></span>
+        <span>Circuitos: <strong>338, 342</strong></span>
+        <span style="margin-left:auto;">
+          <button style="background:none;border:1px solid var(--border);color:var(--fg-muted);padding:4px 12px;border-radius:4px;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;cursor:pointer;">↓ Exportar CSV</button>
+        </span>
+      </div>
+      <div style="overflow-y:auto;flex:1;">
+        <table>
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Tarjeta</th>
+              <th>Nombre</th>
+              <th>Empresa</th>
+              <th>Circuito</th>
+              <th>Tipo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-family:'Rajdhani',sans-serif;font-size:12px;color:var(--fg-muted);white-space:nowrap;">2026-06-24 10:42:28</td>
+              <td style="font-family:'Rajdhani',sans-serif;font-size:12px;">E007234</td>
+              <td>Tiago Correia</td>
+              <td style="color:var(--fg-muted);font-size:12px;">REFER, EP</td>
+              <td style="font-size:12px;color:var(--fg-muted);">Puerta Principal Ent.</td>
+              <td><span class="badge badge-entry">▲ Entrada</span></td>
+            </tr>
+            <tr>
+              <td style="font-family:'Rajdhani',sans-serif;font-size:12px;color:var(--fg-muted);white-space:nowrap;">2026-06-24 10:38:05</td>
+              <td style="font-family:'Rajdhani',sans-serif;font-size:12px;">V002891</td>
+              <td>João Silva</td>
+              <td style="color:var(--fg-muted);font-size:12px;">Empresa XYZ</td>
+              <td style="font-size:12px;color:var(--fg-muted);">Puerta Principal Sal.</td>
+              <td><span class="badge badge-exit">▼ Salida</span></td>
+            </tr>
+            <tr>
+              <td style="font-family:'Rajdhani',sans-serif;font-size:12px;color:var(--fg-muted);white-space:nowrap;">2026-06-24 10:31:47</td>
+              <td style="font-family:'Rajdhani',sans-serif;font-size:12px;">E004512</td>
+              <td>Ana Ferreira</td>
+              <td style="color:var(--fg-muted);font-size:12px;">REFER, EP</td>
+              <td style="font-size:12px;color:var(--fg-muted);">Puerta Principal Ent.</td>
+              <td><span class="badge badge-entry">▲ Entrada</span></td>
+            </tr>
+            <tr>
+              <td style="font-family:'Rajdhani',sans-serif;font-size:12px;color:var(--fg-muted);white-space:nowrap;">2026-06-24 10:28:19</td>
+              <td style="font-family:'Rajdhani',sans-serif;font-size:12px;">E007234</td>
+              <td>Tiago Correia</td>
+              <td style="color:var(--fg-muted);font-size:12px;">REFER, EP</td>
+              <td style="font-size:12px;color:var(--fg-muted);">Puerta Principal Sal.</td>
+              <td><span class="badge badge-exit">▼ Salida</span></td>
+            </tr>
+            <tr>
+              <td style="font-family:'Rajdhani',sans-serif;font-size:12px;color:var(--fg-muted);white-space:nowrap;">2026-06-24 10:15:33</td>
+              <td style="font-family:'Rajdhani',sans-serif;font-size:12px;">E009801</td>
+              <td>Carlos Mendes</td>
+              <td style="color:var(--fg-muted);font-size:12px;">REFER, EP</td>
+              <td style="font-size:12px;color:var(--fg-muted);">Puerta Principal Ent.</td>
+              <td><span class="badge badge-entry">▲ Entrada</span></td>
+            </tr>
+            <tr>
+              <td style="font-family:'Rajdhani',sans-serif;font-size:12px;color:var(--fg-muted);white-space:nowrap;">2026-06-24 10:02:11</td>
+              <td style="font-family:'Rajdhani',sans-serif;font-size:12px;">V001045</td>
+              <td>Pedro Alves</td>
+              <td style="color:var(--fg-muted);font-size:12px;">Tech Iberia</td>
+              <td style="font-size:12px;color:var(--fg-muted);">Puerta Principal Ent.</td>
+              <td><span class="badge badge-entry">▲ Entrada</span></td>
+            </tr>
+            <tr>
+              <td style="font-family:'Rajdhani',sans-serif;font-size:12px;color:var(--fg-muted);white-space:nowrap;">2026-06-24 09:58:44</td>
+              <td style="font-family:'Rajdhani',sans-serif;font-size:12px;">E003367</td>
+              <td>Margarida Lopes</td>
+              <td style="color:var(--fg-muted);font-size:12px;">REFER, EP</td>
+              <td style="font-size:12px;color:var(--fg-muted);">Puerta Principal Sal.</td>
+              <td><span class="badge badge-exit">▼ Salida</span></td>
+            </tr>
+            <tr>
+              <td style="font-family:'Rajdhani',sans-serif;font-size:12px;color:var(--fg-muted);white-space:nowrap;">2026-06-24 09:45:02</td>
+              <td style="font-family:'Rajdhani',sans-serif;font-size:12px;">E004512</td>
+              <td>Ana Ferreira</td>
+              <td style="color:var(--fg-muted);font-size:12px;">REFER, EP</td>
+              <td style="font-size:12px;color:var(--fg-muted);">Puerta Principal Sal.</td>
+              <td><span class="badge badge-exit">▼ Salida</span></td>
+            </tr>
+            <tr>
+              <td style="font-family:'Rajdhani',sans-serif;font-size:12px;color:var(--fg-muted);white-space:nowrap;">2026-06-24 09:31:18</td>
+              <td style="font-family:'Rajdhani',sans-serif;font-size:12px;">V003312</td>
+              <td>Carla Nunes</td>
+              <td style="color:var(--fg-muted);font-size:12px;">Instalaciones SA</td>
+              <td style="font-size:12px;color:var(--fg-muted);">Puerta Principal Ent.</td>
+              <td><span class="badge badge-entry">▲ Entrada</span></td>
+            </tr>
+            <tr>
+              <td style="font-family:'Rajdhani',sans-serif;font-size:12px;color:var(--fg-muted);white-space:nowrap;">2026-06-24 09:15:44</td>
+              <td style="font-family:'Rajdhani',sans-serif;font-size:12px;">V002891</td>
+              <td>João Silva</td>
+              <td style="color:var(--fg-muted);font-size:12px;">Empresa XYZ</td>
+              <td style="font-size:12px;color:var(--fg-muted);">Puerta Principal Ent.</td>
+              <td><span class="badge badge-entry">▲ Entrada</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Pagination -->
+      <div style="padding:10px 16px;border-top:1px solid var(--border);background:var(--surface-2);display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-size:12px;color:var(--fg-muted);">Mostrando 10 de 24 resultados</span>
+        <div style="display:flex;gap:6px;">
+          <button style="background:var(--surface-2);border:1px solid var(--border);color:var(--fg-muted);padding:4px 10px;border-radius:3px;font-family:'Rajdhani',sans-serif;font-size:12px;cursor:pointer;">← Anterior</button>
+          <button style="background:var(--accent);border:none;color:oklch(11% 0.012 245);padding:4px 10px;border-radius:3px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">1</button>
+          <button style="background:var(--surface-2);border:1px solid var(--border);color:var(--fg-muted);padding:4px 10px;border-radius:3px;font-family:'Rajdhani',sans-serif;font-size:12px;cursor:pointer;">2</button>
+          <button style="background:var(--surface-2);border:1px solid var(--border);color:var(--fg-muted);padding:4px 10px;border-radius:3px;font-family:'Rajdhani',sans-serif;font-size:12px;cursor:pointer;">3</button>
+          <button style="background:var(--surface-2);border:1px solid var(--border);color:var(--fg-muted);padding:4px 10px;border-radius:3px;font-family:'Rajdhani',sans-serif;font-size:12px;cursor:pointer;">Siguiente →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+</body>
+</html>
